@@ -1,1 +1,4 @@
 OUT/
+*.admin
+*.json
+*.vscode
