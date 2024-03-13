@@ -2,7 +2,7 @@
 
 const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] = 
 {
-    {
+    {/* GPIOA PIN0 : ADC */
         .GPIO = GPIOA,
         .APB1_Clock = STD_OFF,
         .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
@@ -12,7 +12,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
             .speed = GPIO_SPEED_50MHz
         }
     },
-    {
+    {/* GPIOA PIN0 : I/O */
         .GPIO = GPIOA,
         .APB1_Clock = STD_OFF,
         .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
