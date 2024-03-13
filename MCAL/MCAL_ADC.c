@@ -3,18 +3,7 @@
 void MCAL_ADC_Init(void)
 {
     uint8 adcIndex;
-    GPIO_Config_T           gpioConfig;
     ADC_Config_T            adcConfig;
-
-    /* Enable GPIOA clock */
-    RCM_EnableAPB2PeriphClock(RCM_APB2_PERIPH_GPIOA);
-
-    /* Configure PC0 (ADC Channel0) as analog input */
-    GPIO_ConfigStructInit(&gpioConfig);
-    gpioConfig.mode    = GPIO_MODE_ANALOG;
-    gpioConfig.pin     = GPIO_PIN_0;
-    GPIO_Config(GPIOA, &gpioConfig);
-
 
     for (adcIndex = 0;adcIndex < ADC_SIGNALS_CNT;adcIndex++) {
         /* ADCCLK = PCLK2/4 */

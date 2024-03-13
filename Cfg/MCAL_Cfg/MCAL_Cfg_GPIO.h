@@ -3,7 +3,7 @@
 
 #include "MCAL_CfgList.h"
 
-#define GPIO_SIGNALS_CNT 1
+#define GPIO_SIGNALS_CNT 2
 
 typedef struct {
     GPIO_T* GPIO;
