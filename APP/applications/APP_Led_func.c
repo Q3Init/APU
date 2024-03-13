@@ -1,4 +1,6 @@
 #include "APP_Led_func.h"
+#include "Lib_Log_Util.h"
+
 uint16 tick1=0;
 uint16 tick2=0;
 uint16 tick3=0;
@@ -9,6 +11,9 @@ OS_LOCAL uint8 Os_TaskHdl_Lv0_Task0(void)
     {
         tick1++;
     }
+    #ifdef DEBUG_INFO_ENABLE
+    Log_d("HELLO!! Test --  tick1:%d  hex:%x \r\n",tick1,tick1);
+    #endif
     return ret;
 }
 
