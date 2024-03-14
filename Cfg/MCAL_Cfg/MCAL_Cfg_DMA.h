@@ -20,6 +20,8 @@ typedef struct {
     DMA_Config_T mcal_config_dma;
 } DMASignalsCfg;
 
+extern uint8 spi_tx_buffer[];
+extern uint8 spi_rx_buffer[];
 extern const DMASignalsCfg dmaSignalsCfgTable[];
 
 #endif

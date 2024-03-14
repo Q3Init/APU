@@ -21,9 +21,10 @@ void MCAL_SPI_Init(void)
 
         SPI_I2S_EnableDMA((spiSignalsCfgTable + spiIndex)->spi,(spiSignalsCfgTable + spiIndex)->spi_tx_dmareq);
         SPI_I2S_EnableDMA((spiSignalsCfgTable + spiIndex)->spi,(spiSignalsCfgTable + spiIndex)->spi_rx_dmareq);
-        
+
         SPI_Enable((spiSignalsCfgTable + spiIndex)->spi);    
     }
+    GPIO_WriteBitValue(GPIOB,GPIO_PIN_12,1); /* CS HIGH */
 }
 
 

@@ -15,12 +15,12 @@ const SPISignalsCfg spiSignalsCfgTable[SPI_SIGNALS_CNT] =
             .mode = SPI_MODE_MASTER,
             .length = SPI_DATA_LENGTH_8B,
             /*  Polarity is low  */
-            .polarity = SPI_CLKPOL_HIGH,
+            .polarity = SPI_CLKPOL_LOW,
             /*  Phase is 1 edge  */
-            .phase = SPI_CLKPHA_2EDGE,
+            .phase = SPI_CLKPHA_1EDGE,
             /*  Software select slave enable  */
             .nss = SPI_NSS_SOFT,
-            .baudrateDiv = SPI_BAUDRATE_DIV_8,
+            .baudrateDiv = SPI_BAUDRATE_DIV_16,
             /*  MSB first  */
             .firstBit = SPI_FIRSTBIT_MSB,
             .crcPolynomial = 7
