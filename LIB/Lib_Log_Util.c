@@ -5,7 +5,15 @@
 
 uint8 uart_log_buffer[MAX_LOG_MSG_LEN] = {0};
 
-uint8 NO_FILE_LINE_LOG = false;/* false --> no file_name and line output in log*/
+enum output_selection_tag{
+    NO_LINE_LOG,
+    NO_LINE_FUNC_LOG,
+    NO_FILE_NAME_LINE_LOG,
+    NO_FILE_LINE_FUNC_LOG,
+    NO_LEVEL_FILE_LINE_LOG,
+};
+
+uint8 log_format = NO_LEVEL_FILE_LINE_LOG;/* false --> no file_name and line output in log*/
 
 static char *level_str[] = {
     "DBG", "INF", "WRN", "ERR",
@@ -71,13 +79,20 @@ void Log_writter(const char *file, const char *func, const int line, const int l
 	const char *file_name = _get_filename(file);
     sint32 log_length = 0;
 
-    if(NO_FILE_LINE_LOG == false){
-        log_length = HAL_Snprintf((char *)uart_log_buffer,MAX_LOG_MSG_LEN, "%s | %s: ", level_str[level], func);
+    switch(log_format)
+    {
+        case NO_LEVEL_FILE_LINE_LOG:
+            break;
+        case NO_FILE_LINE_FUNC_LOG:
+            break;
+        case NO_FILE_NAME_LINE_LOG:
+            log_length = HAL_Snprintf((char *)uart_log_buffer,MAX_LOG_MSG_LEN, "%s | %s: ", level_str[level], func);
+            break;
+        default:
+            log_length = HAL_Snprintf((char *)uart_log_buffer,MAX_LOG_MSG_LEN, "%s | %s |%s(%d): ", level_str[level],  file_name, func, line);
+            break;
     }
-    else{
-        log_length = HAL_Snprintf((char *)uart_log_buffer,MAX_LOG_MSG_LEN, "%s | %s |%s(%d): ", level_str[level],  file_name, func, line);
-    }
- 
+
     if((log_length<0) || ((MAX_LOG_MSG_LEN-log_length)<0))
     {
         HAL_Printf("Failed to printf log!\r\n");
