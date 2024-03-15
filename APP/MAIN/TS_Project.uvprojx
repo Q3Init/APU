@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>APM32E103_MINI,DEBUG_INFO_ENABLE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\main;..\applications;..\..\OS\OS_Driver;..\..\OS\OS_Task;..\..\RTE;..\..\TYPES;..\..\RTE;..\..\LIB;..\..\BSW;..\..\Cfg\BSW_Cfg;..\..\MCAL;..\..\Cfg\MCAL_Cfg;..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Driver\CMSIS\Include;..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\inc;..\..\DRIVER\Chip_Driver\AMP32E103VE\User_Interface</IncludePath>
+              <IncludePath>..\main;..\applications;..\..\OS\OS_Driver;..\..\OS\OS_Task;..\..\RTE;..\..\TYPES;..\..\RTE;..\..\LIB;..\..\BSW;..\..\Cfg\BSW_Cfg;..\..\MCAL;..\..\Cfg\MCAL_Cfg;..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Driver\CMSIS\Include;..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\inc;..\..\DRIVER\Chip_Driver\APM32E103VE\User_Interface</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -446,127 +446,127 @@
             <File>
               <FileName>apm32e10x_adc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_adc.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_adc.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_bakpr.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_bakpr.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_bakpr.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_can.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_can.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_can.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_crc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_crc.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_crc.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_dac.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_dac.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_dac.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_dbgmcu.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_dbgmcu.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_dbgmcu.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_dma.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_dma.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_dma.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_dmc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_dmc.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_dmc.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_eint.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_eint.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_eint.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_fmc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_fmc.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_fmc.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_gpio.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_gpio.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_i2c.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_i2c.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_iwdt.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_iwdt.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_iwdt.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_misc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_misc.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_misc.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_pmu.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_pmu.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_pmu.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_rcm.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_rcm.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_rcm.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_rtc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_rtc.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_rtc.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_sci2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_sci2c.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_sci2c.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_sdio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_sdio.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_sdio.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_smc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_smc.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_smc.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_spi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_spi.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_spi.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_tmr.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_tmr.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_tmr.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_usart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_usart.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_usart.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_usb.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_usb.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_usb.c</FilePath>
             </File>
             <File>
               <FileName>apm32e10x_wwdt.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Standard_Library\src\apm32e10x_wwdt.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\src\apm32e10x_wwdt.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -577,19 +577,19 @@
           <GroupName>Chip_Driver</GroupName>
           <Files>
             <File>
-              <FileName>startup_apm32e10x_hd.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\Library\Driver\Startup\startup_apm32e10x_hd.s</FilePath>
+              <FileName>apm32e10x_int.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\User_Interface\apm32e10x_int.c</FilePath>
             </File>
             <File>
               <FileName>system_apm32e10x.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\User_Interface\system_apm32e10x.c</FilePath>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\User_Interface\system_apm32e10x.c</FilePath>
             </File>
             <File>
-              <FileName>apm32e10x_int.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\DRIVER\Chip_Driver\AMP32E103VE\User_Interface\apm32e10x_int.c</FilePath>
+              <FileName>startup_apm32e10x_hd.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Driver\Startup\startup_apm32e10x_hd.s</FilePath>
             </File>
           </Files>
         </Group>
