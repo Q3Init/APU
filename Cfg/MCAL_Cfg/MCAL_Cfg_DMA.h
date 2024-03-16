@@ -3,7 +3,7 @@
 
 #include "MCAL_CfgList.h"
 
-#define DMA_SIGNALS_CNT 7
+#define DMA_SIGNALS_CNT 3
 
 /* USART1 data register address */
 #define USART1_DR_ADDRESS        ((uint32_t)USART1_BASE+0x04)

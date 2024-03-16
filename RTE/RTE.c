@@ -16,10 +16,10 @@ void RTE_Init(void)
     OsTimer_Init();
     /* MCAL Init */
     MCAL_GPIO_Init();
-    MCAL_DMA_Init();
-    MCAL_UART_Init();
+    // MCAL_UART_Init();
     MCAL_ADC_Init();
     MCAL_SPI_Init();
+    MCAL_DMA_Init();
     /* BSW Init */
 
     /* application Init */
