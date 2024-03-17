@@ -10,6 +10,7 @@ typedef struct {
     uint32_t APB1_Clock;
     uint32_t APB2_Clock;
     GPIO_Config_T mcal_config_gpio;
+    uint32_t GPIO_level;
 } GPIOSignalsCfg;
 
 extern const GPIOSignalsCfg gpioSignalsCfgTable[];

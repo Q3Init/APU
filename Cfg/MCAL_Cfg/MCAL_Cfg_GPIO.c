@@ -5,6 +5,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         /*GPIOA初始化*/
         {/* GPIOA PIN_0 : ADC */
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -15,6 +16,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOA PIN_1 : I/O */
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -25,6 +27,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOA PIN_2 : USART2 Tx as alternate function push-pull*/
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -35,6 +38,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOA PIN_3 : USART2 Rx as input floating*/
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -46,6 +50,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOA PIN_4 : I/O */
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -56,6 +61,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOA PIN_5 : I/O */
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -66,6 +72,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOA PIN_6 : I/O */
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -76,6 +83,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOA PIN_7 : I/O */
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -86,6 +94,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOA PIN_8 : I/O */
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -96,6 +105,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOA PIN_9 :  USART1 Tx as alternate function push-pull*/
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -106,6 +116,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOA PIN_10 : USART1 Rx as input floating */
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -116,6 +127,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
          {/* GPIOA PIN_11 : I/O */
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -126,6 +138,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
          {/* GPIOA PIN_12 : I/O */
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -136,6 +149,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
          {/* GPIOA PIN_13 : SWDIO/JTMS */
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -146,6 +160,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
          {/* GPIOA PIN_14 : SWCLK/JTCK */
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -156,6 +171,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
          {/* GPIOA PIN_15 : JTDI */
          .GPIO = GPIOA,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
@@ -169,6 +185,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         /*GPIOB初始化*/
         {/* GPIOB PIN_0 : I/O */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -179,6 +196,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_1 : I/O */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -189,6 +207,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_2 : I/O */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -199,6 +218,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_3 : I/O */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -209,6 +229,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_4 : I/O */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -219,6 +240,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_5 : I/O */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -229,6 +251,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_6 : I/O */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -239,6 +262,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_7 : I/O */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -249,6 +273,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_8 : I/O */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -259,6 +284,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_9 : I/O */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -269,6 +295,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_10 : I/O */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -279,6 +306,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_11 : I/O */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -289,6 +317,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_12 : CS */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -299,6 +328,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_13 : CLK */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -309,6 +339,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_14 : MISO */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -319,6 +350,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_15 : MOSI */
          .GPIO = GPIOB,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
@@ -331,6 +363,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         /*GPIOC初始化*/
         {/* GPIOC PIN_0 : I/O */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -341,6 +374,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_1 : I/O */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -351,6 +385,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_2 : I/O */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -361,6 +396,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_3 : I/O */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -371,6 +407,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_4 : I/O */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -381,6 +418,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_5 : I/O */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -391,6 +429,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_6 : I/O */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -401,6 +440,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_7 : I/O */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -411,6 +451,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_8 : I/O */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -421,6 +462,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_9 : I/O */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -431,6 +473,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_10 : I/O */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -441,6 +484,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_11 : I/O */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -451,6 +495,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_12 : I/O */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -461,6 +506,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_13 : I/O */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -471,6 +517,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_14 : OSC32-IN */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -481,6 +528,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_15 : OSC32-OUT */
          .GPIO = GPIOC,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
@@ -493,6 +541,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         /*GPIOD初始化*/
         {/* GPIOD PIN_0 : I/O */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -503,6 +552,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_1 : I/O */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -513,6 +563,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_2 : I/O */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -523,6 +574,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_3 : I/O */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -533,6 +585,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_4 : I/O */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -543,6 +596,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_5 : I/O */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -553,6 +607,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_6 : I/O */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -563,6 +618,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_7 : I/O */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -573,6 +629,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_8 : 按键——return */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -583,6 +640,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_9 : 按键——enter */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -593,6 +651,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_10 : 按键——up */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -603,6 +662,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_11 : 按键——down */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -613,6 +673,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_12 : 按键——left */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -623,6 +684,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_13 : 按键——right */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -633,6 +695,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_14 : 按键——subtract */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -643,6 +706,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_15 : 按键——plus */
          .GPIO = GPIOD,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
@@ -655,6 +719,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         /*GPIOE初始化*/
         {/* GPIOE PIN_0 : I/O */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {
@@ -665,6 +730,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOE PIN_1 : I/O */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {
@@ -675,6 +741,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOE PIN_2 : SID */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {
@@ -685,6 +752,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOE PIN_3 : SCLK */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {
@@ -695,6 +763,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOE PIN_4 : I/O */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {
@@ -705,6 +774,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOE PIN_5 : RST */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {
@@ -715,6 +785,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOE PIN_6 : CS */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {
@@ -725,6 +796,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOE PIN_7 : LED-communication */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {
@@ -735,6 +807,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOE PIN_8 : LED-disconnect */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {
@@ -745,6 +818,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOE PIN_9 : LED-closing */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {
@@ -755,6 +829,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOE PIN_10 : LED-warning */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {
@@ -765,6 +840,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOE PIN_11 : LED-fault */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {
@@ -775,6 +851,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOE PIN_12 : LED-OverVoltage */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {
@@ -785,6 +862,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOE PIN_13 : LED-OverCurrent */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {
@@ -795,6 +873,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOE PIN_14 : HC-C */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {
@@ -805,6 +884,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOE PIN_15 : TQ-C */
          .GPIO = GPIOE,
+         .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOE,
          {

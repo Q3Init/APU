@@ -18,6 +18,14 @@ void MCAL_GPIO_Init(void)
         gpioConfig = (gpioSignalsCfgTable + gpioIndex)->mcal_config_gpio;
 
         GPIO_Config((gpioSignalsCfgTable + gpioIndex)->GPIO, &gpioConfig);
+        
+        /*GPIO level select */
+        if((gpioSignalsCfgTable+gpioIndex)->GPIO_level==STD_LOW){
+            GPIO_ResetBit((gpioSignalsCfgTable+gpioIndex)->GPIO,(gpioSignalsCfgTable+gpioIndex)->mcal_config_gpio.pin);
+        }
+        if((gpioSignalsCfgTable+gpioIndex)->GPIO_level==STD_HIGH){
+            GPIO_SetBit((gpioSignalsCfgTable+gpioIndex)->GPIO,(gpioSignalsCfgTable+gpioIndex)->mcal_config_gpio.pin);
+        }
     }
 }
 
