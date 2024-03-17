@@ -13,6 +13,8 @@
 #include "MCAL_DMA.h"
 #include "MCAL_SPI.h"
 #include "MCAL_UART.h"
+/* BSW */
+#include "BSW_Adcif.h"
 
 #define __DISENBLE_IRQ() __disable_irq()
 #define __ENABLE_IRQ() __enable_irq()

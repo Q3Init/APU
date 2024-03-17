@@ -21,7 +21,7 @@ void RTE_Init(void)
     MCAL_SPI_Init();
     MCAL_DMA_Init();
     /* BSW Init */
-
+    BSW_Adcif_Init();
     /* application Init */
 
     rteBswRdyFlg = TRUE; /* Init complete flag */
