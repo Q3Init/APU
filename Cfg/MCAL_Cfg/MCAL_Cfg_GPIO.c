@@ -8,7 +8,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
-          .mode = GPIO_MODE_ANALOG,
+          .mode = GPIO_MODE_OUT_PP,
           .pin = GPIO_PIN_0,
           .speed = GPIO_SPEED_50MHz
           }
@@ -49,7 +49,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_ANALOG,
           .pin = GPIO_PIN_4,
           .speed = GPIO_SPEED_50MHz
           }
@@ -59,7 +59,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_ANALOG,
           .pin = GPIO_PIN_5,
           .speed = GPIO_SPEED_50MHz
           }
@@ -69,7 +69,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_ANALOG,
           .pin = GPIO_PIN_6,
           .speed = GPIO_SPEED_50MHz
           }
@@ -79,7 +79,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_ANALOG,
           .pin = GPIO_PIN_7,
           .speed = GPIO_SPEED_50MHz
           }
@@ -374,7 +374,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_ANALOG,
           .pin = GPIO_PIN_4,
           .speed = GPIO_SPEED_50MHz
           }
@@ -384,7 +384,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_ANALOG,
           .pin = GPIO_PIN_5,
           .speed = GPIO_SPEED_50MHz
           }

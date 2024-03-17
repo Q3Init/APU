@@ -1,6 +1,6 @@
 #include "MCAL_Cfg_DMA.h"
 
-__IO uint16_t DMA_ADCConvertedValue = 0;
+uint16_t DMA_ADCConvertedValue[6] = {0};
 uint8 spi_tx_buffer[512] = {0};
 uint8 spi_rx_buffer[512] = {0};
 
@@ -22,12 +22,12 @@ const DMASignalsCfg dmaSignalsCfgTable[DMA_SIGNALS_CNT] =
             .peripheralBaseAddr = ADC_DR_ADDR,
             .memoryBaseAddr = (uint32)&DMA_ADCConvertedValue,
             .dir = DMA_DIR_PERIPHERAL_SRC,
-            .bufferSize = 1,
+            .bufferSize = 6,
             .peripheralInc = DMA_PERIPHERAL_INC_DISABLE,
-            .memoryInc = DMA_MEMORY_INC_DISABLE,
-            .peripheralDataSize = DMA_PERIPHERAL_DATA_SIZE_BYTE,
-            .memoryDataSize = DMA_MEMORY_DATA_SIZE_BYTE,
-            .loopMode = DMA_MODE_NORMAL,
+            .memoryInc = DMA_MEMORY_INC_ENABLE,
+            .peripheralDataSize = DMA_PERIPHERAL_DATA_SIZE_HALFWORD,
+            .memoryDataSize = DMA_MEMORY_DATA_SIZE_HALFWORD,
+            .loopMode = DMA_MODE_CIRCULAR,
             .priority = DMA_PRIORITY_HIGH,
             .M2M = DMA_M2MEN_DISABLE
         }

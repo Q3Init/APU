@@ -200,6 +200,21 @@
           <WinNumber>1</WinNumber>
           <ItemText>spi_tx_buffer</ItemText>
         </Ww>
+        <Ww>
+          <count>9</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>spi_rx_buffer</ItemText>
+        </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>DMA_ADCConvertedValue</ItemText>
+        </Ww>
+        <Ww>
+          <count>11</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>voltage</ItemText>
+        </Ww>
       </WatchWindow1>
       <MemoryWindow4>
         <Mm>
@@ -252,6 +267,10 @@
       <pSingCmdsp></pSingCmdsp>
       <pMultCmdsp></pMultCmdsp>
       <SystemViewers>
+        <Entry>
+          <Name>System Viewer\ADC1</Name>
+          <WinId>35901</WinId>
+        </Entry>
         <Entry>
           <Name>System Viewer\DMA1</Name>
           <WinId>35902</WinId>
