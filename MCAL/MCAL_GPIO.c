@@ -1,18 +1,5 @@
 #include "MCAL_GPIO.h"
 
-void GPIO_LEVEL_SET(uint32_t level,uint16_t index)
-{
-    /*GPIO level select */
-        if(level==STD_LOW){
-            GPIO_ResetBit((gpioSignalsCfgTable+index)->GPIO,(gpioSignalsCfgTable+index)->mcal_config_gpio.pin);
-        }
-        if(level==STD_HIGH){
-            GPIO_SetBit((gpioSignalsCfgTable+index)->GPIO,(gpioSignalsCfgTable+index)->mcal_config_gpio.pin);
-        }
-    
-
-}
-
 void MCAL_GPIO_Init(void)
 {
     uint16 gpioIndex;
@@ -32,7 +19,7 @@ void MCAL_GPIO_Init(void)
 
         GPIO_Config((gpioSignalsCfgTable + gpioIndex)->GPIO, &gpioConfig);
         
-        GPIO_LEVEL_SET((gpioSignalsCfgTable+gpioIndex)->GPIO_level,gpioIndex);
+        GPIO_WriteBitValue((gpioSignalsCfgTable + gpioIndex)->GPIO,(gpioSignalsCfgTable + gpioIndex)->mcal_config_gpio.pin,(gpioSignalsCfgTable + gpioIndex)->GPIO_level);
     }
 }
 
