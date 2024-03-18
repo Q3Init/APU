@@ -317,7 +317,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOB PIN_12 : CS */
          .GPIO = GPIOB,
-         .GPIO_level = STD_LOW,
+         .GPIO_level = STD_HIGH,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOB,
          {
