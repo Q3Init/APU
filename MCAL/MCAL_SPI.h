@@ -5,6 +5,6 @@
 #include "MCAL_Cfg_SPI.h"
 
 extern void MCAL_SPI_Init(void);
-extern void SPI_DMA_Send(uint8_t *txbuffer,uint16_t data_len);
+extern void SPI_tansmission(uint8 *rx_buffer,uint8 *tx_buffer,uint16 len);
 
 #endif
