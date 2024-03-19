@@ -29,6 +29,7 @@ void MCAL_SPI_Init(void)
 
 void SPI_tansmission(uint8 *rx_buffer,uint8 *tx_buffer,uint16 len)
 {
+    GPIO_WriteBitValue(GPIOB,GPIO_PIN_12,0); /* CS LOW */
     DMA_ConfigDataNumber(DMA1_Channel4,len); //设置RX通道内存宽度
     DMA_ConfigDataNumber(DMA1_Channel5,len); //设置TX通道内存宽度
     
@@ -51,5 +52,6 @@ void SPI_tansmission(uint8 *rx_buffer,uint8 *tx_buffer,uint16 len)
     
     DMA_ClearStatusFlag(DMA1_FLAG_TC4);
     DMA_ClearStatusFlag(DMA1_FLAG_TC4);
+    GPIO_WriteBitValue(GPIOB,GPIO_PIN_12,1); /* CS HIGH */
 }
 
