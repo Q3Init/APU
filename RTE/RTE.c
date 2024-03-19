@@ -2,6 +2,7 @@
 #include "Os_EvtHdl.h"
 #include "Os_TimerHdl.h"
 #include "Os_TaskHdl_Lv0.h"
+#include "Lib_LCD_kernel.h"
 
 static volatile boolean rteBswRdyFlg = FALSE;
 
@@ -23,6 +24,8 @@ void RTE_Init(void)
     /* BSW Init */
     BSW_Adcif_Init();
     /* application Init */
+
+    menu_kernel_env_init();
 
     rteBswRdyFlg = TRUE; /* Init complete flag */
     __ENABLE_IRQ(); /* chip enable irq */
