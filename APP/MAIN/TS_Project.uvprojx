@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>APM32E103_MINI,DEBUG_INFO_ENABLE,ARM_MATH_CM3,__CC_ARM,ARM_MATH_MATRIX_CHECK,ARM_MATH_ROUNDING</Define>
               <Undefine></Undefine>
-              <IncludePath>..\main;..\applications;..\..\OS\OS_Driver;..\..\OS\OS_Task;..\..\RTE;..\..\TYPES;..\..\RTE;..\..\LIB;..\..\BSW;..\..\Cfg\BSW_Cfg;..\..\MCAL;..\..\Cfg\MCAL_Cfg;..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Driver\CMSIS\Include;..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\inc;..\..\DRIVER\Chip_Driver\APM32E103VE\User_Interface</IncludePath>
+              <IncludePath>..\main;..\applications;..\..\OS\OS_Driver;..\..\OS\OS_Task;..\..\RTE;..\..\TYPES;..\..\RTE;..\..\LIB;..\..\BSW;..\..\Cfg\BSW_Cfg;..\..\MCAL;..\..\Cfg\MCAL_Cfg;..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Driver\CMSIS\Include;..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\inc;..\..\DRIVER\Chip_Driver\APM32E103VE\User_Interface;..\..\ext-driver</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -703,6 +703,26 @@
               <FileName>arm_cortexM3l_math.lib</FileName>
               <FileType>4</FileType>
               <FilePath>..\..\LIB\arm_cortexM3l_math.lib</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>ext-driver</GroupName>
+          <Files>
+            <File>
+              <FileName>Ext_LCD_Driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ext-driver\Ext_LCD_Driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>Lib_LCD_kernel.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ext-driver\Lib_LCD_kernel.c</FilePath>
+            </File>
+            <File>
+              <FileName>Lib_LCD_menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ext-driver\Lib_LCD_menu.c</FilePath>
             </File>
           </Files>
         </Group>
