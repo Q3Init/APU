@@ -1,6 +1,8 @@
 #include "OS_TASK.h"
+/* User define */
 #include "MCAL_Cfg_DMA.h"
 #include "Lib_LCD_kernel.h"
+#include "BSW_Adcif.h"
 
 OS_LOCAL uint8 Os_TaskHdl_Lv0_Task0(void)
 {
@@ -12,7 +14,7 @@ OS_LOCAL uint8 Os_TaskHdl_Lv0_Task0(void)
 OS_LOCAL uint8 Os_TaskHdl_Lv0_Task1(void)
 {
     uint8 ret = OS_RET_OK;
-    menu_kernel_schedule();//just for test
+    //menu_kernel_schedule();//just for test
     return ret;
 }
 

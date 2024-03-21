@@ -25,7 +25,7 @@ void RTE_Init(void)
     BSW_Adcif_Init();
     /* application Init */
 
-    menu_kernel_env_init();
+    //menu_kernel_env_init();
 
     rteBswRdyFlg = TRUE; /* Init complete flag */
     __ENABLE_IRQ(); /* chip enable irq */

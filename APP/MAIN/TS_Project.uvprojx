@@ -724,6 +724,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\ext-driver\Lib_LCD_menu.c</FilePath>
             </File>
+            <File>
+              <FileName>Ext_MB85RS64.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ext-driver\Ext_MB85RS64.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
