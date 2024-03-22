@@ -6,14 +6,13 @@
 uint8 uart_log_buffer[MAX_LOG_MSG_LEN] = {0};
 
 enum output_selection_tag{
-    NO_LINE_LOG,
-    NO_LINE_FUNC_LOG,
-    NO_FILE_NAME_LINE_LOG,
-    NO_FILE_LINE_FUNC_LOG,
-    NO_LEVEL_FILE_LINE_LOG,
+    NO_MORE_INFO,
+    JUST_LEVEL_FUNC_LOG,
+    JUST_FUNC_LOG,
+    DEFAULT,
 };
 
-uint8 log_format = NO_LEVEL_FILE_LINE_LOG;/* false --> no file_name and line output in log*/
+uint8 log_format = JUST_FUNC_LOG;/* false --> no file_name and line output in log*/
 
 static char *level_str[] = {
     "DBG", "INF", "WRN", "ERR",
@@ -81,12 +80,13 @@ void Log_writter(const char *file, const char *func, const int line, const int l
 
     switch(log_format)
     {
-        case NO_LEVEL_FILE_LINE_LOG:
+        case NO_MORE_INFO:
             break;
-        case NO_FILE_LINE_FUNC_LOG:
-            break;
-        case NO_FILE_NAME_LINE_LOG:
+        case JUST_LEVEL_FUNC_LOG:
             log_length = HAL_Snprintf((char *)uart_log_buffer,MAX_LOG_MSG_LEN, "%s | %s: ", level_str[level], func);
+            break;
+        case JUST_FUNC_LOG:
+            log_length = HAL_Snprintf((char *)uart_log_buffer,MAX_LOG_MSG_LEN, "%s | ", func);
             break;
         default:
             log_length = HAL_Snprintf((char *)uart_log_buffer,MAX_LOG_MSG_LEN, "%s | %s |%s(%d): ", level_str[level],  file_name, func, line);
