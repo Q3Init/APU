@@ -616,13 +616,13 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
           .speed = GPIO_SPEED_50MHz
           }
         },
-        {/* GPIOD PIN_7 : I/O */
+        {/* GPIOD PIN_7 : 按键——reset */
          .GPIO = GPIOD,
          .GPIO_level = STD_LOW,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_IN_PD,
           .pin = GPIO_PIN_7,
           .speed = GPIO_SPEED_50MHz
           }
@@ -633,7 +633,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_IN_PD,
           .pin = GPIO_PIN_8,
           .speed = GPIO_SPEED_50MHz
           }
@@ -644,7 +644,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_IN_PD,
           .pin = GPIO_PIN_9,
           .speed = GPIO_SPEED_50MHz
           }
@@ -655,7 +655,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_IN_PD,
           .pin = GPIO_PIN_10,
           .speed = GPIO_SPEED_50MHz
           }
@@ -666,7 +666,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_IN_PD,
           .pin = GPIO_PIN_11,
           .speed = GPIO_SPEED_50MHz
           }
@@ -677,7 +677,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_IN_PD,
           .pin = GPIO_PIN_12,
           .speed = GPIO_SPEED_50MHz
           }
@@ -688,7 +688,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_IN_PD,
           .pin = GPIO_PIN_13,
           .speed = GPIO_SPEED_50MHz
           }
@@ -699,7 +699,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_IN_PD,
           .pin = GPIO_PIN_14,
           .speed = GPIO_SPEED_50MHz
           }
@@ -710,7 +710,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_IN_PD,
           .pin = GPIO_PIN_15,
           .speed = GPIO_SPEED_50MHz
           }

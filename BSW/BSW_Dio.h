@@ -53,7 +53,7 @@
 #define DIO_PIN_DI7_m  GPIO_PIN_4
 #define DIO_PIN_DI8_m  GPIO_PIN_5
 #define DIO_PIN_DI9_m  GPIO_PIN_6
-#define DIO_PIN_DI10_m GPIO_PIN_7
+#define DIO_PIN_reset GPIO_PIN_7
 #define DIO_PIN_return GPIO_PIN_8
 #define DIO_PIN_enter  GPIO_PIN_9
 #define DIO_PIN_up     GPIO_PIN_10
@@ -66,13 +66,13 @@
 /*GPIOE*/
 #define DIO_PORT_E     GPIOE
 #define DIO_PIN_D08_C  GPIO_PIN_0
-#define DIO_PIN_communication GPIO_PIN_7
-#define DIO_PIN_disconnet GPIO_PIN_8
-#define DIO_PIN_closing   GPIO_PIN_9
-#define DIO_PIN_warnning  GPIO_PIN_10
-#define DIO_PIN_fault  GPIO_PIN_11
-#define DIO_PIN_OverVoltage   GPIO_PIN_12
-#define DIO_PIN_OVerCurrent  GPIO_PIN_13
+#define DIO_PIN_working GPIO_PIN_7
+#define DIO_PIN_keyopen GPIO_PIN_8
+#define DIO_PIN_keyclose   GPIO_PIN_9
+#define DIO_PIN_fault  GPIO_PIN_10
+#define DIO_PIN_warning  GPIO_PIN_11
+#define DIO_PIN_communication   GPIO_PIN_12
+#define DIO_PIN_EI13_m  GPIO_PIN_13
 #define DIO_PIN_HC_C   GPIO_PIN_14
 #define DIO_PIN_TQ_C   GPIO_PIN_15
 
