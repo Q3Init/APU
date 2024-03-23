@@ -23,6 +23,7 @@ void RTE_Init(void)
     MCAL_DMA_Init();
     /* BSW Init */
     BSW_Adcif_Init();
+    BSW_Nvm_Init();
     /* application Init */
 
     //menu_kernel_env_init();

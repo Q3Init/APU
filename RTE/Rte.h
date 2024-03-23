@@ -15,6 +15,7 @@
 #include "MCAL_UART.h"
 /* BSW */
 #include "BSW_Adcif.h"
+#include "BSW_NvM.h"
 
 #define __DISENBLE_IRQ() __disable_irq()
 #define __ENABLE_IRQ() __enable_irq()
