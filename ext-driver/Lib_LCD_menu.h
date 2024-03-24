@@ -4,6 +4,10 @@
 #include "Lib_LCD_kernel.h"
 #include "Ext_LCD_Driver.h"
 
+extern uint8_t cur_menu_type_ptr_from_env_get(void);
+extern void msg_lock_from_env_set(uint8_t msg_lock_level);
+extern void cur_menu_type_ptr_from_env_set(uint8_t cur_menu_type_ptr);
+
 /* Please register here your menu handlers*/
 extern struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * run_monitor_handler(uint8_t msg_process_signal, uint8_t msg_context);

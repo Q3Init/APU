@@ -232,12 +232,16 @@ extern void cur_menu_level_from_env_set(uint32_t level_target);
 extern void msg_source_from_env_set(uint8_t msg_source);
 extern void msg_destination_from_env_set(uint8_t msg_destination);
 extern void msg_source_from_env_set(uint8_t msg_source);
+extern void menu_level_from_env_set(uint8_t first_level, uint8_t second_level, uint8_t third_level);
+extern void cur_menu_type_ptr_from_env_set(uint8_t cur_menu_type_ptr);
+extern void msg_lock_from_env_set(uint8_t msg_lock_level);
 extern uint8_t msg_status_from_env_get(void);
 extern uint8_t msg_context_from_env_get(void);
 extern uint8_t msg_source_from_env_get(void);
 extern uint8_t msg_destination_from_env_get(void);
 extern uint32_t cur_menu_level_from_env_get(void);
-extern void menu_level_from_env_set(uint8_t first_level, uint8_t second_level, uint8_t third_level);
+extern uint8_t cur_menu_type_ptr_from_env_get(void);
+extern uint8_t msg_lock_from_env_get(void);
 /* !!!!!!!!!!! Prohibit calling the above function in interrupt_function !!!!!!!!!!!*/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 
