@@ -132,17 +132,22 @@ enum MSG_LAYER{
 	MODBUS_LAYER,
 };
 
+enum MSG_PRIORITY_MASK{
+	LCD_LAYER_MSG_PRIORITY_MASK = 0X01,
+	OTHER_LAYER_MSG_PRIORITY_MASK = 0x02,
+};
+
 enum MSG_CONTEXT{
 	NO_MSG_CONTEXT,
-	KEY_LEFT,
-	KEY_RIGHT,
-	KEY_UP,
-	KEY_DOWN,
-	KEY_RETURN,
-	KEY_ENTER,
-	KEY_PLUS,
-	KEY_MINUS,
-    FLUSH_SCREEN,
+	KEY_LEFT,				/* 1 */
+	KEY_RIGHT,				/* 2 */
+	KEY_UP,					/* 3 */
+	KEY_DOWN,				/* 4 */
+	KEY_RETURN,				/* 5 */
+	KEY_ENTER,				/* 6 */
+	KEY_PLUS,				/* 7 */
+	KEY_MINUS,				/* 8 */
+    FLUSH_SCREEN,			/* 9 */
 	UNKNOW_MSG_CONTEXT,
 };
 
@@ -167,13 +172,21 @@ struct msg_info_tag
 	uint8_t msg_status;
 };
 
+struct menu_cursor_history_tag
+{
+	uint8_t top_menu_cursor;
+	uint8_t first_menu_cursor;
+	uint8_t second_menu_cursor;
+	uint8_t third_menu_cursor;
+};
+
 struct menu_kernel_env_tag{
 	uint8_t cur_menu_status;//menu operation should be ignored if there is no external signal 
-	uint8_t cur_cmd;
-	uint32_t cur_menu_level;
+	uint8_t cur_menu_type_ptr; //storage current menu cursor
+	uint32_t cur_menu_level; //storage current menu level in all
 	uint8_t last_menu_level;
-	uint8_t last_menu_cmd;
-	uint8_t request_cmd;
+	struct menu_cursor_history_tag menu_cursor_history;
+	uint8_t msg_lock; // bit[0]:LCD(highest Priority!)  bit[1]:other Layer
 	struct msg_info_tag msg_info;
 };
 

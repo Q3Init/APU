@@ -224,12 +224,49 @@ uint32_t cur_menu_level_from_env_get()
 	return menu_kernel_env.cur_menu_level;
 }
 
+void cur_menu_type_ptr_from_env_set(uint8_t cur_menu_type_ptr)
+{
+	menu_kernel_env.cur_menu_type_ptr = cur_menu_type_ptr;
+}
+
+uint8_t cur_menu_type_ptr_from_env_get()
+{
+	return menu_kernel_env.cur_menu_type_ptr;
+}
+
+void msg_lock_from_env_set(uint8_t msg_lock_level)
+{
+	menu_kernel_env.msg_lock = msg_lock_level;
+}
+
+uint8_t msg_lock_from_env_get()
+{
+	return menu_kernel_env.msg_lock;
+}
+
 void msg_send_to_lcd_layer(uint8_t msg_source, uint8_t msg_destination, uint8_t msg_status, uint8_t msg_context)
 {
-	msg_source_from_env_set(msg_source);
-	msg_destination_from_env_set(msg_destination);
-	msg_status_from_env_set(msg_status);
-	msg_context_from_env_set(msg_context);
+	uint8_t msg_lock = msg_lock_from_env_get();
+
+	do
+	{
+		if(msg_lock & LCD_LAYER_MSG_PRIORITY_MASK)
+		{
+			break;
+		}
+
+		if(msg_source == LCD_LAYER)
+		{
+			msg_lock = (msg_lock | (1<<0));
+			// msg_lock = 1;
+			msg_lock_from_env_set(msg_lock);//lock the msg
+		}
+
+		msg_source_from_env_set(msg_source);
+		msg_destination_from_env_set(msg_destination);
+		msg_status_from_env_set(msg_status);
+		msg_context_from_env_set(msg_context);
+	}while (false);
 }
 
 /*
@@ -283,7 +320,7 @@ void lcd_menu_level_search_and_action(void)
 		{
 			if((tbl_ptr+menu_handle_idx)->menu_type == (menu_type_info->menu_type))
 			{
-				call_evt = (tbl_ptr->func==NULL) ? NULL:tbl_ptr->func(msg_process_signal,msg_context);
+				call_evt = ((tbl_ptr+menu_handle_idx)->func==NULL) ? NULL:(tbl_ptr+menu_handle_idx)->func(msg_process_signal,msg_context);
 				break;
 			}
 		}
@@ -297,7 +334,11 @@ void lcd_menu_level_search_and_action(void)
 		//process the handler_event
 		if((call_evt->status == EVT_NO_ERROR) && (msg_process_signal == true) && (call_evt->msg_operation==MSG_RESUMED))
 		{
-			msg_status_from_env_set(MSG_RESUMED);// indicate the msg is resumed
+			uint8_t msg_lock = msg_lock_from_env_get();
+			if((msg_lock & LCD_LAYER_MSG_PRIORITY_MASK) == 0)
+			{
+				msg_status_from_env_set(MSG_RESUMED);// indicate the msg is resumed
+			}
 		}
 
 		free(menu_type_info);
@@ -322,13 +363,13 @@ void menu_level_from_env_set(uint8_t first_level, uint8_t second_level, uint8_t 
 		{
 			menu_level_target |= (second_level<<SECOND_MENU_BIT_BASE);
 		}
-		
+
 		if(third_level != UNKNOW_THIRD_MENU)
 		{
 			menu_level_target |= (third_level<<THIRD_MENU_BIT_BASE);
 		}
 	}while(false);
-	Log_d("HELLO! set menu level:%d \n",menu_level_target);
+	Log_d("HELLO! set menu level:%d \r\n",menu_level_target);
 	cur_menu_level_from_env_set(menu_level_target);
     
 //	menu_kernel_env.cur_menu_level = (first_level<<FIRST_MENU_BIT_BASE)|
@@ -341,7 +382,7 @@ void menu_kernel_env_init(void)
 //	Log_d("HELLO! kernel_env size:%d \n",sizeof(struct menu_kernel_env_tag));
 	memset(&menu_kernel_env, 0x00, sizeof(struct menu_kernel_env_tag));
 	//msg_send_to_lcd_layer(UNKNOW_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_RETURN);
-	msg_send_to_lcd_layer(UNKNOW_LAYER, UNKNOW_LAYER, MSG_AVAILABLE, NO_MSG_CONTEXT);
+	msg_send_to_lcd_layer(UNKNOW_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 	menu_level_from_env_set(TOP_NODE_MENU, UNKNOW_SECOND_MENU, UNKNOW_THIRD_MENU);
 
 //	menu_kernel_env->cur_cmd = ;
