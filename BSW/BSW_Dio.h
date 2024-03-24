@@ -178,7 +178,7 @@
 
 extern uint8 BSW_Dio_ReadInputBit(GPIO_T* port, uint16_t pin);
 extern void BSW_Dio_WriteBitValue(GPIO_T* port, uint16_t pin, uint8_t bitVal);
-extern uint8 BSW_Dio_FlipcBit(GPIO_T* port, uint16_t pin);
+extern void BSW_Dio_FlipcBit(GPIO_T* port, uint16_t pin);
 
 #endif
 
