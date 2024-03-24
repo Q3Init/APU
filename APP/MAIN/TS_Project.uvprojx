@@ -10,7 +10,7 @@
       <TargetName>APU</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
+      <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>APM32E103VE</Device>
@@ -722,14 +722,14 @@
               <FilePath>..\..\ext-driver\Ext_MB85RS64.c</FilePath>
             </File>
             <File>
-              <FileName>KEY.c</FileName>
+              <FileName>Ext_KEY.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ext-driver\KEY.c</FilePath>
+              <FilePath>..\..\ext-driver\Ext_KEY.c</FilePath>
             </File>
             <File>
-              <FileName>LED.c</FileName>
+              <FileName>Ext_LED.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ext-driver\LED.c</FilePath>
+              <FilePath>..\..\ext-driver\Ext_LED.c</FilePath>
             </File>
           </Files>
         </Group>

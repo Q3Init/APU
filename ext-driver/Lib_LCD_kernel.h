@@ -3,6 +3,7 @@
 
 #include "Platform_Types.h"
 #include "Lib_Log_Util.h"
+#include "Ext_KEY.h"
 
 #define uint8_t uint8
 #define uint32_t uint32
@@ -139,16 +140,8 @@ enum MSG_PRIORITY_MASK{
 
 enum MSG_CONTEXT{
 	NO_MSG_CONTEXT,
-	KEY_LEFT,				/* 1 */
-	KEY_RIGHT,				/* 2 */
-	KEY_UP,					/* 3 */
-	KEY_DOWN,				/* 4 */
-	KEY_RETURN,				/* 5 */
-	KEY_ENTER,				/* 6 */
-	KEY_PLUS,				/* 7 */
-	KEY_MINUS,				/* 8 */
-    FLUSH_SCREEN,			/* 9 */
-	UNKNOW_MSG_CONTEXT,
+    FLUSH_SCREEN=9,			/* 9 */
+	UNKNOW_MSG_CONTEXT=10,
 };
 
 enum MSG_STATE_TYPE{
