@@ -1,5 +1,5 @@
-#ifndef __LED_H_
-#define __LED_H_
+#ifndef __EXT_LED_H_
+#define __EXT_LED_H_
 
 #include "MCAL_CfgList.h"
 #include "BSW_Dio.h"

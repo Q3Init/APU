@@ -1,5 +1,5 @@
-#ifndef __KEY_H_
-#define __KEY_H_
+#ifndef __EXT_KEY_H_
+#define __EXT_KEY_H_
 
 # include "MCAL_CfgList.h"
 # include "OS_TASK.h"

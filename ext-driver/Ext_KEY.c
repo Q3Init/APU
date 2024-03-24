@@ -1,4 +1,4 @@
-#include "KEY.h"
+#include "Ext_KEY.h"
 
 uint8 KEY_Reset(void)
 {
