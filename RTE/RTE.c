@@ -18,9 +18,11 @@ void RTE_Init(void)
     /* MCAL Init */
     MCAL_GPIO_Init();
     // MCAL_UART_Init();
-    MCAL_ADC_Init();
     MCAL_SPI_Init();
+    MCAL_Timer_Init();
     MCAL_DMA_Init();
+    MCAL_Nvic_Init();
+    MCAL_ADC_Init();
     /* BSW Init */
     BSW_Adcif_Init();
     BSW_Nvm_Init();

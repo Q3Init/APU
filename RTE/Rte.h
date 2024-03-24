@@ -13,6 +13,8 @@
 #include "MCAL_DMA.h"
 #include "MCAL_SPI.h"
 #include "MCAL_UART.h"
+#include "MCAL_Timer.h"
+#include "MCAL_NVIC.h"
 /* BSW */
 #include "BSW_Adcif.h"
 #include "BSW_NvM.h"

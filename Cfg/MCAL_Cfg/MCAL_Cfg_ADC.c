@@ -9,8 +9,8 @@ const ADCSignalsCfg adcSignalsCfgTable[ADC_SIGNALS_CNT] =
         {
             .mode = ADC_MODE_INDEPENDENT,
             .scanConvMode = ENABLE,
-            .continuosConvMode = ENABLE,
-            .externalTrigConv = ADC_EXT_TRIG_CONV_None,
+            .continuosConvMode = DISABLE,
+            .externalTrigConv = ADC_EXT_TRIG_CONV_TMR3_TRGO,
             .dataAlign = ADC_DATA_ALIGN_RIGHT,
             .nbrOfChannel = 6
         }

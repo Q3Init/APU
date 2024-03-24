@@ -15,5 +15,6 @@
 #include "apm32e10x_adc.h"
 #include "apm32e10x_dma.h"
 #include "apm32e10x_spi.h"
+#include "apm32e10x_tmr.h"
 
 #endif

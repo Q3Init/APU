@@ -621,6 +621,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\MCAL\MCAL_UART.c</FilePath>
             </File>
+            <File>
+              <FileName>MCAL_NVIC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\MCAL\MCAL_NVIC.c</FilePath>
+            </File>
+            <File>
+              <FileName>MCAL_Timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\MCAL\MCAL_Timer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
