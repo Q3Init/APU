@@ -1,7 +1,7 @@
 #include "Ext_MB85RS64.h"
 
-static uint8 mb85rs64_txbuffer[SPI_DATA_LEN] = {0};
-static uint8 mb85rs64_rxbuffer[SPI_DATA_LEN] = {0};
+uint8 mb85rs64_txbuffer[SPI_DATA_LEN] = {0};
+uint8 mb85rs64_rxbuffer[SPI_DATA_LEN] = {0};
 
 /************************************************************************************
 功能描述：在指定地址开始擦除指定长度的数据

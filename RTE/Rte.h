@@ -18,6 +18,9 @@
 /* BSW */
 #include "BSW_Adcif.h"
 #include "BSW_NvM.h"
+/* APP */
+#include "APP_Scroll_storage.h"
+#include "APP_test.h"
 
 #define __DISENBLE_IRQ() __disable_irq()
 #define __ENABLE_IRQ() __enable_irq()

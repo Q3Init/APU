@@ -6,7 +6,6 @@ void MCAL_SPI_Init(void)
     uint8 spiIndex;
     SPI_Config_T spiConfig;
   
-
     for (spiIndex = 0; spiIndex < SPI_SIGNALS_CNT; spiIndex++) {
         /* Enable related Clock */
         RCM_EnableAPB1PeriphClock((spiSignalsCfgTable + spiIndex)->clock);
@@ -24,7 +23,6 @@ void MCAL_SPI_Init(void)
         SPI_I2S_EnableDMA(SPI2,SPI_I2S_DMA_REQ_RX);
         SPI_Enable((spiSignalsCfgTable + spiIndex)->spi);    
     }
-    GPIO_WriteBitValue(GPIOB,GPIO_PIN_12,1); /* CS HIGH */
 }
 
 void SPI_tansmission(uint8 *rx_buffer,uint8 *tx_buffer,uint16 len)

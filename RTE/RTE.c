@@ -27,7 +27,8 @@ void RTE_Init(void)
     BSW_Adcif_Init();
     BSW_Nvm_Init();
     /* application Init */
-
+    APP_Scroll_storage_Init();
+    APP_test_Init(); /* test */
     //menu_kernel_env_init();
 
     rteBswRdyFlg = TRUE; /* Init complete flag */

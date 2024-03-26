@@ -37,13 +37,15 @@ void BSW_Nvm_Mainfunction(void)
         } else if  (nvmCurrentCmd.Cmd == NVM_WRITE) {
             FRAM_Erase(nvmCurrentCmd.block,nvmCurrentCmd.len);
             FRAM_Write(nvmCurrentCmd.data,nvmCurrentCmd.block,nvmCurrentCmd.len);
+        } else if (nvmCurrentCmd.Cmd == NVM_Erase) {
+            FRAM_Erase(nvmCurrentCmd.block,nvmCurrentCmd.len);
         } else {
             /* nothing to do */
         }
     }
 }
 
-void BSW_Nvm_Block(uint16 block,void *data,uint16 len,NvmOpType Cmd)
+void BSW_Nvm_Block(uint16 block,uint16 len,void *data,NvmOpType Cmd)
 {
     nvmCmdFifo[nvmCmdTail].block = block;
     nvmCmdFifo[nvmCmdTail].len   = len;
