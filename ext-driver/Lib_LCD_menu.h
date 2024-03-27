@@ -19,4 +19,13 @@ extern struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_sign
 extern struct menu_event_tag * debug_mode_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * setting_in_factory_handler(uint8_t msg_process_signal, uint8_t msg_context);
 
+/* add your chars */
+extern uint8_t first_runing_monitor[];
+extern uint8_t main_menu[];
+extern uint8_t report_display[];
+extern uint8_t parameter_configure[];
+extern uint8_t fix_value_manage[];
+extern uint8_t debug_mode[];
+extern uint8_t factory_setting[];
+
 #endif /* __LIB_LCD_MENU_H */

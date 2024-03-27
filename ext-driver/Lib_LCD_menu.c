@@ -145,9 +145,16 @@ struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
-            LCD_ShowChinese(0,0,"中国",16);
-            LCD_ShowString(24,30,"LCD_W:",16);
-            LCD_ShowIntNum(72,30,4,1,16);
+            LCD_ShowChinese_garland(0, 0, main_menu, 3);
+
+            LCD_ShowChinese_garland(8, 13, first_runing_monitor, 4);
+            LCD_ShowChinese_garland(8, 26, parameter_configure, 4);
+            LCD_ShowChinese_garland(8, 39, debug_mode, 4);
+
+            LCD_ShowChinese_garland(64, 13, report_display, 4);
+            LCD_ShowChinese_garland(64, 26, fix_value_manage, 4);
+            LCD_ShowChinese_garland(64, 39, factory_setting, 4);
+
 			msg_lock_from_env_set(0);//unlock the msg
         }
 	}
@@ -190,7 +197,7 @@ struct menu_event_tag * run_monitor_handler(uint8_t msg_process_signal, uint8_t 
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
-            LCD_ShowChinese(0,0,"中国",16);
+            
             LCD_ShowString(24,30,"LCD_W:",16);
             LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
@@ -234,7 +241,7 @@ struct menu_event_tag * report_display_handler(uint8_t msg_process_signal, uint8
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
-            LCD_ShowChinese(0,0,"中国",16);
+             
             LCD_ShowString(24,30,"LCD_W:",16);
             LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
@@ -277,7 +284,7 @@ struct menu_event_tag * parameter_configure_handler(uint8_t msg_process_signal, 
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
-            LCD_ShowChinese(0,0,"中国",16);
+             
             LCD_ShowString(24,30,"LCD_W:",16);
             LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
@@ -321,7 +328,7 @@ struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uin
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
-            LCD_ShowChinese(0,0,"中国",16);
+             
             LCD_ShowString(24,30,"LCD_W:",16);
             LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
@@ -364,7 +371,7 @@ struct menu_event_tag * debug_mode_handler(uint8_t msg_process_signal, uint8_t m
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
-            LCD_ShowChinese(0,0,"中国",16);
+             
             LCD_ShowString(24,30,"LCD_W:",16);
             LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
@@ -406,7 +413,7 @@ struct menu_event_tag * setting_in_factory_handler(uint8_t msg_process_signal, u
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
-            LCD_ShowChinese(0,0,"中国",16);
+             
             LCD_ShowString(24,30,"LCD_W:",16);
             LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
@@ -436,7 +443,7 @@ struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
-            LCD_ShowChinese(0,0,"中国",16);
+             
             LCD_ShowString(24,30,"LCD_W:",16);
             LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
@@ -479,7 +486,7 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 		if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
-            LCD_ShowChinese(0,0,"中国",16);
+             
             LCD_ShowString(24,30,"LCD_W:",16);
             LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
