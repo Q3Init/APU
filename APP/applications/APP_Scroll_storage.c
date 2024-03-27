@@ -11,8 +11,8 @@ static uint8 block3_cnt[BLOCK1_BLOCK3_CNT_LEN] = {0};
 
 void APP_Scroll_storage_Init(void)
 {
-    // BSW_Nvm_Block(BLOCK1_BLOCK2_CNT_ADRESS,BLOCK1_BLOCK2_CNT_LEN,block2_cnt,NVM_READ); /* The number of block2 storage items is read */
-    // BSW_Nvm_Block(BLOCK1_BLOCK3_CNT_ADRESS,BLOCK1_BLOCK3_CNT_LEN,block3_cnt,NVM_READ); /* The number of block3 storage items is read */
+    BSW_Nvm_Block(BLOCK1_BLOCK2_CNT_ADRESS,BLOCK1_BLOCK2_CNT_LEN,block2_cnt,NVM_READ); /* The number of block2 storage items is read */
+    BSW_Nvm_Block(BLOCK1_BLOCK3_CNT_ADRESS,BLOCK1_BLOCK3_CNT_LEN,block3_cnt,NVM_READ); /* The number of block3 storage items is read */
     block2_writeIndex = (uint16)(block2_cnt[1] << 8) + (uint16)block2_cnt[0];
     block3_writeIndex = (uint16)(block3_cnt[1] << 8) + (uint16)block3_cnt[0];
 }

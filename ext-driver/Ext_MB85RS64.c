@@ -1,7 +1,7 @@
 #include "Ext_MB85RS64.h"
 
-uint8 mb85rs64_txbuffer[SPI_DATA_LEN] = {0};
-uint8 mb85rs64_rxbuffer[SPI_DATA_LEN] = {0};
+static uint8 mb85rs64_txbuffer[SPI_DATA_LEN] = {0};
+static uint8 mb85rs64_rxbuffer[SPI_DATA_LEN] = {0};
 
 /************************************************************************************
 功能描述：在指定地址开始擦除指定长度的数据
@@ -58,7 +58,7 @@ void FRAM_Write(uint8 *tx_buffer,uint16 WriteAddr,uint16 len)
 入口参数：pbuf:数据存储区  ReadAddr:读数据首地址  Len:要读取的字节数
 返回值：无 
 *************************************************************************************/
-void FRAM_Read(uint8 *rx_buffer,uint8 ReadAddr,uint16 len)
+void FRAM_Read(uint8 *rx_buffer,uint16 ReadAddr,uint16 len)
 {
     uint16 read_index;
     mb85rs64_txbuffer[0] = MB85RS64_READ;

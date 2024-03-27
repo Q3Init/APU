@@ -17,6 +17,6 @@
 
 extern void FRAM_Erase(uint16 EraseAddr,uint16 len);
 extern void FRAM_Write(uint8 *tx_buffer,uint16 WriteAddr,uint16 len);
-extern void FRAM_Read(uint8 *rx_buffer,uint8 ReadAddr,uint16 len);
+extern void FRAM_Read(uint8 *rx_buffer,uint16 ReadAddr,uint16 len);
 
 #endif
