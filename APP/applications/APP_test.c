@@ -10,13 +10,10 @@ uint8 rx2_buffer[48] = {0};
 uint8 block2[2] = {0};
 uint8 block3[2] = {0};
 static uint8 flag = 1;
-uint16 adress = 0x0100;
-uint8 tick = 4;
+uint8 tick = 1;
 
 void APP_test_Init(void)
 {
-    // APP_Scroll_storage_erase(0);
-    // APP_Scroll_storage_erase(1);
 
 }
 
@@ -24,8 +21,10 @@ void APP_test_Mainfunction(void)
 {
     if (tick > 0) {
         tick--;
-        // APP_Scroll_storage_write(0,tx1_buffer);
-        // APP_Scroll_storage_write(1,tx2_buffer);
+        // APP_Scroll_storage_erase(0);
+        // APP_Scroll_storage_erase(1);
+        APP_Scroll_storage_write(0,tx1_buffer);
+        APP_Scroll_storage_write(1,tx2_buffer);
     } else {
         if (flag == 1) {
             flag =0;

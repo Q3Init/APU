@@ -2,6 +2,7 @@
 #define  APP_SCROLL_STORAGE_H_
 
 #include "Platform_Types.h"
+#include "string.h"
 #include "BSW_NvM.h"
 
 #define Controls_block 0
