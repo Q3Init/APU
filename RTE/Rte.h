@@ -21,12 +21,14 @@
 /* APP */
 #include "APP_Scroll_storage.h"
 #include "APP_test.h"
+/* LCD kernel and driver */
+#include "Lib_LCD_kernel.h"
+#include "Ext_LCD_Driver.h"
 
 #define __DISENBLE_IRQ() __disable_irq()
 #define __ENABLE_IRQ() __enable_irq()
 
 extern void RTE_Init(void);
 extern boolean Get_rteBswRdyFlg(void);
-
 
 #endif

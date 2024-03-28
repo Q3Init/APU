@@ -1,11 +1,11 @@
 #include "Ext_LCD_Driver.h"
 
-#define lcd_sclk(x)  do{ if(x){GPIO_SetBit(GPIOA,GPIO_PIN_5);}else{GPIO_ResetBit(GPIOA,GPIO_PIN_5);} }while(false);
-#define lcd_rs(x)  do{ if(x){GPIO_SetBit(GPIOA,GPIO_PIN_4);}else{GPIO_ResetBit(GPIOA,GPIO_PIN_4);} }while(false);
-#define lcd_reset(x)  do{ if(x){GPIO_SetBit(GPIOA,GPIO_PIN_3);}else{GPIO_ResetBit(GPIOA,GPIO_PIN_3);} }while(false);
-#define lcd_cs1(x)  do{ if(x){GPIO_SetBit(GPIOA,GPIO_PIN_2);}else{GPIO_ResetBit(GPIOA,GPIO_PIN_2);} }while(false);
-#define lcd_sid(x)  do{ if(x){GPIO_SetBit(GPIOA,GPIO_PIN_6);}else{GPIO_ResetBit(GPIOA,GPIO_PIN_6);} }while(false);
-#define lcd_LED(x)  do{ if(x){GPIO_SetBit(GPIOA,GPIO_PIN_1);}else{GPIO_ResetBit(GPIOA,GPIO_PIN_1);} }while(false);
+#define lcd_sclk(x)  do{ if(x){GPIO_SetBit(GPIOE,GPIO_PIN_3);}else{GPIO_ResetBit(GPIOE,GPIO_PIN_3);} }while(false);
+#define lcd_rs(x)  do{ if(x){GPIO_SetBit(GPIOE,GPIO_PIN_4);}else{GPIO_ResetBit(GPIOE,GPIO_PIN_4);} }while(false);
+#define lcd_reset(x)  do{ if(x){GPIO_SetBit(GPIOE,GPIO_PIN_5);}else{GPIO_ResetBit(GPIOE,GPIO_PIN_5);} }while(false);
+#define lcd_cs1(x)  do{ if(x){GPIO_SetBit(GPIOE,GPIO_PIN_6);}else{GPIO_ResetBit(GPIOE,GPIO_PIN_6);} }while(false);
+#define lcd_sid(x)  do{ if(x){GPIO_SetBit(GPIOE,GPIO_PIN_2);}else{GPIO_ResetBit(GPIOE,GPIO_PIN_2);} }while(false);
+#define lcd_LED(x)  do{ if(x){GPIO_SetBit(GPIOC,GPIO_PIN_13);}else{GPIO_ResetBit(GPIOC,GPIO_PIN_13);} }while(false);
 
 
 uint32_t lcd_state_first_tbl[128]={0};//1~64 columes
@@ -20,7 +20,7 @@ enum PAGE_POSITION{
       LCD_PAGE_UNKOWN,
 };
 
-uint8_t first_runing_monitor[]=
+uint8_t run_monitor[]=
 {
 0x10,0x11,0xF2,0x00,0x10,0x92,0x52,0x32,0x12,0x92,0x10,0x00,
 0x08,0x04,0x03,0x04,0x09,0x09,0x09,0x09,0x09,0x09,0x0B,0x00,/*"运",0*/
@@ -90,7 +90,7 @@ uint8_t debug_mode[]=
 0x08,0x08,0x08,0x07,0x04,0x04,0x04,0x00,0x03,0x04,0x0E,0x00,/*"式",3*/
 };
 
-uint8_t factory_setting[]=
+uint8_t setting_in_factory[]=
 {
 0x00,0xC4,0x44,0x54,0x65,0x46,0x44,0x64,0x54,0x44,0x44,0x00,
 0x08,0x07,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,/*"产",0*/
@@ -226,12 +226,17 @@ void clear_screen()
 		}
 	}
  	lcd_cs1(1);
+
+      //clear the environment parameters
+      memset(lcd_state_first_tbl, 0x00, sizeof(lcd_state_first_tbl));
+      memset(lcd_state_second_tbl, 0x00, sizeof(lcd_state_second_tbl));
 }
 
-
 /* LCD模块初始化 */
-void initial_lcd()
+void Initial_LCD()
 {
+      lcd_cs1(0);/* set cs pin with low level */ 
+
       lcd_LED(1); /* 打开背光 */
 
 	lcd_cs1(0);
@@ -256,7 +261,7 @@ void initial_lcd()
 	transfer_command_lcd(0x40);  /* 起始行，第一行开始 */
 	transfer_command_lcd(0xaf);  /* 开显示 */
 	lcd_cs1(1);
-    clear_screen();
+      clear_screen();
 }
 
 void lcd_address(uint8_t page,uint8_t column)
@@ -321,7 +326,6 @@ void lcd_state_flush(uint8_t x_col,uint8_t y_row, uint8_t *ptr_center, uint8_t c
       uint8_t my_index=0;
       uint8_t page_idx = y_row/PAGE_SIZE+1;
       uint8_t page_occupy_num = (y_row+chinese_size+PAGE_SIZE-1)/PAGE_SIZE - y_row/PAGE_SIZE;//Note that y_row has to be separated to calculate!
-//      uint8_t colume_idx = x_col;
       uint8_t my_array[32]={0};
       uint8_t page_level = lcd_page_position_for_chinese_get(y_row, chinese_size, 2);
       uint32_t bit_mask = (0xffffffff >> (32-chinese_size));
@@ -337,7 +341,7 @@ void lcd_state_flush(uint8_t x_col,uint8_t y_row, uint8_t *ptr_center, uint8_t c
             uint32_t bit_high_mask_in_medium = (0xffffffff >> (31*2-y_row-chinese_size));
             uint8_t low_y_row = y_row;
             uint8_t high_y_row = chinese_size-32+y_row;//需要测试y_row=20
-//            uint8_t high_y_row_MSB = ((8-high_y_row)>0) ?  8-high_y_row: high_y_row-8;//需要测试y_row=20
+
             switch(page_level)
             {
                   case LCD_PAGE_LOW:
@@ -363,7 +367,6 @@ void lcd_state_flush(uint8_t x_col,uint8_t y_row, uint8_t *ptr_center, uint8_t c
                               {
                                     display_graphic_8x12(page_idx+my_index, x_col+1, my_array);
                               }
-                              delay(4000);
                         }
                         break;
                   case LCD_PAGE_MEDIUM:
@@ -410,7 +413,6 @@ void lcd_state_flush(uint8_t x_col,uint8_t y_row, uint8_t *ptr_center, uint8_t c
                               {
                                     display_graphic_8x12(page_idx+my_index, x_col+1, my_array);
                               }
-                              delay(4000);
                         }
                         break;
                   case LCD_PAGE_HIGH:
@@ -436,7 +438,6 @@ void lcd_state_flush(uint8_t x_col,uint8_t y_row, uint8_t *ptr_center, uint8_t c
                               {
                                     display_graphic_8x12(page_idx+my_index, x_col+1, my_array);
                               }
-                              delay(4000);
                         }
                         break;
                   default:
@@ -447,12 +448,13 @@ void lcd_state_flush(uint8_t x_col,uint8_t y_row, uint8_t *ptr_center, uint8_t c
             //LCD_PAGE_HIGH
             uint8_t high_row = (y_row-31);
             uint8_t high_page_idx = page_idx-4;
+
             //LCD_PAGE_MEDIUM
             uint32_t bit_low_mask_in_medium = (uint32_t)(0xffffffff >> (31-y_row));
             uint32_t bit_high_mask_in_medium = (0xffffffff >> (31*2-y_row-chinese_size));
             uint8_t low_y_row = y_row;
             uint8_t high_y_row = chinese_size-32+y_row;//需要测试y_row=20
-//            uint8_t high_y_row_MSB = ((8-high_y_row)>0) ?  8-high_y_row: high_y_row-8;//需要测试y_row=20
+
             switch(page_level)
             {
                   case LCD_PAGE_LOW:
@@ -478,7 +480,6 @@ void lcd_state_flush(uint8_t x_col,uint8_t y_row, uint8_t *ptr_center, uint8_t c
                               {
                                     display_graphic_8x12(page_idx+my_index, x_col+1, my_array);
                               }
-                              delay(4000);
                         }
                         break;
                   case LCD_PAGE_MEDIUM:
@@ -526,7 +527,6 @@ void lcd_state_flush(uint8_t x_col,uint8_t y_row, uint8_t *ptr_center, uint8_t c
                               {
                                     display_graphic_8x12(page_idx+my_index, x_col+1, my_array);
                               }
-                              delay(4000);
                         }
                         break;
                   case LCD_PAGE_HIGH:
@@ -552,7 +552,6 @@ void lcd_state_flush(uint8_t x_col,uint8_t y_row, uint8_t *ptr_center, uint8_t c
                               {
                                     display_graphic_8x12(page_idx+my_index, x_col+1, my_array);
                               }
-                              delay(4000);
                         }
                         break;
                   default:

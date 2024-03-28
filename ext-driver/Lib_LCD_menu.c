@@ -119,12 +119,6 @@ struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_
 	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
-	// my_flag++;
-
-	// if(my_flag == 3)
-	// {
-	// 	Log_d("\r\n  ME  \r\n");
-	// }
 
 	if(msg_process_signal == 1)
 	{
@@ -145,18 +139,81 @@ struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
-            LCD_ShowChinese_garland(0, 0, main_menu, 3);
-
-            LCD_ShowChinese_garland(8, 13, first_runing_monitor, 4);
-            LCD_ShowChinese_garland(8, 26, parameter_configure, 4);
-            LCD_ShowChinese_garland(8, 39, debug_mode, 4);
-
-            LCD_ShowChinese_garland(64, 13, report_display, 4);
-            LCD_ShowChinese_garland(64, 26, fix_value_manage, 4);
-            LCD_ShowChinese_garland(64, 39, factory_setting, 4);
-
+			clear_screen();
+			msg_context = 0xff;
 			msg_lock_from_env_set(0);//unlock the msg
         }
+
+		switch(msg_context)
+		{
+			case	0xff:
+			case    KEY_UP:
+    		case	KEY_DOWN:		
+    		case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, main_menu, 3);
+				switch(top_menu_array[menu_type_idx])
+				{
+					case RUN_MONITOR:
+						LCD_ShowChinese_no_garland(8, 13, run_monitor, 4);
+						LCD_ShowChinese_garland(8, 26, parameter_configure, 4);
+						LCD_ShowChinese_garland(8, 39, debug_mode, 4);
+
+						LCD_ShowChinese_garland(64, 13, report_display, 4);
+						LCD_ShowChinese_garland(64, 26, fix_value_manage, 4);
+						LCD_ShowChinese_garland(64, 39, setting_in_factory, 4);
+						break;
+					case REPORT_DISPLAY:
+						LCD_ShowChinese_garland(8, 13, run_monitor, 4);
+						LCD_ShowChinese_garland(8, 26, parameter_configure, 4);
+						LCD_ShowChinese_garland(8, 39, debug_mode, 4);
+
+						LCD_ShowChinese_no_garland(64, 13, report_display, 4);
+						LCD_ShowChinese_garland(64, 26, fix_value_manage, 4);
+						LCD_ShowChinese_garland(64, 39, setting_in_factory, 4);
+						break;
+					case PARAMETER_CONFIGURE:
+						LCD_ShowChinese_garland(8, 13, run_monitor, 4);
+						LCD_ShowChinese_no_garland(8, 26, parameter_configure, 4);
+						LCD_ShowChinese_garland(8, 39, debug_mode, 4);
+
+						LCD_ShowChinese_garland(64, 13, report_display, 4);
+						LCD_ShowChinese_garland(64, 26, fix_value_manage, 4);
+						LCD_ShowChinese_garland(64, 39, setting_in_factory, 4);
+						break;
+					case FIX_VALUE_MANAGE:
+						LCD_ShowChinese_garland(8, 13, run_monitor, 4);
+						LCD_ShowChinese_garland(8, 26, parameter_configure, 4);
+						LCD_ShowChinese_garland(8, 39, debug_mode, 4);
+
+						LCD_ShowChinese_garland(64, 13, report_display, 4);
+						LCD_ShowChinese_no_garland(64, 26, fix_value_manage, 4);
+						LCD_ShowChinese_garland(64, 39, setting_in_factory, 4);
+						break;
+					case DEBUG_MODE:
+						LCD_ShowChinese_garland(8, 13, run_monitor, 4);
+						LCD_ShowChinese_garland(8, 26, parameter_configure, 4);
+						LCD_ShowChinese_no_garland(8, 39, debug_mode, 4);
+
+						LCD_ShowChinese_garland(64, 13, report_display, 4);
+						LCD_ShowChinese_garland(64, 26, fix_value_manage, 4);
+						LCD_ShowChinese_garland(64, 39, setting_in_factory, 4);
+						break;
+					case SETTING_IN_FACTORY:
+						LCD_ShowChinese_garland(8, 13, run_monitor, 4);
+						LCD_ShowChinese_garland(8, 26, parameter_configure, 4);
+						LCD_ShowChinese_garland(8, 39, debug_mode, 4);
+
+						LCD_ShowChinese_garland(64, 13, report_display, 4);
+						LCD_ShowChinese_garland(64, 26, fix_value_manage, 4);
+						LCD_ShowChinese_no_garland(64, 39, setting_in_factory, 4);
+						break;
+				}
+				break;
+			default:
+				break;
+		}
 	}
 
 	return menu_evt;

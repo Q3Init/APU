@@ -26,6 +26,6 @@ extern uint8_t report_display[];
 extern uint8_t parameter_configure[];
 extern uint8_t fix_value_manage[];
 extern uint8_t debug_mode[];
-extern uint8_t factory_setting[];
+extern uint8_t setting_in_factory[];
 
 #endif /* __LIB_LCD_MENU_H */

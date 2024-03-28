@@ -2,10 +2,8 @@
 #include "Os_EvtHdl.h"
 #include "Os_TimerHdl.h"
 #include "Os_TaskHdl_Lv0.h"
-#include "Lib_LCD_kernel.h"
 
 static volatile boolean rteBswRdyFlg = FALSE;
-
 void RTE_Init(void)
 {
     __DISENBLE_IRQ(); /* chip disable irq */
@@ -17,7 +15,7 @@ void RTE_Init(void)
     OsTimer_Init();
     /* MCAL Init */
     MCAL_GPIO_Init();
-    // MCAL_UART_Init();
+    MCAL_UART_Init();
     MCAL_SPI_Init();
     MCAL_Timer_Init();
     MCAL_DMA_Init();
@@ -29,7 +27,11 @@ void RTE_Init(void)
     /* application Init */
     APP_Scroll_storage_Init();
     APP_test_Init(); /* test */
-    //menu_kernel_env_init();
+
+    /* LCD kernel init */
+    menu_kernel_env_init();
+    /* LCD driver and menu init */
+	Initial_LCD();	
 
     rteBswRdyFlg = TRUE; /* Init complete flag */
     __ENABLE_IRQ(); /* chip enable irq */
