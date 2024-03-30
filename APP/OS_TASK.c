@@ -36,7 +36,7 @@ OS_LOCAL uint8 Os_TaskHdl_Lv0_Task3(void)
     return ret;
 }
 
-void OS_Delay_us(uint16 counter)
+void OS_Delay_us(uint32 counter)
 {
     counter *=9;
     while(counter--);

@@ -4,6 +4,7 @@
 #include "MCAL_CfgList.h"
 #include "BSW_Dio.h"
 
+
 /*工作指示灯，正常工作时，0.5s闪烁*/
 extern void LED_working_ON(void);
 extern void LED_working_OFF(void);
@@ -19,5 +20,6 @@ extern void LED_warning_OFF(void);
 /*通信指示灯，通信正常时常亮*/
 extern void LED_communicatin_ON(void);
 extern void LED_communicatin_OFF(void);
+
 
 #endif

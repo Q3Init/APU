@@ -4,7 +4,7 @@
 #include "BSW_NvM.h"
 #include "Lib_LCD_kernel.h"
 #include "Ext_LCD_Driver.h"
-#include "Ext_KEY.h"
+#include "APP_KEY_State_Get.h"
 
 void lcd_test_main(void);
 void key_state_process(uint8_t key_state);
@@ -66,72 +66,6 @@ void lcd_test_main(void)
         single_row_continue_printf_12x12_chinese_in_lcd(64, 39, setting_in_factory, 4, 12, 1);
         flag++;
     }
-}
-
-uint8 key_state_get(void)
-{
-    uint8 state = 0xff;
-
-    do
-    {
-        state = KEY_Reset();
-        if(state == KEY_RESET)
-        {
-            break;
-        }
-
-        state = KEY_Return();
-        if(state == KEY_RETURN)
-        {
-            break;
-        }
-
-        state = KEY_Enter();
-        if(state == KEY_ENTER)
-        {
-            break;
-        }
-
-        state = KEY_Up();
-        if(state == KEY_UP)
-        {
-            break;
-        }
-
-        state = KEY_Down();
-        if(state == KEY_DOWN)
-        {
-            break;
-        }
-
-        state = KEY_Left();
-        if(state == KEY_LEFT)
-        {
-            break;
-        }
-
-        state = KEY_Right();
-        if(state == KEY_RIGHT)
-        {
-            break;
-        }
-
-        state = KEY_Minus();
-        if(state == KEY_MINUS)
-        {
-            break;
-        }
-
-        state = KEY_Plus();
-        if(state == KEY_PLUS)
-        {
-            break;
-        }
-
-        state = 0xff;//NONE!
-    } while (false);
-
-    return state;
 }
 
 
