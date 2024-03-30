@@ -44,7 +44,7 @@ void APP_test_Mainfunction(void)
         }
     }
 
-    key_task_test_for_lin();
+    //key_task_test_for_lin();
     // lcd_test_main();//just for lcd driver test
 }
 

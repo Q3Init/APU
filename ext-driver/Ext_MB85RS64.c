@@ -1,4 +1,5 @@
 #include "Ext_MB85RS64.h"
+#include "Lib_Log_Util.h"
 
 static uint8 mb85rs64_txbuffer[SPI_DATA_LEN] = {0};
 static uint8 mb85rs64_rxbuffer[SPI_DATA_LEN] = {0};
@@ -11,6 +12,7 @@ static uint8 mb85rs64_rxbuffer[SPI_DATA_LEN] = {0};
 void FRAM_Erase(uint16 EraseAddr,uint16 len)
 {
     uint16 erase_index = 0;
+    Log_d("erase addr:0x%x,len: %d\n",EraseAddr,len);
     mb85rs64_txbuffer[0] = MB85RS64_WREN; //写使能FRAM 
     mb85rs64_rxbuffer[0] = 0xFF;
     SPI_tansmission(mb85rs64_rxbuffer,mb85rs64_txbuffer,1);
@@ -36,6 +38,7 @@ void FRAM_Erase(uint16 EraseAddr,uint16 len)
 void FRAM_Write(uint8 *tx_buffer,uint16 WriteAddr,uint16 len)
 {
     uint16 write_index = 0;
+    Log_d("tx_buffer:0x%x,write addr:0x%x,len: %d\n",tx_buffer,WriteAddr,len);
     mb85rs64_txbuffer[0] = MB85RS64_WREN; //写使能FRAM 
     mb85rs64_rxbuffer[0] = 0xFF;
     SPI_tansmission(mb85rs64_rxbuffer,mb85rs64_txbuffer,1);
@@ -61,6 +64,7 @@ void FRAM_Write(uint8 *tx_buffer,uint16 WriteAddr,uint16 len)
 void FRAM_Read(uint8 *rx_buffer,uint16 ReadAddr,uint16 len)
 {
     uint16 read_index;
+    Log_d("rx_buffer:0x0x%x,read addr:0x%x,len: %d\n",rx_buffer,ReadAddr,len);
     mb85rs64_txbuffer[0] = MB85RS64_READ;
     mb85rs64_txbuffer[1] = ((uint8)((ReadAddr & 0xff00) >>8));
     mb85rs64_txbuffer[2] = ((uint8)ReadAddr);   

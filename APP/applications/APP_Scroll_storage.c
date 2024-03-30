@@ -1,4 +1,5 @@
 #include "APP_Scroll_storage.h"
+#include "Lib_Log_Util.h"
 
 static uint16 block2_writeIndex = 0;
 static uint16 block3_writeIndex = 0;
@@ -56,17 +57,39 @@ void APP_Scroll_storage_read(uint8 block,uint8 pages,void* data)
 
 void APP_Scroll_storage_erase(uint8 block)
 {
-    uint8 *erase;
+    uint8 *erase1;
+    uint8 *erase2;
+    uint8 erase_index = 0;
+    uint8 erase_block = 0;
+    uint16 erase_address = 0;
     if (block == Controls_block) {
+        erase_index = block2_writeIndex / 32;
         memset(&block2_writeIndex,0,sizeof(block2_writeIndex));
         memset(block2_cnt,0,sizeof(block2_cnt));
         FRAM_Erase(BLOCK1_BLOCK2_CNT_ADRESS,BLOCK1_BLOCK2_CNT_LEN);
-        BSW_Nvm_Block(BASE_BLOCK2_ADRESS,3072,(void *)erase,NVM_Erase);
+        Log_d("block2 erase_index:%d\n",erase_index);
+        if (erase_index == 0) {
+            Log_d("block2 erase\n");
+            BSW_Nvm_Block(BASE_BLOCK2_ADRESS,384,&erase1,NVM_Erase);
+        }
+        for (erase_block = 0; erase_block < erase_index; erase_block++) {
+            erase_address = BASE_BLOCK2_ADRESS + erase_block * 384;
+            BSW_Nvm_Block(erase_address,384,&erase1,NVM_Erase);
+        }
     } else if (block == Error_Block) {
+        erase_index = block3_writeIndex / 32;
         memset(&block3_writeIndex,0,sizeof(block3_writeIndex));
         memset(block3_cnt,0,sizeof(block3_cnt));
         FRAM_Erase(BLOCK1_BLOCK3_CNT_ADRESS,BLOCK1_BLOCK3_CNT_LEN);
-        BSW_Nvm_Block(BASE_BLOCK3_ADRESS,3072,(void *)erase,NVM_Erase);
+        Log_d("block3 erase_index:%d\n",erase_index);
+        if (erase_index == 0) {
+            Log_d("block3 erase\n");
+            BSW_Nvm_Block(BASE_BLOCK3_ADRESS,384,&erase2,NVM_Erase);
+        }
+        for (erase_block = 0; erase_block < erase_index; erase_block++) {
+            erase_address = BASE_BLOCK3_ADRESS + erase_block * 384;
+            BSW_Nvm_Block(erase_address,384,&erase2,NVM_Erase);
+        }
     } else {
         /* nothing to do */
     }    
