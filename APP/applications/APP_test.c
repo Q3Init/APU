@@ -28,10 +28,10 @@ void APP_test_Mainfunction(void)
 {
     if (tick > 0) {
         tick--;
-        // APP_Scroll_storage_erase(0);
-        // APP_Scroll_storage_erase(1);
-        APP_Scroll_storage_write(0,tx1_buffer);
-        APP_Scroll_storage_write(1,tx2_buffer);
+        APP_Scroll_storage_erase(0);
+        APP_Scroll_storage_erase(1);
+        // APP_Scroll_storage_write(0,tx1_buffer);
+        // APP_Scroll_storage_write(1,tx2_buffer);
     } else {
         if (flag == 1) {
             flag =0;
