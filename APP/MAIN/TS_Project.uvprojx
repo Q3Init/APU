@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>APM32E103_MINI,DEBUG_INFO_ENABLE,ARM_MATH_CM3,__CC_ARM,ARM_MATH_MATRIX_CHECK,ARM_MATH_ROUNDING</Define>
               <Undefine></Undefine>
-              <IncludePath>..\main;..\applications;..\..\OS\OS_Driver;..\..\OS\OS_Task;..\..\RTE;..\..\TYPES;..\..\RTE;..\..\LIB;..\..\BSW;..\..\Cfg\BSW_Cfg;..\..\MCAL;..\..\Cfg\MCAL_Cfg;..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Driver\CMSIS\Include;..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\inc;..\..\DRIVER\Chip_Driver\APM32E103VE\User_Interface;..\..\ext-driver;..\..\APP</IncludePath>
+              <IncludePath>..\main;..\applications;..\..\OS\OS_Driver;..\..\OS\OS_Task;..\..\RTE;..\..\TYPES;..\..\RTE;..\..\LIB;..\..\BSW;..\..\Cfg\BSW_Cfg;..\..\MCAL;..\..\ext-driver;..\..\Cfg\MCAL_Cfg;..\..\APP;..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Driver\CMSIS\Include;..\..\DRIVER\Chip_Driver\APM32E103VE\Library\Standard_Library\inc;..\..\DRIVER\Chip_Driver\APM32E103VE\User_Interface</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
