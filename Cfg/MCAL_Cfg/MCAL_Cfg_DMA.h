@@ -22,7 +22,7 @@ typedef struct {
 
 extern uint8 spi_tx_buffer[];
 extern uint8 spi_rx_buffer[];
-extern uint16_t DMA_ADCConvertedValue[6][1024];
+extern uint16_t DMA_ADCConvertedValue[];
 extern const DMASignalsCfg dmaSignalsCfgTable[];
 
 #endif
