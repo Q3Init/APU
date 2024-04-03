@@ -48,6 +48,61 @@ void APP_test_Mainfunction(void)
     // lcd_test_main();//just for lcd driver test
 }
 
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_0[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_1[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_2[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_3[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_4[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_5[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_6[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_7[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_8[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_9[];
+
+//1x12size
+//because the colume size is 1 and page size is 2,so the array size is 2
+extern uint8_t my_1x12_point[];
+
+extern uint8_t DI_chinese[];
+
+extern uint8_t YE_chinese[];
+
+//6x12size
+extern uint8_t XieGang_char[];
+
+//6x12size
+extern uint8_t NUM_1234567890[];
+
+
 void lcd_test_main(void)
 {
     static uint8 flag=0;
@@ -56,14 +111,41 @@ void lcd_test_main(void)
         clear_screen();
         single_row_continue_printf_12x12_chinese_in_lcd(0, 0, main_menu, 3, 12, 1);
 
-        single_row_continue_printf_12x12_chinese_in_lcd(8, 13, run_monitor, 4, 12, 1);
-        single_row_continue_printf_12x12_chinese_in_lcd(8, 26, parameter_configure, 4, 12, 0);
-        single_row_continue_printf_12x12_chinese_in_lcd(8, 39, debug_mode, 4, 12, 1);
-        
-        
-        single_row_continue_printf_12x12_chinese_in_lcd(64, 13, report_display, 4, 12, 1);
-        single_row_continue_printf_12x12_chinese_in_lcd(64, 26, fix_value_manage, 4, 12, 1);
-        single_row_continue_printf_12x12_chinese_in_lcd(64, 39, setting_in_factory, 4, 12, 1);
+
+        /* display the number "9.7" in 1x12_point */
+        lcd_state_flush_for_num(63,20,my_num_9,5,12,1);
+        lcd_state_flush_for_num(69,20,my_1x12_point,1,12,1);
+        lcd_state_flush_for_num(70,20,my_num_7,5,12,1);
+
+        /* display the number "0.43" in 1x12_point */
+        lcd_state_flush_for_num(63,29,my_num_0,5,12,1);
+        lcd_state_flush_for_num(69,29,my_1x12_point,1,12,1);
+        lcd_state_flush_for_num(70,29,my_num_4,5,12,1);
+        lcd_state_flush_for_num(76,29,my_num_3,5,12,1);
+
+        /* display the number "2.5 in 1x12_point */
+        lcd_state_flush_for_num(63,41,my_num_2,5,12,1);
+        lcd_state_flush_for_num(69,41,my_1x12_point,1,12,1);
+        lcd_state_flush_for_num(70,41,my_num_2,5,12,0);
+
+        /* display a series of number*/
+        single_row_continue_printf_COLnxROW12_char_in_lcd(0,20, NUM_1234567890, 10, 6, 12, 1);
+
+        /* display "第0/2页" */
+        single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        lcd_state_flush_for_num(98,1,my_num_0,5,12,1);
+        lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
+        single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+        //  /* display the main menu */
+        // single_row_continue_printf_12x12_chinese_in_lcd(8, 13, run_monitor, 4, 12, 1);
+        // single_row_continue_printf_12x12_chinese_in_lcd(8, 26, parameter_configure, 4, 12, 0);
+        // single_row_continue_printf_12x12_chinese_in_lcd(8, 39, debug_mode, 4, 12, 1);
+
+        // single_row_continue_printf_12x12_chinese_in_lcd(64, 13, report_display, 4, 12, 1);
+        // single_row_continue_printf_12x12_chinese_in_lcd(64, 26, fix_value_manage, 4, 12, 1);
+        // single_row_continue_printf_12x12_chinese_in_lcd(64, 39, setting_in_factory, 4, 12, 1);
         flag++;
     }
 }

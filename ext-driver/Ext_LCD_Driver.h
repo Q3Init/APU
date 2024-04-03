@@ -21,10 +21,12 @@ extern void clear_screen(void);
 extern void lcd_state_flush(uint8_t x_col,uint8_t y_row, uint8_t *ptr_center, uint8_t chinese_size, uint8_t garland_flag);
 extern uint8_t lcd_page_position_for_chinese_get(uint8_t y_row, uint8_t chinese_size, uint8_t lcd_state_tbl_num);
 extern void single_row_continue_printf_12x12_chinese_in_lcd(uint8_t x_col,uint8_t y_row, uint8_t *chinese_string, uint8_t chinese_num, uint8_t chinese_size, uint8_t garland_flag);
+extern void single_row_continue_printf_COLnxROW12_char_in_lcd(uint8_t x_col,uint8_t y_row, uint8_t *number_string, uint8_t char_num, uint8_t num_col_size, uint8_t num_row_size, uint8_t garland_flag);
 extern void display_graphic_8x12(uint8 page,uint8 column,uchar *dp);
 extern void delay(int n_ms);
 extern void transfer_data_lcd(int data1);
-
+extern void lcd_state_flush_for_num(uint8_t x_col,uint8_t y_row, uint8_t *ptr_center, uint8_t num_col_size, uint8_t num_row_size, uint8_t garland_flag);
+extern void display_graphic_8xcol(uint8_t page, uint8_t column, uint8_t column_size,uchar *dp);
 /* add your chars */
 extern uint8_t run_monitor[];
 extern uint8_t main_menu[];
