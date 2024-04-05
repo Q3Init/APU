@@ -13,5 +13,7 @@ extern float32 BSW_Adcif_Get_Ic(void);
 extern float32 BSW_Adcif_Get_Iout(void);
 extern float32 BSW_Adcif_Get_Ua(void);
 extern float32 BSW_Adcif_Get_Ub(void);
+extern float32 BSW_Adcif_Get_Uc(void);
+extern float32 BSW_Adcif_Get_Uout(void);
 
 #endif

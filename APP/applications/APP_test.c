@@ -26,10 +26,11 @@ void APP_test_Init(void)
 
 void APP_test_Mainfunction(void)
 {
+    BSW_Dio_FlipcBit(DIO_PORT_keyopen,DIO_PIN_keyopen);
     if (tick > 0) {
         tick--;
-        APP_Scroll_storage_erase(0);
-        APP_Scroll_storage_erase(1);
+        // APP_Scroll_storage_erase(0);
+        // APP_Scroll_storage_erase(1);
         // APP_Scroll_storage_write(0,tx1_buffer);
         // APP_Scroll_storage_write(1,tx2_buffer);
     } else {
