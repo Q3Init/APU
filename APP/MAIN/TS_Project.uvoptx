@@ -163,7 +163,7 @@
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>appAiFilterVals</ItemText>
+          <ItemText>appAiFilterVals,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
@@ -174,11 +174,6 @@
           <count>3</count>
           <WinNumber>1</WinNumber>
           <ItemText>rx2_buffer</ItemText>
-        </Ww>
-        <Ww>
-          <count>4</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>RCM_CFG</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>

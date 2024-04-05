@@ -7,13 +7,13 @@
 
 extern void BSW_Adcif_Init(void);
 extern void BSW_Adcif_Mainfunction(void);
-extern float32 BSW_Adcif_Get_Ia(void);
-extern float32 BSW_Adcif_Get_Ib(void);
-extern float32 BSW_Adcif_Get_Ic(void);
-extern float32 BSW_Adcif_Get_Iout(void);
-extern float32 BSW_Adcif_Get_Ua(void);
-extern float32 BSW_Adcif_Get_Ub(void);
-extern float32 BSW_Adcif_Get_Uc(void);
-extern float32 BSW_Adcif_Get_Uout(void);
+extern uint32 BSW_Adcif_Get_Ia(void);
+extern uint32 BSW_Adcif_Get_Ib(void);
+extern uint32 BSW_Adcif_Get_Ic(void);
+extern uint32 BSW_Adcif_Get_Iout(void);
+extern uint32 BSW_Adcif_Get_Ua(void);
+extern uint32 BSW_Adcif_Get_Ub(void);
+extern uint32 BSW_Adcif_Get_Uc(void);
+extern uint32 BSW_Adcif_Get_Uout(void);
 
 #endif
