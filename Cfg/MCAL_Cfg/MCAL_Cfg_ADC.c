@@ -4,7 +4,7 @@ const ADCSignalsCfg adcSignalsCfgTable[ADC_SIGNALS_CNT] =
 {
     {
         .adc = ADC1,
-        .ADCDiv = RCM_PCLK2_DIV_4,
+        .ADCDiv = RCM_PCLK2_DIV_6,
         .clock = RCM_APB2_PERIPH_ADC1,
         {
             .mode = ADC_MODE_INDEPENDENT,
