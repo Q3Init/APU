@@ -254,11 +254,56 @@ struct menu_event_tag * run_monitor_handler(uint8_t msg_process_signal, uint8_t 
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
-            
-            LCD_ShowString(24,30,"LCD_W:",16);
-            LCD_ShowIntNum(72,30,4,1,16);
+            clear_screen();
+			msg_context = 0xff;
+            // LCD_ShowString(24,30,"LCD_W:",16);
+            // LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
         }
+
+		switch(msg_context)
+		{
+			case	0xff:
+			case    KEY_UP:
+    		case	KEY_DOWN:		
+    		case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, run_monitor, 4);
+				switch( run_monitor_menu_array[menu_type_idx])
+				{
+					case TELEMETRY_SECOND:
+						LCD_ShowChinese_no_garland(8, 13, telemetry_second, 5);
+						LCD_ShowChinese_garland(8, 26, telemetry_fiest, 5);
+						LCD_ShowChinese_garland(8, 38, open_into_state, 4);
+						LCD_ShowChinese_garland(8, 51, running_state, 4);
+						break;
+					case TELEMETRY_FIRST:
+						LCD_ShowChinese_garland(8, 13, telemetry_second, 5);
+						LCD_ShowChinese_no_garland(8, 26, telemetry_fiest, 5);
+						LCD_ShowChinese_garland(8, 38, open_into_state, 4);
+						LCD_ShowChinese_garland(8, 51, running_state, 4);
+						break;
+					case OPEN_INTO_STATE:
+						LCD_ShowChinese_garland(8, 13, telemetry_second, 5);
+						LCD_ShowChinese_garland(8, 26, telemetry_fiest, 5);
+						LCD_ShowChinese_no_garland(8, 38, open_into_state, 4);
+						LCD_ShowChinese_garland(8, 51, running_state, 4);
+						break;
+					case RUNNING_STATE:
+						LCD_ShowChinese_garland(8, 13, telemetry_second, 5);
+						LCD_ShowChinese_garland(8, 26, telemetry_fiest, 5);
+						LCD_ShowChinese_garland(8, 38, open_into_state, 4);
+						LCD_ShowChinese_no_garland(8, 51, running_state, 4);
+						break;
+
+				}
+				break;
+			default:
+				break;
+		}
+            
+        
 	}
 
 	return menu_evt;
@@ -299,10 +344,40 @@ struct menu_event_tag * report_display_handler(uint8_t msg_process_signal, uint8
         {
 			Log_d("\r\n    \r\n");
              
-            LCD_ShowString(24,30,"LCD_W:",16);
-            LCD_ShowIntNum(72,30,4,1,16);
+        clear_screen();
+			msg_context = 0xff;
+            //LCD_ShowString(24,30,"LCD_W:",16);
+            //LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
         }
+		switch(msg_context)
+		{
+			case	0xff:
+			case    KEY_UP:
+    		case	KEY_DOWN:		
+    		case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, report_display, 4);
+				switch( report_display_menu_array[menu_type_idx])
+				{
+					case SOE_RECORD:
+						LCD_ShowChar_no_garland(8, 13, soe_record_char, 3);
+                        LCD_ShowChinese_no_garland(26, 13, soe_record_chinese, 2);
+						LCD_ShowChinese_garland(8, 27, fault_event, 4);
+
+						break;
+					case FAULT_EVENT:
+						LCD_ShowChar_garland(8, 13, soe_record_char, 3);
+                        LCD_ShowChinese_garland(26, 13, soe_record_chinese, 2);
+						LCD_ShowChinese_no_garland(8, 27, fault_event, 4);
+					
+						break;
+				}
+				break;
+			default:
+				break;
+		}
 	}
 
 	return menu_evt;
@@ -342,10 +417,120 @@ struct menu_event_tag * parameter_configure_handler(uint8_t msg_process_signal, 
         {
 			Log_d("\r\n    \r\n");
              
-            LCD_ShowString(24,30,"LCD_W:",16);
-            LCD_ShowIntNum(72,30,4,1,16);
+            clear_screen();
+			msg_context = 0xff;
+//            LCD_ShowString(24,30,"LCD_W:",16);
+//            LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
         }
+		switch(msg_context)
+		{
+			case	0xff:
+			case    KEY_UP:
+    		case	KEY_DOWN:		
+    		case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, parameter_configure, 4);
+				switch( parameter_configure_menu_array[menu_type_idx])
+				{
+					case CHANGE_PROPORTION_SETTING:
+						LCD_ShowChinese_no_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_garland(8, 51, time_setting, 4);
+
+                        LCD_ShowChinese_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_garland(64, 51, password_setting, 4);
+
+						break;
+					case OPEN_INTO_SETTING:
+						LCD_ShowChinese_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_no_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_garland(8,51, time_setting, 4);
+
+                        LCD_ShowChinese_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_garland(64, 51, password_setting, 4);
+						break;
+					case COMMUNICATION_SETTING:
+						LCD_ShowChinese_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_no_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_garland(8, 51, time_setting, 4);
+
+                        LCD_ShowChinese_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_garland(64, 51, password_setting, 4);
+						break;
+					case TIME_SETTING:
+						LCD_ShowChinese_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_no_garland(8, 51, time_setting, 4);
+
+                        LCD_ShowChinese_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_garland(64, 51, password_setting, 4);
+						break;
+						case WIRE_SPLICE_SETTING:
+						LCD_ShowChinese_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_garland(8, 51, time_setting, 4);
+
+                        LCD_ShowChinese_no_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_garland(64, 51, password_setting, 4);
+						break;
+					case OPEN_OUT_SETTING:
+						LCD_ShowChinese_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_garland(8, 51, time_setting, 4);
+
+                        LCD_ShowChinese_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_no_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_garland(64, 51, password_setting, 4);
+						break;
+					case RECOVER_HOME_SETTING:
+						LCD_ShowChinese_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_garland(8, 51, time_setting, 4);
+
+                        LCD_ShowChinese_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_no_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_garland(64, 51, password_setting, 4);
+						break;
+					case PASSWORD_SETTING:
+						LCD_ShowChinese_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_garland(8, 51, time_setting, 4);
+
+                        LCD_ShowChinese_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_no_garland(64, 51, password_setting, 4);
+						break;
+
+				}
+				break;
+			default:
+				break;
+
+		}
+
 	}
 
 	return menu_evt;

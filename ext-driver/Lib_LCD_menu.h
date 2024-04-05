@@ -28,4 +28,21 @@ extern uint8_t fix_value_manage[];
 extern uint8_t debug_mode[];
 extern uint8_t setting_in_factory[];
 
+extern uint8_t telemetry_second[];
+extern uint8_t telemetry_fiest[];
+extern uint8_t open_into_state[];
+extern uint8_t running_state[];
+
+extern uint8_t soe_record_char[];
+extern uint8_t soe_record_chinese[];
+extern uint8_t fault_event[];
+
+extern uint8_t change_proportion_setting[];
+extern uint8_t wire_splice_setting[];
+extern uint8_t open_into_setting[];
+extern uint8_t open_out_setting[];
+extern uint8_t communication_setting[];
+extern uint8_t recover_home_setting[];
+extern uint8_t time_setting[];
+extern uint8_t password_setting[];
 #endif /* __LIB_LCD_MENU_H */
