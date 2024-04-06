@@ -5,10 +5,14 @@
 #include "Lib_LCD_kernel.h"
 #include "Ext_LCD_Driver.h"
 #include "APP_KEY_State_Get.h"
-
+#include "stdio.h"
+#include "string.h"
+#include "Lib_Log_Util.h"
+#include "BSW_FFT_APP.h"
 void lcd_test_main(void);
 void key_state_process(uint8_t key_state);
 void key_task_test_for_lin(void);
+extern void FFT(void);
 
 uint8 tx1_buffer[12] = {0xdd,0xaa,0x13,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11};
 uint8 tx2_buffer[12] = {0xaa,0xbb,0xcc,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11};
@@ -26,6 +30,12 @@ void APP_test_Init(void)
 
 void APP_test_Mainfunction(void)
 {
+    static uint8_t my_flag = 0;
+    if(my_flag==0)
+    {
+        FFT();
+        my_flag++;
+    }
     BSW_Dio_FlipcBit(DIO_PORT_keyopen,DIO_PIN_keyopen);
     if (tick > 0) {
         tick--;
