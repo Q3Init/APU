@@ -27,7 +27,7 @@ void RTE_Init(void)
     /* application Init */
     APP_Scroll_storage_Init();
     APP_test_Init(); /* test */
-
+    APP_Parameter_Management_Init();
     /* LCD kernel init */
     menu_kernel_env_init();
     /* LCD driver and menu init */

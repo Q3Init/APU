@@ -9,6 +9,8 @@
 #include "string.h"
 #include "Lib_Log_Util.h"
 #include "BSW_FFT_APP.h"
+#include "APP_Parameter_management.h"
+
 void lcd_test_main(void);
 void key_state_process(uint8_t key_state);
 void key_task_test_for_lin(void);
@@ -22,6 +24,10 @@ uint8 block2[2] = {0};
 uint8 block3[2] = {0};
 static uint8 flag = 1;
 uint8 tick = 1;
+float32 pro1 = 560.7;
+float32 pro2 = 471.4;
+uint8 block_pro1[4] = {0};
+uint8 block_pro2[4] = {0};
 
 void APP_test_Init(void)
 {
@@ -30,12 +36,12 @@ void APP_test_Init(void)
 
 void APP_test_Mainfunction(void)
 {
-    static uint8_t my_flag = 0;
-    if(my_flag==0)
-    {
-        FFT();
-        my_flag++;
-    }
+    // static uint8_t my_flag = 0;
+    // if(my_flag==0)
+    // {
+    //     FFT();
+    //     my_flag++;
+    // }
     BSW_Dio_FlipcBit(DIO_PORT_keyopen,DIO_PIN_keyopen);
     if (tick > 0) {
         tick--;
@@ -46,12 +52,13 @@ void APP_test_Mainfunction(void)
     } else {
         if (flag == 1) {
             flag =0;
-
+            // APP_Set_Protect_Parameter(OverVoltage_protection_Lv1,pro1);
+            // APP_Set_Protect_Parameter(OverVoltage_protection_Lv2,pro2);
             APP_Scroll_storage_read(0,0,rx1_buffer);
             APP_Scroll_storage_read(1,0,rx2_buffer);  
 
-            FRAM_Read(block2,0x0000,2);
-            FRAM_Read(block3,0x0002,2);
+            FRAM_Read(block_pro1,0x0004,4);
+            FRAM_Read(block_pro2,0x0008,4);
         }
     }
 
