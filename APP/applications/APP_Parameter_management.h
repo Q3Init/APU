@@ -29,6 +29,8 @@ typedef struct
 extern void APP_Parameter_Management_Init(void);
 extern float32 APP_Get_Protect_Parameter(uint16 id);
 extern uint8 APP_Set_Protect_Parameter(uint16 id,float32 protect_value);
+extern boolean APP_Get_Protect_eol(uint16 id);
+extern uint8 APP_Set_Protect_eol(uint16 id,boolean eol);
 extern uint32 MCM_floatToIntBit( float32 x );
 extern float32 IntBitTofloat( uint32 x );
 

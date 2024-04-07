@@ -24,10 +24,10 @@ uint8 block2[2] = {0};
 uint8 block3[2] = {0};
 static uint8 flag = 1;
 uint8 tick = 1;
-float32 pro1 = 544.8;
-float32 pro2 = 466.6;
-uint8 block_pro1[4] = {0};
-uint8 block_pro2[4] = {0};
+float32 pro1 = 577.7;
+float32 pro2 = 455.5;
+uint8 block_pro1[5] = {0};
+uint8 block_pro2[5] = {0};
 
 void APP_test_Init(void)
 {
@@ -54,12 +54,13 @@ void APP_test_Mainfunction(void)
             flag =0;
             // APP_Set_Protect_Parameter(OverVoltage_protection_Lv1,pro1);
             // APP_Set_Protect_Parameter(OverVoltage_protection_Lv2,pro2);
-
+            // APP_Set_Protect_eol(OverVoltage_protection_Lv1,1);
+            // APP_Set_Protect_eol(OverVoltage_protection_Lv2,1);
             APP_Scroll_storage_read(0,0,rx1_buffer);
             APP_Scroll_storage_read(1,0,rx2_buffer); 
 
-            BSW_Nvm_Block(0x0004,4,block_pro1,NVM_READ);
-            BSW_Nvm_Block(0x0008,4,block_pro2,NVM_READ);               
+            BSW_Nvm_Block(0x0004,5,block_pro1,NVM_READ);
+            BSW_Nvm_Block(0x0009,5,block_pro2,NVM_READ);               
            
         }
     }
