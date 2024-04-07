@@ -11,7 +11,7 @@
 
 typedef enum
 {
-    OverVoltage_protection_Lv1 = 1,
+    OverVoltage_protection_Lv1 = 0,
     OverVoltage_protection_Lv2,
 }APP_ProtectIdRte;
 
@@ -23,6 +23,7 @@ typedef struct
     float32 delay_tick;             /* 单位秒*/
     uint16  address;                /* 存储的地址 */
     boolean eol;                    /* 投入：TRUE，退出：FASLE */
+    uint8   set_buffer[4];          /* 存储数据的地址 */
 }APP_ProtectRte;
 
 extern void APP_Parameter_Management_Init(void);
