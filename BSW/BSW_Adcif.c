@@ -22,14 +22,14 @@ void BSW_Adcif_Init(void)
 
 void BSW_Adcif_Mainfunction(void)
 {
-    appAiFilterVals.bsw_adcif_Ia_val   = (uint32)((DMA_ADCConvertedValue[0][0] * 3300) / 4095);
-    appAiFilterVals.bsw_adcif_Ib_val   = (uint32)((DMA_ADCConvertedValue[0][1] * 3300) / 4095);
-    appAiFilterVals.bsw_adcif_Ic_val   = (uint32)((DMA_ADCConvertedValue[0][2] * 3300) / 4095);
-    appAiFilterVals.bsw_adcif_Iout_val = (uint32)((DMA_ADCConvertedValue[0][3] * 3300) / 4095);
-    appAiFilterVals.bsw_adcif_Ua_val   = (uint32)((DMA_ADCConvertedValue[0][4] * 3300) / 4095);
-    appAiFilterVals.bsw_adcif_Ub_val   = (uint32)((DMA_ADCConvertedValue[0][5] * 3300) / 4095);
-    appAiFilterVals.bsw_adcif_Uc_val   = (uint32)((DMA_ADCConvertedValue[0][6] * 3300) / 4095);
-    appAiFilterVals.bsw_adcif_Uout_val = (uint32)((DMA_ADCConvertedValue[0][7] * 3300) / 4095);
+    appAiFilterVals.bsw_adcif_Ia_val   = (uint32)((DMA_ADCConvertedValue[0] * 3300) / 4095);
+    // appAiFilterVals.bsw_adcif_Ib_val   = (uint32)((DMA_ADCConvertedValue[0][1] * 3300) / 4095);
+    // appAiFilterVals.bsw_adcif_Ic_val   = (uint32)((DMA_ADCConvertedValue[0][2] * 3300) / 4095);
+    // appAiFilterVals.bsw_adcif_Iout_val = (uint32)((DMA_ADCConvertedValue[0][3] * 3300) / 4095);
+    // appAiFilterVals.bsw_adcif_Ua_val   = (uint32)((DMA_ADCConvertedValue[0][4] * 3300) / 4095);
+    // appAiFilterVals.bsw_adcif_Ub_val   = (uint32)((DMA_ADCConvertedValue[0][5] * 3300) / 4095);
+    // appAiFilterVals.bsw_adcif_Uc_val   = (uint32)((DMA_ADCConvertedValue[0][6] * 3300) / 4095);
+    // appAiFilterVals.bsw_adcif_Uout_val = (uint32)((DMA_ADCConvertedValue[0][7] * 3300) / 4095);
 }
 
 uint32 BSW_Adcif_Get_Ia(void)

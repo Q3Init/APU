@@ -12,7 +12,7 @@ const ADCSignalsCfg adcSignalsCfgTable[ADC_SIGNALS_CNT] =
             .continuosConvMode = DISABLE,
             .externalTrigConv = ADC_EXT_TRIG_CONV_TMR3_TRGO,
             .dataAlign = ADC_DATA_ALIGN_RIGHT,
-            .nbrOfChannel = 8
+            .nbrOfChannel = 1
         }
     }
 };

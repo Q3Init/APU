@@ -1,6 +1,6 @@
 #include "MCAL_Cfg_DMA.h"
 
-volatile uint16_t DMA_ADCConvertedValue[ADC_SAMPLS_DATAS][ADC_CHANNEL_NUMS] = {0};
+uint16_t DMA_ADCConvertedValue[ADC_SAMPLS_DATAS] = {0};
 uint8 spi_tx_buffer[512] = {0};
 uint8 spi_rx_buffer[512] = {0};
 

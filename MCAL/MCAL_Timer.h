@@ -5,5 +5,4 @@
 
 extern void MCAL_Timer_Init(void);
 
-
 #endif

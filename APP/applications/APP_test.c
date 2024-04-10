@@ -52,6 +52,7 @@ void APP_test_Mainfunction(void)
     } else {
         if (flag == 1) {
             flag =0;
+            
             // APP_Set_Protect_Parameter(OverVoltage_protection_Lv1,pro1);
             // APP_Set_Protect_Parameter(OverVoltage_protection_Lv2,pro2);
             // APP_Set_Protect_eol(OverVoltage_protection_Lv1,1);
@@ -64,7 +65,7 @@ void APP_test_Mainfunction(void)
            
         }
     }
-
+    // FFT();
     key_task_test_for_lin();
     //lcd_test_main();//just for lcd driver test
 }

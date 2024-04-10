@@ -1,6 +1,6 @@
 #include "MCAL_Timer.h"
 
-#define TIM3_PERIDO 180
+#define TIM3_PERIDO 975
 
 void MCAL_Timer_Init(void)
 {

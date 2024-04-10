@@ -20,14 +20,14 @@ void MCAL_ADC_Init(void)
         ADC_Config((adcSignalsCfgTable + adcIndex)->adc, &adcConfig);
 
         /* ADC channel Convert configuration */
-        ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_4,  1, ADC_SAMPLETIME_13CYCLES5);
-        ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_5,  2, ADC_SAMPLETIME_13CYCLES5);
-        ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_6,  3, ADC_SAMPLETIME_13CYCLES5);
-        ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_7,  4, ADC_SAMPLETIME_13CYCLES5);
-        ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_14, 5, ADC_SAMPLETIME_13CYCLES5);
-        ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_15, 6, ADC_SAMPLETIME_13CYCLES5);
-        ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_8,  7, ADC_SAMPLETIME_13CYCLES5);
-        ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_9,  8, ADC_SAMPLETIME_13CYCLES5);
+        ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_4,  1, ADC_SAMPLETIME_239CYCLES5);
+        // ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_5,  2, ADC_SAMPLETIME_13CYCLES5);
+        // ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_6,  3, ADC_SAMPLETIME_13CYCLES5);
+        // ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_7,  4, ADC_SAMPLETIME_13CYCLES5);
+        // ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_14, 5, ADC_SAMPLETIME_13CYCLES5);
+        // ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_15, 6, ADC_SAMPLETIME_13CYCLES5);
+        // ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_8,  7, ADC_SAMPLETIME_13CYCLES5);
+        // ADC_ConfigRegularChannel(ADC1, ADC_CHANNEL_9,  8, ADC_SAMPLETIME_13CYCLES5);
 
 
         /* Enable ADC DMA */
