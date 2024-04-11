@@ -17,6 +17,7 @@ uint16 ADC_Value[FFT_LENGTH] = {0};
 uint16 ADC_my_test_value[1024]= {0};
 
 uint32 maxIndex = 0;
+float32 maxIndex_1 = 0;
 float32 maxValue = 0;
 float32 frequency = 0;
 arm_rfft_instance_f32 fftInstance;
@@ -59,7 +60,16 @@ void FFT(void)
     // arm_rfft_fast_f32(&fftInstance,fftInput,fftOutput,0); //执行FFT
     arm_max_f32(lBufOutArray,512,&maxValue,&maxIndex); //查找最大幅度的频率
     Log_d("maxValue : %f,maxIndex:%d!\r\n",maxValue,maxIndex);
-    frequency = (float32_t)maxIndex * 1024 / 1024;
+    if ((maxValue > 0) && (maxIndex == 0)) {
+        for (int i = 0; i < 512; i++) {
+            if(lBufOutArray[i] > 1) {
+                maxIndex_1 = (float32)(i-1) + 0.5f;
+            }
+        }
+    } else {
+        maxIndex_1 = maxIndex;
+    }
+    frequency = (float32_t)maxIndex_1 * 1024 / 1024;
     Log_d("frequency : %f!\r\n",frequency);
     TMR_Enable(TMR3);   
 }
