@@ -274,25 +274,25 @@ struct menu_event_tag * run_monitor_handler(uint8_t msg_process_signal, uint8_t 
 				{
 					case TELEMETRY_SECOND:
 						LCD_ShowChinese_no_garland(8, 13, telemetry_second, 5);
-						LCD_ShowChinese_garland(8, 26, telemetry_fiest, 5);
+						LCD_ShowChinese_garland(8, 26, telemetry_first, 5);
 						LCD_ShowChinese_garland(8, 38, open_into_state, 4);
 						LCD_ShowChinese_garland(8, 51, running_state, 4);
 						break;
 					case TELEMETRY_FIRST:
 						LCD_ShowChinese_garland(8, 13, telemetry_second, 5);
-						LCD_ShowChinese_no_garland(8, 26, telemetry_fiest, 5);
+						LCD_ShowChinese_no_garland(8, 26, telemetry_first, 5);
 						LCD_ShowChinese_garland(8, 38, open_into_state, 4);
 						LCD_ShowChinese_garland(8, 51, running_state, 4);
 						break;
 					case OPEN_INTO_STATE:
 						LCD_ShowChinese_garland(8, 13, telemetry_second, 5);
-						LCD_ShowChinese_garland(8, 26, telemetry_fiest, 5);
+						LCD_ShowChinese_garland(8, 26, telemetry_first, 5);
 						LCD_ShowChinese_no_garland(8, 38, open_into_state, 4);
 						LCD_ShowChinese_garland(8, 51, running_state, 4);
 						break;
 					case RUNNING_STATE:
 						LCD_ShowChinese_garland(8, 13, telemetry_second, 5);
-						LCD_ShowChinese_garland(8, 26, telemetry_fiest, 5);
+						LCD_ShowChinese_garland(8, 26, telemetry_first, 5);
 						LCD_ShowChinese_garland(8, 38, open_into_state, 4);
 						LCD_ShowChinese_no_garland(8, 51, running_state, 4);
 						break;

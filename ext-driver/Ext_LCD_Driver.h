@@ -9,10 +9,10 @@
 
 #define LCD_ShowChinese_garland(x, y, s, num)  single_row_continue_printf_12x12_chinese_in_lcd(x, y, s, num, 12, 1)
 #define LCD_ShowChinese_no_garland(x, y, s, num)  single_row_continue_printf_12x12_chinese_in_lcd(x, y, s, num, 12, 0)
-#define LCD_ShowChar_garland(x, y, s, num)  single_row_continue_printf_COLnxROW12_char_in_lcd(x, y, s, num, 6, 12,1)
-#define LCD_ShowChar_no_garland(x, y, s, num)  single_row_continue_printf_COLnxROW12_char_in_lcd(x, y, s, num, 6, 12,0)
-#define LCD_ShowNum_garland(x, y, s, num)  single_row_continue_printf_COLnxROW12_char_in_lcd(x, y, s, num, 5, 12,1)
-#define LCD_ShowNum_no_garland(x, y, s, num)  single_row_continue_printf_COLnxROW12_char_in_lcd(x, y, s, num, 5, 12,0)
+#define LCD_ShowChar_garland(x1, y1, s_1, num_1)  single_row_continue_printf_COLnxROW12_char_in_lcd(x1, y1, s_1, num_1, 6,12,1)
+#define LCD_ShowChar_no_garland(x1, y1, s_1, num_1)  single_row_continue_printf_COLnxROW12_char_in_lcd(x1, y1, s_1, num_1, 6, 12,0)
+#define LCD_ShowNum_garland(x2, y2, s_2, num_2)  lcd_state_flush_for_num(x2, y2, s_2, num_2, 12,1)
+#define LCD_ShowNum_no_garland(x2, y2, s_2, num_2)  lcd_state_flush_for_num(x2, y2, s_2, num_2, 12,0)
 
 extern void LCD_ShowChinese(uint16 x,uint16 y,uint8 *s,uint8 sizey);
 extern void LCD_ShowChar(uint16 x,uint16 y,uint8 num,uint8 sizey);
@@ -41,7 +41,7 @@ extern uint8_t debug_mode[];
 extern uint8_t setting_in_factory[];
 
 extern uint8_t telemetry_second[];
-extern uint8_t telemetry_fiest[];
+extern uint8_t telemetry_first[];
 extern uint8_t open_into_state[];
 extern uint8_t running_state[];
 
@@ -57,4 +57,55 @@ extern uint8_t communication_setting[];
 extern uint8_t recover_home_setting[];
 extern uint8_t time_setting[];
 extern uint8_t password_setting[];
+extern uint8_t my_num_0[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_1[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_2[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_3[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_4[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_5[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_6[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_7[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_8[];
+
+//5x12size
+//because the colume size is 5 and page size is 2,so the array size is 10
+extern uint8_t my_num_9[];
+
+//1x12size
+//because the colume size is 1 and page size is 2,so the array size is 2
+extern uint8_t my_1x12_point[];
+
+extern uint8_t DI_chinese[];
+
+extern uint8_t YE_chinese[];
+
+//6x12size
+extern uint8_t XieGang_char[];
+
+
+
 #endif /* __EXT_LCD_DRIVER_H */

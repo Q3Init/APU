@@ -20,8 +20,8 @@ struct menu_cmd_tag second_menu_cmd_tbl[]=
 struct menu_cmd_tag third_menu_cmd_tbl[]= 
 {
 	/* RUN_MONITOR MENU */
-	{THIRD_MENU,		TELEMETRY_SECOND, 				(menu_kernel_func)time_setting_handler},
-	{THIRD_MENU,		TELEMETRY_FIRST, 				(menu_kernel_func)time_setting_handler},
+	{THIRD_MENU,		TELEMETRY_SECOND, 				(menu_kernel_func)telemetry_second_handler},
+	{THIRD_MENU,		TELEMETRY_FIRST, 				(menu_kernel_func)telemetry_first_handler},
 	{THIRD_MENU,		OPEN_INTO_STATE, 				(menu_kernel_func)time_setting_handler},
 	{THIRD_MENU,		RUNNING_STATE, 					(menu_kernel_func)time_setting_handler},
 

@@ -118,8 +118,8 @@
 #define DIO_PORT_DI9_m   GPIOD
 #define DIO_PIN_DI9_m    GPIO_PIN_6
 
-#define DIO_PORT_reset   GPIOD
-#define DIO_PIN_reset    GPIO_PIN_7
+#define DIO_PORT_DI10_m   GPIOD
+#define DIO_PIN_DI10_m    GPIO_PIN_7
 
 #define DIO_PORT_return  GPIOD
 #define DIO_PIN_return   GPIO_PIN_8
