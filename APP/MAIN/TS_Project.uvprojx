@@ -774,6 +774,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\ext-driver\Ext_LED.c</FilePath>
             </File>
+            <File>
+              <FileName>Lib_LCD_telemetry_first.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ext-driver\Lib_LCD_telemetry_first.c</FilePath>
+            </File>
+            <File>
+              <FileName>Lib_LCD_telemetry_second.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ext-driver\Lib_LCD_telemetry_second.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

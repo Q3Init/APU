@@ -3,12 +3,12 @@
 uint8 KEY_Reset(void)
 {
     uint8 keynum=10;
-    if(BSW_Dio_ReadInputBit(DIO_PORT_reset,DIO_PIN_reset)==1)
-    {
-        OS_Delay_us(1000);
-        while(BSW_Dio_ReadInputBit(DIO_PORT_reset,DIO_PIN_reset)==1)
-        keynum=KEY_RESET;
-    }
+    // if(BSW_Dio_ReadInputBit(DIO_PORT_reset,DIO_PIN_reset)==1)
+    // {
+    //     OS_Delay_us(1000);
+    //     while(BSW_Dio_ReadInputBit(DIO_PORT_reset,DIO_PIN_reset)==1)
+    //     keynum=KEY_RESET;
+    // }
     return keynum;
 }
 
