@@ -17,7 +17,7 @@ enum KEY_BOARD{
 	KEY_PLUS,	    //8
 };
 
-extern uint8 KEY_Reset(void);//返回值0
+// extern uint8 KEY_Reset(void);//返回值0
 extern uint8 KEY_Return(void);//返回值1
 extern uint8 KEY_Enter(void);//返回值2
 extern uint8 KEY_Up(void);//返回值3
