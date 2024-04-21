@@ -26,6 +26,7 @@
 /* Includes */
 #include "MCAL_APM32.h"
 #include "apm32e10x_int.h"
+#include "FreeRTOSConfig.h"
 
 /** @addtogroup Examples
   @{
@@ -122,9 +123,14 @@ void UsageFault_Handler(void)
  * @retval  None
  *
  */
+
+#if !defined(vPortSVCHandler)
+
 void SVC_Handler(void)
 {
 }
+
+#endif
 
 /*!
  * @brief   This function handles Debug Monitor exception
@@ -147,11 +153,13 @@ void DebugMon_Handler(void)
  *
  */
 
+#if !defined(xPortPendSVHandler)
+
 void PendSV_Handler(void)
 {
 }
 
-
+#endif
 /**@} end of group GPIO_Toggle_INT_Functions */
 /**@} end of group GPIO_Toggle */
 /**@} end of group Examples */
