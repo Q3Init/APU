@@ -4,10 +4,6 @@
 #include "MCAL_CfgList.h"
 #include "BSW_Dio.h"
 
-enum LED_level{
-    HIGH=1,
-    LOW=0,
-};
 
 /*工作指示灯，正常工作时，0.5s闪烁*/
 extern void LED_working_ON(void);

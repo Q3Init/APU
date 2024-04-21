@@ -106,7 +106,6 @@ extern uint8_t YE_chinese[];
 //6x12size
 extern uint8_t XieGang_char[];
 
-extern uint8_t my_maohao[];
 
 
 #endif /* __EXT_LCD_DRIVER_H */

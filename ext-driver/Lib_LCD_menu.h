@@ -7,7 +7,6 @@
 extern uint8_t cur_menu_type_ptr_from_env_get(void);
 extern void msg_lock_from_env_set(uint8_t msg_lock_level);
 extern void cur_menu_type_ptr_from_env_set(uint8_t cur_menu_type_ptr);
-extern uint8_t menu_type_ptr_match(uint8_t key_signal, uint8_t menu_row_num, uint8_t menu_column_num, uint8_t menu_type_max_num);
 
 /* Please register here your menu handlers*/
 extern struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_t msg_context);
@@ -16,9 +15,9 @@ extern struct menu_event_tag * report_display_handler(uint8_t msg_process_signal
 extern struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * parameter_configure_handler(uint8_t msg_process_signal, uint8_t msg_context);
-// extern struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uint8_t msg_context);
-// extern struct menu_event_tag * debug_mode_handler(uint8_t msg_process_signal, uint8_t msg_context);
-// extern struct menu_event_tag * setting_in_factory_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * debug_mode_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * setting_in_factory_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_signal, uint8_t msg_context);
 
 
