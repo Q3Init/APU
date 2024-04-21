@@ -5,6 +5,7 @@
 #include "Lib_Log_Util.h"
 #include "Ext_KEY.h"
 
+
 #define uint8_t uint8
 #define uint32_t uint32
 
@@ -253,4 +254,36 @@ extern struct menu_event_tag * debug_mode_handler(uint8_t msg_process_signal, ui
 extern struct menu_event_tag * setting_in_factory_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint8_t msg_context);
+
+extern struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_t msg_context);
+
+extern struct menu_event_tag * debug_mode_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * driver_test_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * remote_driver_test_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * clear_record_handler(uint8_t msg_process_signal, uint8_t msg_context);
+
+extern struct menu_event_tag * setting_in_factory_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * channel_factor_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * full_range_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * open_into_configure_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * open_out_configure_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * protection_configure_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * open_into_test_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * factory_reset_handler(uint8_t msg_process_signal, uint8_t msg_context);
+
 #endif /* __LIB_LCD_KERNEL_H */
