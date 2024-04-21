@@ -278,7 +278,12 @@ extern struct menu_event_tag * remote_driver_test_handler(uint8_t msg_process_si
 extern struct menu_event_tag * clear_record_handler(uint8_t msg_process_signal, uint8_t msg_context);
 
 extern struct menu_event_tag * setting_in_factory_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * channel_factor_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * full_range_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * open_into_configure_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * open_out_configure_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * protection_configure_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * open_into_test_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * factory_reset_handler(uint8_t msg_process_signal, uint8_t msg_context);
 
 #endif /* __LIB_LCD_KERNEL_H */

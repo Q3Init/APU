@@ -62,12 +62,12 @@ struct menu_cmd_tag third_menu_cmd_tbl[]=
 	{THIRD_MENU,		CLEAR_RECORD, 					(menu_kernel_func)clear_record_handler},
 	
 	/* SETTING_IN_FACTORY MENU */
-	{THIRD_MENU,		CHANNEL_FACTOR, 				(menu_kernel_func)time_setting_handler},
+	{THIRD_MENU,		CHANNEL_FACTOR, 				(menu_kernel_func)channel_factor_handler},
 	{THIRD_MENU,		FULL_RANGE_SETTING, 			(menu_kernel_func)full_range_setting_handler},
-	{THIRD_MENU,		OPEN_INTO_CONFIGURE, 			(menu_kernel_func)time_setting_handler},
-	{THIRD_MENU,		OPEN_OUT_CONFIGURE, 			(menu_kernel_func)time_setting_handler},
-	{THIRD_MENU,		PROTECTION_CONFIGURE, 			(menu_kernel_func)time_setting_handler},
-	{THIRD_MENU,		OPEN_INTO_TEST, 				(menu_kernel_func)time_setting_handler},
+	{THIRD_MENU,		OPEN_INTO_CONFIGURE, 			(menu_kernel_func)open_into_configure_handler},
+	{THIRD_MENU,		OPEN_OUT_CONFIGURE, 			(menu_kernel_func)open_out_configure_handler},
+	{THIRD_MENU,		PROTECTION_CONFIGURE, 			(menu_kernel_func)protection_configure_handler},
+	{THIRD_MENU,		OPEN_INTO_TEST, 				(menu_kernel_func)open_into_test_handler},
 	{THIRD_MENU,		FACTORY_RESET, 					(menu_kernel_func)factory_reset_handler},
 };
 

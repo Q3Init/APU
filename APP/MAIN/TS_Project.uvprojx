@@ -411,19 +411,19 @@
               <FilePath>..\applications\APP_Parameter_management.c</FilePath>
             </File>
             <File>
-              <FileName>DEBUG_MODE.c</FileName>
+              <FileName>APP_DEBUG_MODE.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\applications\DEBUG_MODE.c</FilePath>
+              <FilePath>..\applications\APP_DEBUG_MODE.c</FilePath>
             </File>
             <File>
-              <FileName>FIX_VALUE_MANAGE.c</FileName>
+              <FileName>APP_FIX_VALUE_MANAGE.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\applications\FIX_VALUE_MANAGE.c</FilePath>
+              <FilePath>..\applications\APP_FIX_VALUE_MANAGE.c</FilePath>
             </File>
             <File>
-              <FileName>SETTING_IN_FACTORY.c</FileName>
+              <FileName>APP_SETTING_IN_FACTORY.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\applications\SETTING_IN_FACTORY.c</FilePath>
+              <FilePath>..\applications\APP_SETTING_IN_FACTORY.c</FilePath>
             </File>
           </Files>
         </Group>
