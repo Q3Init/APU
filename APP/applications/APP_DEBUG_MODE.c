@@ -1,6 +1,6 @@
 #include "Lib_LCD_kernel.h"
 #include "Lib_LCD_menu.h"
-#include "DEBUG_MODE.h"
+#include "APP_DEBUG_MODE.h"
 
 uint8 debug_mode_menu_array[]=
 {
@@ -126,14 +126,10 @@ uint8_t remote_com_test[]={
 };
 
 uint8_t debug_soe_record[]={
-0x18,0x24,0x24,0x44,0x8C,0x00,0x03,0x02,0x02,0x02,0x01,0x00,/*"S",0*/
-0xF8,0x04,0x04,0x04,0xF8,0x00,0x01,0x02,0x02,0x02,0x01,0x00,/*"O",1*/
-0x04,0xFC,0x24,0x74,0x0C,0x00,0x02,0x03,0x02,0x02,0x03,0x00,/*"E",2*/
-0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,/*" ",3*/
 0x10,0x11,0xF2,0x00,0x00,0xE2,0x22,0x22,0x22,0x3E,0x00,0x00,
-0x00,0x00,0x07,0x02,0x01,0x07,0x08,0x08,0x08,0x08,0x0E,0x00,/*"记",4*/
+0x00,0x00,0x07,0x02,0x01,0x07,0x08,0x08,0x08,0x08,0x0E,0x00,/*"记",0*/
 0x10,0x51,0x95,0x15,0x95,0xF5,0x95,0x15,0x9F,0x50,0x10,0x00,
-0x04,0x04,0x02,0x01,0x08,0x0F,0x00,0x01,0x02,0x04,0x04,0x00,/*"录",5*/
+0x04,0x04,0x02,0x01,0x08,0x0F,0x00,0x01,0x02,0x04,0x04,0x00,/*"录",1*/
 };
 
 uint8_t debug_fault_record[]={
@@ -146,6 +142,10 @@ uint8_t debug_fault_record[]={
 0x10,0x51,0x95,0x15,0x95,0xF5,0x95,0x15,0x9F,0x50,0x10,0x00,
 0x04,0x04,0x02,0x01,0x08,0x0F,0x00,0x01,0x02,0x04,0x04,0x00,/*"录",3*/
 };
+
+extern uint8_t my_char_S[];
+extern uint8_t my_char_O[];
+extern uint8_t my_char_E[];
 
 
 struct menu_event_tag * debug_mode_handler(uint8_t msg_process_signal, uint8_t msg_context)
@@ -197,16 +197,34 @@ struct menu_event_tag * debug_mode_handler(uint8_t msg_process_signal, uint8_t m
 				switch(debug_mode_menu_array[menu_type_idx])
 				{
 					case DRIVER_TEST:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
 						LCD_ShowChinese_no_garland(8, 13, driver_test, 4);
 						LCD_ShowChinese_garland(8, 26, remote_driver_test, 4);
 						LCD_ShowChinese_garland(8, 39, clear_record, 4);
 						break;
 					case REMOTE_DRIVER_TEST:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
 						LCD_ShowChinese_garland(8, 13, driver_test, 4);
 						LCD_ShowChinese_no_garland(8, 26, remote_driver_test, 4);
 						LCD_ShowChinese_garland(8, 39, clear_record, 4);
 						break;
 					case CLEAR_RECORD:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
 						LCD_ShowChinese_garland(8, 13, driver_test, 4);
 						LCD_ShowChinese_garland(8, 26, remote_driver_test, 4);
 						LCD_ShowChinese_no_garland(8, 39, clear_record, 4);
@@ -261,11 +279,23 @@ struct menu_event_tag * driver_test_handler(uint8_t msg_process_signal, uint8_t 
 				switch(driver_test_menu_array[menu_type_idx])
 				{
 					case OPEN_TEST:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
 						LCD_ShowChinese_no_garland(8, 13, open_test, 4);
 						LCD_ShowChinese_garland(8, 26, close_test, 4);
 						LCD_ShowChinese_garland(24, 51, key_enter_working, 6);
 						break;
 					case CLOSE_TEST:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
 						LCD_ShowChinese_garland(8, 13, open_test, 4);
 						LCD_ShowChinese_no_garland(8, 26, close_test, 4);
 						LCD_ShowChinese_garland(24, 51, key_enter_working, 6);
@@ -320,10 +350,22 @@ struct menu_event_tag * remote_driver_test_handler(uint8_t msg_process_signal, u
 				switch(remote_driver_test_menu_array[menu_type_idx])
 				{
 					case TELEMETRY_TEST:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
 						LCD_ShowChinese_no_garland(8, 13, telemetry_test, 4);
 						LCD_ShowChinese_garland(8, 26, remote_com_test, 4);
 						break;
 					case REMOTE_COM_TEST:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
 						LCD_ShowChinese_garland(8, 13, telemetry_test, 4);
 						LCD_ShowChinese_no_garland(8, 26, remote_com_test, 4);
 						break;
@@ -377,13 +419,31 @@ struct menu_event_tag * clear_record_handler(uint8_t msg_process_signal, uint8_t
 				switch(clear_record_menu_array[menu_type_idx])
 				{
 					case DEBUG_SOE_RECORD:
-						LCD_ShowChinese_no_garland(8, 13, debug_soe_record, 4);
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						lcd_state_flush_for_num(8,13,my_char_S,6,12,0);
+						lcd_state_flush_for_num(14,13,my_char_O,6,12,0);
+						lcd_state_flush_for_num(20,13,my_char_E,6,12,0);
+						LCD_ShowChinese_no_garland(26, 13, debug_soe_record, 2);
 						LCD_ShowChinese_garland(8, 26, debug_fault_record, 4);
 						LCD_ShowChinese_garland(24, 51, key_enter_working, 6);
 						
 						break;
 					case DEBUG_FAULT_RECORD:
-						LCD_ShowChinese_garland(8, 13, debug_soe_record, 4);
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+						
+						lcd_state_flush_for_num(8,13,my_char_S,6,12,1);
+						lcd_state_flush_for_num(14,13,my_char_O,6,12,1);
+						lcd_state_flush_for_num(20,13,my_char_E,6,12,1);
+						LCD_ShowChinese_garland(26, 13, debug_soe_record, 2);
 						LCD_ShowChinese_no_garland(8, 26, debug_fault_record, 4);
 						LCD_ShowChinese_garland(24, 51, key_enter_working, 6);
 						

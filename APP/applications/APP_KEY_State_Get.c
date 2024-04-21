@@ -6,11 +6,6 @@ uint8 key_state_get(void)
 
     do
     {
-        // state = KEY_Reset();
-        // if(state == KEY_RESET)
-        // {
-        //     break;
-        // }
 
         state = KEY_Return();
         if(state == KEY_RETURN)
