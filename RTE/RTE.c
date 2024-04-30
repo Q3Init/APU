@@ -8,11 +8,13 @@ void RTE_Init(void)
 {
     __DISENBLE_IRQ(); /* chip disable irq */
     /* System Tick */
-    SystemInit();
-    SysTick_Config(SystemCoreClock / 1000);
+    // SystemInit();
+    // SysTick_Config(SystemCoreClock / 1000);
     /* OS Init */
+#ifdef EASY_OS
     OsEvt_Init();
     OsTimer_Init();
+#endif
     /* MCAL Init */
     MCAL_GPIO_Init();
     MCAL_UART_Init();

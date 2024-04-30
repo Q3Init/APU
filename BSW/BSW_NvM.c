@@ -1,5 +1,7 @@
 #include "BSW_NvM.h"
 #include "Lib_Log_Util.h"
+#include "freertos.h"
+#include "task.h"
 
 #define NVM_CMD_QUEUE_DEPTH 0x10 
 
@@ -31,22 +33,27 @@ void BSW_Nvm_Init(void)
 
 void BSW_Nvm_Mainfunction(void)
 {
-    if (nvmCmdCnt > 0) {
-        Log_d("nvm cnt:%d\n",nvmCmdCnt);
-        nvmCurrentCmd = NvM_lCmdGet();/* Taking instructions */
-        if (nvmCurrentCmd.Cmd == NVM_READ) {
-            Log_d("read,cmd : %d, block: 0x%x, len: %d, *data:0x%x\n",nvmCurrentCmd.Cmd,nvmCurrentCmd.block,nvmCurrentCmd.len,nvmCurrentCmd.data);
-            FRAM_Read(nvmCurrentCmd.data,nvmCurrentCmd.block,nvmCurrentCmd.len);
-        } else if  (nvmCurrentCmd.Cmd == NVM_WRITE) {
-            Log_d("write,cmd : %d, block: 0x%x, len: %d, *data:0x%x\n",nvmCurrentCmd.Cmd,nvmCurrentCmd.block,nvmCurrentCmd.len,nvmCurrentCmd.data);
-            FRAM_Erase(nvmCurrentCmd.block,nvmCurrentCmd.len);
-            FRAM_Write(nvmCurrentCmd.data,nvmCurrentCmd.block,nvmCurrentCmd.len);
-        } else if (nvmCurrentCmd.Cmd == NVM_Erase) {
-            Log_d("erase,cmd : %d, block: 0x%x, len: %d, *data:0x%x\n",nvmCurrentCmd.Cmd,nvmCurrentCmd.block,nvmCurrentCmd.len,nvmCurrentCmd.data);
-            FRAM_Erase(nvmCurrentCmd.block,nvmCurrentCmd.len);
-        } else {
-            /* nothing to do */
+    while(1) 
+    {
+        if (nvmCmdCnt > 0) {
+            Log_d("nvm cnt:%d\n",nvmCmdCnt);
+            nvmCurrentCmd = NvM_lCmdGet();/* Taking instructions */
+            if (nvmCurrentCmd.Cmd == NVM_READ) {
+                Log_d("read,cmd : %d, block: 0x%x, len: %d, *data:0x%x\n",nvmCurrentCmd.Cmd,nvmCurrentCmd.block,nvmCurrentCmd.len,nvmCurrentCmd.data);
+                FRAM_Read(nvmCurrentCmd.data,nvmCurrentCmd.block,nvmCurrentCmd.len);
+            } else if  (nvmCurrentCmd.Cmd == NVM_WRITE) {
+                Log_d("write,cmd : %d, block: 0x%x, len: %d, *data:0x%x\n",nvmCurrentCmd.Cmd,nvmCurrentCmd.block,nvmCurrentCmd.len,nvmCurrentCmd.data);
+                FRAM_Erase(nvmCurrentCmd.block,nvmCurrentCmd.len);
+                FRAM_Write(nvmCurrentCmd.data,nvmCurrentCmd.block,nvmCurrentCmd.len);
+            } else if (nvmCurrentCmd.Cmd == NVM_Erase) {
+                Log_d("erase,cmd : %d, block: 0x%x, len: %d, *data:0x%x\n",nvmCurrentCmd.Cmd,nvmCurrentCmd.block,nvmCurrentCmd.len,nvmCurrentCmd.data);
+                FRAM_Erase(nvmCurrentCmd.block,nvmCurrentCmd.len);
+            } else {
+                /* nothing to do */
+            }
         }
+        Log_d("nvm task!\r\n");
+        vTaskDelay(10);
     }
 }
 
