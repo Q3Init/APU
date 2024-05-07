@@ -3,6 +3,10 @@
 #include "Os_TimerHdl.h"
 #include "Os_TaskHdl_Lv0.h"
 
+#ifndef EASY_OS
+extern void xPortSysTickHandler(void);
+#endif
+
 void GtmTom2Ch0Notify_Cbk(uint8 ModuleType, uint8 ModuleNo, uint8 ChannelNo, uint16 IrqNotifVal)
 {
     (void)ModuleType;
@@ -28,8 +32,21 @@ void GtmTom2Ch0Notify_Cbk(uint8 ModuleType, uint8 ModuleNo, uint8 ChannelNo, uin
     }
 }
 
-/* Repeat definition: Delete the chip's own tick timer interrupt */
-void SysTick_Handler (void) 
-{
+#ifdef EASY_OS
+void SysTick_Handler(void)
+{	
     GtmTom2Ch0Notify_Cbk(0U, 0U, 0U, 0U);
 }
+#else
+void SysTick_Handler(void)
+{	
+    #if (INCLUDE_xTaskGetSchedulerState  == 1 )
+      if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED)
+      {
+    #endif  /* INCLUDE_xTaskGetSchedulerState */  
+        xPortSysTickHandler();
+    #if (INCLUDE_xTaskGetSchedulerState  == 1 )
+      }
+    #endif  /* INCLUDE_xTaskGetSchedulerState */
+}
+#endif

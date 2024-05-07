@@ -1,4 +1,6 @@
 #include "APP_test.h"
+#include "freertos.h"
+#include "task.h"
 #include "APP_Scroll_storage.h"
 #include "OS_TASK.h"
 #include "BSW_NvM.h"
@@ -36,38 +38,43 @@ void APP_test_Init(void)
 
 void APP_test_Mainfunction(void)
 {
-    // static uint8_t my_flag = 0;
-    // if(my_flag==0)
-    // {
-    //     FFT();
-    //     my_flag++;
-    // }
-    BSW_Dio_FlipcBit(DIO_PORT_keyopen,DIO_PIN_keyopen);
-    if (tick > 0) {
-        tick--;
-        // APP_Scroll_storage_erase(0);
-        // APP_Scroll_storage_erase(1);
-        // APP_Scroll_storage_write(0,tx1_buffer);
-        // APP_Scroll_storage_write(1,tx2_buffer);
-    } else {
-        if (flag == 1) {
-            flag =0;
-            
-            // APP_Set_Protect_Parameter(OverVoltage_protection_Lv1,pro1);
-            // APP_Set_Protect_Parameter(OverVoltage_protection_Lv2,pro2);
-            // APP_Set_Protect_eol(OverVoltage_protection_Lv1,1);
-            // APP_Set_Protect_eol(OverVoltage_protection_Lv2,1);
-            APP_Scroll_storage_read(0,0,rx1_buffer);
-            APP_Scroll_storage_read(1,0,rx2_buffer); 
+    while(1) 
+    {
+        // static uint8_t my_flag = 0;
+        // if(my_flag==0)
+        // {
+        //     FFT();
+        //     my_flag++;
+        // }
+        BSW_Dio_FlipcBit(DIO_PORT_keyopen,DIO_PIN_keyopen);
+        if (tick > 0) {
+            tick--;
+            // APP_Scroll_storage_erase(0);
+            // APP_Scroll_storage_erase(1);
+            // APP_Scroll_storage_write(0,tx1_buffer);
+            // APP_Scroll_storage_write(1,tx2_buffer);
+        } else {
+            if (flag == 1) {
+                flag =0;
+                
+                // APP_Set_Protect_Parameter(OverVoltage_protection_Lv1,pro1);
+                // APP_Set_Protect_Parameter(OverVoltage_protection_Lv2,pro2);
+                // APP_Set_Protect_eol(OverVoltage_protection_Lv1,1);
+                // APP_Set_Protect_eol(OverVoltage_protection_Lv2,1);
+                APP_Scroll_storage_read(0,0,rx1_buffer);
+                APP_Scroll_storage_read(1,0,rx2_buffer); 
 
-            BSW_Nvm_Block(0x0004,5,block_pro1,NVM_READ);
-            BSW_Nvm_Block(0x0009,5,block_pro2,NVM_READ);               
-           
+                BSW_Nvm_Block(0x0004,5,block_pro1,NVM_READ);
+                BSW_Nvm_Block(0x0009,5,block_pro2,NVM_READ);               
+            
+            }
         }
+        // FFT();
+        key_task_test_for_lin();
+        Log_d("App test!\r\n");
+        //lcd_test_main();//just for lcd driver test
+        vTaskDelay(50);
     }
-    // FFT();
-    key_task_test_for_lin();
-    //lcd_test_main();//just for lcd driver test
 }
 
 //5x12size

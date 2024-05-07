@@ -1,4 +1,6 @@
 #include "Lib_LCD_kernel.h"
+#include "freertos.h"
+#include "task.h"
 
 struct menu_kernel_env_tag menu_kernel_env;
 
@@ -391,7 +393,11 @@ void menu_kernel_env_init(void)
 /* Please schedule the function !*/
 void menu_kernel_schedule(void)
 {
-	lcd_menu_level_search_and_action();
+	while(1)
+	{
+		lcd_menu_level_search_and_action();
+		vTaskDelay(10);
+	}
 }
 
 
