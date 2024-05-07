@@ -419,21 +419,6 @@
               <FilePath>..\applications\APP_Parameter_management.c</FilePath>
             </File>
             <File>
-              <FileName>APP_DEBUG_MODE.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\applications\APP_DEBUG_MODE.c</FilePath>
-            </File>
-            <File>
-              <FileName>APP_FIX_VALUE_MANAGE.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\applications\APP_FIX_VALUE_MANAGE.c</FilePath>
-            </File>
-            <File>
-              <FileName>APP_SETTING_IN_FACTORY.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\applications\APP_SETTING_IN_FACTORY.c</FilePath>
-            </File>
-            <File>
               <FileName>FreeRTOS_TASK.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeRTOS_TASK.c</FilePath>
