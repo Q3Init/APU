@@ -7,12 +7,21 @@
 #include "Ext_MB85RS64.h"
 #include "Lib_Log_Util.h"
 
-#define PROTECT_NUMS 2
+#define PROTECT_NUMS (CNT_MAX)
 
 typedef enum
 {
     OverVoltage_protection_Lv1 = 0,
     OverVoltage_protection_Lv2,
+    UnderVoltage_protection_Lv1,
+    UnderVoltage_protection_Lv2,
+    OverFrequency,
+    UnderFrequency,
+    FrequencyDiscontinuity,
+    ReversePower_protection,
+    Harmonic_protection,
+    External_coordination,
+    CNT_MAX
 }APP_ProtectIdRte;
 
 typedef struct 

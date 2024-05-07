@@ -4,8 +4,15 @@ static uint8 init_buffer[9] = {0};
 
 static APP_ProtectRte Protect_datasList[PROTECT_NUMS] = 
 {
-    {.id = OverVoltage_protection_Lv1,.protect_value = 0,.protect_default_value = 570.0f,.delay_tick = 0,.delay_default_tick = 0.5,.address = BLOCK1_OVERVOLTAGE_LV1_ADRESS,.eol = FALSE},
-    {.id = OverVoltage_protection_Lv2,.protect_value = 0,.protect_default_value = 460.0f,.delay_tick = 0,.delay_default_tick = 0.5,.address = BLOCK1_OVERVOLTAGE_LV2_ADRESS,.eol = FALSE}
+    {.id = OverVoltage_protection_Lv1, .protect_value = 0,.protect_default_value = 570.0f,.delay_tick = 0,.delay_default_tick = 0.5,.address = BLOCK1_OVERVOLTAGE_LV1_ADRESS,         .eol = FALSE},
+    {.id = OverVoltage_protection_Lv2, .protect_value = 0,.protect_default_value = 460.0f,.delay_tick = 0,.delay_default_tick = 0.5,.address = BLOCK1_OVERVOLTAGE_LV2_ADRESS,         .eol = FALSE},
+    {.id = UnderVoltage_protection_Lv1,.protect_value = 0,.protect_default_value = 190.0f,.delay_tick = 0,.delay_default_tick = 0.5,.address = BLOCK1_UNDERVOLTAGE_LV1_ADRESS,        .eol = FALSE}, 
+    {.id = UnderVoltage_protection_Lv2,.protect_value = 0,.protect_default_value = 270.0f,.delay_tick = 0,.delay_default_tick = 0.5,.address = BLOCK1_UNDERVOLTAGE_LV2_ADRESS,        .eol = FALSE}, 
+    {.id = OverFrequency,              .protect_value = 0,.protect_default_value = 51.0f, .delay_tick = 0,.delay_default_tick = 0.5,.address = BLOCK1_OVERFREQUENCY_ADRESS,           .eol = FALSE}, 
+    {.id = UnderFrequency,             .protect_value = 0,.protect_default_value = 49.0f, .delay_tick = 0,.delay_default_tick = 0.5,.address = BLOCK1_UNDERFREQUENCY_ADRESS,          .eol = FALSE}, 
+    {.id = FrequencyDiscontinuity,     .protect_value = 0,.protect_default_value = 3.0f,  .delay_tick = 0,.delay_default_tick = 0.5,.address = BLOCK1_FREQUENCYDISCONTINUITY_ADRESS,  .eol = FALSE}, 
+    {.id = ReversePower_protection,    .protect_value = 0,.protect_default_value = 100.0f,.delay_tick = 0,.delay_default_tick = 1.0,.address = BLOCK1_REVERSEPOWER_ADRESS,            .eol = FALSE}, 
+    {.id = External_coordination,      .protect_value = 0,.protect_default_value = 0.0f,  .delay_tick = 0,.delay_default_tick = 0.0,.address = BLOCK1_EXTERNALCOORDINATION_ADRESS,    .eol = FALSE},
 };
 
 void APP_Parameter_Management_Init(void)
