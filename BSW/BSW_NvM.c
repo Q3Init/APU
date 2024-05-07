@@ -52,7 +52,6 @@ void BSW_Nvm_Mainfunction(void)
                 /* nothing to do */
             }
         }
-        Log_d("nvm task!\r\n");
         vTaskDelay(10);
     }
 }

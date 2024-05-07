@@ -27,7 +27,6 @@ void BSW_Adcif_Mainfunction(void)
 {
     while(1) 
     {
-        Log_d("adcif task!\r\n");
         appAiFilterVals.bsw_adcif_Ia_val   = (uint32)((DMA_ADCConvertedValue[0] * 3300) / 4095);
         // Log_d("bsw_adcif_Ia_val:%d\r\n",appAiFilterVals.bsw_adcif_Ia_val);
         // appAiFilterVals.bsw_adcif_Ib_val   = (uint32)((DMA_ADCConvertedValue[0][1] * 3300) / 4095);
