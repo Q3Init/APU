@@ -21,6 +21,9 @@ typedef enum
     ReversePower_protection,
     Harmonic_protection,
     External_coordination,
+    Speed_limiting_quick_breaking,
+    Overcurrent_protection,
+    Power_recovery,
     CNT_MAX
 }APP_ProtectIdRte;
 
