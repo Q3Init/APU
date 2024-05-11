@@ -9,8 +9,9 @@ static uint8 mb85rs64_rxbuffer[SPI_DATA_LEN] = {0};
 入口参数：EraseAddr:擦除首地址  Len:要擦除的字节数
 返回值：无 
 *************************************************************************************/
-void FRAM_Erase(uint16 EraseAddr,uint16 len)
+uint8 FRAM_Erase(uint16 EraseAddr,uint16 len)
 {
+    uint8 ret = E_NOK;
     uint16 erase_index = 0;
     Log_d("erase addr:0x%x,len: %d\n",EraseAddr,len);
     mb85rs64_txbuffer[0] = MB85RS64_WREN; //写使能FRAM 
@@ -28,6 +29,8 @@ void FRAM_Erase(uint16 EraseAddr,uint16 len)
     SPI_tansmission(mb85rs64_rxbuffer,mb85rs64_txbuffer,erase_index);
     memset(mb85rs64_rxbuffer,0,sizeof(mb85rs64_rxbuffer));
     memset(mb85rs64_txbuffer,0,sizeof(mb85rs64_txbuffer)); 
+    ret = E_OK;
+    return ret;
 }
 
 /************************************************************************************
@@ -35,8 +38,9 @@ void FRAM_Erase(uint16 EraseAddr,uint16 len)
 入口参数：pbuf:数据存储区  WriteAddr:写入数据首地址  Len:要写入的字节数
 返回值：无 
 *************************************************************************************/
-void FRAM_Write(uint8 *tx_buffer,uint16 WriteAddr,uint16 len)
+uint8 FRAM_Write(uint8 *tx_buffer,uint16 WriteAddr,uint16 len)
 {
+    uint8 ret = E_NOK;
     uint16 write_index = 0;
     Log_d("tx_buffer:0x%x,write addr:0x%x,len: %d\n",tx_buffer,WriteAddr,len);
     mb85rs64_txbuffer[0] = MB85RS64_WREN; //写使能FRAM 
@@ -54,6 +58,8 @@ void FRAM_Write(uint8 *tx_buffer,uint16 WriteAddr,uint16 len)
     SPI_tansmission(mb85rs64_rxbuffer,mb85rs64_txbuffer,write_index);
     memset(mb85rs64_rxbuffer,0,sizeof(mb85rs64_rxbuffer));
     memset(mb85rs64_txbuffer,0,sizeof(mb85rs64_txbuffer));   
+    ret = E_OK;
+    return ret;
 }
 
 /************************************************************************************
@@ -61,8 +67,9 @@ void FRAM_Write(uint8 *tx_buffer,uint16 WriteAddr,uint16 len)
 入口参数：pbuf:数据存储区  ReadAddr:读数据首地址  Len:要读取的字节数
 返回值：无 
 *************************************************************************************/
-void FRAM_Read(uint8 *rx_buffer,uint16 ReadAddr,uint16 len)
+uint8 FRAM_Read(uint8 *rx_buffer,uint16 ReadAddr,uint16 len)
 {
+    uint8 ret = E_NOK;
     uint16 read_index;
     Log_d("rx_buffer:0x0x%x,read addr:0x%x,len: %d\n",rx_buffer,ReadAddr,len);
     mb85rs64_txbuffer[0] = MB85RS64_READ;
@@ -73,6 +80,8 @@ void FRAM_Read(uint8 *rx_buffer,uint16 ReadAddr,uint16 len)
     (void)memcpy(rx_buffer,(mb85rs64_rxbuffer + 3),len);
     memset(mb85rs64_rxbuffer,0,sizeof(mb85rs64_rxbuffer));
     memset(mb85rs64_txbuffer,0,sizeof(mb85rs64_txbuffer));   
+    ret = E_OK;
+    return ret;
 }
 
 

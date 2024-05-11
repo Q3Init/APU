@@ -3,7 +3,6 @@
 #include "MCAL_Cfg_DMA.h"
 #include "Lib_LCD_kernel.h"
 #include "BSW_Adcif.h"
-#include "BSW_NvM.h"
 #include "APP_test.h"
 
 OS_LOCAL uint8 Os_TaskHdl_Lv0_Task0(void)
@@ -17,7 +16,6 @@ OS_LOCAL uint8 Os_TaskHdl_Lv0_Task1(void)
 {
     uint8 ret = OS_RET_OK;
     menu_kernel_schedule();
-    BSW_Nvm_Mainfunction();
     
     return ret;
 }

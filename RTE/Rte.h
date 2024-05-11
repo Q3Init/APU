@@ -17,11 +17,8 @@
 #include "MCAL_NVIC.h"
 /* BSW */
 #include "BSW_Adcif.h"
-#include "BSW_NvM.h"
 /* APP */
-#include "APP_Scroll_storage.h"
 #include "APP_test.h"
-#include "APP_Parameter_management.h"
 /* LCD kernel and driver */
 #include "Lib_LCD_kernel.h"
 #include "Ext_LCD_Driver.h"

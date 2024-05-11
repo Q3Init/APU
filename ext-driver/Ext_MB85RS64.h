@@ -15,8 +15,8 @@
 #define MB85RS64_READ  0x03          //读存储器数据
 #define MB85RS64_WRITE 0x02          //写存储器数据
 
-extern void FRAM_Erase(uint16 EraseAddr,uint16 len);
-extern void FRAM_Write(uint8 *tx_buffer,uint16 WriteAddr,uint16 len);
-extern void FRAM_Read(uint8 *rx_buffer,uint16 ReadAddr,uint16 len);
+extern uint8 FRAM_Erase(uint16 EraseAddr,uint16 len);
+extern uint8 FRAM_Write(uint8 *tx_buffer,uint16 WriteAddr,uint16 len);
+extern uint8 FRAM_Read(uint8 *rx_buffer,uint16 ReadAddr,uint16 len);
 
 #endif

@@ -394,11 +394,6 @@
               <FilePath>..\OS_TASK.c</FilePath>
             </File>
             <File>
-              <FileName>APP_Scroll_storage.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\applications\APP_Scroll_storage.c</FilePath>
-            </File>
-            <File>
               <FileName>APP_test.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\applications\APP_test.c</FilePath>
@@ -412,11 +407,6 @@
               <FileName>APP_LED_State.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\applications\APP_LED_State.c</FilePath>
-            </File>
-            <File>
-              <FileName>APP_Parameter_management.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\applications\APP_Parameter_management.c</FilePath>
             </File>
             <File>
               <FileName>FreeRTOS_TASK.c</FileName>
@@ -765,6 +755,13 @@
         </Group>
         <Group>
           <GroupName>BSW-Cfg</GroupName>
+          <Files>
+            <File>
+              <FileName>BSW_Cfg_NvM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Cfg\BSW_Cfg\BSW_Cfg_NvM.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>LIB</GroupName>

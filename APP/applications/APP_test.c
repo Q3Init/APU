@@ -1,7 +1,6 @@
 #include "APP_test.h"
 #include "freertos.h"
 #include "task.h"
-#include "APP_Scroll_storage.h"
 #include "OS_TASK.h"
 #include "BSW_NvM.h"
 #include "Lib_LCD_kernel.h"
@@ -11,7 +10,6 @@
 #include "string.h"
 #include "Lib_Log_Util.h"
 #include "BSW_FFT_APP.h"
-#include "APP_Parameter_management.h"
 
 void lcd_test_main(void);
 void key_state_process(uint8_t key_state);
@@ -32,6 +30,14 @@ float32 delay_tick1 = 52.5;
 float32 delay_tick2 = 47.3;
 uint8 block_pro1[9] = {0};
 uint8 block_pro2[9] = {0};
+typedef struct
+{
+    /* data */
+    uint8 datas[4];
+}Overvoltage_protection_LV1_One_Value_Rte;
+
+Overvoltage_protection_LV1_One_Value_Rte ov_DATA;
+uint8 ov_read[4];
 
 void APP_test_Init(void)
 {
@@ -42,38 +48,16 @@ void APP_test_Mainfunction(void)
 {
     while(1) 
     {
-        // static uint8_t my_flag = 0;
-        // if(my_flag==0)
-        // {
-        //     FFT();
-        //     my_flag++;
-        // }
+
         BSW_Dio_FlipcBit(DIO_PORT_keyopen,DIO_PIN_keyopen);
         if (tick > 0) {
             tick--;
-            // APP_Scroll_storage_erase(0);
-            // APP_Scroll_storage_erase(1);
-            // APP_Scroll_storage_write(0,tx1_buffer);
-            // APP_Scroll_storage_write(1,tx2_buffer);
+
         } else {
             if (flag == 1) {
                 flag =0;
-                
-                // APP_Set_Protect_Parameter(OverVoltage_protection_Lv1,pro1);
-                // APP_Set_Protect_Parameter(OverVoltage_protection_Lv2,pro2);
-                // APP_Set_delayTick_Parameter(OverVoltage_protection_Lv1,delay_tick1);
-                // APP_Set_delayTick_Parameter(OverVoltage_protection_Lv2,delay_tick2);
-                // APP_Set_Protect_eol(OverVoltage_protection_Lv1,1);
-                // APP_Set_Protect_eol(OverVoltage_protection_Lv2,1);
-                // APP_Scroll_storage_read(0,0,rx1_buffer);
-                // APP_Scroll_storage_read(1,0,rx2_buffer); 
-
-                BSW_Nvm_Block(BLOCK1_OVERVOLTAGE_LV1_ADRESS,9,block_pro1,NVM_READ);
-                BSW_Nvm_Block(BLOCK1_OVERVOLTAGE_LV2_ADRESS,9,block_pro2,NVM_READ);               
-            
             }
         }
-        // FFT();
         key_task_test_for_lin();
         //lcd_test_main();//just for lcd driver test
         vTaskDelay(50);
