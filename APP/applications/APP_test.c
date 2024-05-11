@@ -11,6 +11,7 @@
 #include "Lib_Log_Util.h"
 #include "BSW_FFT_APP.h"
 #include "APP_Scroll_storage.h"
+#include "APP_Parameter.h"
 
 void lcd_test_main(void);
 void key_state_process(uint8_t key_state);
@@ -31,6 +32,7 @@ float32 delay_tick1 = 52.5;
 float32 delay_tick2 = 47.3;
 uint8 block_pro1[9] = {0};
 uint8 block_pro2[9] = {0};
+float32 ddddd = 0;
 
 void APP_test_Init(void)
 {

@@ -20,6 +20,7 @@
 /* APP */
 #include "APP_test.h"
 #include "APP_Scroll_storage.h"
+#include "APP_Parameter.h"
 /* LCD kernel and driver */
 #include "Lib_LCD_kernel.h"
 #include "Ext_LCD_Driver.h"
