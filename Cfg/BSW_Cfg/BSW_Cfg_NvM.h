@@ -15,6 +15,7 @@ typedef enum
 {
     Overvoltage_protection_LV1_One_Value = 0,
     Overvoltage_protection_LV1_One_Dealy,
+    Overvoltage_protection_LV1_One_Eol,
     ID_CNT
 }bsw_nvm_storge_id;
 
