@@ -26,6 +26,7 @@ void RTE_Init(void)
     /* BSW Init */
     BSW_Adcif_Init();
     /* application Init */
+    APP_Scroll_storage_Init();
     APP_test_Init(); /* test */
     /* LCD kernel init */
     menu_kernel_env_init();

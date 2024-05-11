@@ -10,6 +10,7 @@
 #include "string.h"
 #include "Lib_Log_Util.h"
 #include "BSW_FFT_APP.h"
+#include "APP_Scroll_storage.h"
 
 void lcd_test_main(void);
 void key_state_process(uint8_t key_state);
@@ -30,18 +31,10 @@ float32 delay_tick1 = 52.5;
 float32 delay_tick2 = 47.3;
 uint8 block_pro1[9] = {0};
 uint8 block_pro2[9] = {0};
-typedef struct
-{
-    /* data */
-    uint8 datas[4];
-}Overvoltage_protection_LV1_One_Value_Rte;
-
-Overvoltage_protection_LV1_One_Value_Rte ov_DATA;
-uint8 ov_read[4];
 
 void APP_test_Init(void)
 {
-
+    // APP_Scroll_storage_erase(0);
 }
 
 void APP_test_Mainfunction(void)
@@ -56,6 +49,7 @@ void APP_test_Mainfunction(void)
         } else {
             if (flag == 1) {
                 flag =0;
+
             }
         }
         key_task_test_for_lin();

@@ -413,6 +413,11 @@
               <FileType>1</FileType>
               <FilePath>..\FreeRTOS_TASK.c</FilePath>
             </File>
+            <File>
+              <FileName>APP_Scroll_storage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\applications\APP_Scroll_storage.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
