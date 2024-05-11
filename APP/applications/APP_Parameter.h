@@ -34,5 +34,7 @@ extern float32 app_parameter_read_Overvoltage_protection_LV1_One_Value(void);
 extern uint8 app_parameter_write_Overvoltage_protection_LV1_One_Value(float32 data);
 extern float32 app_parameter_read_Overvoltage_protection_LV1_One_Dealy(void);
 extern uint8 app_parameter_write_Overvoltage_protection_LV1_One_Delay(float32 data);
+extern uint8 app_parameter_read_Overvoltage_protection_LV1_One_Eol(void);
+extern uint8 app_parameter_write_Overvoltage_protection_LV1_One_Eol(uint8 data);
 
 #endif
