@@ -8,7 +8,7 @@ BSW_NvM_Rte nvm_datas_Lists[ID_CNT] =
         .data_len = 4
     },
     {
-        .id = Overvoltage_protection_LV1_One_Dealy,
+        .id = Overvoltage_protection_LV1_One_Delay,
         .data_len = 4
     },
     {
@@ -20,7 +20,7 @@ BSW_NvM_Rte nvm_datas_Lists[ID_CNT] =
         .data_len = 4
     },
     {
-        .id = Overvoltage_protection_LV2_One_Dealy,
+        .id = Overvoltage_protection_LV2_One_Delay,
         .data_len = 4
     },
     {
@@ -32,7 +32,7 @@ BSW_NvM_Rte nvm_datas_Lists[ID_CNT] =
         .data_len = 4
     },
     {
-        .id = Undervoltage_protection_LV1_One_Dealy,
+        .id = Undervoltage_protection_LV1_One_Delay,
         .data_len = 4
     },
     {
@@ -44,7 +44,7 @@ BSW_NvM_Rte nvm_datas_Lists[ID_CNT] =
         .data_len = 4
     },
     {
-        .id = Undervoltage_protection_LV2_One_Dealy,
+        .id = Undervoltage_protection_LV2_One_Delay,
         .data_len = 4
     },
     {
@@ -56,7 +56,7 @@ BSW_NvM_Rte nvm_datas_Lists[ID_CNT] =
         .data_len = 4
     },
     {
-        .id = Overfrequency_Dealy,
+        .id = Overfrequency_Delay,
         .data_len = 4
     },
     {
@@ -68,7 +68,7 @@ BSW_NvM_Rte nvm_datas_Lists[ID_CNT] =
         .data_len = 4
     },
     {
-        .id = Underfrequency_Dealy,
+        .id = Underfrequency_Delay,
         .data_len = 4
     },
     {
@@ -80,7 +80,7 @@ BSW_NvM_Rte nvm_datas_Lists[ID_CNT] =
         .data_len = 4
     },
     {
-        .id = Frequency_Discontinuity_Dealy,
+        .id = Frequency_Discontinuity_Delay,
         .data_len = 4
     },
     {

@@ -1,31 +1,31 @@
 #include "APP_Parameter.h"
 /* 过压一段保护 */
 static app_par_Overvoltage_protection_LV1_One_Value_Rte app_par_Overvoltage_protection_LV1_One_Value;
-static app_par_Overvoltage_protection_LV1_One_Dealy_Rte app_par_Overvoltage_protection_LV1_One_Dealy;
+static app_par_Overvoltage_protection_LV1_One_Delay_Rte app_par_Overvoltage_protection_LV1_One_Delay;
 static app_par_Overvoltage_protection_LV1_One_Eol_Rte   app_par_Overvoltage_protection_LV1_One_Eol;
 /* 过压二段保护 */
 static app_par_Overvoltage_protection_LV2_One_Value_Rte app_par_Overvoltage_protection_LV2_One_Value;
-static app_par_Overvoltage_protection_LV2_One_Dealy_Rte app_par_Overvoltage_protection_LV2_One_Dealy;
+static app_par_Overvoltage_protection_LV2_One_Delay_Rte app_par_Overvoltage_protection_LV2_One_Delay;
 static app_par_Overvoltage_protection_LV2_One_Eol_Rte   app_par_Overvoltage_protection_LV2_One_Eol;
 /* 低压一段保护 */
 static app_par_Undervoltage_protection_LV1_One_Value_Rte app_par_Undervoltage_protection_LV1_One_Value;
-static app_par_Undervoltage_protection_LV1_One_Dealy_Rte app_par_Undervoltage_protection_LV1_One_Dealy;
+static app_par_Undervoltage_protection_LV1_One_Delay_Rte app_par_Undervoltage_protection_LV1_One_Delay;
 static app_par_Undervoltage_protection_LV1_One_Eol_Rte   app_par_Undervoltage_protection_LV1_One_Eol;
 /* 低压二段保护 */
 static app_par_Undervoltage_protection_LV2_One_Value_Rte app_par_Undervoltage_protection_LV2_One_Value;
-static app_par_Undervoltage_protection_LV2_One_Dealy_Rte app_par_Undervoltage_protection_LV2_One_Dealy;
+static app_par_Undervoltage_protection_LV2_One_Delay_Rte app_par_Undervoltage_protection_LV2_One_Delay;
 static app_par_Undervoltage_protection_LV2_One_Eol_Rte   app_par_Undervoltage_protection_LV2_One_Eol;
 /* 频率过高 */
 static app_par_Overfrequency_Value_Rte app_par_Overfrequency_Value;
-static app_par_Overfrequency_Dealy_Rte app_par_Overfrequency_Dealy;
+static app_par_Overfrequency_Delay_Rte app_par_Overfrequency_Delay;
 static app_par_Overfrequency_Eol_Rte   app_par_Overfrequency_Eol;
 /* 频率过低 */
 static app_par_Underfrequency_Value_Rte app_par_Underfrequency_Value;
-static app_par_Underfrequency_Dealy_Rte app_par_Underfrequency_Dealy;
+static app_par_Underfrequency_Delay_Rte app_par_Underfrequency_Delay;
 static app_par_Underfrequency_Eol_Rte   app_par_Underfrequency_Eol;
 /* 频率突变 */
 static app_par_Frequency_Discontinuity_Value_Rte app_par_Frequency_Discontinuity_Value;
-static app_par_Frequency_Discontinuity_Dealy_Rte app_par_Frequency_Discontinuity_Dealy;
+static app_par_Frequency_Discontinuity_Delay_Rte app_par_Frequency_Discontinuity_Delay;
 static app_par_Frequency_Discontinuity_Eol_Rte   app_par_Frequency_Discontinuity_Eol;
 /* 逆功率 */
 static app_par_Reverse_Power_Protection_Value_Rte app_par_Reverse_Power_Protection_Value;
@@ -97,10 +97,10 @@ void APP_Parameter_Init(void)
         Log_d("app_par_Overvoltage_protection_LV1_One_Value.datas:%f\r\n",app_par_Overvoltage_protection_LV1_One_Value.datas);
     }
     /* Overvoltage_protection_LV1_One_Delay */
-    ret = BSW_NvM_Read(Overvoltage_protection_LV1_One_Dealy,app_par_Overvoltage_protection_LV1_One_Dealy.p_buf);
+    ret = BSW_NvM_Read(Overvoltage_protection_LV1_One_Delay,app_par_Overvoltage_protection_LV1_One_Delay.p_buf);
     if (ret == E_OK) {
-        app_par_Overvoltage_protection_LV1_One_Dealy.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Overvoltage_protection_LV1_One_Dealy.p_buf);
-        Log_d("app_par_Overvoltage_protection_LV1_One_Dealy.datas:%f\r\n",app_par_Overvoltage_protection_LV1_One_Dealy.datas);
+        app_par_Overvoltage_protection_LV1_One_Delay.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Overvoltage_protection_LV1_One_Delay.p_buf);
+        Log_d("app_par_Overvoltage_protection_LV1_One_Delay.datas:%f\r\n",app_par_Overvoltage_protection_LV1_One_Delay.datas);
     }
     /* Overvoltage_protection_LV1_One_Eol */
     ret = BSW_NvM_Read(Overvoltage_protection_LV1_One_Eol,app_par_Overvoltage_protection_LV1_One_Eol.p_buf);
@@ -115,10 +115,10 @@ void APP_Parameter_Init(void)
         Log_d("app_par_Overvoltage_protection_LV2_One_Value.datas:%f\r\n",app_par_Overvoltage_protection_LV2_One_Value.datas);
     }
     /* Overvoltage_protection_LV2_One_Delay */
-    ret = BSW_NvM_Read(Overvoltage_protection_LV2_One_Dealy,app_par_Overvoltage_protection_LV2_One_Dealy.p_buf);
+    ret = BSW_NvM_Read(Overvoltage_protection_LV2_One_Delay,app_par_Overvoltage_protection_LV2_One_Delay.p_buf);
     if (ret == E_OK) {
-        app_par_Overvoltage_protection_LV2_One_Dealy.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Overvoltage_protection_LV2_One_Dealy.p_buf);
-        Log_d("app_par_Overvoltage_protection_LV2_One_Dealy.datas:%f\r\n",app_par_Overvoltage_protection_LV2_One_Dealy.datas);
+        app_par_Overvoltage_protection_LV2_One_Delay.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Overvoltage_protection_LV2_One_Delay.p_buf);
+        Log_d("app_par_Overvoltage_protection_LV2_One_Delay.datas:%f\r\n",app_par_Overvoltage_protection_LV2_One_Delay.datas);
     }
     /* Overvoltage_protection_LV2_One_Eol */
     ret = BSW_NvM_Read(Overvoltage_protection_LV2_One_Eol,app_par_Overvoltage_protection_LV2_One_Eol.p_buf);
@@ -134,10 +134,10 @@ void APP_Parameter_Init(void)
         Log_d("app_par_Undervoltage_protection_LV1_One_Value.datas:%f\r\n",app_par_Undervoltage_protection_LV1_One_Value.datas);
     }
     /* Undervoltage_protection_LV1_One_Delay */
-    ret = BSW_NvM_Read(Undervoltage_protection_LV1_One_Dealy,app_par_Undervoltage_protection_LV1_One_Dealy.p_buf);
+    ret = BSW_NvM_Read(Undervoltage_protection_LV1_One_Delay,app_par_Undervoltage_protection_LV1_One_Delay.p_buf);
     if (ret == E_OK) {
-        app_par_Undervoltage_protection_LV1_One_Dealy.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Undervoltage_protection_LV1_One_Dealy.p_buf);
-        Log_d("app_par_Undervoltage_protection_LV1_One_Dealy.datas:%f\r\n",app_par_Undervoltage_protection_LV1_One_Dealy.datas);
+        app_par_Undervoltage_protection_LV1_One_Delay.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Undervoltage_protection_LV1_One_Delay.p_buf);
+        Log_d("app_par_Undervoltage_protection_LV1_One_Delay.datas:%f\r\n",app_par_Undervoltage_protection_LV1_One_Delay.datas);
     }
     /* Undervoltage_protection_LV1_One_Eol */
     ret = BSW_NvM_Read(Undervoltage_protection_LV1_One_Eol,app_par_Undervoltage_protection_LV1_One_Eol.p_buf);
@@ -152,10 +152,10 @@ void APP_Parameter_Init(void)
         Log_d("app_par_Undervoltage_protection_LV2_One_Value.datas:%f\r\n",app_par_Undervoltage_protection_LV2_One_Value.datas);
     }
     /* Undervoltage_protection_LV2_One_Delay */
-    ret = BSW_NvM_Read(Undervoltage_protection_LV2_One_Dealy,app_par_Undervoltage_protection_LV2_One_Dealy.p_buf);
+    ret = BSW_NvM_Read(Undervoltage_protection_LV2_One_Delay,app_par_Undervoltage_protection_LV2_One_Delay.p_buf);
     if (ret == E_OK) {
-        app_par_Undervoltage_protection_LV2_One_Dealy.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Undervoltage_protection_LV2_One_Dealy.p_buf);
-        Log_d("app_par_Undervoltage_protection_LV2_One_Dealy.datas:%f\r\n",app_par_Undervoltage_protection_LV2_One_Dealy.datas);
+        app_par_Undervoltage_protection_LV2_One_Delay.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Undervoltage_protection_LV2_One_Delay.p_buf);
+        Log_d("app_par_Undervoltage_protection_LV2_One_Delay.datas:%f\r\n",app_par_Undervoltage_protection_LV2_One_Delay.datas);
     }
     /* Undervoltage_protection_LV2_One_Eol */
     ret = BSW_NvM_Read(Undervoltage_protection_LV2_One_Eol,app_par_Undervoltage_protection_LV2_One_Eol.p_buf);
@@ -169,11 +169,11 @@ void APP_Parameter_Init(void)
         app_par_Overfrequency_Value.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Overfrequency_Value.p_buf);
         Log_d("app_par_Overfrequency_Value.datas:%f\r\n",app_par_Overfrequency_Value.datas);
     }
-    /* Overfrequency_Dealy */
-    ret = BSW_NvM_Read(Overfrequency_Dealy,app_par_Overfrequency_Dealy.p_buf);
+    /* Overfrequency_Delay */
+    ret = BSW_NvM_Read(Overfrequency_Delay,app_par_Overfrequency_Delay.p_buf);
     if (ret == E_OK) {
-        app_par_Overfrequency_Dealy.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Overfrequency_Dealy.p_buf);
-        Log_d("app_par_Overfrequency_Dealy.datas:%f\r\n",app_par_Overfrequency_Dealy.datas);
+        app_par_Overfrequency_Delay.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Overfrequency_Delay.p_buf);
+        Log_d("app_par_Overfrequency_Delay.datas:%f\r\n",app_par_Overfrequency_Delay.datas);
     }
     /* Overfrequency_Eol */
     ret = BSW_NvM_Read(Overfrequency_Eol,app_par_Overfrequency_Eol.p_buf);
@@ -187,11 +187,11 @@ void APP_Parameter_Init(void)
         app_par_Underfrequency_Value.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Underfrequency_Value.p_buf);
         Log_d("app_par_Underfrequency_Value.datas:%f\r\n",app_par_Underfrequency_Value.datas);
     }
-    /* Underfrequency_Dealy */
-    ret = BSW_NvM_Read(Underfrequency_Dealy,app_par_Underfrequency_Dealy.p_buf);
+    /* Underfrequency_Delay */
+    ret = BSW_NvM_Read(Underfrequency_Delay,app_par_Underfrequency_Delay.p_buf);
     if (ret == E_OK) {
-        app_par_Underfrequency_Dealy.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Underfrequency_Dealy.p_buf);
-        Log_d("app_par_Underfrequency_Dealy.datas:%f\r\n",app_par_Underfrequency_Dealy.datas);
+        app_par_Underfrequency_Delay.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Underfrequency_Delay.p_buf);
+        Log_d("app_par_Underfrequency_Delay.datas:%f\r\n",app_par_Underfrequency_Delay.datas);
     }
     /* Underfrequency_Eol */
     ret = BSW_NvM_Read(Underfrequency_Eol,app_par_Underfrequency_Eol.p_buf); 
@@ -205,11 +205,11 @@ void APP_Parameter_Init(void)
         app_par_Frequency_Discontinuity_Value.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Frequency_Discontinuity_Value.p_buf);
         Log_d("app_par_Frequency_Discontinuity_Value.datas:%f\r\n",app_par_Frequency_Discontinuity_Value.datas);
     }
-    /* Frequency_Discontinuity_Dealy */
-    ret = BSW_NvM_Read(Frequency_Discontinuity_Dealy,app_par_Frequency_Discontinuity_Dealy.p_buf);
+    /* Frequency_Discontinuity_Delay */
+    ret = BSW_NvM_Read(Frequency_Discontinuity_Delay,app_par_Frequency_Discontinuity_Delay.p_buf);
     if (ret == E_OK) {
-        app_par_Frequency_Discontinuity_Dealy.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Frequency_Discontinuity_Dealy.p_buf);
-        Log_d("app_par_Frequency_Discontinuity_Dealy.datas:%f\r\n",app_par_Frequency_Discontinuity_Dealy.datas);
+        app_par_Frequency_Discontinuity_Delay.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Frequency_Discontinuity_Delay.p_buf);
+        Log_d("app_par_Frequency_Discontinuity_Delay.datas:%f\r\n",app_par_Frequency_Discontinuity_Delay.datas);
     }
     /* Frequency_Discontinuity_Eol */
     ret = BSW_NvM_Read(Frequency_Discontinuity_Eol,app_par_Frequency_Discontinuity_Eol.p_buf); 
@@ -492,18 +492,18 @@ uint8 app_parameter_write_Overvoltage_protection_LV1_One_Value(float32 data)
     return ret;
 }
 
-float32 app_parameter_read_Overvoltage_protection_LV1_One_Dealy(void)
+float32 app_parameter_read_Overvoltage_protection_LV1_One_Delay(void)
 {
-    float32 ret = app_par_Overvoltage_protection_LV1_One_Dealy.datas;
+    float32 ret = app_par_Overvoltage_protection_LV1_One_Delay.datas;
     return ret;
 }
 
 uint8 app_parameter_write_Overvoltage_protection_LV1_One_Delay(float32 data)
 {
     uint8 ret = E_NOK;
-    app_par_Overvoltage_protection_LV1_One_Dealy.datas = data;
+    app_par_Overvoltage_protection_LV1_One_Delay.datas = data;
     uint32 value = MCM_floatToIntBit(data);
-    ret = BSW_NvM_Write(Overvoltage_protection_LV1_One_Dealy,&value);
+    ret = BSW_NvM_Write(Overvoltage_protection_LV1_One_Delay,&value);
     return ret;
 }
 
@@ -536,18 +536,18 @@ uint8 app_parameter_write_Overvoltage_protection_LV2_One_Value(float32 data)
     return ret;
 }
 
-float32 app_parameter_read_Overvoltage_protection_LV2_One_Dealy(void)
+float32 app_parameter_read_Overvoltage_protection_LV2_One_Delay(void)
 {
-    float32 ret = app_par_Overvoltage_protection_LV2_One_Dealy.datas;
+    float32 ret = app_par_Overvoltage_protection_LV2_One_Delay.datas;
     return ret;
 }
 
 uint8 app_parameter_write_Overvoltage_protection_LV2_One_Delay(float32 data)
 {
     uint8 ret = E_NOK;
-    app_par_Overvoltage_protection_LV2_One_Dealy.datas = data;
+    app_par_Overvoltage_protection_LV2_One_Delay.datas = data;
     uint32 value = MCM_floatToIntBit(data);
-    ret = BSW_NvM_Write(Overvoltage_protection_LV2_One_Dealy,&value);
+    ret = BSW_NvM_Write(Overvoltage_protection_LV2_One_Delay,&value);
     return ret;
 }
 
@@ -580,18 +580,18 @@ uint8 app_parameter_write_Undervoltage_protection_LV1_One_Value(float32 data)
     return ret;
 }
 
-float32 app_parameter_read_Undervoltage_protection_LV1_One_Dealy(void)
+float32 app_parameter_read_Undervoltage_protection_LV1_One_Delay(void)
 {
-    float32 ret = app_par_Undervoltage_protection_LV1_One_Dealy.datas;
+    float32 ret = app_par_Undervoltage_protection_LV1_One_Delay.datas;
     return ret;
 }
 
 uint8 app_parameter_write_Undervoltage_protection_LV1_One_Delay(float32 data)
 {
     uint8 ret = E_NOK;
-    app_par_Undervoltage_protection_LV1_One_Dealy.datas = data;
+    app_par_Undervoltage_protection_LV1_One_Delay.datas = data;
     uint32 value = MCM_floatToIntBit(data);
-    ret = BSW_NvM_Write(Undervoltage_protection_LV1_One_Dealy,&value);
+    ret = BSW_NvM_Write(Undervoltage_protection_LV1_One_Delay,&value);
     return ret;
 }
 
@@ -624,18 +624,18 @@ uint8 app_parameter_write_Undervoltage_protection_LV2_One_Value(float32 data)
     return ret;
 }
 
-float32 app_parameter_read_Undervoltage_protection_LV2_One_Dealy(void)
+float32 app_parameter_read_Undervoltage_protection_LV2_One_Delay(void)
 {
-    float32 ret = app_par_Undervoltage_protection_LV2_One_Dealy.datas;
+    float32 ret = app_par_Undervoltage_protection_LV2_One_Delay.datas;
     return ret;
 }
 
 uint8 app_parameter_write_Undervoltage_protection_LV2_One_Delay(float32 data)
 {
     uint8 ret = E_NOK;
-    app_par_Undervoltage_protection_LV2_One_Dealy.datas = data;
+    app_par_Undervoltage_protection_LV2_One_Delay.datas = data;
     uint32 value = MCM_floatToIntBit(data);
-    ret = BSW_NvM_Write(Undervoltage_protection_LV2_One_Dealy,&value);
+    ret = BSW_NvM_Write(Undervoltage_protection_LV2_One_Delay,&value);
     return ret;
 }
 
@@ -668,18 +668,18 @@ uint8 app_parameter_write_Overfrequency_Value(float32 data)
     return ret;
 }
 
-float32 app_parameter_read_Overfrequency_Dealy(void)
+float32 app_parameter_read_Overfrequency_Delay(void)
 {
-    float32 ret = app_par_Overfrequency_Dealy.datas;
+    float32 ret = app_par_Overfrequency_Delay.datas;
     return ret;
 }
 
-uint8 app_parameter_write_Overfrequency_Dealy(float32 data)
+uint8 app_parameter_write_Overfrequency_Delay(float32 data)
 {
     uint8 ret = E_NOK;
-    app_par_Overfrequency_Dealy.datas = data;
+    app_par_Overfrequency_Delay.datas = data;
     uint32 value = MCM_floatToIntBit(data);
-    ret = BSW_NvM_Write(Overfrequency_Dealy,&value);
+    ret = BSW_NvM_Write(Overfrequency_Delay,&value);
     return ret;
 }
 
@@ -712,18 +712,18 @@ uint8 app_parameter_write_Underfrequency_Value(float32 data)
     return ret;
 }
 
-float32 app_parameter_read_Underfrequency_Dealy(void)
+float32 app_parameter_read_Underfrequency_Delay(void)
 {
-    float32 ret = app_par_Underfrequency_Dealy.datas;
+    float32 ret = app_par_Underfrequency_Delay.datas;
     return ret;
 }
 
-uint8 app_parameter_write_Underfrequency_Dealy(float32 data)
+uint8 app_parameter_write_Underfrequency_Delay(float32 data)
 {
     uint8 ret = E_NOK;
-    app_par_Underfrequency_Dealy.datas = data;
+    app_par_Underfrequency_Delay.datas = data;
     uint32 value = MCM_floatToIntBit(data);
-    ret = BSW_NvM_Write(Underfrequency_Dealy,&value);
+    ret = BSW_NvM_Write(Underfrequency_Delay,&value);
     return ret;
 }
 
@@ -757,18 +757,18 @@ uint8 app_parameter_write_Frequency_Discontinuity_Value(float32 data)
     return ret;
 }
 
-float32 app_parameter_read_Frequency_Discontinuity_Dealy(void)
+float32 app_parameter_read_Frequency_Discontinuity_Delay(void)
 {
-    float32 ret = app_par_Frequency_Discontinuity_Dealy.datas;
+    float32 ret = app_par_Frequency_Discontinuity_Delay.datas;
     return ret;
 }
 
-uint8 app_parameter_write_Frequency_Discontinuity_Dealy(float32 data)
+uint8 app_parameter_write_Frequency_Discontinuity_Delay(float32 data)
 {
     uint8 ret = E_NOK;
-    app_par_Frequency_Discontinuity_Dealy.datas = data;
+    app_par_Frequency_Discontinuity_Delay.datas = data;
     uint32 value = MCM_floatToIntBit(data);
-    ret = BSW_NvM_Write(Frequency_Discontinuity_Dealy,&value);
+    ret = BSW_NvM_Write(Frequency_Discontinuity_Delay,&value);
     return ret;
 }
 

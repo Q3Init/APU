@@ -18,7 +18,7 @@ typedef struct
     /* data */
     float32 datas;
     uint8 p_buf[4];
-}app_par_Overvoltage_protection_LV1_One_Dealy_Rte;
+}app_par_Overvoltage_protection_LV1_One_Delay_Rte;
 
 typedef struct
 {
@@ -39,7 +39,7 @@ typedef struct
     /* data */
     float32 datas;
     uint8 p_buf[4];
-}app_par_Overvoltage_protection_LV2_One_Dealy_Rte;
+}app_par_Overvoltage_protection_LV2_One_Delay_Rte;
 
 typedef struct
 {
@@ -60,7 +60,7 @@ typedef struct
     /* data */
     float32 datas;
     uint8 p_buf[4];
-}app_par_Undervoltage_protection_LV1_One_Dealy_Rte;
+}app_par_Undervoltage_protection_LV1_One_Delay_Rte;
 
 typedef struct
 {
@@ -81,7 +81,7 @@ typedef struct
     /* data */
     float32 datas;
     uint8 p_buf[4];
-}app_par_Undervoltage_protection_LV2_One_Dealy_Rte;
+}app_par_Undervoltage_protection_LV2_One_Delay_Rte;
 
 typedef struct
 {
@@ -102,7 +102,7 @@ typedef struct
     /* data */
     float32 datas;
     uint8 p_buf[4];
-}app_par_Overfrequency_Dealy_Rte;
+}app_par_Overfrequency_Delay_Rte;
 
 typedef struct
 {
@@ -123,7 +123,7 @@ typedef struct
     /* data */
     float32 datas;
     uint8 p_buf[4];
-}app_par_Underfrequency_Dealy_Rte;
+}app_par_Underfrequency_Delay_Rte;
 
 typedef struct
 {
@@ -144,7 +144,7 @@ typedef struct
     /* data */
     float32 datas;
     uint8 p_buf[4];
-}app_par_Frequency_Discontinuity_Dealy_Rte;
+}app_par_Frequency_Discontinuity_Delay_Rte;
 
 typedef struct
 {
@@ -456,14 +456,14 @@ extern void APP_Parameter_Init(void);
 /* 过压一段保护 */
 extern float32 app_parameter_read_Overvoltage_protection_LV1_One_Value(void);
 extern uint8 app_parameter_write_Overvoltage_protection_LV1_One_Value(float32 data);
-extern float32 app_parameter_read_Overvoltage_protection_LV1_One_Dealy(void);
+extern float32 app_parameter_read_Overvoltage_protection_LV1_One_Delay(void);
 extern uint8 app_parameter_write_Overvoltage_protection_LV1_One_Delay(float32 data);
 extern uint8 app_parameter_read_Overvoltage_protection_LV1_One_Eol(void);
 extern uint8 app_parameter_write_Overvoltage_protection_LV1_One_Eol(uint8 data);
 /* 过压二段保护 */
 extern float32 app_parameter_read_Overvoltage_protection_LV2_One_Value(void);
 extern uint8 app_parameter_write_Overvoltage_protection_LV2_One_Value(float32 data);
-extern float32 app_parameter_read_Overvoltage_protection_LV2_One_Dealy(void);
+extern float32 app_parameter_read_Overvoltage_protection_LV2_One_Delay(void);
 extern uint8 app_parameter_write_Overvoltage_protection_LV2_One_Delay(float32 data);
 extern uint8 app_parameter_read_Overvoltage_protection_LV2_One_Eol(void);
 extern uint8 app_parameter_write_Overvoltage_protection_LV2_One_Eol(uint8 data);
@@ -471,38 +471,38 @@ extern uint8 app_parameter_write_Overvoltage_protection_LV2_One_Eol(uint8 data);
 /* 低压一段保护 */
 extern float32 app_parameter_read_Undervoltage_protection_LV1_One_Value(void);
 extern uint8 app_parameter_write_Undervoltage_protection_LV1_One_Value(float32 data);
-extern float32 app_parameter_read_Undervoltage_protection_LV1_One_Dealy(void);
+extern float32 app_parameter_read_Undervoltage_protection_LV1_One_Delay(void);
 extern uint8 app_parameter_write_Undervoltage_protection_LV1_One_Delay(float32 data);
 extern uint8 app_parameter_read_Undervoltage_protection_LV1_One_Eol(void);
 extern uint8 app_parameter_write_Undervoltage_protection_LV1_One_Eol(uint8 data);
 /* 低压二段保护 */
 extern float32 app_parameter_read_Undervoltage_protection_LV2_One_Value(void);
 extern uint8 app_parameter_write_Undervoltage_protection_LV2_One_Value(float32 data);
-extern float32 app_parameter_read_Undervoltage_protection_LV2_One_Dealy(void);
+extern float32 app_parameter_read_Undervoltage_protection_LV2_One_Delay(void);
 extern uint8 app_parameter_write_Undervoltage_protection_LV2_One_Delay(float32 data);
 extern uint8 app_parameter_read_Undervoltage_protection_LV2_One_Eol(void);
 extern uint8 app_parameter_write_Undervoltage_protection_LV2_One_Eol(uint8 data);
 /* 频率过高 */
 extern float32 app_parameter_read_Overfrequency_Value(void);
 extern uint8 app_parameter_write_Overfrequency_Value(float32 data);
-extern float32 app_parameter_read_Overfrequency_Dealy(void);
-extern uint8 app_parameter_write_Overfrequency_Dealy(float32 data);
+extern float32 app_parameter_read_Overfrequency_Delay(void);
+extern uint8 app_parameter_write_Overfrequency_Delay(float32 data);
 extern uint8 app_parameter_read_Overfrequency_Eol(void);
 extern uint8 app_parameter_write_Overfrequency_Eol(uint8 data);
 
 /* 频率过低 */
 extern float32 app_parameter_read_Underfrequency_Value(void);
 extern uint8 app_parameter_write_Underfrequency_Value(float32 data);
-extern float32 app_parameter_read_Underfrequency_Dealy(void);
-extern uint8 app_parameter_write_Underfrequency_Dealy(float32 data);
+extern float32 app_parameter_read_Underfrequency_Delay(void);
+extern uint8 app_parameter_write_Underfrequency_Delay(float32 data);
 extern uint8 app_parameter_read_Underfrequency_Eol(void);
 extern uint8 app_parameter_write_Underfrequency_Eol(uint8 data);
 
 /* 频率突变 */
 extern float32 app_parameter_read_Frequency_Discontinuity_Value(void);
 extern uint8 app_parameter_write_Frequency_Discontinuity_Value(float32 data);
-extern float32 app_parameter_read_Frequency_Discontinuity_Dealy(void);
-extern uint8 app_parameter_write_Frequency_Discontinuity_Dealy(float32 data);
+extern float32 app_parameter_read_Frequency_Discontinuity_Delay(void);
+extern uint8 app_parameter_write_Frequency_Discontinuity_Delay(float32 data);
 extern uint8 app_parameter_read_Frequency_Discontinuity_Eol(void);
 extern uint8 app_parameter_write_Frequency_Discontinuity_Eol(uint8 data);
 
