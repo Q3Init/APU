@@ -524,7 +524,14 @@ static void SystemClock72M(void)
         /* HCLK = SYSCLK */
         RCM->CFG_B.AHBPSC= 0X00;
         /* PCLK2 = HCLK */
-        RCM->CFG_B.APB2PSC= 0;
+        // RCM->CFG_B.APB2PSC= 0;
+          /* 0xx：HCLK 不分频；
+            100：HCLK 2 分频
+            101：HCLK 4 分频
+            110：HCLK 8 分频
+            111：HCLK 16 分频 */
+        // todo casper test
+        RCM->CFG_B.APB2PSC= 6;
         /* PCLK1 = HCLK / 2 */
         RCM->CFG_B.APB1PSC = 4;
 

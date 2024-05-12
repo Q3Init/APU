@@ -4,10 +4,10 @@
 uint8 KEY_Return(void)
 {
     uint8 keynum=0;
-    if(BSW_Dio_ReadInputBit(DIO_PORT_return,DIO_PIN_return)==1)
+    if(BSW_Dio_ReadInputBit(DIO_PORT_return,DIO_PIN_return)==0)
     {
         OS_Delay_us(1000);
-        while(BSW_Dio_ReadInputBit(DIO_PORT_return,DIO_PIN_return)==1)
+        while(BSW_Dio_ReadInputBit(DIO_PORT_return,DIO_PIN_return)==0)
         OS_Delay_us(1000);
         keynum=KEY_RETURN;
     }
@@ -17,11 +17,11 @@ uint8 KEY_Return(void)
 uint8 KEY_Enter(void)
 {
     uint8 keynum=0;
-    if(BSW_Dio_ReadInputBit(DIO_PORT_enter,DIO_PIN_enter)==1)
+    if(BSW_Dio_ReadInputBit(DIO_PORT_enter,DIO_PIN_enter)==0)
     {
         OS_Delay_us(1000);
         
-        while(BSW_Dio_ReadInputBit(DIO_PORT_enter,DIO_PIN_enter)==1)
+        while(BSW_Dio_ReadInputBit(DIO_PORT_enter,DIO_PIN_enter)==0)
         OS_Delay_us(1000);
         keynum=KEY_ENTER;
     }
@@ -31,10 +31,10 @@ uint8 KEY_Enter(void)
 uint8 KEY_Up(void)
 {
     uint8 keynum=0;
-    if(BSW_Dio_ReadInputBit(DIO_PORT_up,DIO_PIN_up)==1)
+    if(BSW_Dio_ReadInputBit(DIO_PORT_up,DIO_PIN_up)==0)
     {
         OS_Delay_us(1000);
-        while(BSW_Dio_ReadInputBit(DIO_PORT_up,DIO_PIN_up)==1)
+        while(BSW_Dio_ReadInputBit(DIO_PORT_up,DIO_PIN_up)==0)
         OS_Delay_us(1000);
         keynum=KEY_UP;
     }
@@ -44,10 +44,10 @@ uint8 KEY_Up(void)
 uint8 KEY_Down(void)
 {
     uint8 keynum=0;
-    if(BSW_Dio_ReadInputBit(DIO_PORT_down,DIO_PIN_down)==1)
+    if(BSW_Dio_ReadInputBit(DIO_PORT_down,DIO_PIN_down)==0)
     {
         OS_Delay_us(1000);
-        while(BSW_Dio_ReadInputBit(DIO_PORT_down,DIO_PIN_down)==1)
+        while(BSW_Dio_ReadInputBit(DIO_PORT_down,DIO_PIN_down)==0)
         OS_Delay_us(1000);
         keynum=KEY_DOWN;
     }
@@ -70,10 +70,10 @@ uint8 KEY_Left(void)
 uint8 KEY_Right(void)
 {
     uint8 keynum=0;
-    if(BSW_Dio_ReadInputBit(DIO_PORT_right,DIO_PIN_right)==1)
+    if(BSW_Dio_ReadInputBit(DIO_PORT_right,DIO_PIN_right)==0)
     {
         OS_Delay_us(1000);
-        while(BSW_Dio_ReadInputBit(DIO_PORT_right,DIO_PIN_right)==1)
+        while(BSW_Dio_ReadInputBit(DIO_PORT_right,DIO_PIN_right)==0)
         OS_Delay_us(1000);
         keynum=KEY_RIGHT;
     }
@@ -83,10 +83,10 @@ uint8 KEY_Right(void)
 uint8 KEY_Minus(void)
 {
     uint8 keynum=0;
-    if(BSW_Dio_ReadInputBit(DIO_PORT_right,DIO_PIN_subtract)==1)
+    if(BSW_Dio_ReadInputBit(DIO_PORT_right,DIO_PIN_subtract)==0)
     {
         OS_Delay_us(1000);
-        while(BSW_Dio_ReadInputBit(DIO_PORT_right,DIO_PIN_subtract)==1)
+        while(BSW_Dio_ReadInputBit(DIO_PORT_right,DIO_PIN_subtract)==0)
         OS_Delay_us(1000);
         keynum=KEY_MINUS;
     }
@@ -96,10 +96,10 @@ uint8 KEY_Minus(void)
 uint8 KEY_Plus(void)
 {
     uint8 keynum=0;
-    if(BSW_Dio_ReadInputBit(DIO_PORT_plus,DIO_PIN_plus)==1)
+    if(BSW_Dio_ReadInputBit(DIO_PORT_plus,DIO_PIN_plus)==0)
     {
         OS_Delay_us(1000);
-        while(BSW_Dio_ReadInputBit(DIO_PORT_plus,DIO_PIN_plus)==1)
+        while(BSW_Dio_ReadInputBit(DIO_PORT_plus,DIO_PIN_plus)==0)
         OS_Delay_us(1000);
         keynum=KEY_PLUS;
 

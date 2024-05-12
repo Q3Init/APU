@@ -16,13 +16,13 @@ void MCAL_Nvic_Init(void)
     DMA_EnableInterrupt(DMA1_Channel1,DMA1_INT_FLAG_TC1);
 }
 
+extern void APP_FFT_Start(void);
 void DMA1_Channel1_IRQHandler(void)
 {
     if (DMA_ReadIntFlag(DMA1_INT_FLAG_TC1) != RESET)
     {
         TMR_Disable(TMR3);
-        get_adcvalues(DMA_ADCConvertedValue);
-        DMA_ClearIntFlag(DMA1_INT_FLAG_TC1);
-        
+        APP_FFT_Start();
+        DMA_ClearIntFlag(DMA1_INT_FLAG_TC1);        
     }
 }
