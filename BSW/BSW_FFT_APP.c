@@ -1,3 +1,5 @@
+#ifdef BSW_FFT_ENABLE
+
 #include "BSW_FFT_APP.h"
 #include "stm32_dsp.h"
 #include "table_fft.h"
@@ -82,3 +84,4 @@ void get_adcvalues(uint16* adcbuffer)
     }
 }
 
+#endif

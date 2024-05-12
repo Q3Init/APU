@@ -71,7 +71,7 @@ void APP_test_Mainfunction(void)
         }
         // FFT();
         key_task_test_for_lin();
-        Log_d("App test!\r\n");
+        // Log_d("App test!\r\n");
         //lcd_test_main();//just for lcd driver test
         vTaskDelay(50);
     }

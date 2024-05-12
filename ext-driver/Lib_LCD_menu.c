@@ -96,7 +96,7 @@ uint8_t menu_type_ptr_match(uint8_t key_signal, uint8_t menu_row_num, uint8_t me
 
     if(cur_row == 0xff)
     {
-		Log_d("E | cur_row_idx: %d  cur_column_idx:%d \r\n", cur_row, cur_column);
+		// Log_d("E | cur_row_idx: %d  cur_column_idx:%d \r\n", cur_row, cur_column);
         return menu_type_ptr;
     }
 
@@ -108,7 +108,7 @@ uint8_t menu_type_ptr_match(uint8_t key_signal, uint8_t menu_row_num, uint8_t me
 
     cur_menu_type_ptr_from_env_set(cur_row*menu_column_num+cur_column);
 
-    Log_d("E | cur_row_idx: %d  cur_column_idx:%d \r\n", cur_row, cur_column);
+    // Log_d("E | cur_row_idx: %d  cur_column_idx:%d \r\n", cur_row, cur_column);
 	menu_type_ptr = cur_menu_type_ptr_from_env_get();
     return menu_type_ptr;
 }

@@ -159,7 +159,7 @@ struct menu_event_tag * debug_mode_handler(uint8_t msg_process_signal, uint8_t m
 	{
 		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
         uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(debug_mode_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		// Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 		if(msg_context == KEY_ENTER)
 		{
 			Log_d("top_menu_array[menu_type_idx]:%d \r\n", debug_mode_menu_array[menu_type_idx]);

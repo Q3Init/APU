@@ -26,6 +26,9 @@
 #include "Lib_LCD_kernel.h"
 #include "Ext_LCD_Driver.h"
 
+#include "APP_Protection_Backend.h"
+#include "APP_Protection_Management.h"
+
 #define __DISENBLE_IRQ() __disable_irq()
 #define __ENABLE_IRQ() __enable_irq()
 

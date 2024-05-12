@@ -35,6 +35,9 @@ void RTE_Init(void)
     /* LCD driver and menu init */
 	Initial_LCD();	
 
+    APP_Protection_Backend_Init();
+    APP_Protection_Management_Init();
+
     rteBswRdyFlg = TRUE; /* Init complete flag */
     __ENABLE_IRQ(); /* chip enable irq */
 }

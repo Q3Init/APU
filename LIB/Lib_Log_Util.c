@@ -1,5 +1,7 @@
 #ifdef DEBUG_INFO_ENABLE
 #include "Lib_Log_Util.h"
+#include "freertos.h"
+#include "semphr.h"
 
 #define MAX_LOG_MSG_LEN 			(512)
 
@@ -71,10 +73,22 @@ static const char *_get_filename(const char *p)
 
 void Log_writter(const char *file, const char *func, const int line, const int level, const char *fmt, ...)
 {
+    static SemaphoreHandle_t log_sem = NULL;
+
 	if (level < g_log_level) {
 		return;
 	}
-		
+
+    if (log_sem == NULL) {
+        log_sem = xSemaphoreCreateMutex();
+        if (log_sem == NULL) {
+            HAL_Printf("Failed to create log semaphore!\r\n");
+        }
+    }
+
+    if (log_sem != NULL) {
+        xSemaphoreTake(log_sem, portMAX_DELAY);
+    }
 	const char *file_name = _get_filename(file);
     sint32 log_length = 0;
 
@@ -109,6 +123,10 @@ void Log_writter(const char *file, const char *func, const int line, const int l
     }
 
     HAL_Printf((char *)uart_log_buffer);
+
+    if (log_sem != NULL) {
+        xSemaphoreGive(log_sem);
+    }
 
     return; 
 }
