@@ -8,5 +8,6 @@
 extern void AppTaskCreate(void);
 
 extern TaskHandle_t AppTaskCreate_Handle;
+extern void AppTaskCreate(void);
 
 #endif

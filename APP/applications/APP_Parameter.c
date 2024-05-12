@@ -70,7 +70,7 @@ uint8 app_parameter_read_Overvoltage_protection_LV1_One_Eol(void)
 uint8 app_parameter_write_Overvoltage_protection_LV1_One_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
-    pp_par_Overvoltage_protection_LV1_One_Eol.datas = data;
+    app_par_Overvoltage_protection_LV1_One_Eol.datas = data;
     ret = BSW_NvM_Write(Overvoltage_protection_LV1_One_Eol,&data);
     return ret;
 }
