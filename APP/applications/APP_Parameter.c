@@ -15,16 +15,19 @@ void APP_Parameter_Init(void)
     ret = BSW_NvM_Read(Overvoltage_protection_LV1_One_Value,app_par_Overvoltage_protection_LV1_One_Value.p_buf);
     if (ret == E_OK) {
         app_par_Overvoltage_protection_LV1_One_Value.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Overvoltage_protection_LV1_One_Value.p_buf);
+        Log_d("app_par_Overvoltage_protection_LV1_One_Value.datas:%f\r\n",app_par_Overvoltage_protection_LV1_One_Value.datas);
     }
     /* Overvoltage_protection_LV1_One_Delay */
     ret = BSW_NvM_Read(Overvoltage_protection_LV1_One_Dealy,app_par_Overvoltage_protection_LV1_One_Dealy.p_buf);
     if (ret == E_OK) {
         app_par_Overvoltage_protection_LV1_One_Dealy.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_Overvoltage_protection_LV1_One_Dealy.p_buf);
+        Log_d("app_par_Overvoltage_protection_LV1_One_Dealy.datas:%f\r\n",app_par_Overvoltage_protection_LV1_One_Value.datas);
     }
     /* Overvoltage_protection_LV1_One_Eol */
     ret = BSW_NvM_Read(Overvoltage_protection_LV1_One_Eol,app_par_Overvoltage_protection_LV1_One_Eol.p_buf);
     if (ret == E_OK) {
         app_par_Overvoltage_protection_LV1_One_Eol.datas = *app_par_Overvoltage_protection_LV1_One_Eol.p_buf;
+        Log_d("app_par_Overvoltage_protection_LV1_One_Eol.datas:%d\r\n",app_par_Overvoltage_protection_LV1_One_Eol.datas);
     }
 }
 
@@ -66,7 +69,8 @@ uint8 app_parameter_read_Overvoltage_protection_LV1_One_Eol(void)
 
 uint8 app_parameter_write_Overvoltage_protection_LV1_One_Eol(uint8 data)
 {
-    uint8 ret = E_NOK;
+    uint8 ret = E_NOK; 
+    pp_par_Overvoltage_protection_LV1_One_Eol.datas = data;
     ret = BSW_NvM_Write(Overvoltage_protection_LV1_One_Eol,&data);
     return ret;
 }

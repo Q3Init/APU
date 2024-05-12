@@ -12,6 +12,7 @@ uint8 BSW_NvM_Write(uint16 id,void* data)
             write_address += nvm_datas_Lists[index-1].data_len;
         }
         if (id == nvm_datas_Lists[index].id) {
+            /* todo:erase */
             ret = FRAM_Write(data,write_address,nvm_datas_Lists[index].data_len);
         }
     }
