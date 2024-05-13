@@ -1,6 +1,7 @@
 
 #include "APP_Protection_Management.h"
 #include "APP_Protection_Backend.h"
+#include "APP_Parameter.h"
 #include "Lib_Log_Util.h"
 #include "freertos.h"
 #include "task.h"
@@ -18,8 +19,12 @@ static void APP_Protection_Voltage_Handler(void)
     uint32  delay_ms       = 0;
 
     if (pMnt->enable.over_volt_enable_lv1) { /* 过压一段保护 */
-        volt_threshold = LIMIT_RANGE(VOLT_MIN_RANGE, VOLT_MAX_RANGE, pMnt->over_volt_threshold_lv1);
-        delay_ms = (uint32)(LIMIT_RANGE(VOLT_DELAY_MIN_RANGE, VOLT_DELAY_MAX_RANGE, pMnt->over_volt_delay_lv1) * 1000);
+        volt_threshold = LIMIT_RANGE(VOLT_MIN_RANGE, 
+                                     VOLT_MAX_RANGE, 
+                                     app_parameter_read_Overvoltage_protection_LV1_One_Value());
+        delay_ms = (uint32)(LIMIT_RANGE(VOLT_DELAY_MIN_RANGE, 
+                                        VOLT_DELAY_MAX_RANGE, 
+                                        app_parameter_read_Overvoltage_protection_LV1_One_Delay()) * 1000);
         /* Ulmax 大于阈值 && （开关在合位 或 Imax > 0.1A） && 过压一段功能投入 */
         if ((APP_Get_Line_Voltage_Max() > volt_threshold) && 
             (((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > 0.1)))) {
@@ -37,8 +42,12 @@ static void APP_Protection_Voltage_Handler(void)
     }
 
     if (pMnt->enable.over_volt_enable_lv2) { /* 过压二段保护 */
-        volt_threshold = LIMIT_RANGE(VOLT_MIN_RANGE, VOLT_MAX_RANGE, pMnt->over_volt_threshold_lv2);
-        delay_ms = (uint32)(LIMIT_RANGE(VOLT_DELAY_MIN_RANGE, VOLT_DELAY_MAX_RANGE, pMnt->over_volt_delay_lv2) * 1000);
+        volt_threshold = LIMIT_RANGE(VOLT_MIN_RANGE, 
+                                     VOLT_MAX_RANGE, 
+                                     app_parameter_read_Overvoltage_protection_LV2_One_Value());
+        delay_ms = (uint32)(LIMIT_RANGE(VOLT_DELAY_MIN_RANGE, 
+                                        VOLT_DELAY_MAX_RANGE, 
+                                        app_parameter_read_Overvoltage_protection_LV2_One_Delay()) * 1000);
         /* Ulmax 大于阈值 && （开关在合位 或 Imax > 0.1A） && 过压二段功能投入 */
         if ((APP_Get_Line_Voltage_Max() > volt_threshold) && 
             (((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > 0.1)))) {
@@ -56,8 +65,12 @@ static void APP_Protection_Voltage_Handler(void)
     }
 
     if (pMnt->enable.under_volt_enable_lv1) { /* 欠压一段保护 */
-        volt_threshold = LIMIT_RANGE(VOLT_MIN_RANGE, VOLT_MAX_RANGE, pMnt->under_volt_threshold_lv1);
-        delay_ms = (uint32)(LIMIT_RANGE(VOLT_DELAY_MIN_RANGE, VOLT_DELAY_MAX_RANGE, pMnt->under_volt_delay_lv1) * 1000);
+        volt_threshold = LIMIT_RANGE(VOLT_MIN_RANGE, 
+                                    VOLT_MAX_RANGE,
+                                    app_parameter_read_Undervoltage_protection_LV1_One_Value());
+        delay_ms = (uint32)(LIMIT_RANGE(VOLT_DELAY_MIN_RANGE, 
+                                        VOLT_DELAY_MAX_RANGE, 
+                                        app_parameter_read_Undervoltage_protection_LV1_One_Delay()) * 1000);
         /* 30v < Ulmin < 设置定值 && （开关在合位 或 Imax > 0.1A） && 低压一段功能投入 */
         if (((APP_Get_Line_Voltage_Min() > 30.0) && (APP_Get_Line_Voltage_Min() < volt_threshold)) && 
             (((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > 0.1)))) {
@@ -75,8 +88,12 @@ static void APP_Protection_Voltage_Handler(void)
     }
 
     if (pMnt->enable.under_volt_enable_lv2) { /* 欠压二段保护 */
-        volt_threshold = LIMIT_RANGE(VOLT_MIN_RANGE, VOLT_MAX_RANGE, pMnt->under_volt_threshold_lv2);
-        delay_ms = (uint32)(LIMIT_RANGE(VOLT_DELAY_MIN_RANGE, VOLT_DELAY_MAX_RANGE, pMnt->under_volt_delay_lv2) * 1000);
+        volt_threshold = LIMIT_RANGE(VOLT_MIN_RANGE, 
+                                     VOLT_MAX_RANGE, 
+                                     app_parameter_read_Undervoltage_protection_LV2_One_Value());
+        delay_ms = (uint32)(LIMIT_RANGE(VOLT_DELAY_MIN_RANGE, 
+                                        VOLT_DELAY_MAX_RANGE, 
+                                        app_parameter_read_Undervoltage_protection_LV2_One_Delay()) * 1000);
         /* 30v < Ulmin < 设置定值 && （开关在合位 或 Imax > 0.1A） && 低压二段功能投入 */
         if (((APP_Get_Line_Voltage_Min() > 30.0) && (APP_Get_Line_Voltage_Min() < volt_threshold)) && 
             (((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > 0.1)))) {
@@ -105,8 +122,12 @@ static void APP_Protection_Freq_Handler(void)
     float32 spike_val      = 0.0;
 
     if (pMnt->enable.over_freq_enable) { /* 过频保护 */
-        freq_threshold = LIMIT_RANGE(FREQ_MIN_RANGE, FREQ_MAX_RANGE, pMnt->over_freq_threshold);
-        delay_ms = (uint32)(LIMIT_RANGE(FREQ_DELAY_MIN_RANGE, FREQ_DELAY_MAX_RANGE, pMnt->over_freq_delay) * 1000);
+        freq_threshold = LIMIT_RANGE(FREQ_MIN_RANGE, 
+                                     FREQ_MAX_RANGE, 
+                                     app_parameter_read_Overfrequency_Value());
+        delay_ms = (uint32)(LIMIT_RANGE(FREQ_DELAY_MIN_RANGE, 
+                                        FREQ_DELAY_MAX_RANGE,
+                                        app_parameter_read_Overfrequency_Delay()) * 1000);
         /* 频率过高功能投入 && 频率值 > 定值 && Ua > 35v && （开关在合位或Imax > 0.1A）*/
         if ((APP_Get_Fundamental_Freq() > freq_threshold) && (APP_Get_Voltage_Ua() > 35.0) && 
             ((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > 0.1))) {
@@ -124,8 +145,12 @@ static void APP_Protection_Freq_Handler(void)
     }
 
     if (pMnt->enable.low_freq_enable) { /* 低频保护 */
-        freq_threshold = LIMIT_RANGE(FREQ_MIN_RANGE, FREQ_MAX_RANGE, pMnt->low_freq_threshold);
-        delay_ms = (uint32)(LIMIT_RANGE(FREQ_DELAY_MIN_RANGE, FREQ_DELAY_MAX_RANGE, pMnt->low_freq_delay) * 1000);
+        freq_threshold = LIMIT_RANGE(FREQ_MIN_RANGE, 
+                                    FREQ_MAX_RANGE, 
+                                    app_parameter_read_Underfrequency_Value());
+        delay_ms = (uint32)(LIMIT_RANGE(FREQ_DELAY_MIN_RANGE, 
+                                        FREQ_DELAY_MAX_RANGE, 
+                                        app_parameter_read_Underfrequency_Delay()) * 1000);
         /* 频率过低功能投入 && 频率值 < 定值 && Ua > 35v && （开关在合位或Imax > 0.1A）*/
         if ((APP_Get_Fundamental_Freq() < freq_threshold) && (APP_Get_Voltage_Ua() > 35.0) && 
             ((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > 0.1))) {
@@ -143,8 +168,12 @@ static void APP_Protection_Freq_Handler(void)
     }
 
     if (pMnt->enable.spike_freq_enable) { /* 频率突变 */
-        freq_threshold = LIMIT_RANGE(FREQ_SPIKE_MIN_RANGE, FREQ_SPIKE_MAX_RANGE, pMnt->spike_freq_threshold);
-        delay_ms = (uint32)(LIMIT_RANGE(FREQ_SPIKE_DELAY_MIN_RANGE, FREQ_SPIKE_DELAY_MAX_RANGE, pMnt->spike_freq_delay) * 1000);        
+        freq_threshold = LIMIT_RANGE(FREQ_SPIKE_MIN_RANGE, 
+                                     FREQ_SPIKE_MAX_RANGE, 
+                                     app_parameter_read_Frequency_Discontinuity_Value());
+        delay_ms = (uint32)(LIMIT_RANGE(FREQ_SPIKE_DELAY_MIN_RANGE, 
+                                        FREQ_SPIKE_DELAY_MAX_RANGE, 
+                                        app_parameter_read_Frequency_Discontinuity_Delay()) * 1000);        
         /* 频率突变功能投入 && 频率df/dt 突变值 > 定值 && Ua > 35 && 开关在合位或Imax > 0.1A */
         if ((APP_Get_System_Ms() - pMnt->spike_freq_run_tick) >= 10) { /* 10ms 检测周期 */   
             spike_val = ABS_FLOAT((APP_Get_Fundamental_Freq() - pMnt->last_fundamental_freq)) / ((APP_Get_System_Ms() - pMnt->spike_freq_run_tick) / 1000.0);
@@ -178,8 +207,12 @@ static void APP_Protection_ReversePower_Handler(void)
     uint32 delay_ms = 0;
 
     if (pMnt->enable.reverse_power_enable) {
-        power_threshold = LIMIT_RANGE(REVERSE_POWER_MIN_RANGE, REVERSE_POWER_MAX_RANGE, pMnt->reverse_power_threshold);
-        delay_ms = (uint32)(LIMIT_RANGE(REVERSE_POWER_DELAY_MIN_RANGE, REVERSE_POWER_DELAY_MAX_RANGE, pMnt->reverse_power_delay)*1000);
+        power_threshold = LIMIT_RANGE(REVERSE_POWER_MIN_RANGE, 
+                                      REVERSE_POWER_MAX_RANGE, 
+                                      app_parameter_read_Reverse_Power_Protection_Value());
+        delay_ms = (uint32)(LIMIT_RANGE(REVERSE_POWER_DELAY_MIN_RANGE, 
+                                        REVERSE_POWER_DELAY_MAX_RANGE, 
+                                        app_parameter_read_Reverse_Power_Protection_Delay())*1000);
         /* 逆功率功能投入 && 功率绝对值 > 定值 && Ua > 35V && 开关在合位或Imax > 0.1A */
         if ((ABS_FLOAT(APP_Get_Reverse_Power()) > power_threshold) && (APP_Get_Voltage_Ua() > 35.0) && 
             ((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > 0.1))) {
@@ -208,8 +241,12 @@ static void APP_Protection_Harmonic_Handler(void)
     uint32 delay_ms = 0;
 
     if (pMnt->enable.harmonic_volt_distortion_enable) { /* 任意相电压大于60v且电压失真度大于定值 */
-        distortion_threshold = LIMIT_RANGE(HARMONIC_VOLTAGE_DISTORTION_MIN_RANGE, HARMONIC_VOLTAGE_DISTORTION_MAX_RANGE, pMnt->harmonic_volt_distortion_threshold);
-        delay_ms = (uint32)(LIMIT_RANGE(HARMONIC_VOLTAGE_DISTORTION_DELAY_MIN_RANGE, HARMONIC_VOLTAGE_DISTORTION_DELAY_MAX_RANGE, pMnt->harmonic_volt_distortion_delay) * 1000);
+        distortion_threshold = LIMIT_RANGE(HARMONIC_VOLTAGE_DISTORTION_MIN_RANGE, 
+                                           HARMONIC_VOLTAGE_DISTORTION_MAX_RANGE, 
+                                           app_parameter_read_Harmonic_Protection_Value());
+        delay_ms = (uint32)(LIMIT_RANGE(HARMONIC_VOLTAGE_DISTORTION_DELAY_MIN_RANGE, 
+                                        HARMONIC_VOLTAGE_DISTORTION_DELAY_MAX_RANGE, 
+                                        app_parameter_read_Harmonic_Protection_Delay()) * 1000);
         /* 任意相电压大于60v且电压失真度大于定值 && 谐波保护功能投入 */
         if ((APP_Get_Voltage_Ua() > 60.0) && (APP_Get_Voltage_Ub() > 60.0) && (APP_Get_Voltage_Ub() > 60.0) && 
             ((APP_Get_Harmonic_Distortion_Ua() > distortion_threshold) || 
@@ -238,7 +275,9 @@ static void APP_Protection_ExtCtrl_Handler(void)
     uint8_t delay_ms = 0;
 
     if (pMnt->enable.ext_ctrl_enable && pMnt->enable.ext_ctrl_permit_switch_off) { /* 外部联跳保护 */
-        delay_ms = (uint32)(LIMIT_RANGE(EXT_CTRL_DELAY_MIN_RANGE, EXT_CTRL_DELAY_MAX_RANGE, pMnt->ext_ctrl_delay) * 1000);
+        delay_ms = (uint32)(LIMIT_RANGE(EXT_CTRL_DELAY_MIN_RANGE, 
+                                        EXT_CTRL_DELAY_MAX_RANGE, 
+                                        app_parameter_read_External_Coordination_Delay()) * 1000);
         /* 外部联跳信号输入 && 联跳允许跳闸投入 && 外部联跳功能投入 */
         if (true == APP_Remote_Signal_Input_Switching_Exist_Off()) { /* 存在跳闸输入 */
             if ((APP_Get_System_Ms() - pMnt->ext_ctrl_tick) >= delay_ms) {
@@ -268,8 +307,12 @@ static void APP_Protection_Current_Handler(void)
     static float32 last_current_Ic = 0.0;
 
     if (pMnt->enable.quick_break_enable) { /* 速断保护 */
-        threshold = LIMIT_RANGE(QUICK_BREAK_MIN_RANGE, QUICK_BREAK_MAX_RANGE, pMnt->quick_break_threshold);
-        delay_ms = (uint32) (LIMIT_RANGE(QUICK_BREAK_DELAY_MIN_RANGE, QUICK_BREAK_DELAY_MAX_RANGE, pMnt->quick_break_delay) * 1000);
+        threshold = LIMIT_RANGE(QUICK_BREAK_MIN_RANGE, 
+                                QUICK_BREAK_MAX_RANGE, 
+                                app_parameter_read_Instantaneous_Overcurrent_Protection_Value());
+        delay_ms = (uint32) (LIMIT_RANGE(QUICK_BREAK_DELAY_MIN_RANGE, 
+                                         QUICK_BREAK_DELAY_MAX_RANGE, 
+                                         app_parameter_read_Instantaneous_Overcurrent_Delay()) * 1000);
         /* max(Ia,Ib,Ic) > 定值 && 突变量满足启动条件 && 速断保护功能投入 */
         if ((APP_Get_System_Ms() - pMnt->quick_break_run_tick) >= 50) {
             spike_val_Ia = ABS_FLOAT((APP_Get_Current_Ia() - last_current_Ia) / ((APP_Get_System_Ms() - pMnt->quick_break_run_tick) / 1000.0));
@@ -296,8 +339,12 @@ static void APP_Protection_Current_Handler(void)
 
 
     if (pMnt->enable.time_limit_quick_break_enable) { /* 限时速断保护 */
-        threshold = LIMIT_RANGE(TIME_LIMIT_QUICK_BREAK_MIN_RANGE, TIME_LIMIT_QUICK_BREAK_MAX_RANGE, pMnt->time_limit_quick_break_threshold);
-        delay_ms = (uint32) (LIMIT_RANGE(TIME_LIMIT_QUICK_BREAK_DELAY_MIN_RANGE, TIME_LIMIT_QUICK_BREAK_DELAY_MAX_RANGE, pMnt->time_limit_quick_break_delay) * 1000);
+        threshold = LIMIT_RANGE(TIME_LIMIT_QUICK_BREAK_MIN_RANGE, 
+                                TIME_LIMIT_QUICK_BREAK_MAX_RANGE, 
+                                app_parameter_read_Speed_Limit_Break_Value());
+        delay_ms = (uint32) (LIMIT_RANGE(TIME_LIMIT_QUICK_BREAK_DELAY_MIN_RANGE, 
+                                         TIME_LIMIT_QUICK_BREAK_DELAY_MAX_RANGE, 
+                                         app_parameter_read_Speed_Limit_Break_Delay()) * 1000);
         if (APP_Get_Line_Current_Max() > threshold) {
             if (((APP_Get_System_Ms() - pMnt->time_limit_quick_break_tick) >=  delay_ms) && 
                 (!pMnt->state.time_limit_quick_break_switch_off_state)) {
@@ -314,8 +361,12 @@ static void APP_Protection_Current_Handler(void)
     }
 
     if (pMnt->enable.over_current_enable) { /* 过流保护 */
-        threshold = LIMIT_RANGE(OVER_CURRENT_MIN_RANGE, OVER_CURRENT_MAX_RANGE, pMnt->over_current_threshold);
-        delay_ms = (uint32)(LIMIT_RANGE(OVER_CURRENT_DELAY_MIN_RANGE, OVER_CURRENT_DELAY_MAX_RANGE, pMnt->over_current_delay) * 1000);
+        threshold = LIMIT_RANGE(OVER_CURRENT_MIN_RANGE, 
+                                OVER_CURRENT_MAX_RANGE, 
+                                app_parameter_read_Overcurrent_Protection_Value());
+        delay_ms = (uint32)(LIMIT_RANGE(OVER_CURRENT_DELAY_MIN_RANGE, 
+                                        OVER_CURRENT_DELAY_MAX_RANGE, 
+                                        app_parameter_read_Overcurrent_Protection_Delay()) * 1000);
         if (APP_Get_Line_Current_Max() > threshold) {
             if (((APP_Get_System_Ms() - pMnt->over_current_tick) >= delay_ms) && 
                 (!pMnt->state.over_current_switch_off_state)) {
@@ -332,8 +383,12 @@ static void APP_Protection_Current_Handler(void)
     }
 
     if (pMnt->enable.over_current_enable) { /* 零序电流保护 */
-        threshold = LIMIT_RANGE(ZERO_SEQUENCE_CURRENT_MIN_RANGE, ZERO_SEQUENCE_CURRENT_MAX_RANGE, pMnt->zero_seq_current_threshold);
-        delay_ms = (uint32)(LIMIT_RANGE(ZERO_SEQUENCE_CURRENT_DELAY_MIN_RANGE, ZERO_SEQUENCE_CURRENT_DELAY_MAX_RANGE, pMnt->zero_seq_current_delay) * 1000);
+        threshold = LIMIT_RANGE(ZERO_SEQUENCE_CURRENT_MIN_RANGE, 
+                                ZERO_SEQUENCE_CURRENT_MAX_RANGE, 
+                                app_parameter_read_Zero_Sequence_Overflow_Value());
+        delay_ms = (uint32)(LIMIT_RANGE(ZERO_SEQUENCE_CURRENT_DELAY_MIN_RANGE, 
+                                        ZERO_SEQUENCE_CURRENT_DELAY_MAX_RANGE, 
+                                        app_parameter_read_Zero_Sequence_Overflow_Delay()) * 1000);
         /* 3IO > 零序过流定值 && 零序过流功能投入 */
         if (APP_Get_Current_Iout() > threshold) {
             if (((APP_Get_System_Ms() - pMnt->zero_seq_current_tick) >= delay_ms) && 
@@ -365,8 +420,12 @@ static void APP_Protection_SystemOutage_Handler(void)
     boolean current_flag = false;
 
     if (pMnt->enable.system_outage_enable) { /* 系统失电保护 */
-        threshold = LIMIT_RANGE(SYSTEM_OUTAGE_MIN_RANGE, SYSTEM_OUTAGE_MAX_RANGE, pMnt->system_outage_threshold);
-        delay_ms = (uint32) (LIMIT_RANGE(SYSTEM_OUTAGE_DELAY_MIN_RANGE, SYSTEM_OUTAGE_DELAY_MAX_RANGE, pMnt->system_outage_delay) * 1000);
+        threshold = LIMIT_RANGE(SYSTEM_OUTAGE_MIN_RANGE, 
+                                SYSTEM_OUTAGE_MAX_RANGE, 
+                                app_parameter_read_System_Down_Value());
+        delay_ms = (uint32) (LIMIT_RANGE(SYSTEM_OUTAGE_DELAY_MIN_RANGE, 
+                                         SYSTEM_OUTAGE_DELAY_MAX_RANGE, 
+                                         app_parameter_read_System_Down_Delay()) * 1000);
         /* 系统失电功能投入 && 开关在合位 && Ia\Ib\Ic < 0.1A && 系统曾有压 && Umax < 定值 && 允许跳闸 */
         if ((APP_Get_Line_Voltage_Max() > threshold) && (pMnt->system_power_up_flag == false)) { /* 系统有电标志 */ 
             pMnt->system_power_up_flag = true;
@@ -413,12 +472,21 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
     /* 有压合闸功能投入 && 下限 < 任意线电压 < 上限 && 下限 < 频率 < 上限 && 没有合闸闭锁信号 && 
         三相电流均小于0.1A && 开关在分位 && 发电侧UX < 30V && 合闸充电标志=1 */
     if (pMnt->enable.on_volt_switch_on_enable) { /* 有压合闸 */
-        volt_limit = ((APP_Get_Voltage_Ua() > pMnt->lower_volt_limit) && (APP_Get_Voltage_Ua() < pMnt->upper_volt_limit)) &&
-                        ((APP_Get_Voltage_Ub() > pMnt->lower_volt_limit) && (APP_Get_Voltage_Ub() < pMnt->upper_volt_limit)) && 
-                        ((APP_Get_Voltage_Uc() > pMnt->lower_volt_limit) && (APP_Get_Voltage_Uc() < pMnt->upper_volt_limit));
-        freq_limit = (APP_Get_Fundamental_Freq() > pMnt->lower_freq_limit) && (APP_Get_Fundamental_Freq() < pMnt->upper_freq_limit);
-        current_limit = (APP_Get_Current_Ia() < 0.1) && (APP_Get_Current_Ib() < 0.1) && (APP_Get_Current_Ic() < 0.1);
-        delay_ms = (uint32) (LIMIT_RANGE(ON_VOLT_SWITCH_ON_MIN_RANGE, ON_VOLT_SWITCH_ON_MAX_RANGE, pMnt->on_volt_switch_on_delay) * 1000);
+        volt_limit = ((APP_Get_Voltage_Ua() > app_parameter_read_Voltage_Closing_Lower_Voltage_Limit()) && 
+                        (APP_Get_Voltage_Ua() < app_parameter_read_Voltage_Closing_Upper_Voltage_Limit())) &&
+                      ((APP_Get_Voltage_Ub() > app_parameter_read_Voltage_Closing_Lower_Voltage_Limit()) && 
+                        (APP_Get_Voltage_Ub() < app_parameter_read_Voltage_Closing_Upper_Voltage_Limit())) && 
+                      ((APP_Get_Voltage_Uc() > app_parameter_read_Voltage_Closing_Lower_Voltage_Limit()) && 
+                        (APP_Get_Voltage_Uc() < app_parameter_read_Voltage_Closing_Upper_Voltage_Limit()));
+
+        freq_limit = (APP_Get_Fundamental_Freq() > app_parameter_read_Voltage_Closing_Lower_Frequency_Limit()) && 
+                     (APP_Get_Fundamental_Freq() < app_parameter_read_Voltage_Closing_Upper_Frequency_Limit());
+        current_limit = (APP_Get_Current_Ia() < CURRENT_MIN_LIMIT_THR) && 
+                        (APP_Get_Current_Ib() < CURRENT_MIN_LIMIT_THR) && 
+                        (APP_Get_Current_Ic() < CURRENT_MIN_LIMIT_THR);
+        delay_ms = (uint32) (LIMIT_RANGE(ON_VOLT_SWITCH_ON_MIN_RANGE, 
+                                         ON_VOLT_SWITCH_ON_MAX_RANGE, 
+                                         app_parameter_read_Voltage_Closing_Delay()) * 1000);
         if (volt_limit && freq_limit && current_limit && enable_state && 
             (BIT_RESET == APP_Remote_Signal_Input_Read_Closing_And_Locking()) && 
             (true == APP_Remote_Signal_Input_Switching_Exist_Off()) &&
@@ -446,8 +514,12 @@ static void APP_Protection_PowerRestorationOperate_Handler(void)
     uint32  delay_ms  = 0;
 
     if (pMnt->enable.power_restoration_enable) { /* 功率恢复合闸 */
-        threshold = LIMIT_RANGE(POWER_RESTORATION_MIN_RANGE, POWER_RESTORATION_MAX_RANGE, pMnt->power_restoration_threshold);
-        delay_ms = (uint32_t) (LIMIT_RANGE(POWER_RESTORATION_DELAY_MIN_RANGE, POWER_RESTORATION_DELAY_MAX_RANGE, pMnt->power_restoration_delay) * 1000);
+        threshold = LIMIT_RANGE(POWER_RESTORATION_MIN_RANGE, 
+                                POWER_RESTORATION_MAX_RANGE, 
+                                app_parameter_read_Power_recovery_Value());
+        delay_ms = (uint32_t) (LIMIT_RANGE(POWER_RESTORATION_DELAY_MIN_RANGE, 
+                                           POWER_RESTORATION_DELAY_MAX_RANGE, 
+                                           app_parameter_read_Power_recovery_Delay()) * 1000);
         /* 功率恢复功能投入 && 开关在分位 && IA\IB\IC均<0.1A && 逆功率保护动作过 && P > 功率恢复定值 */
         if ((true == APP_Remote_Signal_Input_Switching_Exist_Off()) && (pMnt->state.reverse_power_switch_off_state) &&
             ((APP_Get_Current_Ia() < 0.1) && (APP_Get_Current_Ib() < 0.1) && (APP_Get_Current_Ic() < 0.1) && 

@@ -94,6 +94,9 @@
 #define EXT_CTRL_DELAY_MIN_RANGE    (0.0)
 #define EXT_CTRL_DELAY_MAX_RANGE    (600.0)
 
+/* 最小电流限制阈值,单位：A */
+#define CURRENT_MIN_LIMIT_THR   (0.1)
+
   /* 各保护功能模块合闸状态 */
 typedef struct {
     int over_volt_switch_off_state_lv1           : 1;  /* 过压一段状态 */
