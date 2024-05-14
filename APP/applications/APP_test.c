@@ -32,7 +32,7 @@ float32 delay_tick1 = 52.5;
 float32 delay_tick2 = 47.3;
 uint8 block_pro1[9] = {0};
 uint8 block_pro2[9] = {0};
-float32 ddddd = 0;
+uint8 ddddd = 0;
 
 void APP_test_Init(void)
 {
@@ -51,7 +51,7 @@ void APP_test_Mainfunction(void)
         } else {
             if (flag == 1) {
                 flag =0;
-
+                // app_parameter_write_Undervoltage_protection_LV2_One_Eol(ddddd);
             }
         }
         key_task_test_for_lin();
