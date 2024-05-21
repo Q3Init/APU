@@ -24,22 +24,22 @@ struct menu_cmd_tag third_menu_cmd_tbl[]=
 	/* RUN_MONITOR MENU */
 	{THIRD_MENU,		TELEMETRY_SECOND, 				(menu_kernel_func)telemetry_second_handler},
 	{THIRD_MENU,		TELEMETRY_FIRST, 				(menu_kernel_func)telemetry_first_handler},
-	{THIRD_MENU,		OPEN_INTO_STATE, 				(menu_kernel_func)time_setting_handler},
-	{THIRD_MENU,		RUNNING_STATE, 					(menu_kernel_func)time_setting_handler},
+	{THIRD_MENU,		OPEN_INTO_STATE, 				(menu_kernel_func)open_into_state_handler},
+	{THIRD_MENU,		RUNNING_STATE, 					(menu_kernel_func)running_state_handler},
 
 	/* REPORT_DISPLAY MENU */
 	{THIRD_MENU,		SOE_RECORD, 					(menu_kernel_func)time_setting_handler},
 	{THIRD_MENU,		FAULT_EVENT, 					(menu_kernel_func)time_setting_handler},
 	
 	/* PARAMETER_CONFIGURE MENU */
-	{THIRD_MENU,		CHANGE_PROPORTION_SETTING, 		(menu_kernel_func)time_setting_handler},
-	{THIRD_MENU,		WIRE_SPLICE_SETTING, 			(menu_kernel_func)time_setting_handler},
-	{THIRD_MENU,		OPEN_INTO_SETTING, 				(menu_kernel_func)time_setting_handler},
-	{THIRD_MENU,		OPEN_OUT_SETTING, 				(menu_kernel_func)time_setting_handler},
-	{THIRD_MENU,		COMMUNICATION_SETTING, 			(menu_kernel_func)time_setting_handler},
-	{THIRD_MENU,		RECOVER_HOME_SETTING, 			(menu_kernel_func)time_setting_handler},
+	{THIRD_MENU,		CHANGE_PROPORTION_SETTING, 		(menu_kernel_func)change_proportion_setting_handler},
+	{THIRD_MENU,		WIRE_SPLICE_SETTING, 			(menu_kernel_func)wire_splice_setting_handler},
+	{THIRD_MENU,		OPEN_INTO_SETTING, 				(menu_kernel_func)open_into_setting_handler},
+	{THIRD_MENU,		OPEN_OUT_SETTING, 				(menu_kernel_func)open_out_setting_handler},
+	{THIRD_MENU,		COMMUNICATION_SETTING, 			(menu_kernel_func)communication_setting_handler},
+	{THIRD_MENU,		RECOVER_HOME_SETTING, 			(menu_kernel_func)recover_home_setting_handler},
 	{THIRD_MENU,		TIME_SETTING, 					(menu_kernel_func)time_setting_handler},
-	{THIRD_MENU,		PASSWORD_SETTING, 				(menu_kernel_func)time_setting_handler},
+	{THIRD_MENU,		PASSWORD_SETTING, 				(menu_kernel_func)password_setting_handler},
 	
 	/* FIX_VALUE_MANAGE MENU */
 	{THIRD_MENU,		OVER_VOLTAGE_PROTECTION, 		(menu_kernel_func)over_voltage_protection_handler},

@@ -13,6 +13,8 @@
 #define LCD_ShowChar_no_garland(x1, y1, s_1, num_1)  single_row_continue_printf_COLnxROW12_char_in_lcd(x1, y1, s_1, num_1, 6, 12,0)
 #define LCD_ShowNum_garland(x2, y2, s_2, num_2)  lcd_state_flush_for_num(x2, y2, s_2, num_2, 12,1)
 #define LCD_ShowNum_no_garland(x2, y2, s_2, num_2)  lcd_state_flush_for_num(x2, y2, s_2, num_2, 12,0)
+#define LCD_ShowEnglish_garland(x1, y1, s_1, num_1)  single_row_continue_printf_6x12_english_in_lcd(x1, y1, s_1, num_1, 6,12,1)
+#define LCD_ShowEnglish_no_garland(x1, y1, s_1, num_1)  single_row_continue_printf_6x12_english_in_lcd(x1, y1, s_1, num_1, 6, 12,0)
 
 extern void LCD_ShowChinese(uint16 x,uint16 y,uint8 *s,uint8 sizey);
 extern void LCD_ShowChar(uint16 x,uint16 y,uint8 num,uint8 sizey);
@@ -25,6 +27,7 @@ extern void clear_screen(void);
 extern void lcd_state_flush(uint8_t x_col,uint8_t y_row, uint8_t *ptr_center, uint8_t chinese_size, uint8_t garland_flag);
 extern uint8_t lcd_page_position_for_chinese_get(uint8_t y_row, uint8_t chinese_size, uint8_t lcd_state_tbl_num);
 extern void single_row_continue_printf_12x12_chinese_in_lcd(uint8_t x_col,uint8_t y_row, uint8_t *chinese_string, uint8_t chinese_num, uint8_t chinese_size, uint8_t garland_flag);
+extern void single_row_continue_printf_6x12_english_in_lcd(uint8_t x_col,uint8_t y_row, uint8_t *english_string, uint8_t english_num, uint8_t english_col_size, uint8_t english_row_size, uint8_t garland_flag);
 extern void single_row_continue_printf_COLnxROW12_char_in_lcd(uint8_t x_col,uint8_t y_row, uint8_t *number_string, uint8_t char_num, uint8_t num_col_size, uint8_t num_row_size, uint8_t garland_flag);
 extern void display_graphic_8x12(uint8 page,uint8 column,uchar *dp);
 extern void delay(int n_ms);

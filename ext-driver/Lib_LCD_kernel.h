@@ -286,4 +286,19 @@ extern struct menu_event_tag * protection_configure_handler(uint8_t msg_process_
 extern struct menu_event_tag * open_into_test_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * factory_reset_handler(uint8_t msg_process_signal, uint8_t msg_context);
 
+extern struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * communication_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * recover_home_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
+
+extern struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_t msg_context);
+
+
 #endif /* __LIB_LCD_KERNEL_H */

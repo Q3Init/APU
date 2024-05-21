@@ -887,6 +887,236 @@ void lcd_state_flush(uint8_t x_col,uint8_t y_row, uint8_t *ptr_center, uint8_t c
             }
       }
 }
+/*  
+ *    @brief   
+ *         The x_col value range from 0 to 127. The y_row value range from 0 to 63. 
+ *         Of course, y_row should be smaller than (63-8) and x_col should be smaller than (127-8) in this project
+ *         english_row_size should be more than 8.
+ */
+
+void lcd_state_flush_for_english(uint8_t x_col,uint8_t y_row, uint8_t *ptr_center, uint8_t english_col_size, uint8_t english_row_size, uint8_t garland_flag)
+{
+      uint8_t index=0;
+      uint8_t my_index=0;
+      uint8_t page_idx = y_row/PAGE_SIZE+1;
+      uint8_t page_occupy_num = (y_row+english_row_size+PAGE_SIZE-1)/PAGE_SIZE - y_row/PAGE_SIZE;//Note that y_row has to be separated to calculate!
+      uint8_t my_array[32]={0};
+      uint8_t page_level = lcd_page_position_for_chinese_get(y_row, english_row_size, 2);
+      uint32_t bit_mask = (0xffffffff >> (32-english_row_size));
+
+      //LCD_PAGE_HIGH
+      uint8_t high_row = y_row-31;
+      uint8_t high_page_idx = page_idx-4;
+      
+      //LCD_PAGE_MEDIUM
+      uint32_t bit_low_mask_in_medium = (uint32_t)(0xffffffff >> (31-y_row));
+      uint32_t bit_high_mask_in_medium = (0xffffffff >> (31*2-y_row-english_row_size));
+      uint8_t low_y_row = y_row;
+      uint8_t high_y_row = english_row_size-32+y_row;//需要测试y_row=20
+      uint8_t high_y_row_threshold = english_row_size - 8;
+      Log_e("page_occupy_num:%d \n",page_occupy_num);
+      if(garland_flag==1)
+      {
+            switch(page_level)
+            {
+                  case LCD_PAGE_LOW:
+                        //chinese_size default value is 12.So fetch bit_mask=0xfff as chinese_bit mask
+                        //and clear the matching bits.
+
+                        for(my_index = 0; my_index<page_occupy_num; my_index++)
+                        {
+                              for(index=0;index<english_col_size;index++)
+                              {
+                                    //just clear once for every index
+                                    if(my_index==0)
+                                    {
+                                          lcd_state_first_tbl[x_col+index] &= ~(bit_mask<<y_row);
+                                    }
+                                    //and set the matching bits for the chinese.
+                                    // lcd_state_first_tbl[x_col+index] |= (uint32_t)(ptr_center[index] <<y_row); //first page
+                                    lcd_state_first_tbl[x_col+index] |= (uint32_t)(ptr_center[index+english_col_size*my_index] <<(y_row+8*my_index));
+                              }
+                        }
+
+                        for(my_index = 0; my_index<page_occupy_num; my_index++)
+                        {
+                              for(index=0;index<english_col_size;index++)
+                              {
+                                    my_array[index] = (uint8_t)((lcd_state_first_tbl[x_col+index] >> ((page_idx-1+my_index)<<3)) & 0xff);
+                              }
+
+                              display_graphic_8xcol(page_idx+my_index, x_col+1, english_col_size, my_array);
+                        }
+                        break;
+                  case LCD_PAGE_MEDIUM:
+                        for(index=0;index<english_col_size;index++)
+                        {
+                              //clear the matching bits.
+                              lcd_state_first_tbl[x_col+index] &= bit_low_mask_in_medium;
+                              lcd_state_second_tbl[x_col+index] &= bit_high_mask_in_medium;
+                              //and set the matching bits of lcd_state_first_tbl for the chinese.
+                              //fetch LSB(the most significant digit)
+                              lcd_state_first_tbl[x_col+index] |= (uint32_t)(ptr_center[index] << low_y_row); 
+                              lcd_state_first_tbl[x_col+index] |= (uint32_t)(ptr_center[index+english_col_size] << (low_y_row+8));
+
+                              //and set the matching bits of lcd_state_second_tbl for the chinese.
+                              //fetch MSB(the Most Significant Bit)
+                              lcd_state_second_tbl[x_col+index] |= (uint32_t)(ptr_center[index] >> (english_row_size-high_y_row));
+                              if(high_y_row < high_y_row_threshold)// high_y_row_threshold = 4 = 12 - 8
+                              {
+                                    lcd_state_second_tbl[x_col+index] |= (uint32_t)(ptr_center[index+english_col_size] >> (high_y_row_threshold-high_y_row));
+                              }
+                              else
+                              {
+                                    lcd_state_second_tbl[x_col+index] |= (uint32_t)(ptr_center[index+english_col_size] << (high_y_row-high_y_row_threshold));
+                              }
+                        }
+                        for(my_index = 0; my_index<page_occupy_num; my_index++)
+                        {
+                              for(index=0;index<english_col_size;index++)
+                              {
+                                    uint32_t cur_bit_idx = (page_idx-1+my_index)<<3;
+                                    if(cur_bit_idx>31)
+                                    {
+                                          my_array[index] = (uint8_t)((lcd_state_second_tbl[x_col+index] >> (cur_bit_idx-32)) & 0xff);
+                                    }
+                                    else
+                                    {
+                                          my_array[index] = (uint8_t)((lcd_state_first_tbl[x_col+index] >> cur_bit_idx) & 0xff);
+                                    }
+                              }
+
+                              display_graphic_8xcol(page_idx+my_index, x_col+1, english_col_size, my_array);
+                        }
+                        break;
+                  case LCD_PAGE_HIGH:
+                        for(index=0;index<english_col_size;index++)
+                        {
+                              //chinese_size default value is 12.So fetch bit_mask=0xfff as chinese_bit mask
+                              //and clear the matching bits.
+                              lcd_state_second_tbl[x_col+index] &= ~(bit_mask<< high_row);
+
+                              //and set the matching bits for the chinese.
+                              lcd_state_second_tbl[x_col+index] |= (uint32_t)(ptr_center[index] <<high_row); //first page
+                              lcd_state_second_tbl[x_col+index] |= (uint32_t)(ptr_center[index+english_col_size] <<(high_row+8));
+                        }
+
+                        for(my_index = 0; my_index<page_occupy_num; my_index++)
+                        {
+                              for(index=0;index<english_col_size;index++)
+                              {
+                                    my_array[index] = (uint8_t)((lcd_state_second_tbl[x_col+index] >> ((high_page_idx-1+my_index)<<3)) & 0xff);
+                              }
+
+                              display_graphic_8xcol(page_idx+my_index, x_col+1, english_col_size, my_array);
+                        }
+                        break;
+                  default:
+                        break;
+            }
+      }
+      else{
+            switch(page_level)
+            {
+                  case LCD_PAGE_LOW:
+                        //chinese_size default value is 12.So fetch bit_mask=0xfff as chinese_bit mask
+                        //and clear the matching bits.
+
+                        for(my_index = 0; my_index<page_occupy_num; my_index++)
+                        {
+                              for(index=0;index<english_col_size;index++)
+                              {
+                                    //just clear once for every index
+                                    if(my_index==0)
+                                    {
+                                          lcd_state_first_tbl[x_col+index] &= ~(bit_mask<<y_row);
+                                    }
+
+                                    //and set the matching bits for the chinese.
+                                    // lcd_state_first_tbl[x_col+index] |= (uint32_t)(ptr_center[index] <<y_row); //first page
+                                    lcd_state_first_tbl[x_col+index] |= (uint32_t)((uint8_t)(~ptr_center[index+english_col_size*my_index]) <<(y_row+8*my_index));
+                              }
+                        }
+
+                        for(my_index = 0; my_index<page_occupy_num; my_index++)
+                        {
+                              for(index=0;index<english_col_size;index++)
+                              {
+                                    my_array[index] = (uint8_t)((lcd_state_first_tbl[x_col+index] >> ((page_idx-1+my_index)<<3)) & 0xff);
+                              }
+
+                              display_graphic_8xcol(page_idx+my_index, x_col+1, english_col_size, my_array);
+                        }
+                        break;
+                  case LCD_PAGE_MEDIUM:
+                        for(index=0;index<english_col_size;index++)
+                        {
+                              //clear the matching bits.
+                              lcd_state_first_tbl[x_col+index] &= bit_low_mask_in_medium;
+                              lcd_state_second_tbl[x_col+index] &= bit_high_mask_in_medium;
+                              //and set the matching bits of lcd_state_first_tbl for the chinese.
+                              //fetch LSB(the most significant digit)
+                              lcd_state_first_tbl[x_col+index] |= (uint32_t)((uint8_t)(~ptr_center[index]) << low_y_row); 
+                              lcd_state_first_tbl[x_col+index] |= (uint32_t)((uint8_t)(~ptr_center[index+english_col_size]) << (low_y_row+8));
+
+                              //and set the matching bits of lcd_state_second_tbl for the chinese.
+                              //fetch MSB(the Most Significant Bit)
+                              lcd_state_second_tbl[x_col+index] |= (uint32_t)((uint8_t)(~ptr_center[index]) >> (english_row_size-high_y_row));
+                              if(high_y_row < high_y_row_threshold)// high_y_row_threshold = 4 = 12 - 8
+                              {
+                                    lcd_state_second_tbl[x_col+index] |= (uint32_t)((uint8_t)(~ptr_center[index+english_col_size]) >> (high_y_row_threshold-high_y_row));
+                              }
+                              else
+                              {
+                                    lcd_state_second_tbl[x_col+index] |= (uint32_t)((uint8_t)(~ptr_center[index+english_col_size]) << (high_y_row-high_y_row_threshold));
+                              }
+                        }
+                        for(my_index = 0; my_index<page_occupy_num; my_index++)
+                        {
+                              for(index=0;index<english_col_size;index++)
+                              {
+                                    uint32_t cur_bit_idx = (page_idx-1+my_index)<<3;
+                                    if(cur_bit_idx>31)
+                                    {
+                                          my_array[index] = (uint8_t)((lcd_state_second_tbl[x_col+index] >> (cur_bit_idx-32)) & 0xff);
+                                    }
+                                    else
+                                    {
+                                          my_array[index] = (uint8_t)((lcd_state_first_tbl[x_col+index] >> cur_bit_idx) & 0xff);
+                                    }
+                              }
+
+                              display_graphic_8xcol(page_idx+my_index, x_col+1, english_col_size, my_array);
+                        }
+                        break;
+                  case LCD_PAGE_HIGH:
+                        for(index=0;index<english_col_size;index++)
+                        {
+                              //chinese_size default value is 12.So fetch bit_mask=0xfff as chinese_bit mask
+                              //and clear the matching bits.
+                              lcd_state_second_tbl[x_col+index] &= ~(bit_mask<< high_row);
+
+                              //and set the matching bits for the chinese.
+                              lcd_state_second_tbl[x_col+index] |= (uint32_t)((uint8_t)(~ptr_center[index]) <<high_row); //first page
+                              lcd_state_second_tbl[x_col+index] |= (uint32_t)((uint8_t)(~ptr_center[index+english_col_size]) <<(high_row+8));
+                        }
+
+                        for(my_index = 0; my_index<page_occupy_num; my_index++)
+                        {
+                              for(index=0;index<english_col_size;index++)
+                              {
+                                    my_array[index] = (uint8_t)((lcd_state_second_tbl[x_col+index] >> ((high_page_idx-1+my_index)<<3)) & 0xff);
+                              }
+
+                              display_graphic_8xcol(page_idx+my_index, x_col+1, english_col_size, my_array);
+                        }
+                        break;
+                  default:
+                        break;
+            }
+      }
+}
+
 
 /*  
  *    @brief   
@@ -1116,7 +1346,21 @@ void lcd_state_flush_for_num(uint8_t x_col,uint8_t y_row, uint8_t *ptr_center, u
             }
       }
 }
+/******************************************************************************
+      @brief    dispaly number
+      @param    x_col,y_row dispaly the coordinate 
+                *number_string  display your chinese string
+      @return   None
+******************************************************************************/
+void single_row_continue_printf_6x12_english_in_lcd(uint8_t x_col,uint8_t y_row, uint8_t *english_string, uint8_t english_num, uint8_t english_col_size, uint8_t english_row_size, uint8_t garland_flag)
+{
+      uint8_t index = 0;
 
+      for(index=0; index<english_num; index++)
+      {
+            lcd_state_flush_for_num(x_col+english_col_size*index, y_row, english_string+2*english_col_size*index, english_col_size, english_row_size, garland_flag);
+      }
+}
 /******************************************************************************
       @brief    dispaly chinese
       @param    x_col,y_row dispaly the coordinate 

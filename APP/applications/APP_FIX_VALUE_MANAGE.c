@@ -1130,6 +1130,30 @@ struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uin
 
 	return menu_evt;
 }
+void show_num(uint8_t hang, uint8_t lie, uint8_t num, uint8_t length, uint8_t high, uint8_t level){
+	if(num==0){
+		lcd_state_flush_for_num(hang,lie,my_num_0,length,high,level);
+	}
+	if(num==1){
+		lcd_state_flush_for_num(hang,lie,my_num_1,length,high,level);
+	}
+	if(num==2){
+		lcd_state_flush_for_num(hang,lie,my_num_2,length,high,level);
+	}
+	if(num==3){
+		lcd_state_flush_for_num(hang,lie,my_num_3,length,high,level);
+	}
+	if(num==4){
+		lcd_state_flush_for_num(hang,lie,my_num_4,length,high,level);
+	}
+	if(num==5){
+		lcd_state_flush_for_num(hang,lie,my_num_5,length,high,level);
+	}
+	if(num==6){
+		lcd_state_flush_for_num(hang,lie,my_num_6,length,high,level);
+	}
+}
+uint8_t my_num[5] = {0};
 
 struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
@@ -1138,6 +1162,11 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	// static uint8_t limited_index = 0;
+	// static uint8_t check_num_modify = false;
+	// static uint8_t enter_flag = false;
+
+	// uint8_t msg_storage = msg_context;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
     if(authentication_key)
@@ -1153,19 +1182,77 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 
 		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
+			// if(!check_num_modify)
+			// {
+				// limited_index = 0;
+				// enter_flag = false;
+				menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
+				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				Log_d("key KEY_RETURN menu!\r\n");
+			// }
+			// else
+			// {
+			// 	msg_storage = FLUSH_SCREEN;
+			// }
 		}
+		
+
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
             clear_screen();
-			msg_context = 0xff;
+			// msg_storage = 0xff;
+			// enter_flag = true;
 			msg_lock_from_env_set(0);//unlock the msg
         }
-    
+
+		// if(enter_flag == true){
+		// 	if(msg_context == KEY_ENTER){
+		// 	check_num_modify = true;}
+		// }
+
+		// if(check_num_modify)
+		// {
+		// 	switch(over_voltage_protection_array[menu_type_idx])
+		// 	{
+		// 		case FIRST_FIX_VALUE:
+
+		// 			if(check_num_modify == true)
+		// 			{
+		// 				switch(msg_context)
+		// 				{	uint8_t new_num;
+		// 					case    KEY_UP://+
+		// 						new_num=my_num[limited_index]++;
+		// 						show_num(63,13,new_num,5,12,0);
+		// 						break;
+		// 					case	KEY_DOWN://-
+		// 						new_num=my_num[limited_index]--;
+		// 						show_num(63,13,new_num,5,12,0);
+		// 						break;
+		// 					case	KEY_LEFT:
+		// 						limited_index = ((--limited_index)<=0) ? 0 : limited_index;
+		// 						show_num(63-6*limited_index,13,my_num[limited_index],5,12,0);
+		// 						break;
+		// 					case	KEY_RIGHT:
+		// 						limited_index = ((++limited_index)> sizeof(my_num)) ? sizeof(my_num) : limited_index;
+		// 						show_num(63+6*limited_index,13,my_num[limited_index],5,12,0);
+		// 						break;
+		// 					default:
+		// 						break;
+		// 				}
+		// 			}
+					
+
+		// 			break;
+		// 		case FIRST_DELAY:
+		// 			break;
+
+		// 		default:
+		// 			break;
+		// 	}
+		// }
+
 		switch(msg_context)
 		{
 			case	0xff:
@@ -1398,8 +1485,10 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 				break;
 		}
 	}
+
     return menu_evt;
 }
+
 struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/

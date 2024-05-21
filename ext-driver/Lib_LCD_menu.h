@@ -13,8 +13,8 @@ extern uint8_t menu_type_ptr_match(uint8_t key_signal, uint8_t menu_row_num, uin
 extern struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * run_monitor_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * report_display_handler(uint8_t msg_process_signal, uint8_t msg_context);
-extern struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_t msg_context);
-extern struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
+// extern struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_t msg_context);
+// extern struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * parameter_configure_handler(uint8_t msg_process_signal, uint8_t msg_context);
 // extern struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uint8_t msg_context);
 // extern struct menu_event_tag * debug_mode_handler(uint8_t msg_process_signal, uint8_t msg_context);

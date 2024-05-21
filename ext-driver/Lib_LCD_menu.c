@@ -254,11 +254,56 @@ struct menu_event_tag * run_monitor_handler(uint8_t msg_process_signal, uint8_t 
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
-            
-            LCD_ShowString(24,30,"LCD_W:",16);
-            LCD_ShowIntNum(72,30,4,1,16);
+            clear_screen();
+			msg_context = 0xff;
+            // LCD_ShowString(24,30,"LCD_W:",16);
+            // LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
         }
+
+		switch(msg_context)
+		{
+			case	0xff:
+			case    KEY_UP:
+    		case	KEY_DOWN:		
+    		case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, run_monitor, 4);
+				switch( run_monitor_menu_array[menu_type_idx])
+				{
+					case TELEMETRY_SECOND:
+						LCD_ShowChinese_no_garland(8, 13, telemetry_second, 5);
+						LCD_ShowChinese_garland(8, 26, telemetry_first, 5);
+						LCD_ShowChinese_garland(8, 38, open_into_state, 4);
+						LCD_ShowChinese_garland(8, 51, running_state, 4);
+						break;
+					case TELEMETRY_FIRST:
+						LCD_ShowChinese_garland(8, 13, telemetry_second, 5);
+						LCD_ShowChinese_no_garland(8, 26, telemetry_first, 5);
+						LCD_ShowChinese_garland(8, 38, open_into_state, 4);
+						LCD_ShowChinese_garland(8, 51, running_state, 4);
+						break;
+					case OPEN_INTO_STATE:
+						LCD_ShowChinese_garland(8, 13, telemetry_second, 5);
+						LCD_ShowChinese_garland(8, 26, telemetry_first, 5);
+						LCD_ShowChinese_no_garland(8, 38, open_into_state, 4);
+						LCD_ShowChinese_garland(8, 51, running_state, 4);
+						break;
+					case RUNNING_STATE:
+						LCD_ShowChinese_garland(8, 13, telemetry_second, 5);
+						LCD_ShowChinese_garland(8, 26, telemetry_first, 5);
+						LCD_ShowChinese_garland(8, 38, open_into_state, 4);
+						LCD_ShowChinese_no_garland(8, 51, running_state, 4);
+						break;
+
+				}
+				break;
+			default:
+				break;
+		}
+            
+        
 	}
 
 	return menu_evt;
@@ -299,10 +344,40 @@ struct menu_event_tag * report_display_handler(uint8_t msg_process_signal, uint8
         {
 			Log_d("\r\n    \r\n");
              
-            LCD_ShowString(24,30,"LCD_W:",16);
-            LCD_ShowIntNum(72,30,4,1,16);
+        clear_screen();
+			msg_context = 0xff;
+            //LCD_ShowString(24,30,"LCD_W:",16);
+            //LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
         }
+		switch(msg_context)
+		{
+			case	0xff:
+			case    KEY_UP:
+    		case	KEY_DOWN:		
+    		case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, report_display, 4);
+				switch( report_display_menu_array[menu_type_idx])
+				{
+					case SOE_RECORD:
+						LCD_ShowEnglish_garland(8, 13, soe_record_char, 3);
+                        LCD_ShowChinese_no_garland(26, 13, soe_record_chinese, 2);
+						LCD_ShowChinese_garland(8, 27, fault_event, 4);
+
+						break;
+					case FAULT_EVENT:
+						LCD_ShowEnglish_garland(8, 13, soe_record_char, 3);
+                        LCD_ShowChinese_garland(26, 13, soe_record_chinese, 2);
+						LCD_ShowChinese_no_garland(8, 27, fault_event, 4);
+					
+						break;
+				}
+				break;
+			default:
+				break;
+		}
 	}
 
 	return menu_evt;
@@ -342,14 +417,125 @@ struct menu_event_tag * parameter_configure_handler(uint8_t msg_process_signal, 
         {
 			Log_d("\r\n    \r\n");
              
-            LCD_ShowString(24,30,"LCD_W:",16);
-            LCD_ShowIntNum(72,30,4,1,16);
+            clear_screen();
+			msg_context = 0xff;
+//            LCD_ShowString(24,30,"LCD_W:",16);
+//            LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
         }
+		switch(msg_context)
+		{
+			case	0xff:
+			case    KEY_UP:
+    		case	KEY_DOWN:		
+    		case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, parameter_configure, 4);
+				switch( parameter_configure_menu_array[menu_type_idx])
+				{
+					case CHANGE_PROPORTION_SETTING:
+						LCD_ShowChinese_no_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_garland(8, 51, time_setting, 4);
+
+                        LCD_ShowChinese_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_garland(64, 51, password_setting, 4);
+
+						break;
+					case OPEN_INTO_SETTING:
+						LCD_ShowChinese_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_no_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_garland(8,51, time_setting, 4);
+
+                        LCD_ShowChinese_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_garland(64, 51, password_setting, 4);
+						break;
+					case COMMUNICATION_SETTING:
+						LCD_ShowChinese_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_no_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_garland(8, 51, time_setting, 4);
+
+                        LCD_ShowChinese_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_garland(64, 51, password_setting, 4);
+						break;
+					case TIME_SETTING:
+						LCD_ShowChinese_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_no_garland(8, 51, time_setting, 4);
+
+                        LCD_ShowChinese_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_garland(64, 51, password_setting, 4);
+						break;
+						case WIRE_SPLICE_SETTING:
+						LCD_ShowChinese_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_garland(8, 51, time_setting, 4);
+
+                        LCD_ShowChinese_no_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_garland(64, 51, password_setting, 4);
+						break;
+					case OPEN_OUT_SETTING:
+						LCD_ShowChinese_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_garland(8, 51, time_setting, 4);
+
+                        LCD_ShowChinese_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_no_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_garland(64, 51, password_setting, 4);
+						break;
+					case RECOVER_HOME_SETTING:
+						LCD_ShowChinese_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_garland(8, 51, time_setting, 4);
+
+                        LCD_ShowChinese_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_no_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_garland(64, 51, password_setting, 4);
+						break;
+					case PASSWORD_SETTING:
+						LCD_ShowChinese_garland(8, 13, change_proportion_setting,4);
+						LCD_ShowChinese_garland(8, 26, open_into_setting, 4);
+                        LCD_ShowChinese_garland(8, 38, communication_setting, 4);
+						LCD_ShowChinese_garland(8, 51, time_setting, 4);
+
+                        LCD_ShowChinese_garland(64, 13, wire_splice_setting, 4);
+						LCD_ShowChinese_garland(64, 26, open_out_setting, 4);
+						LCD_ShowChinese_garland(64, 38, recover_home_setting, 4);
+                        LCD_ShowChinese_no_garland(64, 51, password_setting, 4);
+						break;
+
+				}
+				break;
+			default:
+				break;
+
+		}
+
 	}
 
 	return menu_evt;
 }
+
 
 
 
@@ -480,75 +666,75 @@ struct menu_event_tag * parameter_configure_handler(uint8_t msg_process_signal, 
 // 	return menu_evt;
 // }
 
-struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_t msg_context)
-{
-	/* msg_evt should be malloced and return it! */
-	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
-	menu_evt->status = EVT_NO_ERROR;
-	menu_evt->msg_operation = MSG_RESUMED;
+// struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_t msg_context)
+// {
+// 	/* msg_evt should be malloced and return it! */
+// 	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
+// 	menu_evt->status = EVT_NO_ERROR;
+// 	menu_evt->msg_operation = MSG_RESUMED;
 
-	if(msg_process_signal == 1)
-	{
-		if(msg_context == KEY_RETURN)
-		{
-			menu_level_from_env_set(TOP_NODE_MENU, RUN_MONITOR, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
-		}
+// 	if(msg_process_signal == 1)
+// 	{
+// 		if(msg_context == KEY_RETURN)
+// 		{
+// 			menu_level_from_env_set(TOP_NODE_MENU, RUN_MONITOR, UNKNOW_THIRD_MENU);
+//             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+// 			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+// 			Log_d("key KEY_RETURN menu!\r\n");
+// 		}
 
-        if(msg_context == FLUSH_SCREEN)
-        {
-			Log_d("\r\n    \r\n");
+//         if(msg_context == FLUSH_SCREEN)
+//         {
+// 			Log_d("\r\n    \r\n");
              
-            LCD_ShowString(24,30,"LCD_W:",16);
-            LCD_ShowIntNum(72,30,4,1,16);
-			msg_lock_from_env_set(0);//unlock the msg
-        }
-	}
+//             LCD_ShowString(24,30,"LCD_W:",16);
+//             LCD_ShowIntNum(72,30,4,1,16);
+// 			msg_lock_from_env_set(0);//unlock the msg
+//         }
+// 	}
 
-	return menu_evt;
-}
+// 	return menu_evt;
+// }
 
-struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
-{
-	/* msg_evt should be malloced and return it! */
-	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
-	menu_evt->status = EVT_NO_ERROR;
-	menu_evt->msg_operation = MSG_RESUMED;
+// struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
+// {
+// 	/* msg_evt should be malloced and return it! */
+// 	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
+// 	menu_evt->status = EVT_NO_ERROR;
+// 	menu_evt->msg_operation = MSG_RESUMED;
 
-	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
-	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-	if(authentication_key)
-	{
-		Log_d("\r\n    \r\n");
-		return menu_evt;
-	}
+// 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
+// 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
+// 	if(authentication_key)
+// 	{
+// 		Log_d("\r\n    \r\n");
+// 		return menu_evt;
+// 	}
 
-	if(msg_process_signal == 1)
-	{
-		if(msg_context == KEY_RETURN)
-		{
-			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
-		}
+// 	if(msg_process_signal == 1)
+// 	{
+// 		if(msg_context == KEY_RETURN)
+// 		{
+// 			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
+//             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+// 			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+// 			Log_d("key KEY_RETURN menu!\r\n");
+// 		}
 		
-		if(msg_context == KEY_UP)
-		{
-			Log_d("HELLO! your logical ?\r\n");
-		}
+// 		if(msg_context == KEY_UP)
+// 		{
+// 			Log_d("HELLO! your logical ?\r\n");
+// 		}
 
-		if(msg_context == FLUSH_SCREEN)
-        {
-			Log_d("\r\n    \r\n");
+// 		if(msg_context == FLUSH_SCREEN)
+//         {
+// 			Log_d("\r\n    \r\n");
              
-            LCD_ShowString(24,30,"LCD_W:",16);
-            LCD_ShowIntNum(72,30,4,1,16);
-			msg_lock_from_env_set(0);//unlock the msg
-        }
-	}
+//             LCD_ShowString(24,30,"LCD_W:",16);
+//             LCD_ShowIntNum(72,30,4,1,16);
+// 			msg_lock_from_env_set(0);//unlock the msg
+//         }
+// 	}
 
-	return menu_evt;
-}
+// 	return menu_evt;
+// }

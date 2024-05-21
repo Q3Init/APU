@@ -1,0 +1,103 @@
+diff --git a/APP/applications/APP_FIX_VALUE_MANAGE.c b/APP/applications/APP_FIX_VALUE_MANAGE.c
+index 2d03dfa..9adc7eb 100644
+--- a/APP/applications/APP_FIX_VALUE_MANAGE.c
++++ b/APP/applications/APP_FIX_VALUE_MANAGE.c
+@@ -1131,13 +1131,17 @@ struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uin
+ 	return menu_evt;
+ }
+ 
++uint8_t my_num[5] = {0};
++
+ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_signal, uint8_t msg_context)
+ {
+ 	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
+ 	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
+ 	menu_evt->status = EVT_NO_ERROR;
+ 	menu_evt->msg_operation = MSG_RESUMED;
+-
++	static uint8_t limited_index = 0;
++	static uint8_t check_num_modify = false;
++	uint8_t msg_storage = msg_context;
+ 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
+ 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
+     if(authentication_key)
+@@ -1153,20 +1157,63 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
+ 
+ 		if(msg_context == KEY_RETURN)
+ 		{
+-			menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
+-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+-			Log_d("key KEY_RETURN menu!\r\n");
++			if(!check_num_modify)
++			{
++				limited_index = 0;
++				menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
++				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
++				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
++				Log_d("key KEY_RETURN menu!\r\n");
++			}
++			else
++			{
++				msg_storage = FLUSH_SCREEN;
++			}
+ 		}
+-        if(msg_context == FLUSH_SCREEN)
++
++        if(msg_storage == FLUSH_SCREEN)
+         {
+ 			Log_d("\r\n    \r\n");
+             clear_screen();
+-			msg_context = 0xff;
++			msg_storage = 0xff;
+ 			msg_lock_from_env_set(0);//unlock the msg
+         }
+-    
+-		switch(msg_context)
++
++		if(check_num_modify)
++		{
++			switch(over_voltage_protection_array[menu_type_idx])
++			{
++				case FIRST_FIX_VALUE:
++					if(check_num_modify == true)
++					{
++						switch(msg_context)
++						{
++							case    KEY_UP://+
++								my_num[limited_index]++;
++								break;
++							case	KEY_DOWN://-
++								my_num[limited_index]--;
++								break;
++							case	KEY_LEFT:
++								limited_index = ((--limited_index)<0) ? 0 : limited_index;
++								break;
++							case	KEY_RIGHT:
++								limited_index = ((++limited_index)> sizeof(my_num)) ? sizeof(my_num) : limited_index;
++								break;
++							default:
++								break;
++						}
++					}
++					break;
++				case FIRST_DELAY:
++					break;
++
++				default:
++					break;
++			}
++		}
++
++		switch(msg_storage)
+ 		{
+ 			case	0xff:
+ 			case    KEY_UP:
+@@ -1398,6 +1445,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
+ 				break;
+ 		}
+ 	}
++
+     return menu_evt;
+ }
+ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_signal, uint8_t msg_context)
