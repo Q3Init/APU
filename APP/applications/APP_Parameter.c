@@ -81,7 +81,45 @@ static app_par_Power_recovery_Value_Rte   app_par_Power_recovery_Value;
 static app_par_Power_recovery_Delay_Rte   app_par_Power_recovery_Delay;
 static app_par_Power_recovery_Eol_Rte   app_par_Power_recovery_Eol;
 
-
+/********************************************************************定值管理*******************************************************************************************/
+/* 变比设置 */
+static app_par_Grid_PT_primary_Rte app_par_Grid_PT_primary;
+static app_par_Grid_PT_secondary_Rte app_par_Grid_PT_secondary;
+static app_par_Generation_PT_primary_Rte app_par_Generation_PT_primary;
+static app_par_Generation_PT_secondary_Rte app_par_Generation_PT_secondary;
+static app_par_Protective_CT_primary_Rte app_par_Protective_CT_primary;
+static app_par_Protected_CT_secondary_Rte app_par_Protected_CT_secondary;
+static app_par_Zero_sequence_CT_once_Rte app_par_Zero_sequence_CT_once;
+static app_par_Zero_sequence_CT_twice_Rte app_par_Zero_sequence_CT_twice;
+/* 开入设置 */
+static app_par_Remote_letter_anti_shake_time_Rte app_par_Remote_letter_anti_shake_time;
+static app_par_Remote_letter_into_the_logic_Rte app_par_Remote_letter_into_the_logic;
+/* 开出设置 */
+static app_par_Trip_exit_time_Rte app_par_Trip_exit_time;
+static app_par_Closing_exit_time_Rte app_par_Closing_exit_time;
+static app_par_D01_exit_time_Rte app_par_D01_exit_time;
+static app_par_D02_exit_time_Rte app_par_D02_exit_time;
+static app_par_D03_exit_time_Rte app_par_D03_exit_time;
+static app_par_D04_exit_time_Rte app_par_D04_exit_time;
+static app_par_Energy_storage_exit_time_Rte app_par_Energy_storage_exit_time;
+static app_par_Energy_storage_outlet_selection_Rte app_par_Energy_storage_outlet_selection;
+/* 接线设置 */
+static app_par_Zero_drift_threshold_Rte app_par_Zero_drift_threshold;
+static app_par_Voltage_connection_Rte app_par_Voltage_connection;
+static app_par_Protect_CT_channels_Rte app_par_Protect_CT_channels;
+static app_par_Switch_position_Rte app_par_Switch_position;
+/* 通信设置 */
+static app_par_Serial_protocol_Rte app_par_Serial_protocol;
+static app_par_Serial_check_Rte app_par_Serial_check;
+static app_par_Serial_baud_rate_Rte app_par_Serial_baud_rate;
+static app_par_Module_address_Rte app_par_Module_address;
+static app_par_Switch_coding_Rte app_par_Switch_coding;
+static app_par_Change_threshold_Rte app_par_Change_threshold;
+/* 复归设置 */
+static app_par_Restore_functional_input_Rte app_par_Restore_functional_input;
+static app_par_Restore_time_Rte app_par_Restore_time;
+/* 密码设置 */
+static app_par_Device_password_Rte app_par_Device_password;
 
 static uint32 MCM_floatToIntBit( float32 x );  
 static float32 IntBitTofloat( uint32 x );
@@ -474,6 +512,161 @@ void APP_Parameter_Init(void)
     if (ret == E_OK) {
         app_par_Power_recovery_Eol.datas = *app_par_Power_recovery_Eol.p_buf;
         Log_d("app_par_Power_recovery_Eol.datas:%d\r\n",app_par_Power_recovery_Eol.datas);
+    }
+    /* Grid_PT_primary */
+    ret = BSW_NvM_Read(Grid_PT_primary,&app_par_Grid_PT_primary.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Grid_PT_primary.datas:%d\r\n",app_par_Grid_PT_primary.datas);
+    }
+    /* Grid_PT_secondary */
+    ret = BSW_NvM_Read(Grid_PT_secondary,&app_par_Grid_PT_secondary.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Grid_PT_secondary.datas:%d\r\n",app_par_Grid_PT_secondary.datas);
+    }
+    /* Generation_PT_primary */
+    ret = BSW_NvM_Read(Generation_PT_primary,&app_par_Generation_PT_primary.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Generation_PT_primary.datas:%d\r\n",app_par_Generation_PT_primary.datas);
+    }
+    /* Generation_PT_secondary */
+    ret = BSW_NvM_Read(Generation_PT_secondary,&app_par_Generation_PT_secondary.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Generation_PT_secondary.datas:%d\r\n",app_par_Generation_PT_secondary.datas);
+    }
+    /* Protective_CT_primary */
+    ret = BSW_NvM_Read(Protective_CT_primary,&app_par_Protective_CT_primary.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Protective_CT_primary.datas:%d\r\n",app_par_Protective_CT_primary.datas);
+    }
+    /* Protected_CT_secondary */
+    ret = BSW_NvM_Read(Protected_CT_secondary,&app_par_Protected_CT_secondary.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Protected_CT_secondary.datas:%d\r\n",app_par_Protected_CT_secondary.datas);
+    }
+    /* Zero_sequence_CT_once */
+    ret = BSW_NvM_Read(Zero_sequence_CT_once,&app_par_Zero_sequence_CT_once.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Zero_sequence_CT_once.datas:%d\r\n",app_par_Zero_sequence_CT_once.datas);
+    }
+    /* Zero_sequence_CT_twice */
+    ret = BSW_NvM_Read(Zero_sequence_CT_twice,&app_par_Zero_sequence_CT_twice.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Zero_sequence_CT_twice.datas:%d\r\n",app_par_Zero_sequence_CT_twice.datas);
+    }
+    /* Remote_letter_anti_shake_time */
+    ret = BSW_NvM_Read(Remote_letter_anti_shake_time,&app_par_Remote_letter_anti_shake_time.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Remote_letter_anti_shake_time.datas:%d\r\n",app_par_Remote_letter_anti_shake_time.datas);
+    }
+    /* Remote_letter_into_the_logic */
+    ret = BSW_NvM_Read(Remote_letter_into_the_logic,&app_par_Remote_letter_into_the_logic.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Remote_letter_into_the_logic.datas:%d\r\n",app_par_Remote_letter_into_the_logic.datas);
+    }
+    /* Trip_exit_time */
+    ret = BSW_NvM_Read(Trip_exit_time,&app_par_Trip_exit_time.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Trip_exit_time.datas:%d\r\n",app_par_Trip_exit_time.datas);
+    }
+    /* Closing_exit_time */
+    ret = BSW_NvM_Read(Closing_exit_time,&app_par_Closing_exit_time.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Closing_exit_time.datas:%d\r\n",app_par_Closing_exit_time.datas);
+    }
+    /* D01_exit_time */
+    ret = BSW_NvM_Read(D01_exit_time,&app_par_D01_exit_time.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_D01_exit_time.datas:%d\r\n",app_par_D01_exit_time.datas);
+    }
+    /* D02_exit_time */
+    ret = BSW_NvM_Read(D02_exit_time,&app_par_D02_exit_time.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_D02_exit_time.datas:%d\r\n",app_par_D02_exit_time.datas);
+    }
+    /* D03_exit_time */
+    ret = BSW_NvM_Read(D03_exit_time,&app_par_D03_exit_time.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_D03_exit_time.datas:%d\r\n",app_par_D03_exit_time.datas);
+    }
+    /* D04_exit_time */
+    ret = BSW_NvM_Read(D04_exit_time,&app_par_D04_exit_time.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_D04_exit_time.datas:%d\r\n",app_par_D04_exit_time.datas);
+    }
+    /* Energy_storage_exit_time */
+    ret = BSW_NvM_Read(Energy_storage_exit_time,&app_par_Energy_storage_exit_time.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Energy_storage_exit_time.datas:%d\r\n",app_par_Energy_storage_exit_time.datas);
+    }
+    /* Energy_storage_outlet_selection */
+    ret = BSW_NvM_Read(Energy_storage_outlet_selection,&app_par_Energy_storage_outlet_selection.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Energy_storage_outlet_selection.datas:%d\r\n",app_par_Energy_storage_outlet_selection.datas);
+    }
+    /* Zero_drift_threshold */
+    ret = BSW_NvM_Read(Zero_drift_threshold,&app_par_Zero_drift_threshold.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Zero_drift_threshold.datas:%d\r\n",app_par_Zero_drift_threshold.datas);
+    }
+    /* Voltage_connection */
+    ret = BSW_NvM_Read(Voltage_connection,&app_par_Voltage_connection.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Voltage_connection.datas:%d\r\n",app_par_Voltage_connection.datas);
+    }
+    /* Protect_CT_channels */
+    ret = BSW_NvM_Read(Protect_CT_channels,&app_par_Protect_CT_channels.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Protect_CT_channels.datas:%d\r\n",app_par_Protect_CT_channels.datas);
+    }
+    /* Switch_position */
+    ret = BSW_NvM_Read(Switch_position,&app_par_Switch_position.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Switch_position.datas:%d\r\n",app_par_Switch_position.datas);
+    }
+    /* Serial_protocol */
+    ret = BSW_NvM_Read(Serial_protocol,&app_par_Serial_protocol.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Serial_protocol.datas:%d\r\n",app_par_Serial_protocol.datas);
+    }
+    /* Serial_check */
+    ret = BSW_NvM_Read(Serial_check,&app_par_Serial_check.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Serial_check.datas:%d\r\n",app_par_Serial_check.datas);
+    }
+    /* Serial_baud_rate */
+    ret = BSW_NvM_Read(Serial_baud_rate,&app_par_Serial_baud_rate.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Serial_baud_rate.datas:%d\r\n",app_par_Serial_baud_rate.datas);
+    }
+    /* Module_address */
+    ret = BSW_NvM_Read(Module_address,&app_par_Module_address.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Module_address.datas:%d\r\n",app_par_Module_address.datas);
+    }
+    /* Switch_coding */
+    ret = BSW_NvM_Read(Switch_coding,&app_par_Switch_coding.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Switch_coding.datas:%d\r\n",app_par_Switch_coding.datas);
+    }
+    /* Change_threshold */
+    ret = BSW_NvM_Read(Change_threshold,&app_par_Change_threshold.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Change_threshold.datas:%d\r\n",app_par_Change_threshold.datas);
+    }
+    /* Restore_functional_input */
+    ret = BSW_NvM_Read(Restore_functional_input,&app_par_Restore_functional_input.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Restore_functional_input.datas:%d\r\n",app_par_Restore_functional_input.datas);
+    }
+    /* Restore_time */
+    ret = BSW_NvM_Read(Restore_time,&app_par_Restore_time.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Restore_time.datas:%d\r\n",app_par_Restore_time.datas);
+    }
+    /* Device_password */
+    ret = BSW_NvM_Read(Device_password,&app_par_Device_password.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_Device_password.datas:%d\r\n",app_par_Device_password.datas);
     }
 }
 
@@ -1412,6 +1605,444 @@ uint8 app_parameter_write_Power_recovery_Eol(uint8 data)
     ret = BSW_NvM_Write(Power_recovery_Eol,&data);
     return ret;
 }
+
+/********************************************************************定值管理*******************************************************************************************/
+uint16 app_parameter_read_Grid_PT_primary(void)
+{
+    uint16 ret = app_par_Grid_PT_primary.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Grid_PT_primary(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Grid_PT_primary.datas = data;
+    ret = BSW_NvM_Write(Grid_PT_primary,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_Grid_PT_secondary(void)
+{
+    uint16 ret = app_par_Grid_PT_secondary.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Grid_PT_secondary(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Grid_PT_secondary.datas = data;
+    ret = BSW_NvM_Write(Grid_PT_secondary,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_Generation_PT_primary(void)
+{
+    uint16 ret = app_par_Generation_PT_primary.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Generation_PT_primary(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Generation_PT_primary.datas = data;
+    ret = BSW_NvM_Write(Generation_PT_primary,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_Generation_PT_secondary(void)
+{
+    uint16 ret = app_par_Generation_PT_secondary.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Generation_PT_secondary(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Generation_PT_secondary.datas = data;
+    ret = BSW_NvM_Write(Generation_PT_secondary,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_Protective_CT_primary(void)
+{
+    uint16 ret = app_par_Protective_CT_primary.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Protective_CT_primary(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Protective_CT_primary.datas = data;
+    ret = BSW_NvM_Write(Protective_CT_primary,&data);
+    return ret;
+}
+
+uint8 app_parameter_read_Protected_CT_secondary(void)
+{
+    uint8 ret = app_par_Protected_CT_secondary.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Protected_CT_secondary(uint8 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Protected_CT_secondary.datas = data;
+    ret = BSW_NvM_Write(Protected_CT_secondary,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_Zero_sequence_CT_once(void)
+{
+    uint16 ret = app_par_Zero_sequence_CT_once.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Zero_sequence_CT_once(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Zero_sequence_CT_once.datas = data;
+    ret = BSW_NvM_Write(Zero_sequence_CT_once,&data);
+    return ret;
+}
+
+uint8 app_parameter_read_Zero_sequence_CT_twice(void)
+{
+    uint8 ret = app_par_Zero_sequence_CT_twice.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Zero_sequence_CT_twice(uint8 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Zero_sequence_CT_twice.datas = data;
+    ret = BSW_NvM_Write(Zero_sequence_CT_twice,&data);
+    return ret;
+}
+
+/**/
+uint16 app_parameter_read_Remote_letter_anti_shake_time(void)
+{
+    uint16 ret = app_par_Remote_letter_anti_shake_time.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Remote_letter_anti_shake_time(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Remote_letter_anti_shake_time.datas = data;
+    ret = BSW_NvM_Write(Remote_letter_anti_shake_time,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_Remote_letter_into_the_logic(void)
+{
+    uint16 ret = app_par_Remote_letter_into_the_logic.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Remote_letter_into_the_logic(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Remote_letter_into_the_logic.datas = data;
+    ret = BSW_NvM_Write(Remote_letter_into_the_logic,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_Trip_exit_time(void)
+{
+    uint16 ret = app_par_Trip_exit_time.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Trip_exit_time(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Trip_exit_time.datas = data;
+    ret = BSW_NvM_Write(Trip_exit_time,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_Closing_exit_time(void)
+{
+    uint16 ret = app_par_Closing_exit_time.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Closing_exit_time(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Closing_exit_time.datas = data;
+    ret = BSW_NvM_Write(Closing_exit_time,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_D01_exit_time(void)
+{
+    uint16 ret = app_par_D01_exit_time.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_D01_exit_time(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_D01_exit_time.datas = data;
+    ret = BSW_NvM_Write(D01_exit_time,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_D02_exit_time(void)
+{
+    uint16 ret = app_par_D02_exit_time.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_D02_exit_time(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_D02_exit_time.datas = data;
+    ret = BSW_NvM_Write(D02_exit_time,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_D03_exit_time(void)
+{
+    uint16 ret = app_par_D03_exit_time.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_D03_exit_time(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_D03_exit_time.datas = data;
+    ret = BSW_NvM_Write(D03_exit_time,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_D04_exit_time(void)
+{
+    uint16 ret = app_par_D04_exit_time.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_D04_exit_time(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_D04_exit_time.datas = data;
+    ret = BSW_NvM_Write(D04_exit_time,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_Energy_storage_exit_time(void)
+{
+    uint16 ret = app_par_Energy_storage_exit_time.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Energy_storage_exit_time(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Energy_storage_exit_time.datas = data;
+    ret = BSW_NvM_Write(Energy_storage_exit_time,&data);
+    return ret;
+}
+
+uint8 app_parameter_read_Energy_storage_outlet_selection(void)
+{
+    uint8 ret = app_par_Energy_storage_outlet_selection.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Energy_storage_outlet_selection(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Energy_storage_outlet_selection.datas = data;
+    ret = BSW_NvM_Write(Energy_storage_outlet_selection,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_Zero_drift_threshold(void)
+{
+    uint16 ret = app_par_Zero_drift_threshold.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Zero_drift_threshold(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Zero_drift_threshold.datas = data;
+    ret = BSW_NvM_Write(Zero_drift_threshold,&data);
+    return ret;
+}
+
+uint8 app_parameter_read_Voltage_connection(void)
+{
+    uint8 ret = app_par_Voltage_connection.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Voltage_connection(uint8 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Voltage_connection.datas = data;
+    ret = BSW_NvM_Write(Voltage_connection,&data);
+    return ret;
+}
+
+uint8 app_parameter_read_Protect_CT_channels(void)
+{
+    uint8 ret = app_par_Protect_CT_channels.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Protect_CT_channels(uint8 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Protect_CT_channels.datas = data;
+    ret = BSW_NvM_Write(Protect_CT_channels,&data);
+    return ret;
+}
+
+uint8 app_parameter_read_Switch_position(void)
+{
+    uint8 ret = app_par_Switch_position.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Switch_position(uint8 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Switch_position.datas = data;
+    ret = BSW_NvM_Write(Switch_position,&data);
+    return ret;
+}
+
+uint8 app_parameter_read_Serial_protocol(void)
+{
+    uint8 ret = app_par_Serial_protocol.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Serial_protocol(uint8 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Serial_protocol.datas = data;
+    ret = BSW_NvM_Write(Serial_protocol,&data);
+    return ret;
+}
+
+uint8 app_parameter_read_Serial_check(void)
+{
+    uint8 ret = app_par_Serial_check.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Serial_check(uint8 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Serial_check.datas = data;
+    ret = BSW_NvM_Write(Serial_check,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_Serial_baud_rate(void)
+{
+    uint16 ret = app_par_Serial_baud_rate.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Serial_baud_rate(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Serial_baud_rate.datas = data;
+    ret = BSW_NvM_Write(Serial_baud_rate,&data);
+    return ret;
+}
+
+uint8 app_parameter_read_Module_address(void)
+{
+    uint8 ret = app_par_Module_address.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Module_address(uint8 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Module_address.datas = data;
+    ret = BSW_NvM_Write(Module_address,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_Switch_coding(void)
+{
+    uint16 ret = app_par_Switch_coding.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Switch_coding(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Switch_coding.datas = data;
+    ret = BSW_NvM_Write(Switch_coding,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_Change_threshold(void)
+{
+    uint16 ret = app_par_Change_threshold.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Change_threshold(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Change_threshold.datas = data;
+    ret = BSW_NvM_Write(Change_threshold,&data);
+    return ret;
+}
+
+uint8 app_parameter_read_Restore_functional_input(void)
+{
+    uint8 ret = app_par_Restore_functional_input.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Restore_functional_input(uint8 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Restore_functional_input.datas = data;
+    ret = BSW_NvM_Write(Restore_functional_input,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_Restore_time(void)
+{
+    uint16 ret = app_par_Restore_time.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Restore_time(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Restore_time.datas = data;
+    ret = BSW_NvM_Write(Restore_time,&data);
+    return ret;
+}
+
+uint32 app_parameter_read_Device_password(void)
+{
+    uint32 ret = app_par_Device_password.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_Device_password(uint32 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_Device_password.datas = data;
+    ret = BSW_NvM_Write(Device_password,&data);
+    return ret;
+}
+
+
 
 
 static uint32 MCM_floatToIntBit( float32 x )

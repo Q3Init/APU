@@ -449,7 +449,192 @@ typedef struct
     uint8 p_buf[1];
 }app_par_Power_recovery_Eol_Rte;
 
+/********************************************************************定值管理*******************************************************************************************/
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Grid_PT_primary_Rte;
 
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Grid_PT_secondary_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Generation_PT_primary_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Generation_PT_secondary_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Protective_CT_primary_Rte;
+
+typedef struct
+{
+    /* data */
+    uint8 datas;
+}app_par_Protected_CT_secondary_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Zero_sequence_CT_once_Rte;
+
+typedef struct
+{
+    /* data */
+    uint8 datas;
+}app_par_Zero_sequence_CT_twice_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Remote_letter_anti_shake_time_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Remote_letter_into_the_logic_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Trip_exit_time_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Closing_exit_time_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_D01_exit_time_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_D02_exit_time_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_D03_exit_time_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_D04_exit_time_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Energy_storage_exit_time_Rte;
+
+typedef struct
+{
+    /* data */
+    uint8 datas;
+}app_par_Energy_storage_outlet_selection_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Zero_drift_threshold_Rte;
+
+typedef struct
+{
+    /* data */
+    uint8 datas;
+}app_par_Voltage_connection_Rte;
+
+typedef struct
+{
+    /* data */
+    uint8 datas;
+}app_par_Protect_CT_channels_Rte;
+
+typedef struct
+{
+    /* data */
+    uint8 datas;
+}app_par_Switch_position_Rte;
+
+typedef struct
+{
+    /* data */
+    uint8 datas;
+}app_par_Serial_protocol_Rte;
+
+typedef struct
+{
+    /* data */
+    uint8 datas;
+}app_par_Serial_check_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Serial_baud_rate_Rte;
+
+typedef struct
+{
+    /* data */
+    uint8 datas;
+}app_par_Module_address_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Switch_coding_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Change_threshold_Rte;
+
+typedef struct
+{
+    /* data */
+    uint8 datas;
+}app_par_Restore_functional_input_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_Restore_time_Rte;
+
+typedef struct
+{
+    /* data */
+    uint32 datas;
+}app_par_Device_password_Rte;
 
 extern void APP_Parameter_Init(void);
 
@@ -611,5 +796,77 @@ extern float32 app_parameter_read_Power_recovery_Delay(void);
 extern uint8 app_parameter_write_Power_recovery_Delay(float32 data);
 extern uint8 app_parameter_read_Power_recovery_Eol(void);
 extern uint8 app_parameter_write_Power_recovery_Eol(uint8 data);
+
+/********************************************************************定值管理*******************************************************************************************/
+/* 变比设置 */
+extern uint16 app_parameter_read_Grid_PT_primary(void);
+extern uint8 app_parameter_write_Grid_PT_primary(uint16 data);
+extern uint16 app_parameter_read_Grid_PT_secondary(void);
+extern uint8 app_parameter_write_Grid_PT_secondary(uint16 data);
+extern uint16 app_parameter_read_Generation_PT_primary(void);
+extern uint8 app_parameter_write_Generation_PT_primary(uint16 data);
+extern uint16 app_parameter_read_Generation_PT_secondary(void);
+extern uint8 app_parameter_write_Generation_PT_secondary(uint16 data);
+extern uint16 app_parameter_read_Protective_CT_primary(void);
+extern uint8 app_parameter_write_Protective_CT_primary(uint16 data);
+extern uint8 app_parameter_read_Protected_CT_secondary(void);
+extern uint8 app_parameter_write_Protected_CT_secondary(uint8 data);
+extern uint16 app_parameter_read_Zero_sequence_CT_once(void);
+extern uint8 app_parameter_write_Zero_sequence_CT_once(uint16 data);
+extern uint8 app_parameter_read_Zero_sequence_CT_twice(void);
+extern uint8 app_parameter_write_Zero_sequence_CT_twice(uint8 data);
+/* 开入设置 */
+extern uint16 app_parameter_read_Remote_letter_anti_shake_time(void);
+extern uint8 app_parameter_write_Remote_letter_anti_shake_time(uint16 data);
+extern uint16 app_parameter_read_Remote_letter_into_the_logic(void);
+extern uint8 app_parameter_write_Remote_letter_into_the_logic(uint16 data);
+/* 开出设置 */
+extern uint16 app_parameter_read_Trip_exit_time(void);
+extern uint8 app_parameter_write_Trip_exit_time(uint16 data);
+extern uint16 app_parameter_read_Closing_exit_time(void);
+extern uint8 app_parameter_write_Closing_exit_time(uint16 data);
+extern uint16 app_parameter_read_D01_exit_time(void);
+extern uint8 app_parameter_write_D01_exit_time(uint16 data);
+extern uint16 app_parameter_read_D02_exit_time(void);
+extern uint8 app_parameter_write_D02_exit_time(uint16 data);
+extern uint16 app_parameter_read_D03_exit_time(void);
+extern uint8 app_parameter_write_D03_exit_time(uint16 data);
+extern uint16 app_parameter_read_D04_exit_time(void);
+extern uint8 app_parameter_write_D04_exit_time(uint16 data);
+extern uint16 app_parameter_read_Energy_storage_exit_time(void);
+extern uint8 app_parameter_write_Energy_storage_exit_time(uint16 data);
+extern uint8 app_parameter_read_Energy_storage_outlet_selection(void);
+extern uint8 app_parameter_write_Energy_storage_outlet_selection(uint16 data);
+/* 接线设置 */
+extern uint16 app_parameter_read_Zero_drift_threshold(void);
+extern uint8 app_parameter_write_Zero_drift_threshold(uint16 data);
+extern uint8 app_parameter_read_Voltage_connection(void);
+extern uint8 app_parameter_write_Voltage_connection(uint8 data);
+extern uint8 app_parameter_read_Protect_CT_channels(void);
+extern uint8 app_parameter_write_Protect_CT_channels(uint8 data);
+extern uint8 app_parameter_read_Switch_position(void);
+extern uint8 app_parameter_write_Switch_position(uint8 data);
+/* 通信设置 */
+extern uint8 app_parameter_read_Serial_protocol(void);
+extern uint8 app_parameter_write_Serial_protocol(uint8 data);
+extern uint8 app_parameter_read_Serial_check(void);
+extern uint8 app_parameter_write_Serial_check(uint8 data);
+extern uint16 app_parameter_read_Serial_baud_rate(void);
+extern uint8 app_parameter_write_Serial_baud_rate(uint16 data);
+extern uint8 app_parameter_read_Module_address(void);
+extern uint8 app_parameter_write_Module_address(uint8 data);
+extern uint16 app_parameter_read_Switch_coding(void);
+extern uint8 app_parameter_write_Switch_coding(uint16 data);
+extern uint16 app_parameter_read_Change_threshold(void);
+extern uint8 app_parameter_write_Change_threshold(uint16 data);
+/* 复归设置 */
+extern uint8 app_parameter_read_Restore_functional_input(void);
+extern uint8 app_parameter_write_Restore_functional_input(uint8 data);
+extern uint16 app_parameter_read_Restore_time(void);
+extern uint8 app_parameter_write_Restore_time(uint16 data);
+/* 密码设置 */
+extern uint32 app_parameter_read_Device_password(void);
+extern uint8 app_parameter_write_Device_password(uint32 data);
+
 
 #endif

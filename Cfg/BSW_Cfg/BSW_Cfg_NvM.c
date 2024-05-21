@@ -258,7 +258,131 @@ BSW_NvM_Rte nvm_datas_Lists[ID_CNT] =
     {
         .id = Power_recovery_Eol,
         .data_len = 1
-    }
+    },
+    {
+        .id = Grid_PT_primary,
+        .data_len = 2
+    },
+    {
+        .id = Grid_PT_secondary,
+        .data_len = 2
+    },
+    {
+        .id = Generation_PT_primary,
+        .data_len = 2
+    },
+    {
+        .id = Generation_PT_secondary,
+        .data_len = 2
+    },
+    {
+        .id = Protective_CT_primary,
+        .data_len = 2
+    },
+    {
+        .id = Protected_CT_secondary,
+        .data_len = 1
+    },
+    {
+        .id = Zero_sequence_CT_once,
+        .data_len = 2
+    },
+    {
+        .id = Zero_sequence_CT_twice,
+        .data_len = 1
+    },
+    {
+        .id = Remote_letter_anti_shake_time,
+        .data_len = 2
+    },
+    {
+        .id = Remote_letter_into_the_logic,
+        .data_len = 2
+    },
+    {
+        .id = Trip_exit_time,
+        .data_len = 2
+    },  
+    {
+        .id = Closing_exit_time,
+        .data_len = 2
+    },
+    {
+        .id = D01_exit_time,
+        .data_len = 2
+    },
+    {
+        .id = D02_exit_time,
+        .data_len = 2
+    },
+    {
+        .id = D03_exit_time,
+        .data_len = 2
+    },
+    {
+        .id = D04_exit_time,
+        .data_len = 2
+    },
+    {
+        .id = Energy_storage_exit_time,
+        .data_len = 2
+    },
+    {
+        .id = Energy_storage_outlet_selection,
+        .data_len = 1
+    },
+    {
+        .id = Zero_drift_threshold,
+        .data_len = 2
+    }, 
+    {
+        .id = Voltage_connection,
+        .data_len = 1
+    },  
+    {
+        .id = Protect_CT_channels,
+        .data_len = 1
+    },  
+    {
+        .id = Switch_position,
+        .data_len = 1
+    }, 
+    {
+        .id = Serial_protocol,
+        .data_len = 1
+    }, 
+    {
+        .id = Serial_check,
+        .data_len = 1
+    },
+    {
+        .id = Serial_baud_rate,
+        .data_len = 2
+    },
+    {
+        .id = Module_address,
+        .data_len = 1
+    },
+    {
+        .id = Switch_coding,
+        .data_len = 2
+    },
+    {
+        .id = Change_threshold,
+        .data_len = 2
+    },
+    {
+        .id = Restore_functional_input,
+        .data_len = 1
+    },
+    {
+        .id = Restore_time,
+        .data_len = 2
+    },
+    {
+        .id = Device_password,
+        .data_len = 4
+    },
 };
 
 
