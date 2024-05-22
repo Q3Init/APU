@@ -19,8 +19,10 @@
 /* 输入消抖延迟，单位：ms */
 #define REMOTE_SIGNAL_INPUT_DEBOUNCE_DELAY 10
 
-#define APP_ADC2VOLT_CALC(adc_val)  ((((float32)(adc_val) * 3300 / 4095.0f) - ADC_VOLT_OFFSET) * VOLTAGE_CONV_SCALE / 1000.0)
-#define APP_ADC2CURRENT_CALC(adc_val)  ((((float32)(adc_val) * 3300 / 4095.0f) - ADC_VOLT_OFFSET) * CURRENT_CONV_SCALE / 1000.0)
+#define APP_ADC2VOLT_CALC(adc_val)  (((float32)(adc_val) * 3300 / 4096.0f) - ADC_VOLT_OFFSET)
+#define APP_DC2AC_VOLT(V)   ((V) * VOLTAGE_CONV_SCALE / 1000.0)
+#define APP_ADC2CURRENT_CALC(adc_val)  (((float32)(adc_val) * 3300 / 4096.0f) - ADC_VOLT_OFFSET)
+#define APP_DC2AC_CURRENT(C) ((C) * CURRENT_CONV_SCALE / 1000.0)
 
 /* 限制范围 */
 #define LIMIT_RANGE(MIN, MAX, VAL)  ((VAL) < (MIN) ? (MIN) : ((VAL) > (MAX) ? (MAX) : (VAL)))
@@ -35,7 +37,10 @@
 
 /* 需FFT变换的频率 = ADC 采样频率 x FFT变化后的第N个数据点 / 采样点数 */
 #define FFT_POINT_CNT   1024
-#define FFT_SAMPLE_RATE 5952
+#define FFT_SAMPLE_RATE 6000
+// #define FFT_SAMPLE_RATE 2048
+// #define FFT_SAMPLE_RATE 6144
+// #define FFT_SAMPLE_RATE 5952
 
 /* 能量补偿点数 */
 #define RFFT_ENERGY_COMP_MAX_POINT  20
@@ -147,6 +152,9 @@ typedef struct {
     float32 fft_mag_buff[FFT_POINT_CNT];
     arm_rfft_fast_instance_f32 rfft_f32;
 
+    // uint16 *p_sample_adc;
+    // uint16 samle_adc_channel;
+    // uint16 sample_adc_count;
 
 } APP_Protection_Backend_t;
 

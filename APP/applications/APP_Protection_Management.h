@@ -156,89 +156,34 @@ typedef struct {
     APP_Protection_State_t  state;   /* 各保护功能模块合闸状态 */
     APP_Protection_Enable_t enable;  /* 保护功能使能 */
 
-    float32 over_volt_threshold_lv1;  /* 过压一段阈值，单位：v */
-    float32 over_volt_delay_lv1;      /* 过压一段延时，单位：s */
     uint32 over_volt_tick_lv1;   
-
-    float32 over_volt_threshold_lv2;  /* 过压二段阈值，单位：v */
-    float32 over_volt_delay_lv2;      /* 过压二段延时，单位：s */
     uint32 over_volt_tick_lv2;
-
-    float32 under_volt_threshold_lv1;  /* 欠压一段阈值，单位：v */
-    float32 under_volt_delay_lv1;      /* 欠压一段延时，单位：s */
     uint32 under_volt_tick_lv1;
-
-    float32 under_volt_threshold_lv2;  /* 欠压二段阈值，单位：v */
-    float32 under_volt_delay_lv2;      /* 欠压二段延时，单位：s */
     uint32 under_volt_tick_lv2;
-    
-    float32 over_freq_threshold;  /* 过频阈值，单位:hz */
-    float32 over_freq_delay;      /* 过频延时，单位：s */
     uint32 over_freq_tick;
-
-    float32 low_freq_threshold;  /* 欠频阈值，单位:hz */
-    float32 low_freq_delay;      /* 欠频延时，单位：s */
     uint32 low_freq_tick;
-
-    float32 spike_freq_threshold;  /* 过冲频阈值，单位:hz */
-    float32 spike_freq_delay;      /* 过冲频延时，单位：s */
     uint32 spike_freq_tick;
     uint32 spike_freq_run_tick;
-
-    float32 reverse_power_threshold;  /* 逆功率阈值，单位：w */
-    float32 reverse_power_delay;      /* 逆功率延时，单位：s */
     uint32 reverse_power_tick;
-
-    float32 harmonic_volt_distortion_threshold;  /* 谐波电压失真度阈值，单位：% */
-    float32 harmonic_volt_distortion_delay;      /* 谐波电压失真度延时，单位：s */
     uint32 harmonic_volt_distortion_tick;
-
-    float32 ext_ctrl_delay;  /* 外部控制延时，单位：s */
-    boolean ext_ctrl_tick;   /* 外部控制延时，单位：s */
-
-    float32 quick_break_threshold;  /* 速断保护阈值，单位:A */
-    float32 quick_break_delay;      /* 速断保护延时，单位：s */
+    uint32 ext_ctrl_tick;  /* 外部控制延时，单位：s */
     uint32 quick_break_tick;
     uint32 quick_break_run_tick;
-
-    float32 time_limit_quick_break_threshold;  /* 限时速断保护阈值，单位：A */
-    float32 time_limit_quick_break_delay;      /* 限时速断保护延时，单位：s */
     uint32 time_limit_quick_break_tick;
-
-    float32 over_current_threshold;  /* 过流保护阈值，单位：A */
-    float32 over_current_delay;      /* 过流保护延时，单位：s */
     uint32 over_current_tick;
-
-    float32 zero_seq_current_threshold;  /* 零序电流保护阈值，单位：A */
-    float32 zero_seq_current_delay;      /* 零序电流保护延时，单位：s */
     uint32 zero_seq_current_tick;
-
-    float32 system_outage_threshold;  /* 系统停电保护阈值，单位：A */
-    float32 system_outage_delay;      /* 系统停电保护延时，单位：s */
     uint32 system_outage_tick;
-    boolean system_power_up_flag;  /* 系统有电标志 */
-
-    float32 upper_volt_limit;  /* 电压上限，单位：v */
-    float32 lower_volt_limit;  /* 电压下限，单位：v */
-    float32 upper_freq_limit;  /* 频率上限，单位：hz */
-    float32 lower_freq_limit;  /* 频率下限，单位：hz */
-    
-    boolean on_volt_switch_on_state;  /* 有压合闸状态 */
     uint32 on_volt_switch_on_tick;
-    float32 on_volt_switch_on_delay;  /* 有压合闸延时，单位：s */
-    
-    boolean switch_on_lock_flag;         /* 合闸锁死标志 */
-    boolean system_first_power_up_flag;  /* 系统上电一次标志 */
-
-    float32 power_restoration_threshold;  /* 功率恢复阈值，单位：w */
-    float32 power_restoration_delay;      /* 功率恢复延时，单位：s */
     uint32 power_restoration_tick;
 
+    boolean system_power_up_flag;        /* 系统有电标志 */
+    boolean switch_on_lock_flag;         /* 合闸锁死标志 */
+    boolean system_first_power_up_flag;  /* 系统上电一次标志 */
     float32 last_fundamental_freq;
 
 } APP_Protection_Mnt_t;
 
-APP_Protection_State_t *APP_Get_Protection_State(void);
+const APP_Protection_State_t *APP_Get_Protection_State(void);
 APP_Protection_Enable_t *APP_Get_Protection_Enable(void);
 
 void APP_Protection_Management_Init(void);

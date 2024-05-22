@@ -545,7 +545,7 @@ static void APP_Protection_PowerRestorationOperate_Handler(void)
  * 
  * @return APP_Protection_State_t* 
  */
-APP_Protection_State_t *APP_Get_Protection_State(void)
+const APP_Protection_State_t *APP_Get_Protection_State(void)
 {
     return &pMnt->state;
 }
