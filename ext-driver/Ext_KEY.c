@@ -59,10 +59,10 @@ uint8 KEY_Down(void)
 uint8 KEY_Left(void)
 {
     uint8 keynum=0;
-    if(BSW_Dio_ReadInputBit(DIO_PORT_left,DIO_PIN_left)==1)
+    if(BSW_Dio_ReadInputBit(DIO_PORT_left,DIO_PIN_left)==0)
     {
         OS_Delay_us(1000);
-        if(BSW_Dio_ReadInputBit(DIO_PORT_left,DIO_PIN_left)==1) {
+        if(BSW_Dio_ReadInputBit(DIO_PORT_left,DIO_PIN_left)==0) {
             keynum=KEY_LEFT;
         }    
     }

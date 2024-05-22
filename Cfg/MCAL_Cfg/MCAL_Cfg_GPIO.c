@@ -429,11 +429,11 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOC PIN_6 : I/O */
          .GPIO = GPIOC,
-         .GPIO_level = STD_LOW,
+         .GPIO_level = STD_HIGH,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOC,
          {
-          .mode = GPIO_MODE_OUT_PP,
+          .mode = GPIO_MODE_IN_PU,
           .pin = GPIO_PIN_6,
           .speed = GPIO_SPEED_50MHz
           }
@@ -629,88 +629,88 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
         {/* GPIOD PIN_8 : 按键——return */
          .GPIO = GPIOD,
-         .GPIO_level = STD_LOW,
+         .GPIO_level = STD_HIGH,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_IN_PD,
+          .mode = GPIO_MODE_IN_PU,
           .pin = GPIO_PIN_8,
           .speed = GPIO_SPEED_50MHz
           }
         },
         {/* GPIOD PIN_9 : 按键——enter */
          .GPIO = GPIOD,
-         .GPIO_level = STD_LOW,
+         .GPIO_level = STD_HIGH,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_IN_PD,
+          .mode = GPIO_MODE_IN_PU,
           .pin = GPIO_PIN_9,
           .speed = GPIO_SPEED_50MHz
           }
         },
         {/* GPIOD PIN_10 : 按键——up */
          .GPIO = GPIOD,
-         .GPIO_level = STD_LOW,
+         .GPIO_level = STD_HIGH,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_IN_PD,
+          .mode = GPIO_MODE_IN_PU,
           .pin = GPIO_PIN_10,
           .speed = GPIO_SPEED_50MHz
           }
         },
         {/* GPIOD PIN_11 : 按键——down */
          .GPIO = GPIOD,
-         .GPIO_level = STD_LOW,
+         .GPIO_level = STD_HIGH,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_IN_PD,
+          .mode = GPIO_MODE_IN_PU,
           .pin = GPIO_PIN_11,
           .speed = GPIO_SPEED_50MHz
           }
         },
         {/* GPIOD PIN_12 : 按键——left */
          .GPIO = GPIOD,
-         .GPIO_level = STD_LOW,
+         .GPIO_level = STD_HIGH,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_IN_PD,
+          .mode = GPIO_MODE_IN_PU,
           .pin = GPIO_PIN_12,
           .speed = GPIO_SPEED_50MHz
           }
         },
         {/* GPIOD PIN_13 : 按键——right */
          .GPIO = GPIOD,
-         .GPIO_level = STD_LOW,
+         .GPIO_level = STD_HIGH,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_IN_PD,
+          .mode = GPIO_MODE_IN_PU,
           .pin = GPIO_PIN_13,
           .speed = GPIO_SPEED_50MHz
           }
         },
         {/* GPIOD PIN_14 : 按键——subtract */
          .GPIO = GPIOD,
-         .GPIO_level = STD_LOW,
+         .GPIO_level = STD_HIGH,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_IN_PD,
+          .mode = GPIO_MODE_IN_PU,
           .pin = GPIO_PIN_14,
           .speed = GPIO_SPEED_50MHz
           }
         },
         {/* GPIOD PIN_15 : 按键——plus */
          .GPIO = GPIOD,
-         .GPIO_level = STD_LOW,
+         .GPIO_level = STD_HIGH,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOD,
          {
-          .mode = GPIO_MODE_IN_PD,
+          .mode = GPIO_MODE_IN_PU,
           .pin = GPIO_PIN_15,
           .speed = GPIO_SPEED_50MHz
           }
