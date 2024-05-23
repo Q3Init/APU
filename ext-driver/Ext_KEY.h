@@ -15,6 +15,7 @@ enum KEY_BOARD{
 	KEY_RIGHT,	    //6
 	KEY_MINUS,	    //7 
 	KEY_PLUS,	    //8
+    KEY_UNKNOW,
 };
 
 
