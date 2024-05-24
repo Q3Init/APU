@@ -1,7 +1,7 @@
 #include "Lib_LCD_kernel.h"
 #include "Lib_LCD_menu.h"
 #include "APP_FIX_VALUE_MANAGE.h"
-
+#include "APP_Parameter.h"
 uint8_t over_voltage_protection[]={
 0x10,0x11,0xF2,0x00,0x08,0x28,0xC8,0x08,0x08,0xFF,0x08,0x00,
 0x08,0x04,0x03,0x04,0x08,0x08,0x08,0x0A,0x0A,0x0B,0x08,0x00,/*"过",0*/
@@ -1130,6 +1130,7 @@ struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uin
 
 	return menu_evt;
 }
+
 void show_num(uint8_t hang, uint8_t lie, uint8_t num, uint8_t length, uint8_t high, uint8_t level)
 {
 	uint8_t *lcd_num_ptr = NULL;
@@ -1225,8 +1226,138 @@ float32 my_convert_int_to_float32_array(uint8_t * ptr, uint8_t int_convert_lengt
 	return all_sum;
 }
 
-uint8_t my_num[5] = {0};
-float32 my_one_fixed_value = 0;
+uint8_t over_voltage_num[5] = {0};
+struct lcd_modify_num_tag{
+	uint8_t menu_type_idx ;
+	uint8_t limited_index;
+	uint8_t check_num_modify;
+	uint8_t enter_flag;
+	uint8_t last_index;
+	uint8_t enter_key_ind;
+};
+
+struct lcd_modify_num_tag lcd_modify_num_env={
+	.menu_type_idx = 0,
+	.limited_index = 0,
+	.check_num_modify = 0,
+	.enter_flag = false,
+	.last_index = 0,
+	.enter_key_ind = 0,
+};
+
+void lcd_the_modified_num_env_to_be_clear_part(void)
+{
+	lcd_modify_num_env.limited_index = 0;
+	lcd_modify_num_env.last_index = 0;
+	lcd_modify_num_env.check_num_modify = false;
+	lcd_modify_num_env.enter_key_ind = 0;
+}
+
+void lcd_the_modified_num_env_to_be_init(void)
+{
+	lcd_modify_num_env.menu_type_idx = 0;
+	lcd_modify_num_env.enter_flag = false;
+	lcd_modify_num_env.limited_index = 0;
+	lcd_modify_num_env.last_index = 0;
+	lcd_modify_num_env.check_num_modify = false;
+	lcd_modify_num_env.enter_key_ind = 0;
+}
+
+void lcd_the_modified_num_env_to_be_clear_all(void)
+{
+	lcd_modify_num_env.menu_type_idx = 0;
+	lcd_modify_num_env.enter_flag = false;
+	lcd_modify_num_env.limited_index = 0;
+	lcd_modify_num_env.last_index = 0;
+	lcd_modify_num_env.check_num_modify = false;
+	lcd_modify_num_env.enter_key_ind = 0;
+}
+
+void lcd_number_modify_array_get(float32 *float_flag, float32 value, uint8_t *array_ptr, 
+								uint8_t int_convert_length, uint8_t point_convert_length, uint8_t num_flush_idx)
+{
+	if(num_flush_idx!=0xff)
+	{
+		for(int j =0;j<(int_convert_length+point_convert_length);j++)
+		{
+			array_ptr[j] = over_voltage_num[j];
+		}
+		Log_d("ENTER! lcd float_flag:%f\n",*float_flag);
+	}
+	else
+	{
+		*float_flag = value;
+		*float_flag = *float_flag+ 0.0001;
+		my_convert_float32_to_int_array(array_ptr, int_convert_length, point_convert_length, *float_flag);
+	}
+
+}
+
+void lcd_chinese_modify_array_get(uint8_t *int_flag, uint8_t bool_value, uint8_t num_flush_idx)
+{
+	if(num_flush_idx!=0xff)
+	{
+		*int_flag = *over_voltage_num;
+		Log_d("ENTER! int lcd float_flag:%f\n", *int_flag);
+	}
+	else
+	{
+		*int_flag = bool_value;
+	}
+}
+
+//Note: Both point_pos and num_idx_flush are set from zero.
+void lcd_chinese_modify_display_in_order(uint8_t num_flush_idx,
+										uint8_t x, uint8_t y, uint8_t *s, uint8_t chinese_num)
+{
+	if(num_flush_idx != 0xff)
+	{
+		LCD_ShowChinese_no_garland(x, y, s, chinese_num);
+	}
+	else
+	{
+		LCD_ShowChinese_garland(x, y, s, chinese_num);
+	}
+}
+
+
+//Note: Both point_pos and num_idx_flush are set from zero.
+void lcd_number_display_in_order(uint8_t hang, uint8_t lie, uint8_t length, uint8_t high,
+							uint8_t num_idx_flush, uint16_t array_length, uint8_t *ptr, uint8_t point_pos)
+{
+	uint8_t op = false;
+	for(int j=0;j<array_length;j++)
+	{
+		op = (num_idx_flush == j)? false:true;
+		if(j<point_pos)
+		{
+			show_num(hang+j*6,lie,ptr[j],length,high,op);
+		}
+		else if(j==point_pos)
+		{
+			lcd_state_flush_for_num(hang+j*6,lie,my_1x12_point,1,12,1);
+			show_num(hang+j*6+2,lie,ptr[j],length,high,op);
+		}
+		else
+		{
+			show_num(hang+j*6+2,lie,ptr[j],length,high,op);
+		}
+	}
+}
+
+void lcd_showchinese_no_garland_or_garland(uint8_t garland_flush_target,
+											uint8_t x, uint8_t y, uint8_t *s, uint8_t chinese_num)
+{
+	if(garland_flush_target == false)
+	{
+		LCD_ShowChinese_no_garland(x, y, s, chinese_num);
+	}
+	else
+	{
+		LCD_ShowChinese_garland(x, y, s, chinese_num);
+	}
+}
+
 struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
@@ -1234,11 +1365,13 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
-	float32 my_float_flag = 0;
-	static uint8_t menu_type_idx = 0;
-	static uint8_t limited_index = 0;
-	static uint8_t check_num_modify = false;
-	static uint8_t enter_flag = false;
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint8_t num_idx_flush[6] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[5] = {0};
+	uint8_t op = false;
+	uint8_t int_flag = 0;
 
 	uint8_t msg_storage = msg_context;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
@@ -1249,346 +1382,268 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 		return menu_evt;
 	}
 
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 	// app_parameter_write_Overvoltage_protection_LV1_One_Value(233.33);
     if(msg_process_signal == 1)
 	{
-		if(!check_num_modify)
+
+		if(!lcd_modify_num_env.check_num_modify)
 		{
-			menu_type_idx = menu_type_ptr_match(msg_context, 6, 1, sizeof(over_voltage_protection_array));
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 6, 1, sizeof(over_voltage_protection_array));
 		}
 		
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
-			if(!check_num_modify)
+			if(!lcd_modify_num_env.check_num_modify)
 			{
-				enter_flag = false;
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
 				menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				lcd_the_modified_num_env_to_be_clear_all();
 				Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				memset(my_num, 0x00, sizeof(my_num)); //clear the array before returning the chinese colume
-				limited_index = 0;
-				check_num_modify = false;
-				msg_storage = 0xff; //flush the screen for returned chinese colume
+				Log_d("RETURN\n");
+				//just for test log
+				for(int j=0;j<5;j++)
+				{
+					Log_d("[%d]=%d\n",j,over_voltage_num[j]);
+				}
+				memset(over_voltage_num, 0x00, sizeof(over_voltage_num)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+				float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Value();
+				Log_d("ENTER! float_flag:%f\n",float_flag);
+				my_convert_float32_to_int_array(over_voltage_num, 3, 2, float_flag);
 			}
+			key_idx_for_num = 0;
 		}
 		
 
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
             clear_screen();
-			// msg_context = 0xff;
-			msg_storage = 0xff;
-			my_float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Value();
-			my_convert_float32_to_int_array(my_num, 3, 2, my_float_flag);
-			enter_flag = true;// prepare for the number modify
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
 			msg_lock_from_env_set(0);//unlock the msg
 
-			//just for test log
-			for(int j=0;j<5;j++)
-			{
-				Log_d("[%d]=%d\n",j,my_num[j]);
-			}
-        }
-
-		if(enter_flag == true){
-			if(msg_context == KEY_ENTER)
-			{
-				check_num_modify = true;
-				msg_storage = KEY_UNKNOW;
-				// prepare for the number modify
-				clear_screen();
-				my_float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Value();
-				my_convert_float32_to_int_array(my_num, 3, 2, my_float_flag);
-			}
-		}
-
-		if(check_num_modify)
-		{
-			switch(over_voltage_protection_array[menu_type_idx])
+			//init the array over_voltage_num with value in the first chinese volume
+			switch(over_voltage_protection_array[lcd_modify_num_env.menu_type_idx])
 			{
 				case FIRST_FIX_VALUE:
-						switch(msg_context)
-						{	uint8_t new_num;
-							case    KEY_UP://+
-								if(my_num[limited_index]<9)
-								{
-									my_num[limited_index]++;
-									my_float_flag = my_convert_int_to_float32_array(my_num,3, 2);
-									app_parameter_write_Overvoltage_protection_LV1_One_Value(my_float_flag);
-								}
-								new_num=my_num[limited_index];
-								show_num(58+6*limited_index,13,new_num,5,12,0);
-								break;
-							case	KEY_DOWN://-
-								if(my_num[limited_index]>0)
-								{
-									my_num[limited_index]--;
-									my_float_flag = my_convert_int_to_float32_array(my_num,3, 2);
-									app_parameter_write_Overvoltage_protection_LV1_One_Value(my_float_flag);
-								}
-								new_num=my_num[limited_index];
-								show_num(58+6*limited_index,13,new_num,5,12,0);
-								break;
-							case	KEY_LEFT:
-								if(limited_index>0)
-								{
-									--limited_index;
-								}
-								show_num(58+6*limited_index,13,my_num[limited_index],5,12,0);
-								break;
-							case	KEY_RIGHT:
-								if(limited_index < (sizeof(my_num)-1))
-								{
-									++limited_index;
-								}
-								show_num(58+6*limited_index,13,my_num[limited_index],5,12,0);
-								break;
-							default:
-								break;
-						}
+					//update the value for the array over_voltage_num
+					float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Value();
+					Log_d("ENTER! float_flag:%f\n",float_flag);
+					my_convert_float32_to_int_array(over_voltage_num, 3, 2, float_flag);
 					break;
-				case FIRST_DELAY:
-					break;
-
 				default:
 					break;
 			}
-		}
-		else
-		{
-			switch(msg_storage)
+        }
+
+		if(lcd_modify_num_env.enter_flag == true){
+			if(msg_context == KEY_ENTER)
 			{
-				case	0xff:
-				case    KEY_UP:
-				case	KEY_DOWN:		
-				case	KEY_LEFT:
-				case	KEY_RIGHT:
-					clear_screen();
-					LCD_ShowChinese_garland(0, 0, over_voltage_protection, 4);
-					switch(over_voltage_protection_array[menu_type_idx])
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true;
+					switch(over_voltage_protection_array[lcd_modify_num_env.menu_type_idx])
 					{
 						case FIRST_FIX_VALUE:
-							single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-							lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-							lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-							lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
-							single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-							LCD_ShowChinese_no_garland(8, 13, first_fix_value, 4);
-							lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-							lcd_state_flush_for_num(63,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(69,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(75,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(81,13,my_1x12_point,1,12,1);
-							lcd_state_flush_for_num(83,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(89,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(95,13,my_char_V,6,12,1);
-
-							LCD_ShowChinese_garland(8, 26, first_delay, 4);
-							lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-							lcd_state_flush_for_num(63,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(69,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(75,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(81,26,my_1x12_point,1,12,1);
-							lcd_state_flush_for_num(83,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(89,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(95,26,my_char_s,6,12,1);
-
-
-							LCD_ShowChinese_garland(8, 38, first_in_out, 4);
-							lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-							LCD_ShowChinese_garland(63, 38, back, 2);
-							
-							LCD_ShowChinese_garland(8, 51, second_fix_value, 4);
-							lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
-							lcd_state_flush_for_num(63,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(69,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(75,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(81,51,my_1x12_point,1,12,1);
-							lcd_state_flush_for_num(83,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(89,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(95,51,my_char_V,6,12,1);
-
+							key_idx_for_num = 0;
+							//update the value for the array over_voltage_num
+							float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Value();
+							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(over_voltage_num, 3, 2, float_flag);
 							break;
 						case FIRST_DELAY:
-							single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-							lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-							lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-							lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
-							single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-							LCD_ShowChinese_garland(8, 13, first_fix_value, 4);
-							lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-							lcd_state_flush_for_num(63,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(69,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(75,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(81,13,my_1x12_point,1,12,1);
-							lcd_state_flush_for_num(83,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(89,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(95,13,my_char_V,6,12,1);
-
-							LCD_ShowChinese_no_garland(8, 26, first_delay, 4);
-							lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-							lcd_state_flush_for_num(63,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(69,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(75,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(81,26,my_1x12_point,1,12,1);
-							lcd_state_flush_for_num(83,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(89,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(95,26,my_char_s,6,12,1);
-
-							LCD_ShowChinese_garland(8, 38, first_in_out, 4);
-							lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-							LCD_ShowChinese_garland(63, 38, back, 2);
-
-							LCD_ShowChinese_garland(8, 51, second_fix_value, 4);
-							lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
-							lcd_state_flush_for_num(63,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(69,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(75,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(81,51,my_1x12_point,1,12,1);
-							lcd_state_flush_for_num(83,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(89,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(95,51,my_char_V,6,12,1);
-
+							//update the value for the array over_voltage_num
+							float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Delay();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(over_voltage_num, 3, 2, float_flag);
+							key_idx_for_num = 1;
 							break;
 						case FIRST_IN_OUT:
-							single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-							lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-							lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-							lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
-							single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-							LCD_ShowChinese_garland(8, 13, first_fix_value, 4);
-							lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-							lcd_state_flush_for_num(63,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(69,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(75,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(81,13,my_1x12_point,1,12,1);
-							lcd_state_flush_for_num(83,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(89,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(95,13,my_char_V,6,12,1);
-
-							LCD_ShowChinese_garland(8, 26, first_delay, 4);
-							lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-							lcd_state_flush_for_num(63,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(69,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(75,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(81,26,my_1x12_point,1,12,1);
-							lcd_state_flush_for_num(83,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(89,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(95,26,my_char_s,6,12,1);
-
-							LCD_ShowChinese_no_garland(8, 38, first_in_out, 4);
-							lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-							LCD_ShowChinese_garland(63, 38, back, 2);
-
-							LCD_ShowChinese_garland(8, 51, second_fix_value, 4);
-							lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
-							lcd_state_flush_for_num(63,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(69,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(75,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(81,51,my_1x12_point,1,12,1);
-							lcd_state_flush_for_num(83,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(89,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(95,51,my_char_V,6,12,1);
-
+							memset(over_voltage_num, 0x00, sizeof(over_voltage_num));
+							int_flag = app_parameter_read_Overvoltage_protection_LV1_One_Eol();
+							over_voltage_num[0] = int_flag;
+							key_idx_for_num = 2;
 							break;
 						case SECOND_FIX_VALUE:
-							single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-							lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-							lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-							lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
-							single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-							
-							LCD_ShowChinese_garland(8, 13, first_fix_value, 4);
-							lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-							lcd_state_flush_for_num(63,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(69,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(75,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(81,13,my_1x12_point,1,12,1);
-							lcd_state_flush_for_num(83,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(89,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(95,13,my_char_V,6,12,1);
-
-							LCD_ShowChinese_garland(8, 26, first_delay, 4);
-							lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-							lcd_state_flush_for_num(63,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(69,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(75,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(81,26,my_1x12_point,1,12,1);
-							lcd_state_flush_for_num(83,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(89,26,my_num_0,5,12,1);
-							lcd_state_flush_for_num(95,26,my_char_s,6,12,1);
-
-							LCD_ShowChinese_garland(8, 38, first_in_out, 4);
-							lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-							LCD_ShowChinese_garland(63, 38, back, 2);
-
-							LCD_ShowChinese_no_garland(8, 51, second_fix_value, 4);
-							lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
-							lcd_state_flush_for_num(63,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(69,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(75,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(81,51,my_1x12_point,1,12,1);
-							lcd_state_flush_for_num(83,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(89,51,my_num_0,5,12,1);
-							lcd_state_flush_for_num(95,51,my_char_V,6,12,1);
-
+							//update the value for the array over_voltage_num
+							float_flag = app_parameter_read_Overvoltage_protection_LV2_One_Value();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(over_voltage_num, 3, 2, float_flag);
+							key_idx_for_num = 3;
 							break;
-
 						case SECOND_DELAY:
-							single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-							lcd_state_flush_for_num(98,1,my_num_2,5,12,1);
-							lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-							lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
-							single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-							LCD_ShowChinese_no_garland(8, 13, second_delay, 4);
-							lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-							lcd_state_flush_for_num(63,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(69,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(75,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(81,13,my_1x12_point,1,12,1);
-							lcd_state_flush_for_num(83,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(89,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(95,13,my_char_s,6,12,1);
-
-							LCD_ShowChinese_garland(8, 26, second_in_out, 4);
-							lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-							LCD_ShowChinese_garland(63, 26, back, 2);
-
+							//update the value for the array over_voltage_num
+							float_flag = app_parameter_read_Overvoltage_protection_LV2_One_Delay();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(over_voltage_num, 3, 2, float_flag);
+							key_idx_for_num = 4;
 							break;
 						case SECOND_IN_OUT:
-							single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-							lcd_state_flush_for_num(98,1,my_num_2,5,12,1);
-							lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-							lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
-							single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-							LCD_ShowChinese_garland(8, 13, second_delay, 4);
-							lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-							lcd_state_flush_for_num(63,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(69,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(75,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(81,13,my_1x12_point,1,12,1);
-							lcd_state_flush_for_num(83,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(89,13,my_num_0,5,12,1);
-							lcd_state_flush_for_num(95,13,my_char_s,6,12,1);
-
-							LCD_ShowChinese_no_garland(8, 26, second_in_out, 4);
-							lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-							LCD_ShowChinese_garland(63, 26, back, 2);
-
+							memset(over_voltage_num, 0x00, sizeof(over_voltage_num));
+							int_flag = app_parameter_read_Overvoltage_protection_LV2_One_Eol();
+							over_voltage_num[0] = int_flag;
+							key_idx_for_num = 5;
 							break;
-						
+						default:
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(over_voltage_protection_array[lcd_modify_num_env.menu_type_idx])
+					{
+						case FIRST_FIX_VALUE:
+							// prepare for the number modify
+							float_flag = my_convert_int_to_float32_array(over_voltage_num,3, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Overvoltage_protection_LV1_One_Value(0);
+							app_parameter_write_Overvoltage_protection_LV1_One_Value(float_flag);
+							float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Value();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case FIRST_DELAY:
+							float_flag = my_convert_int_to_float32_array(over_voltage_num,3, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Overvoltage_protection_LV1_One_Delay(0);
+							app_parameter_write_Overvoltage_protection_LV1_One_Delay(float_flag);
+							float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Delay();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case FIRST_IN_OUT:
+							int_flag = (uint8_t)over_voltage_num[0];
+							app_parameter_write_Overvoltage_protection_LV1_One_Eol(0);
+							app_parameter_write_Overvoltage_protection_LV1_One_Eol(int_flag);
+							int_flag = app_parameter_read_Overvoltage_protection_LV1_One_Eol();
+							break;
+						case SECOND_FIX_VALUE:
+							float_flag = my_convert_int_to_float32_array(over_voltage_num,3, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Overvoltage_protection_LV2_One_Value(0);
+							app_parameter_write_Overvoltage_protection_LV2_One_Value(float_flag);
+							float_flag = app_parameter_read_Overvoltage_protection_LV2_One_Value();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case SECOND_DELAY:
+							float_flag = my_convert_int_to_float32_array(over_voltage_num,3, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Overvoltage_protection_LV2_One_Delay(0);
+							app_parameter_write_Overvoltage_protection_LV2_One_Delay(float_flag);
+							float_flag = app_parameter_read_Overvoltage_protection_LV2_One_Delay();
+							break;
+						case SECOND_IN_OUT:
+							int_flag = (uint8_t)over_voltage_num[0];
+							app_parameter_write_Overvoltage_protection_LV2_One_Eol(0);
+							app_parameter_write_Overvoltage_protection_LV2_One_Eol(int_flag);
+							int_flag = app_parameter_read_Overvoltage_protection_LV2_One_Eol();
+							break;
+						default:
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
+
+		if(lcd_modify_num_env.check_num_modify)
+		{
+			switch(over_voltage_protection_array[lcd_modify_num_env.menu_type_idx])
+			{
+				case FIRST_FIX_VALUE:
+				case FIRST_DELAY:
+				case SECOND_FIX_VALUE:
+				case SECOND_DELAY:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_UP://+
+							if(over_voltage_num[lcd_modify_num_env.limited_index]<9)
+							{
+								over_voltage_num[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=over_voltage_num[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_DOWN://-
+							if(over_voltage_num[lcd_modify_num_env.limited_index]>0)
+							{
+								over_voltage_num[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=over_voltage_num[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < (sizeof(over_voltage_num)-1))
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				case FIRST_IN_OUT:
+				case SECOND_IN_OUT:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case KEY_UP://+
+							if(over_voltage_num[lcd_modify_num_env.limited_index]<1)
+							{
+								over_voltage_num[lcd_modify_num_env.limited_index]++;
+							}
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d limited_index=%d\n", over_voltage_num[lcd_modify_num_env.limited_index], key_idx_for_num, lcd_modify_num_env.limited_index); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case KEY_DOWN:
+							if(over_voltage_num[lcd_modify_num_env.limited_index]>0)
+							{
+								over_voltage_num[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=over_voltage_num[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d limited_index=%d\n", new_num, key_idx_for_num, lcd_modify_num_env.limited_index); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
 					}
 					break;
 				default:
@@ -1596,7 +1651,145 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 			}
 		}
 
-		
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				switch(over_voltage_protection_array[lcd_modify_num_env.menu_type_idx])
+				{
+					case FIRST_FIX_VALUE:
+						chinese_idx_flush &= 0x00FE;
+						break;
+					case FIRST_DELAY:
+						chinese_idx_flush &= 0x00FD;
+						break;
+					case FIRST_IN_OUT:
+						chinese_idx_flush &= 0x00FB;
+						break;
+					case SECOND_FIX_VALUE:
+						chinese_idx_flush &= 0x00F7;
+						break;
+					case SECOND_DELAY:
+						chinese_idx_flush &= 0x00EF;
+						break;
+					case SECOND_IN_OUT:
+						chinese_idx_flush &= 0x00DF;
+						break;
+					
+				}
+				break;
+			default:
+				break;
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, over_voltage_protection, 4);
+				switch(over_voltage_protection_array[lcd_modify_num_env.menu_type_idx])
+				{
+					case SECOND_DELAY:
+					case SECOND_IN_OUT:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+						lcd_state_flush_for_num(98,1,my_num_2,5,12,1);
+						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+						lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
+						single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x10, 8, 13, second_delay, 4);
+						// LCD_ShowChinese_no_garland(8, 13, second_delay, 4);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Overvoltage_protection_LV2_One_Delay(), 
+													num_array, 3, 2, num_idx_flush[4]);
+						lcd_number_display_in_order(63, 13, 5, 12, 
+											num_idx_flush[4], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,13,my_char_s,6,12,1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x20, 8, 26, second_in_out, 4);
+						// LCD_ShowChinese_garland(8, 26, second_in_out, 4);
+						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Overvoltage_protection_LV2_One_Eol(), 
+													num_idx_flush[5]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[5],  63, 26, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[5],  63, 26, back, 2);
+						}
+						break;
+					case FIRST_FIX_VALUE:
+					case FIRST_DELAY:
+					case FIRST_IN_OUT:
+					case SECOND_FIX_VALUE:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+						lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+						lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
+						single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, first_fix_value, 4);
+						// LCD_ShowChinese_no_garland(8, 13, first_fix_value, 4);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Overvoltage_protection_LV1_One_Value(), 
+													num_array, 3, 2, num_idx_flush[0]);
+						lcd_number_display_in_order(63, 13, 5, 12, 
+											num_idx_flush[0], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,13,my_char_V,6,12,1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, first_delay, 4);
+						// LCD_ShowChinese_garland(8, 26, first_delay, 4);
+						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Overvoltage_protection_LV1_One_Delay(), 
+													num_array, 3, 2, num_idx_flush[1]);
+						lcd_number_display_in_order(63, 26, 5, 12, 
+											num_idx_flush[1], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,26,my_char_s,6,12,1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 8, 38, first_in_out, 4);
+						// LCD_ShowChinese_garland(8, 38, first_in_out, 4);
+						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Overvoltage_protection_LV1_One_Eol(), 
+													num_idx_flush[2]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63, 38, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63, 38, back, 2);
+						}
+
+						
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x08, 8, 51, second_fix_value, 4);
+						// LCD_ShowChinese_garland(8, 51, second_fix_value, 4);
+						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Overvoltage_protection_LV2_One_Value(), 
+													num_array, 3, 2, num_idx_flush[3]);
+						lcd_number_display_in_order(63, 51, 5, 12, 
+											num_idx_flush[3], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,51,my_char_V,6,12,1);
+
+						break;
+					default:
+						break;
+				}
+			default:
+				break;
+		}
 	}
 
     return menu_evt;

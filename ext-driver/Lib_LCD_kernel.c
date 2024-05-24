@@ -381,13 +381,10 @@ void menu_level_from_env_set(uint8_t first_level, uint8_t second_level, uint8_t 
 
 void menu_kernel_env_init(void)
 {
-//	Log_d("HELLO! kernel_env size:%d \n",sizeof(struct menu_kernel_env_tag));
 	memset(&menu_kernel_env, 0x00, sizeof(struct menu_kernel_env_tag));
 	//msg_send_to_lcd_layer(UNKNOW_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_RETURN);
 	msg_send_to_lcd_layer(UNKNOW_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 	menu_level_from_env_set(TOP_NODE_MENU, UNKNOW_SECOND_MENU, UNKNOW_THIRD_MENU);
-
-//	menu_kernel_env->cur_cmd = ;
 }
 
 /* Please schedule the function !*/
