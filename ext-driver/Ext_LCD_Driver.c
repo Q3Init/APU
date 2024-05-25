@@ -565,7 +565,7 @@ void Initial_LCD()
 	delay(10);
 	transfer_command_lcd(0x26);  /* Flat-tuning Contrast range from 0x20 to 0x27 粗调对比度*/
 	transfer_command_lcd(0x81);  /* Fine-tuning Contrast 微调对比度 */
-	transfer_command_lcd(0x22);  /* 0x28, Fine-tuning Contrast value,  allowable range from 0x00 to 0x3f 微调对比度的值*/
+	transfer_command_lcd(0x11);  /* 0x28, Fine-tuning Contrast value,  allowable range from 0x00 to 0x3f 微调对比度的值*/
 	transfer_command_lcd(0xa2);  /* 1/9 bias 偏压比 */
 	transfer_command_lcd(0xc8);  /* 行扫描顺序，从上到下 */
 	transfer_command_lcd(0xa0);  /* 列扫描顺序，从左到右  */

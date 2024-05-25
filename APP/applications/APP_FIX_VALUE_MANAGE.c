@@ -1171,7 +1171,7 @@ void show_num(uint8_t hang, uint8_t lie, uint8_t num, uint8_t length, uint8_t hi
 			break;
 	}
 
-	if((num>=0) && (num<=9))
+	if(num<=9)
 	{
 		lcd_state_flush_for_num(hang,lie,lcd_num_ptr,length,high,level);
 	}
