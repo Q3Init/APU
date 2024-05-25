@@ -2398,6 +2398,47 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 
 		if(lcd_modify_num_env.check_num_modify)
 		{
+			uint8_t diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+					diff_num_idx_ths = sizeof(lcd_modify_num_array)-2;
+					break;
+				case OVER_DELAY:
+					diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					break;
+				case FUNCTION_IN_OUT:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case KEY_UP://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<1)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d limited_index=%d\n", lcd_modify_num_array[lcd_modify_num_env.limited_index], key_idx_for_num, lcd_modify_num_env.limited_index); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case KEY_DOWN:
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d limited_index=%d\n", new_num, key_idx_for_num, lcd_modify_num_env.limited_index); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+
 			switch(chinese_menu_idx)
 			{
 				case FIX_VALUE:
@@ -2437,39 +2478,11 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
 						case	KEY_RIGHT:
-							if(lcd_modify_num_env.limited_index < (sizeof(lcd_modify_num_array)-1))
+							if(lcd_modify_num_env.limited_index < diff_num_idx_ths)
 							{
 								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
 								++lcd_modify_num_env.limited_index;
 							}
-							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
-							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
-							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
-							break;
-						default:
-							break;
-					}
-					break;
-				case FUNCTION_IN_OUT:
-					switch(msg_context)
-					{	uint8_t new_num;
-						case KEY_UP://+
-							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<1)
-							{
-								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
-							}
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d limited_index=%d\n", lcd_modify_num_array[lcd_modify_num_env.limited_index], key_idx_for_num, lcd_modify_num_env.limited_index); 
-							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
-							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
-							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
-							break;
-						case KEY_DOWN:
-							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
-							{
-								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
-							}
-							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d limited_index=%d\n", new_num, key_idx_for_num, lcd_modify_num_env.limited_index); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -2737,6 +2750,47 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 
 		if(lcd_modify_num_env.check_num_modify)
 		{
+			uint8_t diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+					diff_num_idx_ths = sizeof(lcd_modify_num_array)-2;
+					break;
+				case OVER_DELAY:
+					diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					break;
+				case FUNCTION_IN_OUT:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case KEY_UP://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<1)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d limited_index=%d\n", lcd_modify_num_array[lcd_modify_num_env.limited_index], key_idx_for_num, lcd_modify_num_env.limited_index); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case KEY_DOWN:
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d limited_index=%d\n", new_num, key_idx_for_num, lcd_modify_num_env.limited_index); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+
 			switch(chinese_menu_idx)
 			{
 				case FIX_VALUE:
@@ -2776,39 +2830,11 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
 						case	KEY_RIGHT:
-							if(lcd_modify_num_env.limited_index < (sizeof(lcd_modify_num_array)-1))
+							if(lcd_modify_num_env.limited_index < diff_num_idx_ths)
 							{
 								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
 								++lcd_modify_num_env.limited_index;
 							}
-							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
-							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
-							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
-							break;
-						default:
-							break;
-					}
-					break;
-				case FUNCTION_IN_OUT:
-					switch(msg_context)
-					{	uint8_t new_num;
-						case KEY_UP://+
-							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<1)
-							{
-								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
-							}
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d limited_index=%d\n", lcd_modify_num_array[lcd_modify_num_env.limited_index], key_idx_for_num, lcd_modify_num_env.limited_index); 
-							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
-							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
-							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
-							break;
-						case KEY_DOWN:
-							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
-							{
-								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
-							}
-							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d limited_index=%d\n", new_num, key_idx_for_num, lcd_modify_num_env.limited_index); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
