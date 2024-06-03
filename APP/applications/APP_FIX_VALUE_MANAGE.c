@@ -1226,7 +1226,7 @@ float32 my_convert_int_to_float32_array(uint8_t * ptr, uint8_t int_convert_lengt
 	return all_sum;
 }
 
-uint8_t lcd_modify_num_array[5] = {0};
+static uint8_t lcd_modify_num_array[5] = {0};
 struct lcd_modify_num_tag{
 	uint8_t menu_type_idx ;
 	uint8_t limited_index;
@@ -1236,7 +1236,7 @@ struct lcd_modify_num_tag{
 	uint8_t enter_key_ind;
 };
 
-struct lcd_modify_num_tag lcd_modify_num_env={
+static struct lcd_modify_num_tag lcd_modify_num_env={
 	.menu_type_idx = 0,
 	.limited_index = 0,
 	.check_num_modify = 0,

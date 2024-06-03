@@ -2,6 +2,4 @@
 #define __APP_SETTING_IN_FACTORY_H_
 
 
-
-
 #endif

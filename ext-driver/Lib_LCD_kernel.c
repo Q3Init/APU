@@ -71,6 +71,7 @@ struct menu_cmd_tag third_menu_cmd_tbl[]=
 	{THIRD_MENU,		PROTECTION_CONFIGURE, 			(menu_kernel_func)protection_configure_handler},
 	{THIRD_MENU,		OPEN_INTO_TEST, 				(menu_kernel_func)open_into_test_handler},
 	{THIRD_MENU,		FACTORY_RESET, 					(menu_kernel_func)factory_reset_handler},
+	{THIRD_MENU,		PARAMETER_NORMINAL_VALUE_CFG,   (menu_kernel_func)parameter_norminal_value_cfg_handler},
 };
 
 struct menu_level_layer_tag menu_level_layer_tbl[]=

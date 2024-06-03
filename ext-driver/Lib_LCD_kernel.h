@@ -111,6 +111,7 @@ enum third_level_menu_type{
 	PROTECTION_CONFIGURE,
 	OPEN_INTO_TEST,
 	FACTORY_RESET,
+	PARAMETER_NORMINAL_VALUE_CFG,
 	THIRD_LEVEL_MENU_TYPE_MAX_IDX,
 };
 
@@ -285,7 +286,7 @@ extern struct menu_event_tag * open_out_configure_handler(uint8_t msg_process_si
 extern struct menu_event_tag * protection_configure_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * open_into_test_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * factory_reset_handler(uint8_t msg_process_signal, uint8_t msg_context);
-
+extern struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, uint8_t msg_context);
