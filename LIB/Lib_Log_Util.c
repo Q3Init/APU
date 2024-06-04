@@ -20,7 +20,7 @@ static char *level_str[] = {
     "DBG", "INF", "WRN", "ERR",
 };
 
-LOG_LEVEL g_log_level = LOG_ERROR;
+LOG_LEVEL g_log_level = LOG_DEBUG;
 
 void sys_uart1_sendchar(uint8 data)
 {
