@@ -1,6 +1,5 @@
 #include "Lib_LCD_kernel.h"
 #include "Lib_LCD_menu.h"
-#include "APP_FIX_VALUE_MANAGE.h"
 #include "APP_Parameter.h"
 uint8_t over_voltage_protection[]={
 0x10,0x11,0xF2,0x00,0x08,0x28,0xC8,0x08,0x08,0xFF,0x08,0x00,
@@ -584,6 +583,13 @@ uint8_t back[]={
 0x80,0x1E,0x10,0x10,0x10,0xFF,0x10,0x10,0x10,0x1E,0x80,0x00,
 0x07,0x04,0x04,0x04,0x04,0x07,0x04,0x04,0x04,0x04,0x0F,0x00,/*"出",1*/
 };
+
+uint8_t my_char_du[]={
+0x00,0xFE,0x0A,0x8A,0xBE,0xAA,0xAB,0xAA,0xBE,0x8A,0x0A,0x00,
+0x08,0x07,0x00,0x08,0x09,0x0A,0x04,0x04,0x0A,0x09,0x08,0x00,/*"度",0*/
+};
+
+
 uint8_t my_char_V[]={
 0x04,0x7C,0x80,0xE0,0x1C,0x04,0x00,0x00,0x03,0x00,0x00,0x00,/*"V",0*/
 };
@@ -1131,233 +1137,6 @@ struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uin
 	return menu_evt;
 }
 
-void show_num(uint8_t hang, uint8_t lie, uint8_t num, uint8_t length, uint8_t high, uint8_t level)
-{
-	uint8_t *lcd_num_ptr = NULL;
-	switch(num)
-	{
-		case 0:
-			lcd_num_ptr = my_num_0;
-			break;
-		case 1:
-			lcd_num_ptr = my_num_1;
-			break;
-		case 2:
-			lcd_num_ptr = my_num_2;
-			break;
-		case 3:
-			lcd_num_ptr = my_num_3;
-			break;
-		case 4:
-			lcd_num_ptr = my_num_4;
-			break;
-		case 5:
-			lcd_num_ptr = my_num_5;
-			break;
-		case 6:
-			lcd_num_ptr = my_num_6;
-			break;
-		case 7:
-			lcd_num_ptr = my_num_7;
-			break;
-		case 8:
-			lcd_num_ptr = my_num_8;
-			break;
-		case 9:
-			lcd_num_ptr = my_num_9;
-			break;
-		default:
-			num = 0xff;
-			break;
-	}
-
-	if(num<=9)
-	{
-		lcd_state_flush_for_num(hang,lie,lcd_num_ptr,length,high,level);
-	}
-}
-
-void my_convert_float32_to_int_array(uint8_t * ptr, uint8_t int_convert_length, uint8_t point_convert_length, float32 data)
-{
-	uint32_t conver_int_par = (uint32_t)data;
-	float32 conver_point_par = data - conver_int_par;
-	uint32_t co_x = 1;
-
-	for(int j=int_convert_length-1; j>=0; j--)
-	{
-		ptr[j] = conver_int_par % 10;
-		conver_int_par = conver_int_par / 10;
-	}
-
-	for(int j=0; j<point_convert_length;j++)
-	{
-		co_x = co_x*10;
-	}
-
-	conver_int_par = (uint32_t)(co_x*conver_point_par);
-
-	for(int j=point_convert_length+int_convert_length-1; j>int_convert_length-1; j--)
-	{
-		ptr[j] = conver_int_par%10;
-		conver_int_par = conver_int_par/10;
-	}
-}
-
-float32 my_convert_int_to_float32_array(uint8_t * ptr, uint8_t int_convert_length, uint8_t point_convert_length)
-{
-	float32 all_sum = 0;
-	uint32_t conver_int_sum = 0;
-	float32 conver_point_par = 1;
-	uint32_t co_x = 1;
-
-	for(int j=int_convert_length+point_convert_length-1; j>=0; j--)
-	{
-		conver_int_sum += ptr[j]*co_x;
-		co_x = co_x*10;
-	}
-
-	for(int j=point_convert_length; j>0; j--)
-	{
-		conver_point_par *= 0.1;
-	}
-
-	all_sum = conver_int_sum*conver_point_par;
-
-	return all_sum;
-}
-
-static uint8_t lcd_modify_num_array[5] = {0};
-struct lcd_modify_num_tag{
-	uint8_t menu_type_idx ;
-	uint8_t limited_index;
-	uint8_t check_num_modify;
-	uint8_t enter_flag;
-	uint8_t last_index;
-	uint8_t enter_key_ind;
-};
-
-static struct lcd_modify_num_tag lcd_modify_num_env={
-	.menu_type_idx = 0,
-	.limited_index = 0,
-	.check_num_modify = 0,
-	.enter_flag = false,
-	.last_index = 0,
-	.enter_key_ind = 0,
-};
-
-void lcd_the_modified_num_env_to_be_clear_part(void)
-{
-	lcd_modify_num_env.limited_index = 0;
-	lcd_modify_num_env.last_index = 0;
-	lcd_modify_num_env.check_num_modify = false;
-	lcd_modify_num_env.enter_key_ind = 0;
-}
-
-void lcd_the_modified_num_env_to_be_init(void)
-{
-	lcd_modify_num_env.menu_type_idx = 0;
-	lcd_modify_num_env.enter_flag = false;
-	lcd_modify_num_env.limited_index = 0;
-	lcd_modify_num_env.last_index = 0;
-	lcd_modify_num_env.check_num_modify = false;
-	lcd_modify_num_env.enter_key_ind = 0;
-}
-
-void lcd_the_modified_num_env_to_be_clear_all(void)
-{
-	lcd_modify_num_env.menu_type_idx = 0;
-	lcd_modify_num_env.enter_flag = false;
-	lcd_modify_num_env.limited_index = 0;
-	lcd_modify_num_env.last_index = 0;
-	lcd_modify_num_env.check_num_modify = false;
-	lcd_modify_num_env.enter_key_ind = 0;
-}
-
-void lcd_number_modify_array_get(float32 *float_flag, float32 value, uint8_t *array_ptr, 
-								uint8_t int_convert_length, uint8_t point_convert_length, uint8_t num_flush_idx)
-{
-	if(num_flush_idx!=0xff)
-	{
-		for(int j =0;j<(int_convert_length+point_convert_length);j++)
-		{
-			array_ptr[j] = lcd_modify_num_array[j];
-		}
-		Log_d("ENTER! lcd float_flag:%f\n",*float_flag);
-	}
-	else
-	{
-		*float_flag = value;
-		*float_flag = *float_flag+ 0.0001;
-		my_convert_float32_to_int_array(array_ptr, int_convert_length, point_convert_length, *float_flag);
-	}
-
-}
-
-void lcd_chinese_modify_array_get(uint8_t *int_flag, uint8_t bool_value, uint8_t num_flush_idx)
-{
-	if(num_flush_idx!=0xff)
-	{
-		*int_flag = *lcd_modify_num_array;
-		Log_d("ENTER! int lcd float_flag:%f\n", *int_flag);
-	}
-	else
-	{
-		*int_flag = bool_value;
-	}
-}
-
-//Note: Both point_pos and num_idx_flush are set from zero.
-void lcd_chinese_modify_display_in_order(uint8_t num_flush_idx,
-										uint8_t x, uint8_t y, uint8_t *s, uint8_t chinese_num)
-{
-	if(num_flush_idx != 0xff)
-	{
-		LCD_ShowChinese_no_garland(x, y, s, chinese_num);
-	}
-	else
-	{
-		LCD_ShowChinese_garland(x, y, s, chinese_num);
-	}
-}
-
-
-//Note: Both point_pos and num_idx_flush are set from zero.
-void lcd_number_display_in_order(uint8_t hang, uint8_t lie, uint8_t length, uint8_t high,
-							uint8_t num_idx_flush, uint16_t array_length, uint8_t *ptr, uint8_t point_pos)
-{
-	uint8_t op = false;
-	for(int j=0;j<array_length;j++)
-	{
-		op = (num_idx_flush == j)? false:true;
-		if(j<point_pos)
-		{
-			show_num(hang+j*6,lie,ptr[j],length,high,op);
-		}
-		else if(j==point_pos)
-		{
-			lcd_state_flush_for_num(hang+j*6,lie,my_1x12_point,1,12,1);
-			show_num(hang+j*6+2,lie,ptr[j],length,high,op);
-		}
-		else
-		{
-			show_num(hang+j*6+2,lie,ptr[j],length,high,op);
-		}
-	}
-}
-
-void lcd_showchinese_no_garland_or_garland(uint8_t garland_flush_target,
-											uint8_t x, uint8_t y, uint8_t *s, uint8_t chinese_num)
-{
-	if(garland_flush_target == false)
-	{
-		LCD_ShowChinese_no_garland(x, y, s, chinese_num);
-	}
-	else
-	{
-		LCD_ShowChinese_garland(x, y, s, chinese_num);
-	}
-}
-
 struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
@@ -1370,7 +1149,6 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 	uint8_t num_idx_flush[6] = {0};
 	uint16_t chinese_idx_flush = 0xff;
 	uint8_t num_array[5] = {0};
-	uint8_t op = false;
 	uint8_t int_flag = 0;
 	uint8_t chinese_menu_idx = 0;
 
@@ -1802,7 +1580,6 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 	uint8_t num_idx_flush[6] = {0};
 	uint16_t chinese_idx_flush = 0xff;
 	uint8_t num_array[5] = {0};
-	uint8_t op = false;
 	uint8_t int_flag = 0;
 	uint8_t chinese_menu_idx = 0;
 
@@ -2239,7 +2016,6 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 	uint8_t num_idx_flush[6] = {0};
 	uint16_t chinese_idx_flush = 0xff;
 	uint8_t num_array[5] = {0};
-	uint8_t op = false;
 	uint8_t int_flag = 0;
 	uint8_t chinese_menu_idx = 0;
 
@@ -2571,7 +2347,6 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 	uint8_t num_idx_flush[6] = {0};
 	uint16_t chinese_idx_flush = 0xff;
 	uint8_t num_array[5] = {0};
-	uint8_t op = false;
 	uint8_t int_flag = 0;
 	uint8_t chinese_menu_idx = 0;
 
@@ -3904,7 +3679,6 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 	uint8_t num_idx_flush[6] = {0};
 	uint16_t chinese_idx_flush = 0xff;
 	uint8_t num_array[5] = {0};
-	uint8_t op = false;
 	uint8_t int_flag = 0;
 	uint8_t chinese_menu_idx = 0;
 
@@ -4235,7 +4009,6 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 	uint8_t num_idx_flush[6] = {0};
 	uint16_t chinese_idx_flush = 0xff;
 	uint8_t num_array[5] = {0};
-	uint8_t op = false;
 	uint8_t int_flag = 0;
 	uint8_t chinese_menu_idx = 0;
 

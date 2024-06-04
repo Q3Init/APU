@@ -6,6 +6,16 @@
 
 #define LCD_FLUSH_SCREEN_IND 0xff
 
+struct lcd_modify_num_tag{
+	uint8_t menu_type_idx ;
+	uint8_t limited_index;
+	uint8_t check_num_modify;
+	uint8_t enter_flag;
+	uint8_t last_index;
+	uint8_t enter_key_ind;
+};
+extern struct lcd_modify_num_tag lcd_modify_num_env;
+
 extern uint8_t cur_menu_type_ptr_from_env_get(void);
 extern void msg_lock_from_env_set(uint8_t msg_lock_level);
 extern void cur_menu_type_ptr_from_env_set(uint8_t cur_menu_type_ptr);
@@ -13,6 +23,25 @@ extern uint8_t menu_type_ptr_match(uint8_t key_signal, uint8_t menu_row_num, uin
 extern void lcd_the_modified_num_env_to_be_init(void);
 extern void lcd_the_modified_num_env_to_be_clear_part(void);
 extern void lcd_the_modified_num_env_to_be_clear_all(void);
+
+
+extern void lcd_number_modify_array_get(float32 *float_flag, float32 value, uint8_t *array_ptr, 
+								uint8_t int_convert_length, uint8_t point_convert_length, uint8_t num_flush_idx);
+extern uint8_t lcd_modify_num_array[5];
+extern void show_num(uint8_t hang, uint8_t lie, uint8_t num, uint8_t length, uint8_t high, uint8_t level);
+extern void my_convert_float32_to_int_array(uint8_t * ptr, uint8_t int_convert_length, uint8_t point_convert_length, float32 data);
+extern float32 my_convert_int_to_float32_array(uint8_t * ptr, uint8_t int_convert_length, uint8_t point_convert_length);
+extern void lcd_number_modify_array_get(float32 *float_flag, float32 value, uint8_t *array_ptr, 
+								uint8_t int_convert_length, uint8_t point_convert_length, uint8_t num_flush_idx);
+extern void lcd_chinese_modify_array_get(uint8_t *int_flag, uint8_t bool_value, uint8_t num_flush_idx);
+extern void lcd_chinese_modify_display_in_order(uint8_t num_flush_idx,
+										uint8_t x, uint8_t y, uint8_t *s, uint8_t chinese_num);
+extern void lcd_number_display_in_order(uint8_t hang, uint8_t lie, uint8_t length, uint8_t high,
+							uint8_t num_idx_flush, uint16_t array_length, uint8_t *ptr, uint8_t point_pos);
+extern void lcd_showchinese_no_garland_or_garland(uint8_t garland_flush_target,
+											uint8_t x, uint8_t y, uint8_t *s, uint8_t chinese_num);
+extern void lcd_number_modify_array_get(float32 *float_flag, float32 value, uint8_t *array_ptr, 
+								uint8_t int_convert_length, uint8_t point_convert_length, uint8_t num_flush_idx);
 
 /* Please register here your menu handlers*/
 extern struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_t msg_context);
