@@ -120,6 +120,32 @@ static app_par_Restore_functional_input_Rte app_par_Restore_functional_input;
 static app_par_Restore_time_Rte app_par_Restore_time;
 /* 密码设置 */
 static app_par_Device_password_Rte app_par_Device_password;
+/* 标定参数 */
+static app_par_A_VOLTAGE_AMPLITUDE_Rte  app_par_A_VOLTAGE_AMPLITUDE;
+static app_par_A_VOLTAGE_FREQUENCY_Rte app_par_A_VOLTAGE_FREQUENCY;
+static app_par_A_VOLTAGE_PHASE_Rte app_par_A_VOLTAGE_PHASE;
+static app_par_B_VOLTAGE_AMPLITUDE_Rte app_par_B_VOLTAGE_AMPLITUDE;
+static app_par_B_VOLTAGE_FREQUENCY_Rte app_par_B_VOLTAGE_FREQUENCY;
+static app_par_B_VOLTAGE_PHASE_Rte app_par_B_VOLTAGE_PHASE;
+static app_par_C_VOLTAGE_AMPLITUDE_Rte app_par_C_VOLTAGE_AMPLITUDE;
+static app_par_C_VOLTAGE_FREQUENCY_Rte app_par_C_VOLTAGE_FREQUENCY;
+static app_par_C_VOLTAGE_PHASE_Rte app_par_C_VOLTAGE_PHASE;
+static app_par_ZERO_VOLTAGE_AMPLITUDE_Rte app_par_ZERO_VOLTAGE_AMPLITUDE;
+static app_par_ZERO_VOLTAGE_FREQUENCY_Rte app_par_ZERO_VOLTAGE_FREQUENCY;
+static app_par_ZERO_VOLTAGE_PHASE_Rte app_par_ZERO_VOLTAGE_PHASE;
+static app_par_A_CURRENT_AMPLITUDE_Rte app_par_A_CURRENT_AMPLITUDE;
+static app_par_A_CURRENT_FREQUENCY_Rte app_par_A_CURRENT_FREQUENCY;
+static app_par_A_CURRENT_PHASE_Rte app_par_A_CURRENT_PHASE;
+static app_par_B_CURRENT_AMPLITUDE_Rte app_par_B_CURRENT_AMPLITUDE;
+static app_par_B_CURRENT_FREQUENCY_Rte app_par_B_CURRENT_FREQUENCY;
+static app_par_B_CURRENT_PHASE_Rte app_par_B_CURRENT_PHASE;
+static app_par_C_CURRENT_AMPLITUDE_Rte app_par_C_CURRENT_AMPLITUDE;
+static app_par_C_CURRENT_FREQUENCY_Rte app_par_C_CURRENT_FREQUENCY;
+static app_par_C_CURRENT_PHASE_Rte app_par_C_CURRENT_PHASE;
+static app_par_ZERO_CURRENT_AMPLITUDE_Rte app_par_ZERO_CURRENT_AMPLITUDE;
+static app_par_ZERO_CURRENT_FREQUENCY_Rte app_par_ZERO_CURRENT_FREQUENCY;
+static app_par_ZERO_CURRENT_PHASE_Rte app_par_ZERO_CURRENT_PHASE;
+
 
 static uint32 MCM_floatToIntBit( float32 x );  
 static float32 IntBitTofloat( uint32 x );
@@ -667,6 +693,157 @@ void APP_Parameter_Init(void)
     ret = BSW_NvM_Read(Device_password,&app_par_Device_password.datas); 
     if (ret == E_OK) {
         Log_d("app_par_Device_password.datas:%d\r\n",app_par_Device_password.datas);
+    }
+    /* A_VOLTAGE_AMPLITUDE */
+    ret = BSW_NvM_Read(A_VOLTAGE_AMPLITUDE,app_par_A_VOLTAGE_AMPLITUDE.p_buf);
+    if (ret == E_OK) {
+        app_par_A_VOLTAGE_AMPLITUDE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_A_VOLTAGE_AMPLITUDE.p_buf);
+        Log_d("app_par_A_VOLTAGE_AMPLITUDE.datas:%f\r\n",app_par_A_VOLTAGE_AMPLITUDE.datas);
+    }
+    /* A_VOLTAGE_FREQUENCY */
+    ret = BSW_NvM_Read(A_VOLTAGE_FREQUENCY,app_par_A_VOLTAGE_FREQUENCY.p_buf);
+    if (ret == E_OK) {
+        app_par_A_VOLTAGE_FREQUENCY.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_A_VOLTAGE_FREQUENCY.p_buf);
+        Log_d("app_par_A_VOLTAGE_FREQUENCY.datas:%f\r\n",app_par_A_VOLTAGE_FREQUENCY.datas);
+    }
+    /* A_VOLTAGE_PHASE */
+    ret = BSW_NvM_Read(A_VOLTAGE_PHASE,app_par_A_VOLTAGE_PHASE.p_buf);
+    if (ret == E_OK) {
+        app_par_A_VOLTAGE_PHASE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_A_VOLTAGE_PHASE.p_buf);
+        Log_d("app_par_A_VOLTAGE_PHASE.datas:%f\r\n",app_par_A_VOLTAGE_PHASE.datas);
+    }
+
+    /* B_VOLTAGE_AMPLITUDE */
+    ret = BSW_NvM_Read(B_VOLTAGE_AMPLITUDE,app_par_B_VOLTAGE_AMPLITUDE.p_buf);
+    if (ret == E_OK) {
+        app_par_B_VOLTAGE_AMPLITUDE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_B_VOLTAGE_AMPLITUDE.p_buf);
+        Log_d("app_par_B_VOLTAGE_AMPLITUDE.datas:%f\r\n",app_par_B_VOLTAGE_AMPLITUDE.datas);
+    }
+    /* B_VOLTAGE_FREQUENCY */
+    ret = BSW_NvM_Read(B_VOLTAGE_FREQUENCY,app_par_B_VOLTAGE_FREQUENCY.p_buf);
+    if (ret == E_OK) {
+        app_par_B_VOLTAGE_FREQUENCY.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_B_VOLTAGE_FREQUENCY.p_buf);
+        Log_d("app_par_B_VOLTAGE_FREQUENCY.datas:%f\r\n",app_par_B_VOLTAGE_FREQUENCY.datas);
+    }
+    /* B_VOLTAGE_PHASE */
+    ret = BSW_NvM_Read(B_VOLTAGE_PHASE,app_par_B_VOLTAGE_PHASE.p_buf);
+    if (ret == E_OK) {
+        app_par_B_VOLTAGE_PHASE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_B_VOLTAGE_PHASE.p_buf);
+        Log_d("app_par_B_VOLTAGE_PHASE.datas:%f\r\n",app_par_B_VOLTAGE_PHASE.datas);
+    }
+
+    /* C_VOLTAGE_AMPLITUDE */
+    ret = BSW_NvM_Read(C_VOLTAGE_AMPLITUDE,app_par_C_VOLTAGE_AMPLITUDE.p_buf);
+    if (ret == E_OK) {
+        app_par_C_VOLTAGE_AMPLITUDE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_C_VOLTAGE_AMPLITUDE.p_buf);
+        Log_d("app_par_C_VOLTAGE_AMPLITUDE.datas:%f\r\n",app_par_C_VOLTAGE_AMPLITUDE.datas);
+    }
+    /* C_VOLTAGE_FREQUENCY */
+    ret = BSW_NvM_Read(C_VOLTAGE_FREQUENCY,app_par_C_VOLTAGE_FREQUENCY.p_buf);
+    if (ret == E_OK) {
+        app_par_C_VOLTAGE_FREQUENCY.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_C_VOLTAGE_FREQUENCY.p_buf);
+        Log_d("app_par_C_VOLTAGE_FREQUENCY.datas:%f\r\n",app_par_C_VOLTAGE_FREQUENCY.datas);
+    }
+    /* C_VOLTAGE_PHASE */
+    ret = BSW_NvM_Read(C_VOLTAGE_PHASE,app_par_C_VOLTAGE_PHASE.p_buf);
+    if (ret == E_OK) {
+        app_par_C_VOLTAGE_PHASE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_C_VOLTAGE_PHASE.p_buf);
+        Log_d("app_par_C_VOLTAGE_PHASE.datas:%f\r\n",app_par_C_VOLTAGE_PHASE.datas);
+    }
+
+    /* ZERO_VOLTAGE_AMPLITUDE */
+    ret = BSW_NvM_Read(ZERO_VOLTAGE_AMPLITUDE,app_par_ZERO_VOLTAGE_AMPLITUDE.p_buf);
+    if (ret == E_OK) {
+        app_par_ZERO_VOLTAGE_AMPLITUDE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_ZERO_VOLTAGE_AMPLITUDE.p_buf);
+        Log_d("app_par_ZERO_VOLTAGE_AMPLITUDE.datas:%f\r\n",app_par_ZERO_VOLTAGE_AMPLITUDE.datas);
+    }
+    /* ZERO_VOLTAGE_FREQUENCY */
+    ret = BSW_NvM_Read(ZERO_VOLTAGE_FREQUENCY,app_par_ZERO_VOLTAGE_FREQUENCY.p_buf);
+    if (ret == E_OK) {
+        app_par_ZERO_VOLTAGE_FREQUENCY.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_ZERO_VOLTAGE_FREQUENCY.p_buf);
+        Log_d("app_par_ZERO_VOLTAGE_FREQUENCY.datas:%f\r\n",app_par_ZERO_VOLTAGE_FREQUENCY.datas);
+    }
+    /* ZERO_VOLTAGE_PHASE */
+    ret = BSW_NvM_Read(ZERO_VOLTAGE_PHASE,app_par_ZERO_VOLTAGE_PHASE.p_buf);
+    if (ret == E_OK) {
+        app_par_ZERO_VOLTAGE_PHASE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_ZERO_VOLTAGE_PHASE.p_buf);
+        Log_d("app_par_ZERO_VOLTAGE_PHASE.datas:%f\r\n",app_par_ZERO_VOLTAGE_PHASE.datas);
+    }
+//====
+    /* A_CURRENT_AMPLITUDE */
+    ret = BSW_NvM_Read(A_CURRENT_AMPLITUDE,app_par_A_CURRENT_AMPLITUDE.p_buf);
+    if (ret == E_OK) {
+        app_par_A_CURRENT_AMPLITUDE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_A_CURRENT_AMPLITUDE.p_buf);
+        Log_d("app_par_A_CURRENT_AMPLITUDE.datas:%f\r\n",app_par_A_CURRENT_AMPLITUDE.datas);
+    }
+    /* A_CURRENT_FREQUENCY */
+    ret = BSW_NvM_Read(A_CURRENT_FREQUENCY,app_par_A_CURRENT_FREQUENCY.p_buf);
+    if (ret == E_OK) {
+        app_par_A_CURRENT_FREQUENCY.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_A_CURRENT_FREQUENCY.p_buf);
+        Log_d("app_par_A_CURRENT_FREQUENCY.datas:%f\r\n",app_par_A_CURRENT_FREQUENCY.datas);
+    }
+    /* A_CURRENT_PHASE */
+    ret = BSW_NvM_Read(A_CURRENT_PHASE,app_par_A_CURRENT_PHASE.p_buf);
+    if (ret == E_OK) {
+        app_par_A_CURRENT_PHASE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_A_CURRENT_PHASE.p_buf);
+        Log_d("app_par_A_CURRENT_PHASE.datas:%f\r\n",app_par_A_CURRENT_PHASE.datas);
+    }
+
+    /* B_CURRENT_AMPLITUDE */
+    ret = BSW_NvM_Read(B_CURRENT_AMPLITUDE,app_par_B_CURRENT_AMPLITUDE.p_buf);
+    if (ret == E_OK) {
+        app_par_B_CURRENT_AMPLITUDE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_B_CURRENT_AMPLITUDE.p_buf);
+        Log_d("app_par_B_CURRENT_AMPLITUDE.datas:%f\r\n",app_par_B_CURRENT_AMPLITUDE.datas);
+    }
+    /* B_CURRENT_FREQUENCY */
+    ret = BSW_NvM_Read(B_CURRENT_FREQUENCY,app_par_B_CURRENT_FREQUENCY.p_buf);
+    if (ret == E_OK) {
+        app_par_B_CURRENT_FREQUENCY.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_B_CURRENT_FREQUENCY.p_buf);
+        Log_d("app_par_B_CURRENT_FREQUENCY.datas:%f\r\n",app_par_B_CURRENT_FREQUENCY.datas);
+    }
+    /* B_CURRENT_PHASE */
+    ret = BSW_NvM_Read(B_CURRENT_PHASE,app_par_B_CURRENT_PHASE.p_buf);
+    if (ret == E_OK) {
+        app_par_B_CURRENT_PHASE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_B_CURRENT_PHASE.p_buf);
+        Log_d("app_par_B_CURRENT_PHASE.datas:%f\r\n",app_par_B_CURRENT_PHASE.datas);
+    }
+
+    /* C_CURRENT_AMPLITUDE */
+    ret = BSW_NvM_Read(C_CURRENT_AMPLITUDE,app_par_C_CURRENT_AMPLITUDE.p_buf);
+    if (ret == E_OK) {
+        app_par_C_CURRENT_AMPLITUDE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_C_CURRENT_AMPLITUDE.p_buf);
+        Log_d("app_par_C_CURRENT_AMPLITUDE.datas:%f\r\n",app_par_C_CURRENT_AMPLITUDE.datas);
+    }
+    /* C_CURRENT_FREQUENCY */
+    ret = BSW_NvM_Read(C_CURRENT_FREQUENCY,app_par_C_CURRENT_FREQUENCY.p_buf);
+    if (ret == E_OK) {
+        app_par_C_CURRENT_FREQUENCY.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_C_CURRENT_FREQUENCY.p_buf);
+        Log_d("app_par_C_CURRENT_FREQUENCY.datas:%f\r\n",app_par_C_CURRENT_FREQUENCY.datas);
+    }
+    /* C_CURRENT_PHASE */
+    ret = BSW_NvM_Read(C_CURRENT_PHASE,app_par_C_CURRENT_PHASE.p_buf);
+    if (ret == E_OK) {
+        app_par_C_CURRENT_PHASE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_C_CURRENT_PHASE.p_buf);
+        Log_d("app_par_C_CURRENT_PHASE.datas:%f\r\n",app_par_C_CURRENT_PHASE.datas);
+    }
+
+    /* ZERO_CURRENT_AMPLITUDE */
+    ret = BSW_NvM_Read(ZERO_CURRENT_AMPLITUDE,app_par_ZERO_CURRENT_AMPLITUDE.p_buf);
+    if (ret == E_OK) {
+        app_par_ZERO_CURRENT_AMPLITUDE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_ZERO_CURRENT_AMPLITUDE.p_buf);
+        Log_d("app_par_ZERO_CURRENT_AMPLITUDE.datas:%f\r\n",app_par_ZERO_CURRENT_AMPLITUDE.datas);
+    }
+    /* ZERO_CURRENT_FREQUENCY */
+    ret = BSW_NvM_Read(ZERO_CURRENT_FREQUENCY,app_par_ZERO_CURRENT_FREQUENCY.p_buf);
+    if (ret == E_OK) {
+        app_par_ZERO_CURRENT_FREQUENCY.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_ZERO_CURRENT_FREQUENCY.p_buf);
+        Log_d("app_par_ZERO_CURRENT_FREQUENCY.datas:%f\r\n",app_par_ZERO_CURRENT_FREQUENCY.datas);
+    }
+    /* ZERO_CURRENT_PHASE */
+    ret = BSW_NvM_Read(ZERO_CURRENT_PHASE,app_par_ZERO_CURRENT_PHASE.p_buf);
+    if (ret == E_OK) {
+        app_par_ZERO_CURRENT_PHASE.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_ZERO_CURRENT_PHASE.p_buf);
+        Log_d("app_par_ZERO_CURRENT_PHASE.datas:%f\r\n",app_par_ZERO_CURRENT_PHASE.datas);
     }
 }
 
@@ -2042,8 +2219,365 @@ uint8 app_parameter_write_Device_password(uint32 data)
     return ret;
 }
 
+float32 app_parameter_read_A_VOLTAGE_AMPLITUDE(void)
+{
+    float32 ret = app_par_A_VOLTAGE_AMPLITUDE.datas;
+    return ret;
+}
 
+uint8 app_parameter_write_A_VOLTAGE_AMPLITUDE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_A_VOLTAGE_AMPLITUDE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(A_VOLTAGE_AMPLITUDE,&value);
+    return ret;
+}
 
+float32 app_parameter_read_A_VOLTAGE_FREQUENCY(void)
+{
+    float32 ret = app_par_A_VOLTAGE_FREQUENCY.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_A_VOLTAGE_FREQUENCY(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_A_VOLTAGE_FREQUENCY.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(A_VOLTAGE_FREQUENCY,&value);
+    return ret;
+}
+
+float32 app_parameter_read_A_VOLTAGE_PHASE(void)
+{
+    float32 ret = app_par_A_VOLTAGE_PHASE.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_A_VOLTAGE_PHASE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_A_VOLTAGE_PHASE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(A_VOLTAGE_PHASE,&value);
+    return ret;
+}
+
+float32 app_parameter_read_B_VOLTAGE_AMPLITUDE(void)
+{
+    float32 ret = app_par_B_VOLTAGE_AMPLITUDE.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_B_VOLTAGE_AMPLITUDE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_B_VOLTAGE_AMPLITUDE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(B_VOLTAGE_AMPLITUDE,&value);
+    return ret;
+}
+
+float32 app_parameter_read_B_VOLTAGE_FREQUENCY(void)
+{
+    float32 ret = app_par_B_VOLTAGE_FREQUENCY.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_B_VOLTAGE_FREQUENCY(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_B_VOLTAGE_FREQUENCY.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(B_VOLTAGE_FREQUENCY,&value);
+    return ret;
+}
+
+float32 app_parameter_read_B_VOLTAGE_PHASE(void)
+{
+    float32 ret = app_par_B_VOLTAGE_PHASE.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_B_VOLTAGE_PHASE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_B_VOLTAGE_PHASE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(B_VOLTAGE_PHASE,&value);
+    return ret;
+}
+
+float32 app_parameter_read_C_VOLTAGE_AMPLITUDE(void)
+{
+    float32 ret = app_par_C_VOLTAGE_AMPLITUDE.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_C_VOLTAGE_AMPLITUDE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_C_VOLTAGE_AMPLITUDE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(C_VOLTAGE_AMPLITUDE,&value);
+    return ret;
+}
+
+float32 app_parameter_read_C_VOLTAGE_FREQUENCY(void)
+{
+    float32 ret = app_par_C_VOLTAGE_FREQUENCY.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_C_VOLTAGE_FREQUENCY(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_C_VOLTAGE_FREQUENCY.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(C_VOLTAGE_FREQUENCY,&value);
+    return ret;
+}
+
+float32 app_parameter_read_C_VOLTAGE_PHASE(void)
+{
+    float32 ret = app_par_C_VOLTAGE_PHASE.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_C_VOLTAGE_PHASE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_C_VOLTAGE_PHASE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(C_VOLTAGE_PHASE,&value);
+    return ret;
+}
+
+float32 app_parameter_read_ZERO_VOLTAGE_AMPLITUDE(void)
+{
+    float32 ret = app_par_ZERO_VOLTAGE_AMPLITUDE.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_ZERO_VOLTAGE_AMPLITUDE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_ZERO_VOLTAGE_AMPLITUDE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(ZERO_VOLTAGE_AMPLITUDE,&value);
+    return ret;
+}
+
+float32 app_parameter_read_ZERO_VOLTAGE_FREQUENCY(void)
+{
+    float32 ret = app_par_ZERO_VOLTAGE_FREQUENCY.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_ZERO_VOLTAGE_FREQUENCY(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_ZERO_VOLTAGE_FREQUENCY.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(ZERO_VOLTAGE_FREQUENCY,&value);
+    return ret;
+}
+
+float32 app_parameter_read_ZERO_VOLTAGE_PHASE(void)
+{
+    float32 ret = app_par_ZERO_VOLTAGE_PHASE.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_ZERO_VOLTAGE_PHASE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_ZERO_VOLTAGE_PHASE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(ZERO_VOLTAGE_PHASE,&value);
+    return ret;
+}
+
+float32 app_parameter_read_A_CURRENT_AMPLITUDE(void)
+{
+    float32 ret = app_par_A_CURRENT_AMPLITUDE.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_A_CURRENT_AMPLITUDE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_A_CURRENT_AMPLITUDE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(A_CURRENT_AMPLITUDE,&value);
+    return ret;
+}
+
+float32 app_parameter_read_A_CURRENT_FREQUENCY(void)
+{
+    float32 ret = app_par_A_CURRENT_FREQUENCY.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_A_CURRENT_FREQUENCY(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_A_CURRENT_FREQUENCY.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(A_CURRENT_FREQUENCY,&value);
+    return ret;
+}
+
+float32 app_parameter_read_A_CURRENT_PHASE(void)
+{
+    float32 ret = app_par_A_CURRENT_PHASE.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_A_CURRENT_PHASE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_A_CURRENT_PHASE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(A_CURRENT_PHASE,&value);
+    return ret;
+}
+
+float32 app_parameter_read_B_CURRENT_AMPLITUDE(void)
+{
+    float32 ret = app_par_B_CURRENT_AMPLITUDE.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_B_CURRENT_AMPLITUDE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_B_CURRENT_AMPLITUDE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(B_CURRENT_AMPLITUDE,&value);
+    return ret;
+}
+
+float32 app_parameter_read_B_CURRENT_FREQUENCY(void)
+{
+    float32 ret = app_par_B_CURRENT_FREQUENCY.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_B_CURRENT_FREQUENCY(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_B_CURRENT_FREQUENCY.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(B_CURRENT_FREQUENCY,&value);
+    return ret;
+}
+
+float32 app_parameter_read_B_CURRENT_PHASE(void)
+{
+    float32 ret = app_par_B_CURRENT_PHASE.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_B_CURRENT_PHASE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_B_CURRENT_PHASE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(B_CURRENT_PHASE,&value);
+    return ret;
+}
+
+float32 app_parameter_read_C_CURRENT_AMPLITUDE(void)
+{
+    float32 ret = app_par_C_CURRENT_AMPLITUDE.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_C_CURRENT_AMPLITUDE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_C_CURRENT_AMPLITUDE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(C_CURRENT_AMPLITUDE,&value);
+    return ret;
+}
+
+float32 app_parameter_read_C_CURRENT_FREQUENCY(void)
+{
+    float32 ret = app_par_C_CURRENT_FREQUENCY.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_C_CURRENT_FREQUENCY(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_C_CURRENT_FREQUENCY.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(C_CURRENT_FREQUENCY,&value);
+    return ret;
+}
+
+float32 app_parameter_read_C_CURRENT_PHASE(void)
+{
+    float32 ret = app_par_C_CURRENT_PHASE.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_C_CURRENT_PHASE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_C_CURRENT_PHASE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(C_CURRENT_PHASE,&value);
+    return ret;
+}
+
+float32 app_parameter_read_ZERO_CURRENT_AMPLITUDE(void)
+{
+    float32 ret = app_par_ZERO_CURRENT_AMPLITUDE.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_ZERO_CURRENT_AMPLITUDE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_ZERO_CURRENT_AMPLITUDE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(ZERO_CURRENT_AMPLITUDE,&value);
+    return ret;
+}
+
+float32 app_parameter_read_ZERO_CURRENT_FREQUENCY(void)
+{
+    float32 ret = app_par_ZERO_CURRENT_FREQUENCY.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_ZERO_CURRENT_FREQUENCY(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_ZERO_CURRENT_FREQUENCY.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(ZERO_CURRENT_FREQUENCY,&value);
+    return ret;
+}
+
+float32 app_parameter_read_ZERO_CURRENT_PHASE(void)
+{
+    float32 ret = app_par_ZERO_CURRENT_PHASE.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_ZERO_CURRENT_PHASE(float32 data)
+{
+    uint8 ret = E_NOK;
+    app_par_ZERO_CURRENT_PHASE.datas = data;
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(ZERO_CURRENT_PHASE,&value);
+    return ret;
+}
 
 static uint32 MCM_floatToIntBit( float32 x )
 {

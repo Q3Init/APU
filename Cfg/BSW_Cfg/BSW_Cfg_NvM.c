@@ -383,6 +383,102 @@ BSW_NvM_Rte nvm_datas_Lists[ID_CNT] =
         .id = Device_password,
         .data_len = 4
     },
+    {
+        .id = A_VOLTAGE_AMPLITUDE,
+        .data_len = 4
+    },
+    {
+        .id = A_VOLTAGE_FREQUENCY,
+        .data_len = 4
+    },
+    {
+        .id = A_VOLTAGE_PHASE,
+        .data_len = 4
+    },
+    {
+        .id = B_VOLTAGE_AMPLITUDE,
+        .data_len = 4
+    },
+    {
+        .id = B_VOLTAGE_FREQUENCY,
+        .data_len = 4
+    },
+    {
+        .id = B_VOLTAGE_PHASE,
+        .data_len = 4
+    },
+    {
+        .id = C_VOLTAGE_AMPLITUDE,
+        .data_len = 4
+    },
+    {
+        .id = C_VOLTAGE_FREQUENCY,
+        .data_len = 4
+    },
+    {
+        .id = C_VOLTAGE_PHASE,
+        .data_len = 4
+    },
+    {
+        .id = ZERO_VOLTAGE_AMPLITUDE,
+        .data_len = 4
+    },
+    {
+        .id = ZERO_VOLTAGE_FREQUENCY,
+        .data_len = 4
+    },
+    {
+        .id = ZERO_VOLTAGE_PHASE,
+        .data_len = 4
+    },
+    {
+        .id = A_CURRENT_AMPLITUDE,
+        .data_len = 4
+    },
+    {
+        .id = A_CURRENT_FREQUENCY,
+        .data_len = 4
+    },
+    {
+        .id = A_CURRENT_PHASE,
+        .data_len = 4
+    },
+    {
+        .id = B_CURRENT_AMPLITUDE,
+        .data_len = 4
+    },
+    {
+        .id = B_CURRENT_FREQUENCY,
+        .data_len = 4
+    },
+    {
+        .id = B_CURRENT_PHASE,
+        .data_len = 4
+    },
+    {
+        .id = C_CURRENT_AMPLITUDE,
+        .data_len = 4
+    },
+    {
+        .id = C_CURRENT_FREQUENCY,
+        .data_len = 4
+    },
+    {
+        .id = C_CURRENT_PHASE,
+        .data_len = 4
+    },
+    {
+        .id = ZERO_CURRENT_AMPLITUDE,
+        .data_len = 4
+    },
+    {
+        .id = ZERO_CURRENT_FREQUENCY,
+        .data_len = 4
+    },
+    {
+        .id = ZERO_CURRENT_PHASE,
+        .data_len = 4
+    },
 };
 
 

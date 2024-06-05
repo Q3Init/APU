@@ -636,6 +636,175 @@ typedef struct
     uint32 datas;
 }app_par_Device_password_Rte;
 
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_A_VOLTAGE_AMPLITUDE_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_A_VOLTAGE_FREQUENCY_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_A_VOLTAGE_PHASE_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_B_VOLTAGE_AMPLITUDE_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_B_VOLTAGE_FREQUENCY_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_B_VOLTAGE_PHASE_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_C_VOLTAGE_AMPLITUDE_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_C_VOLTAGE_FREQUENCY_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_C_VOLTAGE_PHASE_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_ZERO_VOLTAGE_AMPLITUDE_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_ZERO_VOLTAGE_FREQUENCY_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_ZERO_VOLTAGE_PHASE_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_A_CURRENT_AMPLITUDE_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_A_CURRENT_FREQUENCY_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_A_CURRENT_PHASE_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_B_CURRENT_AMPLITUDE_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_B_CURRENT_FREQUENCY_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_B_CURRENT_PHASE_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_C_CURRENT_AMPLITUDE_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_C_CURRENT_FREQUENCY_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_C_CURRENT_PHASE_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_ZERO_CURRENT_AMPLITUDE_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_ZERO_CURRENT_FREQUENCY_Rte;
+
+typedef struct
+{
+    /* data */
+    float32 datas;
+    uint8 p_buf[4];
+}app_par_ZERO_CURRENT_PHASE_Rte;
+
+
 extern void APP_Parameter_Init(void);
 
 /* 过压一段保护 */
@@ -867,6 +1036,61 @@ extern uint8 app_parameter_write_Restore_time(uint16 data);
 /* 密码设置 */
 extern uint32 app_parameter_read_Device_password(void);
 extern uint8 app_parameter_write_Device_password(uint32 data);
+/* 标定参数 */
+extern float32 app_parameter_read_A_VOLTAGE_AMPLITUDE(void);
+extern uint8 app_parameter_write_A_VOLTAGE_AMPLITUDE(float32 data);
+extern float32 app_parameter_read_A_VOLTAGE_FREQUENCY(void);
+extern uint8 app_parameter_write_A_VOLTAGE_FREQUENCY(float32 data);
+extern float32 app_parameter_read_A_VOLTAGE_PHASE(void);
+extern uint8 app_parameter_write_A_VOLTAGE_PHASE(float32 data);
 
+extern float32 app_parameter_read_B_VOLTAGE_AMPLITUDE(void);
+extern uint8 app_parameter_write_B_VOLTAGE_AMPLITUDE(float32 data);
+extern float32 app_parameter_read_B_VOLTAGE_FREQUENCY(void);
+extern uint8 app_parameter_write_B_VOLTAGE_FREQUENCY(float32 data);
+extern float32 app_parameter_read_B_VOLTAGE_PHASE(void);
+extern uint8 app_parameter_write_B_VOLTAGE_PHASE(float32 data);
+
+extern float32 app_parameter_read_C_VOLTAGE_AMPLITUDE(void);
+extern uint8 app_parameter_write_C_VOLTAGE_AMPLITUDE(float32 data);
+extern float32 app_parameter_read_C_VOLTAGE_FREQUENCY(void);
+extern uint8 app_parameter_write_C_VOLTAGE_FREQUENCY(float32 data);
+extern float32 app_parameter_read_C_VOLTAGE_PHASE(void);
+extern uint8 app_parameter_write_C_VOLTAGE_PHASE(float32 data);
+
+extern float32 app_parameter_read_ZERO_VOLTAGE_AMPLITUDE(void);
+extern uint8 app_parameter_write_ZERO_VOLTAGE_AMPLITUDE(float32 data);
+extern float32 app_parameter_read_ZERO_VOLTAGE_FREQUENCY(void);
+extern uint8 app_parameter_write_ZERO_VOLTAGE_FREQUENCY(float32 data);
+extern float32 app_parameter_read_ZERO_VOLTAGE_PHASE(void);
+extern uint8 app_parameter_write_ZERO_VOLTAGE_PHASE(float32 data);
+
+extern float32 app_parameter_read_A_CURRENT_AMPLITUDE(void);
+extern uint8 app_parameter_write_A_CURRENT_AMPLITUDE(float32 data);
+extern float32 app_parameter_read_A_CURRENT_FREQUENCY(void);
+extern uint8 app_parameter_write_A_CURRENT_FREQUENCY(float32 data);
+extern float32 app_parameter_read_A_CURRENT_PHASE(void);
+extern uint8 app_parameter_write_A_CURRENT_PHASE(float32 data);
+
+extern float32 app_parameter_read_B_CURRENT_AMPLITUDE(void);
+extern uint8 app_parameter_write_B_CURRENT_AMPLITUDE(float32 data);
+extern float32 app_parameter_read_B_CURRENT_FREQUENCY(void);
+extern uint8 app_parameter_write_B_CURRENT_FREQUENCY(float32 data);
+extern float32 app_parameter_read_B_CURRENT_PHASE(void);
+extern uint8 app_parameter_write_B_CURRENT_PHASE(float32 data);
+
+extern float32 app_parameter_read_C_CURRENT_AMPLITUDE(void);
+extern uint8 app_parameter_write_C_CURRENT_AMPLITUDE(float32 data);
+extern float32 app_parameter_read_C_CURRENT_FREQUENCY(void);
+extern uint8 app_parameter_write_C_CURRENT_FREQUENCY(float32 data);
+extern float32 app_parameter_read_C_CURRENT_PHASE(void);
+extern uint8 app_parameter_write_C_CURRENT_PHASE(float32 data);
+
+extern float32 app_parameter_read_ZERO_CURRENT_AMPLITUDE(void);
+extern uint8 app_parameter_write_ZERO_CURRENT_AMPLITUDE(float32 data);
+extern float32 app_parameter_read_ZERO_CURRENT_FREQUENCY(void);
+extern uint8 app_parameter_write_ZERO_CURRENT_FREQUENCY(float32 data);
+extern float32 app_parameter_read_ZERO_CURRENT_PHASE(void);
+extern uint8 app_parameter_write_ZERO_CURRENT_PHASE(float32 data);
 
 #endif
