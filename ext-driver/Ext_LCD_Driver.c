@@ -952,7 +952,6 @@ void lcd_state_flush_for_english(uint8_t x_col,uint8_t y_row, uint8_t *ptr_cente
       uint8_t low_y_row = y_row;
       uint8_t high_y_row = english_row_size-32+y_row;//需要测试y_row=20
       uint8_t high_y_row_threshold = english_row_size - 8;
-      Log_e("page_occupy_num:%d \n",page_occupy_num);
       if(garland_flag==1)
       {
             switch(page_level)
