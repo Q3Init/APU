@@ -522,7 +522,11 @@ extern uint8_t my_num_7[];
 extern uint8_t my_num_8[];
 extern uint8_t my_num_9[];
 extern uint8_t my_maohao[];
-
+extern uint8_t fuzhi[];
+extern uint8_t pinlv[];
+extern uint8_t xiangwei[];
+extern uint8_t dianyabiaoding[];
+extern uint8_t dianliubiaoding[];
 struct menu_event_tag * setting_in_factory_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! */
@@ -3600,7 +3604,7 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
-				LCD_ShowChinese_garland(0, 0, parameter_norminal_value_cfg, 4);
+				Log_e("chinese_menu_idx=%d  \n",chinese_menu_idx);
 				switch(chinese_menu_idx)
 				{
 					//first page
@@ -3608,6 +3612,8 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 					case B_VOLTAGE_AMPLITUDE_VALUE:
 					case C_VOLTAGE_AMPLITUDE_VALUE:
 					case ZERO_VOLTAGE_AMPLITUDE_VALUE:
+						LCD_ShowChinese_garland(0, 0, dianyabiaoding, 4);
+						LCD_ShowChinese_garland(56, 0, fuzhi, 2);
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
 						lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
 						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
@@ -3654,6 +3660,8 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 					case B_VOLTAGE_FREQUENCY_VALUE:
 					case C_VOLTAGE_FREQUENCY_VALUE:
 					case ZERO_VOLTAGE_FREQUENCY_VALUE:
+						LCD_ShowChinese_garland(0, 0, dianyabiaoding, 4);
+						LCD_ShowChinese_garland(56, 0, pinlv, 2);
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
 						lcd_state_flush_for_num(98,1,my_num_2,5,12,1);
 						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
@@ -3687,7 +3695,7 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 						lcd_state_flush_for_num(95,38,my_char_H,6,12,1);
 						lcd_state_flush_for_num(101,38,my_char_z,6,12,1);
 
-						
+						Log_e("HELLO! chinese_idx_flush=%x num_idx_flush[7]=%d num_idx_flush[8]=%d num_idx_flush[9]=%d\n", chinese_idx_flush, num_idx_flush[7], num_idx_flush[8], num_idx_flush[9]);
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x80, 8, 51, ZERO_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, ZERO_VOLTAGE_AMPLITUDE_VALUE_READ(), 
@@ -3702,13 +3710,15 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 					case B_VOLTAGE_PHASE_VALUE:
 					case C_VOLTAGE_PHASE_VALUE:
 					case ZERO_VOLTAGE_PHASE_VALUE:
+						LCD_ShowChinese_garland(0, 0, dianyabiaoding, 4);
+						LCD_ShowChinese_garland(56, 0, xiangwei, 2);
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
 						lcd_state_flush_for_num(98,1,my_num_3,5,12,1);
 						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
 						lcd_state_flush_for_num(109,1,my_num_6,5,12,1);
 						single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0100, 8, 13, A_NORMINAL_VALUE, 4);
+						Log_e("HELLO! chinese_idx_flush=%x num_idx_flush[7]=%d num_idx_flush[8]=%d num_idx_flush[9]=%d\n", chinese_idx_flush, num_idx_flush[7], num_idx_flush[8], num_idx_flush[9]);
+						lcd_showchinese_no_garland_or_garland((chinese_idx_flush & 0x0100)>>8, 8, 13, A_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, A_VOLTAGE_PHASE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[8]);
@@ -3717,7 +3727,7 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 						single_row_continue_printf_12x12_chinese_in_lcd(95, 13, my_char_du, 1, 12, 1);
 
 
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0200, 8, 26, B_NORMINAL_VALUE, 4);
+						lcd_showchinese_no_garland_or_garland( (chinese_idx_flush & 0x0200)>>8, 8, 26, B_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, B_VOLTAGE_PHASE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[9]);
@@ -3725,7 +3735,7 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 											num_idx_flush[9], sizeof(num_array), num_array, 3);
 						single_row_continue_printf_12x12_chinese_in_lcd(95, 26, my_char_du, 1, 12, 1);
 
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0400, 8, 38, C_NORMINAL_VALUE, 4);
+						lcd_showchinese_no_garland_or_garland( (chinese_idx_flush & 0x0400)>>8, 8, 38, C_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, C_VOLTAGE_PHASE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[10]);
@@ -3734,7 +3744,7 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 						single_row_continue_printf_12x12_chinese_in_lcd(95, 38, my_char_du, 1, 12, 1);
 
 						
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0800, 8, 51, ZERO_NORMINAL_VALUE, 4);
+						lcd_showchinese_no_garland_or_garland( (chinese_idx_flush & 0x0800)>>8, 8, 51, ZERO_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, ZERO_VOLTAGE_PHASE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[11]);
@@ -3747,58 +3757,62 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 					case B_CURRENT_AMPLITUDE_VALUE:
 					case C_CURRENT_AMPLITUDE_VALUE:
 					case ZERO_CURRENT_AMPLITUDE_VALUE:
+						LCD_ShowChinese_garland(0, 0, dianliubiaoding, 4);
+						LCD_ShowChinese_garland(56, 0, fuzhi, 2);
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
 						lcd_state_flush_for_num(98,1,my_num_4,5,12,1);
 						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
 						lcd_state_flush_for_num(109,1,my_num_6,5,12,1);
 						single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
 
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01000, 8, 13, A_NORMINAL_VALUE, 4);
+						lcd_showchinese_no_garland_or_garland((chinese_idx_flush & 0x01000)>>8, 8, 13, A_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, A_CURRENT_AMPLITUDE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[12]);
 						lcd_number_display_in_order(63, 13, 5, 12, 
 											num_idx_flush[12], sizeof(num_array), num_array, 3);
-						lcd_state_flush_for_num(95,13,my_char_V,6,12,1);
+						lcd_state_flush_for_num(95,13,my_char_A,6,12,1);
 
 
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02000, 8, 26, B_NORMINAL_VALUE, 4);
+						lcd_showchinese_no_garland_or_garland((chinese_idx_flush & 0x02000)>>8, 8, 26, B_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, B_CURRENT_AMPLITUDE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[13]);
 						lcd_number_display_in_order(63, 26, 5, 12, 
 											num_idx_flush[13], sizeof(num_array), num_array, 3);
-						lcd_state_flush_for_num(95,26,my_char_V,6,12,1);
+						lcd_state_flush_for_num(95,26,my_char_A,6,12,1);
 
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04000, 8, 38, C_NORMINAL_VALUE, 4);
+						lcd_showchinese_no_garland_or_garland((chinese_idx_flush & 0x04000)>>8, 8, 38, C_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, C_CURRENT_AMPLITUDE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[14]);
 						lcd_number_display_in_order(63, 38, 5, 12, 
 											num_idx_flush[14], sizeof(num_array), num_array, 3);
-						lcd_state_flush_for_num(95,38,my_char_V,6,12,1);
+						lcd_state_flush_for_num(95,38,my_char_A,6,12,1);
 
 						
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x08000, 8, 51, ZERO_NORMINAL_VALUE, 4);
+						lcd_showchinese_no_garland_or_garland((chinese_idx_flush & 0x08000)>>8, 8, 51, ZERO_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, ZERO_CURRENT_AMPLITUDE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[15]);
 						lcd_number_display_in_order(63, 51, 5, 12, 
 											num_idx_flush[15], sizeof(num_array), num_array, 3);
-						lcd_state_flush_for_num(95,51,my_char_V,6,12,1);
+						lcd_state_flush_for_num(95,51,my_char_A,6,12,1);
 						break;
 					// fifth page
 					case A_CURRENT_FREQUENCY_VALUE:
 					case B_CURRENT_FREQUENCY_VALUE:
 					case C_CURRENT_FREQUENCY_VALUE:
 					case ZERO_CURRENT_FREQUENCY_VALUE:
+						LCD_ShowChinese_garland(0, 0, dianliubiaoding, 4);
+						LCD_ShowChinese_garland(56, 0, pinlv, 2);
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
 						lcd_state_flush_for_num(98,1,my_num_5,5,12,1);
 						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
 						lcd_state_flush_for_num(109,1,my_num_6,5,12,1);
 						single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
 
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x10000, 8, 13, A_NORMINAL_VALUE, 4);
+						lcd_showchinese_no_garland_or_garland( (chinese_idx_flush & 0x10000)>>16, 8, 13, A_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, A_CURRENT_AMPLITUDE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[16]);
@@ -3807,7 +3821,7 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 						lcd_state_flush_for_num(95,13,my_char_H,6,12,1);
 						lcd_state_flush_for_num(101,13,my_char_z,6,12,1);
 
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x20000, 8, 26, B_NORMINAL_VALUE, 4);
+						lcd_showchinese_no_garland_or_garland((chinese_idx_flush & 0x20000)>>16, 8, 26, B_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, B_CURRENT_AMPLITUDE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[17]);
@@ -3816,7 +3830,7 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 						lcd_state_flush_for_num(95,26,my_char_H,6,12,1);
 						lcd_state_flush_for_num(101,26,my_char_z,6,12,1);
 
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x40000, 8, 38, C_NORMINAL_VALUE, 4);
+						lcd_showchinese_no_garland_or_garland((chinese_idx_flush & 0x40000)>>16, 8, 38, C_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, C_CURRENT_AMPLITUDE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[18]);
@@ -3826,7 +3840,7 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 						lcd_state_flush_for_num(101,38,my_char_z,6,12,1);
 
 						
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x80000, 8, 51, ZERO_NORMINAL_VALUE, 4);
+						lcd_showchinese_no_garland_or_garland((chinese_idx_flush & 0x80000)>>16, 8, 51, ZERO_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, ZERO_CURRENT_AMPLITUDE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[19]);
@@ -3840,13 +3854,15 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 					case B_CURRENT_PHASE_VALUE:
 					case C_CURRENT_PHASE_VALUE:
 					case ZERO_CURRENT_PHASE_VALUE:
+						LCD_ShowChinese_garland(0, 0, dianliubiaoding, 4);
+						LCD_ShowChinese_garland(56, 0, xiangwei, 2);
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
 						lcd_state_flush_for_num(98,1,my_num_6,5,12,1);
 						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
 						lcd_state_flush_for_num(109,1,my_num_6,5,12,1);
 						single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
 
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0100000, 8, 13, A_NORMINAL_VALUE, 4);
+						lcd_showchinese_no_garland_or_garland((chinese_idx_flush & 0x0100000)>>16, 8, 13, A_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, A_VOLTAGE_PHASE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[20]);
@@ -3855,7 +3871,7 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 						single_row_continue_printf_12x12_chinese_in_lcd(95, 13, my_char_du, 1, 12, 1);
 
 
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0200000, 8, 26, B_NORMINAL_VALUE, 4);
+						lcd_showchinese_no_garland_or_garland((chinese_idx_flush & 0x0200000)>>16, 8, 26, B_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, B_VOLTAGE_PHASE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[21]);
@@ -3863,7 +3879,7 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 											num_idx_flush[21], sizeof(num_array), num_array, 3);
 						single_row_continue_printf_12x12_chinese_in_lcd(95, 26, my_char_du, 1, 12, 1);
 
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0400000, 8, 38, C_NORMINAL_VALUE, 4);
+						lcd_showchinese_no_garland_or_garland((chinese_idx_flush & 0x0400000)>>16, 8, 38, C_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, C_VOLTAGE_PHASE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[22]);
@@ -3872,7 +3888,7 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 						single_row_continue_printf_12x12_chinese_in_lcd(95, 38, my_char_du, 1, 12, 1);
 
 						
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0800000, 8, 51, ZERO_NORMINAL_VALUE, 4);
+						lcd_showchinese_no_garland_or_garland((chinese_idx_flush & 0x0800000)>>16, 8, 51, ZERO_NORMINAL_VALUE, 4);
 						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, ZERO_VOLTAGE_PHASE_VALUE_READ(), 
 													num_array, 3, 2, num_idx_flush[23]);
