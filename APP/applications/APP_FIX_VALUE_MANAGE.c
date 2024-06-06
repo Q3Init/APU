@@ -2027,7 +2027,7 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 
 		if(!lcd_modify_num_env.check_num_modify)
 		{
-			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 6, 1, sizeof(frequency_over_menu_array));
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_over_menu_array));
 		}
 		chinese_menu_idx = frequency_over_menu_array[lcd_modify_num_env.menu_type_idx];
 		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
@@ -2430,20 +2430,20 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 						case FIX_VALUE:
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
-							float_flag = app_parameter_read_Underfrequency_Value();
+							float_flag = app_parameter_read_Frequency_Discontinuity_Value();
 							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 							break;
 						case OVER_DELAY:
 							//update the value for the array lcd_modify_num_array
-							float_flag = app_parameter_read_Underfrequency_Delay();
+							float_flag = app_parameter_read_Frequency_Discontinuity_Delay();
 							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
 						case FUNCTION_IN_OUT:
 							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
-							int_flag = app_parameter_read_Underfrequency_Eol();
+							int_flag = app_parameter_read_Frequency_Discontinuity_Eol();
 							lcd_modify_num_array[0] = int_flag;
 							key_idx_for_num = 2;
 							break;
@@ -2461,24 +2461,24 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 							// prepare for the number modify
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
 							float_flag = float_flag+ 0.0001;
-							app_parameter_write_Underfrequency_Value(0);
-							app_parameter_write_Underfrequency_Value(float_flag);
-							float_flag = app_parameter_read_Underfrequency_Value();
+							app_parameter_write_Frequency_Discontinuity_Value(0);
+							app_parameter_write_Frequency_Discontinuity_Value(float_flag);
+							float_flag = app_parameter_read_Frequency_Discontinuity_Value();
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
-							app_parameter_write_Underfrequency_Delay(0);
-							app_parameter_write_Underfrequency_Delay(float_flag);
-							float_flag = app_parameter_read_Underfrequency_Delay();
+							app_parameter_write_Frequency_Discontinuity_Delay(0);
+							app_parameter_write_Frequency_Discontinuity_Delay(float_flag);
+							float_flag = app_parameter_read_Frequency_Discontinuity_Delay();
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FUNCTION_IN_OUT:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
-							app_parameter_write_Underfrequency_Eol(0);
-							app_parameter_write_Underfrequency_Eol(int_flag);
-							int_flag = app_parameter_read_Underfrequency_Eol();
+							app_parameter_write_Frequency_Discontinuity_Eol(0);
+							app_parameter_write_Frequency_Discontinuity_Eol(int_flag);
+							int_flag = app_parameter_read_Frequency_Discontinuity_Eol();
 							break;
 						default:
 							break;
@@ -2658,6 +2658,7 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 
     return menu_evt;
 }
+
 struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
@@ -2673,146 +2674,331 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 		return menu_evt;
 	}
 
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint8_t num_idx_flush[6] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[5] = {0};
+	// uint8_t op = false;
+	uint8_t int_flag = 0;
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t msg_storage = msg_context;
+
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
     if(msg_process_signal == 1)
 	{	
-		uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		if(!lcd_modify_num_env.check_num_modify)
+		{
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
+		}
+		chinese_menu_idx = frequency_mutation_menu_array[lcd_modify_num_env.menu_type_idx];
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+
+		// uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
+		// Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
-		}
-        if(msg_context == FLUSH_SCREEN)
-        {
-			Log_d("\r\n    \r\n");
-            clear_screen();
-			msg_context = 0xff;
-			msg_lock_from_env_set(0);//unlock the msg
-        }
-		switch(msg_context)
-		{
-			case	0xff:
-			case    KEY_UP:
-    		case	KEY_DOWN:		
-    		case	KEY_LEFT:
-			case	KEY_RIGHT:
-				clear_screen();
-				LCD_ShowChinese_garland(0, 0, frequency_mutation, 4);
-				switch(frequency_mutation_menu_array[menu_type_idx])
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+
+				menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
+            	msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				lcd_the_modified_num_env_to_be_clear_all();
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				//just for test log
+				for(int j=0;j<5;j++)
 				{
-					case MUTATION_FIX_VALUE:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+				}
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+				float_flag = app_parameter_read_Frequency_Discontinuity_Value();
+				Log_d("ENTER! float_flag:%f\n",float_flag);
+				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+			}
+			key_idx_for_num = 0;
+		}
+		
 
-						LCD_ShowChinese_no_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(70,13,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(72,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(90,13,my_char_H,6,12,1);
-						lcd_state_flush_for_num(96,13,my_char_z,6,12,1);
-						lcd_state_flush_for_num(102,13,XieGang_char,6,12,1);
-						lcd_state_flush_for_num(108,13,my_char_s,6,12,1);
+         if(msg_context == FLUSH_SCREEN)
+        {
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
+            clear_screen();
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
+			msg_lock_from_env_set(0);//unlock the msg
+			chinese_menu_idx = frequency_mutation_menu_array[lcd_modify_num_env.menu_type_idx];
+			//init the array lcd_modify_num_array with value in the first chinese volume
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+					//update the value for the array lcd_modify_num_array
+					float_flag = app_parameter_read_Frequency_Discontinuity_Value();
+					Log_d("ENTER! float_flag:%f\n",float_flag);
+					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+					break;
+				default:
+					break;
+			
+        	}
+		
+    }
 
-						LCD_ShowChinese_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
+	if(lcd_modify_num_env.enter_flag == true){
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true;
+					switch(chinese_menu_idx)
+					{
+						case FIX_VALUE:
+							key_idx_for_num = 0;
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Frequency_Discontinuity_Value();
+							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+							break;
+						case OVER_DELAY:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Frequency_Discontinuity_Delay();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+							key_idx_for_num = 1;
+							break;
+						case FUNCTION_IN_OUT:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = app_parameter_read_Frequency_Discontinuity_Eol();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 2;
+							break;
+						default:
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						case FIX_VALUE:
+							// prepare for the number modify
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Frequency_Discontinuity_Value(0);
+							app_parameter_write_Frequency_Discontinuity_Value(float_flag);
+							float_flag = app_parameter_read_Underfrequency_Value();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case OVER_DELAY:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Frequency_Discontinuity_Delay(0);
+							app_parameter_write_Frequency_Discontinuity_Delay(float_flag);
+							float_flag = app_parameter_read_Underfrequency_Delay();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case FUNCTION_IN_OUT:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							app_parameter_write_Frequency_Discontinuity_Eol(0);
+							app_parameter_write_Frequency_Discontinuity_Eol(int_flag);
+							int_flag = app_parameter_read_Underfrequency_Eol();
+							break;
+						default:
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
 
-						LCD_ShowChinese_garland(8, 38, function_in_out, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(63, 38, back, 2);
+		if(lcd_modify_num_env.check_num_modify)
+		{
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-2;
+					up_diff_num_idx_ths = 9;
+					break;
+				case OVER_DELAY:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					up_diff_num_idx_ths = 9;
+					break;
+				case FUNCTION_IN_OUT:
+					right_diff_num_idx_ths = 0;
+					up_diff_num_idx_ths = 1;
+					break;
+				default:
+					break;
+			}
 
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+				case OVER_DELAY:
+				case FUNCTION_IN_OUT:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_UP://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_DOWN://-
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				switch(chinese_menu_idx)
+				{
+					case FIX_VALUE:
+						chinese_idx_flush &= 0x00FE;
 						break;
-					case MUTATION_DELAY:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(70,13,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(72,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(90,13,my_char_H,6,12,1);
-						lcd_state_flush_for_num(96,13,my_char_z,6,12,1);
-						lcd_state_flush_for_num(102,13,XieGang_char,6,12,1);
-						lcd_state_flush_for_num(108,13,my_char_s,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_garland(8, 38, function_in_out, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(63, 38, back, 2);
-
+					case OVER_DELAY:
+						chinese_idx_flush &= 0x00FD;
 						break;
-					case MUTATION_FUNCTION_IN_OUT:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(70,13,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(72,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(90,13,my_char_H,6,12,1);
-						lcd_state_flush_for_num(96,13,my_char_z,6,12,1);
-						lcd_state_flush_for_num(102,13,XieGang_char,6,12,1);
-						lcd_state_flush_for_num(108,13,my_char_s,6,12,1);
-
-						LCD_ShowChinese_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 38, function_in_out, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(63, 38, back, 2);
+					case FUNCTION_IN_OUT:
+						chinese_idx_flush &= 0x00FB;
 						break;
+					default:
+						break;
+					
 				}
 				break;
 			default:
 				break;
 		}
-    }
 
-    return menu_evt;
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, frequency_mutation, 4);
+				switch(chinese_menu_idx)
+				{
+					case FIX_VALUE:
+					case OVER_DELAY:
+					case FUNCTION_IN_OUT:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, fix_value, 4);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Frequency_Discontinuity_Value(), 
+													num_array, 2, 2, num_idx_flush[0]);
+						lcd_number_display_in_order(64, 13, 5, 12, 
+											num_idx_flush[0], sizeof(num_array)-1, num_array, 2);
+						lcd_state_flush_for_num(90,13,my_char_H,6,12,1);
+						lcd_state_flush_for_num(96,13,my_char_z,6,12,1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, over_delay, 4);
+						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Frequency_Discontinuity_Delay(), 
+													num_array, 3, 2, num_idx_flush[1]);
+						lcd_number_display_in_order(64, 26, 5, 12, 
+											num_idx_flush[1], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,26,my_char_s,6,12,1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 8, 38, function_in_out, 4);
+						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Frequency_Discontinuity_Eol(), 
+													num_idx_flush[2]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63, 38, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63, 38, back, 2);
+						}
+						break;
+					default:
+						break;
+				}
+			default:
+			
+				break;
+			}
+		}
+	return menu_evt;	
 }
+
+    
+
+
 struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
@@ -2828,140 +3014,328 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 		return menu_evt;
 	}
 
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint8_t num_idx_flush[6] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[5] = {0};
+	// uint8_t op = false;
+	uint8_t int_flag = 0;
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t msg_storage = msg_context;
+
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
     if(msg_process_signal == 1)
 	{	
-		uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(reverse_power_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		if(!lcd_modify_num_env.check_num_modify)
+		{
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(reverse_power_menu_array));
+		}
+		chinese_menu_idx = reverse_power_menu_array[lcd_modify_num_env.menu_type_idx];
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+
+		// uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
+		// Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
-		}
-        if(msg_context == FLUSH_SCREEN)
-        {
-			Log_d("\r\n    \r\n");
-            clear_screen();
-			msg_context = 0xff;
-			msg_lock_from_env_set(0);//unlock the msg
-        }
-		switch(msg_context)
-		{
-			case	0xff:
-			case    KEY_UP:
-    		case	KEY_DOWN:		
-    		case	KEY_LEFT:
-			case	KEY_RIGHT:
-				clear_screen();
-				LCD_ShowChinese_garland(0, 0, reverse_power, 4);
-				switch(reverse_power_menu_array[menu_type_idx])
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+
+				menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
+            	msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				lcd_the_modified_num_env_to_be_clear_all();
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				//just for test log
+				for(int j=0;j<5;j++)
 				{
-					case REVERSE_FIX_VALUE:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+				}
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+				float_flag = app_parameter_read_Reverse_Power_Protection_Value();
+				Log_d("ENTER! float_flag:%f\n",float_flag);
+				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+			}
+			key_idx_for_num = 0;
+		}
+		
 
-						LCD_ShowChinese_no_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(82,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(88,13,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(90,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,13,my_char_W,6,12,1);
+         if(msg_context == FLUSH_SCREEN)
+        {
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
+            clear_screen();
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
+			msg_lock_from_env_set(0);//unlock the msg
+			chinese_menu_idx = reverse_power_menu_array[lcd_modify_num_env.menu_type_idx];
+			//init the array lcd_modify_num_array with value in the first chinese volume
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+					//update the value for the array lcd_modify_num_array
+					float_flag = app_parameter_read_Reverse_Power_Protection_Value();
+					Log_d("ENTER! float_flag:%f\n",float_flag);
+					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+					break;
+				default:
+					break;
+			
+        	}
+		
+    }
 
-						LCD_ShowChinese_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
+	if(lcd_modify_num_env.enter_flag == true){
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true;
+					switch(chinese_menu_idx)
+					{
+						case FIX_VALUE:
+							key_idx_for_num = 0;
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Reverse_Power_Protection_Value();
+							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+							break;
+						case OVER_DELAY:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Reverse_Power_Protection_Delay();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+							key_idx_for_num = 1;
+							break;
+						case FUNCTION_IN_OUT:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = app_parameter_read_Reverse_Power_Protection_Eol();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 2;
+							break;
+						default:
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						case FIX_VALUE:
+							// prepare for the number modify
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Reverse_Power_Protection_Value(0);
+							app_parameter_write_Reverse_Power_Protection_Value(float_flag);
+							float_flag = app_parameter_read_Reverse_Power_Protection_Value();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case OVER_DELAY:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Reverse_Power_Protection_Delay(0);
+							app_parameter_write_Reverse_Power_Protection_Delay(float_flag);
+							float_flag = app_parameter_read_Reverse_Power_Protection_Delay();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case FUNCTION_IN_OUT:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							app_parameter_write_Reverse_Power_Protection_Eol(0);
+							app_parameter_write_Reverse_Power_Protection_Eol(int_flag);
+							int_flag = app_parameter_read_Reverse_Power_Protection_Eol();
+							break;
+						default:
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
 
-						LCD_ShowChinese_garland(8, 38, function_in_out, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(63, 38, back, 2);
+		if(lcd_modify_num_env.check_num_modify)
+		{
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-2;
+					up_diff_num_idx_ths = 9;
+					break;
+				case OVER_DELAY:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					up_diff_num_idx_ths = 9;
+					break;
+				case FUNCTION_IN_OUT:
+					right_diff_num_idx_ths = 0;
+					up_diff_num_idx_ths = 1;
+					break;
+				default:
+					break;
+			}
 
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+				case OVER_DELAY:
+				case FUNCTION_IN_OUT:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_UP://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_DOWN://-
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				switch(chinese_menu_idx)
+				{
+					case FIX_VALUE:
+						chinese_idx_flush &= 0x00FE;
 						break;
-					case REVERSE_DELAY:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(82,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(88,13,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(90,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,13,my_char_W,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_garland(8, 38, function_in_out, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(63, 38, back, 2);
-
+					case OVER_DELAY:
+						chinese_idx_flush &= 0x00FD;
 						break;
-					case REVERSE_FUNCTION_IN_OUT:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(82,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(88,13,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(90,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,13,my_char_W,6,12,1);
-
-						LCD_ShowChinese_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 38, function_in_out, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(63, 38, back, 2);
+					case FUNCTION_IN_OUT:
+						chinese_idx_flush &= 0x00FB;
 						break;
+					default:
+						break;
+					
 				}
 				break;
 			default:
 				break;
 		}
-    }
 
-    return menu_evt;
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, reverse_power, 4);
+				switch(chinese_menu_idx)
+				{
+					case FIX_VALUE:
+					case OVER_DELAY:
+					case FUNCTION_IN_OUT:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, fix_value, 4);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Reverse_Power_Protection_Value(), 
+													num_array, 2, 2, num_idx_flush[0]);
+						lcd_number_display_in_order(64, 13, 5, 12, 
+											num_idx_flush[0], sizeof(num_array)-1, num_array, 2);
+						lcd_state_flush_for_num(90,13,my_char_H,6,12,1);
+						lcd_state_flush_for_num(96,13,my_char_z,6,12,1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, over_delay, 4);
+						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Reverse_Power_Protection_Delay(), 
+													num_array, 3, 2, num_idx_flush[1]);
+						lcd_number_display_in_order(64, 26, 5, 12, 
+											num_idx_flush[1], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,26,my_char_s,6,12,1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 8, 38, function_in_out, 4);
+						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Reverse_Power_Protection_Eol(), 
+													num_idx_flush[2]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63, 38, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63, 38, back, 2);
+						}
+						break;
+					default:
+						break;
+				}
+			default:
+			
+				break;
+			}
+		}
+	return menu_evt;	
 }
+
 struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
@@ -2977,129 +3351,328 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 		return menu_evt;
 	}
 
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint8_t num_idx_flush[6] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[5] = {0};
+	// uint8_t op = false;
+	uint8_t int_flag = 0;
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t msg_storage = msg_context;
+
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
     if(msg_process_signal == 1)
 	{	
-		uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(harmonic_protection_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		if(!lcd_modify_num_env.check_num_modify)
+		{
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(harmonic_protection_menu_array));
+		}
+		chinese_menu_idx = harmonic_protection_menu_array[lcd_modify_num_env.menu_type_idx];
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+
+		// uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
+		// Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
-		}
-        if(msg_context == FLUSH_SCREEN)
-        {
-			Log_d("\r\n    \r\n");
-            clear_screen();
-			msg_context = 0xff;
-			msg_lock_from_env_set(0);//unlock the msg
-        }
-		switch(msg_context)
-		{
-			case	0xff:
-			case    KEY_UP:
-    		case	KEY_DOWN:		
-    		case	KEY_LEFT:
-			case	KEY_RIGHT:
-				clear_screen();
-				LCD_ShowChinese_garland(0, 0, harmonic_protection, 4);
-				switch(harmonic_protection_menu_array[menu_type_idx])
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+
+				menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
+            	msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				lcd_the_modified_num_env_to_be_clear_all();
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				//just for test log
+				for(int j=0;j<5;j++)
 				{
-					case HARMONIC_FIX_VALUE:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+				}
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+				float_flag = app_parameter_read_Harmonic_Protection_Value();
+				Log_d("ENTER! float_flag:%f\n",float_flag);
+				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+			}
+			key_idx_for_num = 0;
+		}
+		
 
-						LCD_ShowChinese_no_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,baifenhao,6,12,1);
+         if(msg_context == FLUSH_SCREEN)
+        {
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
+            clear_screen();
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
+			msg_lock_from_env_set(0);//unlock the msg
+			chinese_menu_idx = harmonic_protection_menu_array[lcd_modify_num_env.menu_type_idx];
+			//init the array lcd_modify_num_array with value in the first chinese volume
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+					//update the value for the array lcd_modify_num_array
+					float_flag = app_parameter_read_Harmonic_Protection_Value();
+					Log_d("ENTER! float_flag:%f\n",float_flag);
+					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+					break;
+				default:
+					break;
+			
+        	}
+		
+    }
 
-						LCD_ShowChinese_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
+	if(lcd_modify_num_env.enter_flag == true){
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true;
+					switch(chinese_menu_idx)
+					{
+						case FIX_VALUE:
+							key_idx_for_num = 0;
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Harmonic_Protection_Value();
+							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+							break;
+						case OVER_DELAY:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Harmonic_Protection_Delay();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+							key_idx_for_num = 1;
+							break;
+						case FUNCTION_IN_OUT:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = app_parameter_read_Harmonic_Protection_Eol();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 2;
+							break;
+						default:
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						case FIX_VALUE:
+							// prepare for the number modify
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Harmonic_Protection_Value(0);
+							app_parameter_write_Harmonic_Protection_Value(float_flag);
+							float_flag = app_parameter_read_Harmonic_Protection_Value();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case OVER_DELAY:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Harmonic_Protection_Delay(0);
+							app_parameter_write_Harmonic_Protection_Delay(float_flag);
+							float_flag = app_parameter_read_Harmonic_Protection_Delay();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case FUNCTION_IN_OUT:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							app_parameter_write_Harmonic_Protection_Eol(0);
+							app_parameter_write_Harmonic_Protection_Eol(int_flag);
+							int_flag = app_parameter_read_Harmonic_Protection_Eol();
+							break;
+						default:
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
 
-						LCD_ShowChinese_garland(8, 38, function_in_out, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(63, 38, back, 2);
+		if(lcd_modify_num_env.check_num_modify)
+		{
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-2;
+					up_diff_num_idx_ths = 9;
+					break;
+				case OVER_DELAY:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					up_diff_num_idx_ths = 9;
+					break;
+				case FUNCTION_IN_OUT:
+					right_diff_num_idx_ths = 0;
+					up_diff_num_idx_ths = 1;
+					break;
+				default:
+					break;
+			}
 
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+				case OVER_DELAY:
+				case FUNCTION_IN_OUT:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_UP://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_DOWN://-
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				switch(chinese_menu_idx)
+				{
+					case FIX_VALUE:
+						chinese_idx_flush &= 0x00FE;
 						break;
-					case HARMONIC_DELAY:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,baifenhao,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_garland(8, 38, function_in_out, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(63, 38, back, 2);
-
+					case OVER_DELAY:
+						chinese_idx_flush &= 0x00FD;
 						break;
-					case HARMONIC_FUNCTION_IN_OUT:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,baifenhao,6,12,1);
-
-						LCD_ShowChinese_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 38, function_in_out, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(63, 38, back, 2);
-
+					case FUNCTION_IN_OUT:
+						chinese_idx_flush &= 0x00FB;
 						break;
+					default:
+						break;
+					
 				}
 				break;
 			default:
 				break;
 		}
-    }
 
-    return menu_evt;
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, harmonic_protection, 4);
+				switch(chinese_menu_idx)
+				{
+					case FIX_VALUE:
+					case OVER_DELAY:
+					case FUNCTION_IN_OUT:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, fix_value, 4);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Harmonic_Protection_Value(), 
+													num_array, 2, 2, num_idx_flush[0]);
+						lcd_number_display_in_order(64, 13, 5, 12, 
+											num_idx_flush[0], sizeof(num_array)-1, num_array, 2);
+						lcd_state_flush_for_num(90,13,my_char_H,6,12,1);
+						lcd_state_flush_for_num(96,13,my_char_z,6,12,1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, over_delay, 4);
+						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Harmonic_Protection_Delay(), 
+													num_array, 3, 2, num_idx_flush[1]);
+						lcd_number_display_in_order(64, 26, 5, 12, 
+											num_idx_flush[1], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,26,my_char_s,6,12,1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 8, 38, function_in_out, 4);
+						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Harmonic_Protection_Eol(), 
+													num_idx_flush[2]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63, 38, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63, 38, back, 2);
+						}
+						break;
+					default:
+						break;
+				}
+			default:
+			
+				break;
+			}
+		}
+	return menu_evt;	
 }
+
 struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
@@ -3115,142 +3688,311 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 		return menu_evt;
 	}
 
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint8_t num_idx_flush[6] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[5] = {0};
+	// uint8_t op = false;
+	uint8_t int_flag = 0;
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t msg_storage = msg_context;
+
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
     if(msg_process_signal == 1)
 	{	
-		uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 5, 1, sizeof(external_shunt_tripping_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		if(!lcd_modify_num_env.check_num_modify)
+		{
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 5, 1, sizeof(external_shunt_tripping_menu_array));
+		}
+		chinese_menu_idx = external_shunt_tripping_menu_array[lcd_modify_num_env.menu_type_idx];
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+
+		// uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
+		// Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+
+				menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
+            	msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				lcd_the_modified_num_env_to_be_clear_all();
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				//just for test log
+				for(int j=0;j<5;j++)
+				{
+					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+				}
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+				float_flag = app_parameter_read_External_Coordination_Delay();
+				Log_d("ENTER! float_flag:%f\n",float_flag);
+				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+			}
+			key_idx_for_num = 0;
 		}
-        if(msg_context == FLUSH_SCREEN)
+		
+
+         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
             clear_screen();
-			msg_context = 0xff;
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
 			msg_lock_from_env_set(0);//unlock the msg
-        }
-		switch(msg_context)
+			chinese_menu_idx = external_shunt_tripping_menu_array[lcd_modify_num_env.menu_type_idx];
+			//init the array lcd_modify_num_array with value in the first chinese volume
+			switch(chinese_menu_idx)
+			{
+				case TRIPPING_FIRST_DELAY:
+					//update the value for the array lcd_modify_num_array
+					float_flag = app_parameter_read_External_Coordination_Delay();
+					Log_d("ENTER! float_flag:%f\n",float_flag);
+					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+					break;
+				default:
+					break;
+			
+        	}
+		
+    }
+
+	if(lcd_modify_num_env.enter_flag == true){
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true;
+					switch(chinese_menu_idx)
+					{
+						case TRIPPING_FIRST_DELAY:
+							key_idx_for_num = 0;
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_External_Coordination_Delay();
+							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+							break;
+						case TRIPPING_SECOND_DELAY:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_External_Coordination_Delay();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+							key_idx_for_num = 1;
+							break;
+						case TRIPPING_FIRST_CLOSE:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = app_parameter_read_External_Coordination_Eol();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 2;
+							break;
+						case TRIPPING_SECOND_CLOSE:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = app_parameter_read_External_Coordination_Eol();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 2;
+							break;
+						case TRIPPING_IN_OUT:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = app_parameter_read_External_Coordination_Eol();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 2;
+							break;
+						default:
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						case TRIPPING_FIRST_DELAY:
+							// prepare for the number modify
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_External_Coordination_Delay(0);
+							app_parameter_write_External_Coordination_Delay(float_flag);
+							float_flag = app_parameter_read_External_Coordination_Delay();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case TRIPPING_SECOND_DELAY:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_External_Coordination_Delay(0);
+							app_parameter_write_External_Coordination_Delay(float_flag);
+							float_flag = app_parameter_read_External_Coordination_Delay();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case TRIPPING_FIRST_CLOSE:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							app_parameter_write_External_Coordination_Eol(0);
+							app_parameter_write_External_Coordination_Eol(int_flag);
+							int_flag = app_parameter_read_External_Coordination_Eol();
+							break;
+						case TRIPPING_SECOND_CLOSE:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							app_parameter_write_External_Coordination_Eol(0);
+							app_parameter_write_External_Coordination_Eol(int_flag);
+							int_flag = app_parameter_read_External_Coordination_Eol();
+							break;
+						case TRIPPING_IN_OUT:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							app_parameter_write_External_Coordination_Eol(0);
+							app_parameter_write_External_Coordination_Eol(int_flag);
+							int_flag = app_parameter_read_External_Coordination_Eol();
+							break;
+						default:
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
+
+		if(lcd_modify_num_env.check_num_modify)
 		{
-			case	0xff:
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case TRIPPING_FIRST_DELAY:
+				case TRIPPING_SECOND_DELAY:
+				case TRIPPING_FIRST_CLOSE:
+				case TRIPPING_SECOND_CLOSE:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					up_diff_num_idx_ths = 9;
+					break;
+				case TRIPPING_IN_OUT:
+					right_diff_num_idx_ths = 0;
+					up_diff_num_idx_ths = 1;
+					break;
+				default:
+					break;
+			}
+
+			switch(chinese_menu_idx)
+			{
+				case TRIPPING_FIRST_DELAY:
+				case TRIPPING_SECOND_DELAY:
+				case TRIPPING_FIRST_CLOSE:
+				case TRIPPING_SECOND_CLOSE:
+				case TRIPPING_IN_OUT:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_UP://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_DOWN://-
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-    		case	KEY_DOWN:		
-    		case	KEY_LEFT:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				switch(chinese_menu_idx)
+				{
+					case TRIPPING_FIRST_DELAY:
+						chinese_idx_flush &= 0x00FE;
+						break;
+					case TRIPPING_SECOND_DELAY:
+						chinese_idx_flush &= 0x00FD;
+						break;
+					case TRIPPING_FIRST_CLOSE:
+						chinese_idx_flush &= 0x00FB;
+						break;
+					case TRIPPING_SECOND_CLOSE:
+						chinese_idx_flush &= 0x00F7;
+						break;
+					case TRIPPING_IN_OUT:
+						chinese_idx_flush &= 0x00EF;
+						break;
+					default:
+						break;
+					
+				}
+				break;
+			default:
+				break;
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
 				LCD_ShowChinese_garland(0, 0, external_shunt_tripping, 4);
-				switch(external_shunt_tripping_menu_array[menu_type_idx])
+				switch(chinese_menu_idx)
 				{
 					case TRIPPING_FIRST_DELAY:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_no_garland(8, 13, tripping_first_delay, 6);
-						lcd_state_flush_for_num(82,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(88,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(94,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(100,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(106,13,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(108,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(114,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(120,13,my_char_s,6,12,1);
-
-						LCD_ShowChinese_garland(8, 26, tripping_second_delay, 6);
-						lcd_state_flush_for_num(82,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(88,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(94,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(100,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(106,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(108,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(114,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(120,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_garland(8, 38, tripping_first_close, 6);
-						lcd_state_flush_for_num(82,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(88, 38, back, 2);
-
-						LCD_ShowChinese_garland(8, 51, tripping_second_close, 6);
-						lcd_state_flush_for_num(82,51,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(88, 51, back, 2);
-						break;
 					case TRIPPING_SECOND_DELAY:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, tripping_first_delay, 6);
-						lcd_state_flush_for_num(82,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(88,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(94,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(100,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(106,13,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(108,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(114,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(120,13,my_char_s,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 26, tripping_second_delay, 6);
-						lcd_state_flush_for_num(82,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(88,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(94,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(100,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(106,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(108,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(114,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(120,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_garland(8, 38, tripping_first_close, 6);
-						lcd_state_flush_for_num(82,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(88, 38, back, 2);
-
-						LCD_ShowChinese_garland(8, 51, tripping_second_close, 6);
-						lcd_state_flush_for_num(82,51,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(88, 51, back, 2);
-						break;
 					case TRIPPING_FIRST_CLOSE:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, tripping_first_delay, 6);
-						lcd_state_flush_for_num(82,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(88,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(94,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(100,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(106,13,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(108,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(114,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(120,13,my_char_s,6,12,1);
-
-						LCD_ShowChinese_garland(8, 26, tripping_second_delay, 6);
-						lcd_state_flush_for_num(82,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(88,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(94,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(100,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(106,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(108,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(114,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(120,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 38, tripping_first_close, 6);
-						lcd_state_flush_for_num(82,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(88, 38, back, 2);
-
-						LCD_ShowChinese_garland(8, 51, tripping_second_close, 6);
-						lcd_state_flush_for_num(82,51,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(88, 51, back, 2);
-
-						break;
 					case TRIPPING_SECOND_CLOSE:
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
         				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
@@ -3258,56 +4000,86 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
         				lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
         				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
 
-						LCD_ShowChinese_garland(8, 13, tripping_first_delay, 6);
-						lcd_state_flush_for_num(82,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(88,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(94,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(100,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(106,13,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(108,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(114,13,my_num_0,5,12,1);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, tripping_first_delay, 6);
+						lcd_state_flush_for_num(81,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_External_Coordination_Delay(), 
+													num_array, 3, 2, num_idx_flush[0]);
+						lcd_number_display_in_order(87, 13, 5, 12, 
+											num_idx_flush[0], sizeof(num_array), num_array, 3);
 						lcd_state_flush_for_num(120,13,my_char_s,6,12,1);
 
-						LCD_ShowChinese_garland(8, 26, tripping_second_delay, 6);
-						lcd_state_flush_for_num(82,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(88,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(94,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(100,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(106,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(108,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(114,26,my_num_0,5,12,1);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, tripping_second_delay, 6);
+						lcd_state_flush_for_num(81,26,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_External_Coordination_Delay(), 
+													num_array, 3, 2, num_idx_flush[1]);
+						lcd_number_display_in_order(87, 26, 5, 12, 
+											num_idx_flush[1], sizeof(num_array), num_array, 3);
 						lcd_state_flush_for_num(120,26,my_char_s,6,12,1);
 
-						LCD_ShowChinese_garland(8, 38, tripping_first_close, 6);
-						lcd_state_flush_for_num(82,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(88, 38, back, 2);
 
-						LCD_ShowChinese_no_garland(8, 51, tripping_second_close, 6);
-						lcd_state_flush_for_num(82,51,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(88, 51, back, 2);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 8, 38, tripping_first_close, 6);
+						lcd_state_flush_for_num(81,38,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Harmonic_Protection_Eol(), 
+													num_idx_flush[2]);
 
+						
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  86, 38, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  86, 38, back, 2);
+						}
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x08, 8, 51, tripping_second_close, 6);
+						lcd_state_flush_for_num(81,51,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Harmonic_Protection_Eol(), 
+													num_idx_flush[3]);
+
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[3],  86, 51, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[3],  86, 51, back, 2);
+						}
 						break;
+
 					case TRIPPING_IN_OUT:
+
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
         				lcd_state_flush_for_num(98,1,my_num_2,5,12,1);
         				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
         				lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
         				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
 
-						LCD_ShowChinese_no_garland(8, 13, tripping_in_out, 4);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x10, 8, 13, function_in_out, 4);
 						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 13, back, 2);
-
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Harmonic_Protection_Eol(), 
+													num_idx_flush[4]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[4],  63, 13, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[4],  63, 13, back, 2);
+						}
+						
+						break;
+					default:
 						break;
 				}
-				break;
 			default:
+			
 				break;
+			}
 		}
-    }
-
-    return menu_evt;
+	return menu_evt;	
 }
+
 struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
@@ -3323,151 +4095,302 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 		return menu_evt;
 	}
 
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint8_t num_idx_flush[6] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[5] = {0};
+	// uint8_t op = false;
+	uint8_t int_flag = 0;
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t msg_storage = msg_context;
+
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
     if(msg_process_signal == 1)
 	{	
-		uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 4, 1, sizeof(quick_disconnect_protection_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		if(!lcd_modify_num_env.check_num_modify)
+		{
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 4, 1, sizeof(quick_disconnect_protection_menu_array));
+		}
+		chinese_menu_idx = quick_disconnect_protection_menu_array[lcd_modify_num_env.menu_type_idx];
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+
+		// uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
+		// Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+
+				menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
+            	msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				lcd_the_modified_num_env_to_be_clear_all();
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				//just for test log
+				for(int j=0;j<5;j++)
+				{
+					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+				}
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+				float_flag = app_parameter_read_Instantaneous_Overcurrent_Protection_Value();
+				Log_d("ENTER! float_flag:%f\n",float_flag);
+				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+			}
+			key_idx_for_num = 0;
 		}
-        if(msg_context == FLUSH_SCREEN)
+		
+
+         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
             clear_screen();
-			msg_context = 0xff;
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
 			msg_lock_from_env_set(0);//unlock the msg
-        }
-		switch(msg_context)
+			chinese_menu_idx = quick_disconnect_protection_menu_array[lcd_modify_num_env.menu_type_idx];
+			//init the array lcd_modify_num_array with value in the first chinese volume
+			switch(chinese_menu_idx)
+			{
+				case DISCONNECT_PROTECTION_FIX_VALUE:
+					//update the value for the array lcd_modify_num_array
+					float_flag = app_parameter_read_Instantaneous_Overcurrent_Protection_Value();
+					Log_d("ENTER! float_flag:%f\n",float_flag);
+					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+					break;
+				default:
+					break;
+			
+        	}
+		
+    }
+
+	if(lcd_modify_num_env.enter_flag == true){
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true;
+					switch(chinese_menu_idx)
+					{
+						case DISCONNECT_PROTECTION_FIX_VALUE:
+							key_idx_for_num = 0;
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Instantaneous_Overcurrent_Protection_Value();
+							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+							break;
+						case DISCONNECT_MUTATION_FIX_VALUE:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Instantaneous_Overcurrent_Mutation_Setting();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 1, 2, float_flag);
+							key_idx_for_num = 1;
+							break;
+						case DISCONNECT_DELAY:
+							float_flag = app_parameter_read_Instantaneous_Overcurrent_Delay();
+							Log_d("ENTER! 4 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+							key_idx_for_num = 2;
+							break;
+						case DISCONNECT_IN_OUT:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = app_parameter_read_Instantaneous_Overcurrent_Eol();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 3;
+							break;
+						default:
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						case DISCONNECT_PROTECTION_FIX_VALUE:
+							// prepare for the number modify
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Instantaneous_Overcurrent_Protection_Value(0);
+							app_parameter_write_Instantaneous_Overcurrent_Protection_Value(float_flag);
+							float_flag = app_parameter_read_Instantaneous_Overcurrent_Protection_Value();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case DISCONNECT_MUTATION_FIX_VALUE:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,1, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Instantaneous_Overcurrent_Mutation_Setting(0);
+							app_parameter_write_Instantaneous_Overcurrent_Mutation_Setting(float_flag);
+							float_flag = app_parameter_read_Instantaneous_Overcurrent_Mutation_Setting();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case DISCONNECT_DELAY:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Instantaneous_Overcurrent_Delay(0);
+							app_parameter_write_Instantaneous_Overcurrent_Delay(float_flag);
+							float_flag = app_parameter_read_Instantaneous_Overcurrent_Delay();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case DISCONNECT_IN_OUT:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							app_parameter_write_Instantaneous_Overcurrent_Eol(0);
+							app_parameter_write_Instantaneous_Overcurrent_Eol(int_flag);
+							int_flag = app_parameter_read_Instantaneous_Overcurrent_Eol();
+							break;
+						default:
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
+
+		if(lcd_modify_num_env.check_num_modify)
 		{
-			case	0xff:
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case DISCONNECT_PROTECTION_FIX_VALUE:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					up_diff_num_idx_ths = 9;
+					break;
+				case DISCONNECT_MUTATION_FIX_VALUE:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					up_diff_num_idx_ths = 9;
+					break;
+				case DISCONNECT_DELAY:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					up_diff_num_idx_ths = 9;
+					break;
+				case DISCONNECT_IN_OUT:
+					right_diff_num_idx_ths = 0;
+					up_diff_num_idx_ths = 1;
+					break;
+				default:
+					break;
+			}
+
+			switch(chinese_menu_idx)
+			{
+				case DISCONNECT_PROTECTION_FIX_VALUE:
+				case DISCONNECT_MUTATION_FIX_VALUE:
+				case DISCONNECT_DELAY:
+				case DISCONNECT_IN_OUT:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_UP://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_DOWN://-
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-    		case	KEY_DOWN:		
-    		case	KEY_LEFT:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
 			case	KEY_RIGHT:
-				clear_screen();
-				LCD_ShowChinese_garland(0, 0, first_over_current, 4);
-				switch(quick_disconnect_protection_menu_array[menu_type_idx])
+				switch(chinese_menu_idx)
 				{
 					case DISCONNECT_PROTECTION_FIX_VALUE:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_no_garland(8, 13, protection_fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_1x12_point,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(90,13,my_char_A,6,12,1);
-
-						LCD_ShowChinese_garland(8, 26, mutation_fix_value, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_1x12_point,5,12,1);
-						lcd_state_flush_for_num(72,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,26,my_char_A,6,12,1);
-
-						LCD_ShowChinese_garland(8, 38, over_delay, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,38,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,38,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,38,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,38,my_char_s,6,12,1);
-
-						LCD_ShowChinese_garland(8, 51, function_in_out, 4);
-						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 51, back, 2);
-
+						chinese_idx_flush &= 0x00FE;
 						break;
 					case DISCONNECT_MUTATION_FIX_VALUE:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, protection_fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_1x12_point,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(90,13,my_char_A,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 26, mutation_fix_value, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_1x12_point,5,12,1);
-						lcd_state_flush_for_num(72,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,26,my_char_A,6,12,1);
-
-						LCD_ShowChinese_garland(8, 38, over_delay, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,38,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,38,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,38,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,38,my_char_s,6,12,1);
-
-						LCD_ShowChinese_garland(8, 51, function_in_out, 4);
-						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 51, back, 2);
+						chinese_idx_flush &= 0x00FD;
 						break;
 					case DISCONNECT_DELAY:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, protection_fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_1x12_point,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(90,13,my_char_A,6,12,1);
-
-						LCD_ShowChinese_garland(8, 26, mutation_fix_value, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_1x12_point,5,12,1);
-						lcd_state_flush_for_num(72,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,26,my_char_A,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 38, over_delay, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,38,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,38,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,38,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,38,my_char_s,6,12,1);
-
-						LCD_ShowChinese_garland(8, 51, function_in_out, 4);
-						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 51, back, 2);
+						chinese_idx_flush &= 0x00FB;
 						break;
+					case DISCONNECT_IN_OUT:
+						chinese_idx_flush &= 0x00F7;
+						break;
+					default:
+						break;
+					
+				}
+				break;
+			default:
+				break;
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, quick_disconnect_protection, 4);
+				switch(chinese_menu_idx)
+				{
+					case DISCONNECT_PROTECTION_FIX_VALUE:
+					case DISCONNECT_MUTATION_FIX_VALUE:
+					case DISCONNECT_DELAY:
 					case DISCONNECT_IN_OUT:
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
         				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
@@ -3475,46 +4398,54 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
         				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
         				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
 
-						LCD_ShowChinese_garland(8, 13, protection_fix_value, 4);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, protection_fix_value, 4);
 						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_1x12_point,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,13,my_num_0,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Instantaneous_Overcurrent_Protection_Value(), 
+													num_array, 2, 2, num_idx_flush[0]);
+						lcd_number_display_in_order(64, 13, 5, 12, 
+											num_idx_flush[0], sizeof(num_array)-1, num_array, 2);
 						lcd_state_flush_for_num(90,13,my_char_A,6,12,1);
 
-						LCD_ShowChinese_garland(8, 26, mutation_fix_value, 4);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, mutation_fix_value, 4);
 						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_1x12_point,5,12,1);
-						lcd_state_flush_for_num(72,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,26,my_char_A,6,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Instantaneous_Overcurrent_Mutation_Setting(), 
+													num_array, 1, 2, num_idx_flush[1]);
+						lcd_number_display_in_order(64, 26, 5, 12, 
+											num_idx_flush[1], sizeof(num_array)-2, num_array, 1);
+						lcd_state_flush_for_num(85,26,my_char_A,6,12,1);
 
-						LCD_ShowChinese_garland(8, 38, over_delay, 4);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 8, 38, over_delay, 4);
 						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,38,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,38,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,38,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,38,my_char_s,6,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Instantaneous_Overcurrent_Mutation_Setting(), 
+													num_array, 3, 2, num_idx_flush[2]);
+						lcd_number_display_in_order(64, 38, 5, 12, 
+											num_idx_flush[2], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,38,my_char_s,6,12,1);
 
-						LCD_ShowChinese_no_garland(8, 51, function_in_out, 4);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x08, 8, 51, function_in_out, 4);
 						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 51, back, 2);
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Instantaneous_Overcurrent_Delay(), 
+													num_idx_flush[3]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[3],  63, 51, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[3],  63, 51, back, 2);
+						}
+						break;
+					default:
 						break;
 				}
-				break;
 			default:
+			
 				break;
+			}
 		}
-    }
-
-    return menu_evt;
+	return menu_evt;	
 }
+
 struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
@@ -3530,135 +4461,328 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 		return menu_evt;
 	}
 
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint8_t num_idx_flush[6] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[5] = {0};
+	// uint8_t op = false;
+	uint8_t int_flag = 0;
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t msg_storage = msg_context;
+
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
     if(msg_process_signal == 1)
 	{	
-		uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(limited_time_quick_disconnect_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		if(!lcd_modify_num_env.check_num_modify)
+		{
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(limited_time_quick_disconnect_menu_array));
+		}
+		chinese_menu_idx = limited_time_quick_disconnect_menu_array[lcd_modify_num_env.menu_type_idx];
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+
+		// uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
+		// Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
-		}
-        if(msg_context == FLUSH_SCREEN)
-        {
-			Log_d("\r\n    \r\n");
-            clear_screen();
-			msg_context = 0xff;
-			msg_lock_from_env_set(0);//unlock the msg
-        }
-		switch(msg_context)
-		{
-			case	0xff:
-			case    KEY_UP:
-    		case	KEY_DOWN:		
-    		case	KEY_LEFT:
-			case	KEY_RIGHT:
-				clear_screen();
-				LCD_ShowChinese_garland(0, 0, second_over_current, 4);
-				switch(limited_time_quick_disconnect_menu_array[menu_type_idx])
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+
+				menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
+            	msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				lcd_the_modified_num_env_to_be_clear_all();
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				//just for test log
+				for(int j=0;j<5;j++)
 				{
-					case LIMITED_FIX_VALUE:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+				}
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+				float_flag = app_parameter_read_Speed_Limit_Break_Value();
+				Log_d("ENTER! float_flag:%f\n",float_flag);
+				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+			}
+			key_idx_for_num = 0;
+		}
+		
 
-						LCD_ShowChinese_no_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_1x12_point,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(90,13,my_char_A,6,12,1);
+         if(msg_context == FLUSH_SCREEN)
+        {
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
+            clear_screen();
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
+			msg_lock_from_env_set(0);//unlock the msg
+			chinese_menu_idx = limited_time_quick_disconnect_menu_array[lcd_modify_num_env.menu_type_idx];
+			//init the array lcd_modify_num_array with value in the first chinese volume
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+					//update the value for the array lcd_modify_num_array
+					float_flag = app_parameter_read_Speed_Limit_Break_Value();
+					Log_d("ENTER! float_flag:%f\n",float_flag);
+					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+					break;
+				default:
+					break;
+			
+        	}
+		
+    }
 
-						LCD_ShowChinese_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
+	if(lcd_modify_num_env.enter_flag == true){
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true;
+					switch(chinese_menu_idx)
+					{
+						case FIX_VALUE:
+							key_idx_for_num = 0;
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Speed_Limit_Break_Value();
+							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+							break;
+						case OVER_DELAY:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Speed_Limit_Break_Delay();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+							key_idx_for_num = 1;
+							break;
+						case FUNCTION_IN_OUT:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = app_parameter_read_Speed_Limit_Break_Eol();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 2;
+							break;
+						default:
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						case FIX_VALUE:
+							// prepare for the number modify
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Speed_Limit_Break_Value(0);
+							app_parameter_write_Speed_Limit_Break_Value(float_flag);
+							float_flag = app_parameter_read_Speed_Limit_Break_Value();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case OVER_DELAY:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Speed_Limit_Break_Delay(0);
+							app_parameter_write_Speed_Limit_Break_Delay(float_flag);
+							float_flag = app_parameter_read_Speed_Limit_Break_Delay();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case FUNCTION_IN_OUT:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							app_parameter_write_Speed_Limit_Break_Eol(0);
+							app_parameter_write_Speed_Limit_Break_Eol(int_flag);
+							int_flag = app_parameter_read_Speed_Limit_Break_Eol();
+							break;
+						default:
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
 
-						LCD_ShowChinese_garland(8, 38, function_in_out, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 38, back, 2);
+		if(lcd_modify_num_env.check_num_modify)
+		{
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-2;
+					up_diff_num_idx_ths = 9;
+					break;
+				case OVER_DELAY:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					up_diff_num_idx_ths = 9;
+					break;
+				case FUNCTION_IN_OUT:
+					right_diff_num_idx_ths = 0;
+					up_diff_num_idx_ths = 1;
+					break;
+				default:
+					break;
+			}
+
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+				case OVER_DELAY:
+				case FUNCTION_IN_OUT:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_UP://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_DOWN://-
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				switch(chinese_menu_idx)
+				{
+					case FIX_VALUE:
+						chinese_idx_flush &= 0x00FE;
 						break;
-					case LIMITED_DELAY:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_1x12_point,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(90,13,my_char_A,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_garland(8, 38, function_in_out, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 38, back, 2);
+					case OVER_DELAY:
+						chinese_idx_flush &= 0x00FD;
 						break;
-					case LIMITED_IN_OUT:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_1x12_point,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(90,13,my_char_A,6,12,1);
-
-						LCD_ShowChinese_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 38, function_in_out, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 38, back, 2);
+					case FUNCTION_IN_OUT:
+						chinese_idx_flush &= 0x00FB;
 						break;
+					default:
+						break;
+					
 				}
 				break;
 			default:
 				break;
 		}
-    }
 
-    return menu_evt;
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, limited_time_quick_disconnect, 4);
+				switch(chinese_menu_idx)
+				{
+					case FIX_VALUE:
+					case OVER_DELAY:
+					case FUNCTION_IN_OUT:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, fix_value, 4);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Speed_Limit_Break_Value(), 
+													num_array, 2, 2, num_idx_flush[0]);
+						lcd_number_display_in_order(64, 13, 5, 12, 
+											num_idx_flush[0], sizeof(num_array)-1, num_array, 2);
+						lcd_state_flush_for_num(90,13,my_char_H,6,12,1);
+						lcd_state_flush_for_num(96,13,my_char_z,6,12,1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, over_delay, 4);
+						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Speed_Limit_Break_Delay(), 
+													num_array, 3, 2, num_idx_flush[1]);
+						lcd_number_display_in_order(64, 26, 5, 12, 
+											num_idx_flush[1], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,26,my_char_s,6,12,1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 8, 38, function_in_out, 4);
+						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Speed_Limit_Break_Eol(), 
+													num_idx_flush[2]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63, 38, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63, 38, back, 2);
+						}
+						break;
+					default:
+						break;
+				}
+			default:
+			
+				break;
+			}
+		}
+	return menu_evt;	
 }
+
 struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
@@ -4362,141 +5486,292 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 		return menu_evt;
 	}
 
+
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint8_t num_idx_flush[6] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[5] = {0};
+	// uint8_t op = false;
+	uint8_t int_flag = 0;
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t msg_storage = msg_context;
+
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
     if(msg_process_signal == 1)
-	{	
-		uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 4, 1, sizeof(system_power_off_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+	{
+		if(!lcd_modify_num_env.check_num_modify)
+		{
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 4, 1, sizeof(system_power_off_menu_array));
+		}
+		chinese_menu_idx = system_power_off_menu_array[lcd_modify_num_env.menu_type_idx];
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+
+				menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
+				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				lcd_the_modified_num_env_to_be_clear_all();
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				//just for test log
+				for(int j=0;j<5;j++)
+				{
+					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+				}
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+				float_flag = app_parameter_read_System_Down_Value();
+				Log_d("ENTER! float_flag:%f\n",float_flag);
+				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 3, float_flag);
+			}
+			key_idx_for_num = 0;
 		}
+		
+
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
             clear_screen();
-			msg_context = 0xff;
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
 			msg_lock_from_env_set(0);//unlock the msg
+			chinese_menu_idx = system_power_off_menu_array[lcd_modify_num_env.menu_type_idx];
+			//init the array lcd_modify_num_array with value in the first chinese volume
+			switch(chinese_menu_idx)
+			{
+				case SYSTEM_FIX_VALUE:
+					//update the value for the array lcd_modify_num_array
+					float_flag = app_parameter_read_System_Down_Value();
+					Log_d("ENTER! float_flag:%f\n",float_flag);
+					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 3, float_flag);
+					break;
+				default:
+					break;
+			}
         }
-		switch(msg_context)
+
+		if(lcd_modify_num_env.enter_flag == true){
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true;
+					switch(chinese_menu_idx)
+					{
+						case SYSTEM_FIX_VALUE:
+							key_idx_for_num = 0;
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_System_Down_Value();
+							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 3, float_flag);
+							break;
+						case SYSTEM_DELAY:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_System_Down_Delay();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+							key_idx_for_num = 1;
+							break;
+						case SYSTEM_CHECK_CURRENT:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = app_parameter_read_System_Down_Allow_trip();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 2;
+							break;
+						case SYSTEM_IN_OUT:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = app_parameter_read_System_Down_Eol();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 3;
+							break;
+						default:
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						case SYSTEM_FIX_VALUE:
+							// prepare for the number modify
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 3);
+							float_flag = float_flag+ 0.00001;
+							app_parameter_write_System_Down_Value(0);
+							app_parameter_write_System_Down_Value(float_flag);
+							float_flag = app_parameter_read_System_Down_Value();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case SYSTEM_DELAY:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_System_Down_Delay(0);
+							app_parameter_write_System_Down_Delay(float_flag);
+							float_flag = app_parameter_read_System_Down_Delay();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case SYSTEM_CHECK_CURRENT:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							app_parameter_write_System_Down_Allow_trip(0);
+							app_parameter_write_System_Down_Allow_trip(int_flag);
+							int_flag = app_parameter_read_System_Down_Allow_trip();
+							break;
+						case SYSTEM_IN_OUT:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							app_parameter_write_System_Down_Eol(0);
+							app_parameter_write_System_Down_Eol(int_flag);
+							int_flag = app_parameter_read_System_Down_Eol();
+							break;
+						default:
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
+
+		if(lcd_modify_num_env.check_num_modify)
 		{
-			case	0xff:
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case SYSTEM_FIX_VALUE:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array);
+					up_diff_num_idx_ths = 9;
+					break;
+				case SYSTEM_DELAY:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array);
+					up_diff_num_idx_ths = 9;
+					break;
+				case SYSTEM_CHECK_CURRENT:
+				case SYSTEM_IN_OUT:
+					up_diff_num_idx_ths = 1;
+					right_diff_num_idx_ths = 0;
+					break;
+				default:
+					break;
+			}
+
+			switch(chinese_menu_idx)
+			{
+				case SYSTEM_FIX_VALUE:
+				case SYSTEM_DELAY:
+				case SYSTEM_CHECK_CURRENT:
+				case SYSTEM_IN_OUT:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_UP://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_DOWN://-
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-    		case	KEY_DOWN:		
-    		case	KEY_LEFT:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				switch(chinese_menu_idx)
+				{
+					case SYSTEM_FIX_VALUE:
+						chinese_idx_flush &= 0x00FE;
+						break;
+					case SYSTEM_DELAY:
+						chinese_idx_flush &= 0x00FD;
+						break;
+					case SYSTEM_CHECK_CURRENT:
+						chinese_idx_flush &= 0x00FB;
+						break;
+					case SYSTEM_IN_OUT:
+						chinese_idx_flush &= 0x00F7;
+					default:
+						break;
+					
+				}
+				break;
+			default:
+				break;
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
 				LCD_ShowChinese_garland(0, 0, system_power_off, 4);
-				switch(system_power_off_menu_array[menu_type_idx])
+				switch(chinese_menu_idx)
 				{
 					case SYSTEM_FIX_VALUE:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_no_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_1x12_point,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(90,13,my_char_V,6,12,1);
-
-						LCD_ShowChinese_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_garland(8, 38, check_current, 3);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 38, back, 2);
-
-						LCD_ShowChinese_garland(8, 51, function_in_out, 4);
-						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 51, back, 2);
-
-						break;
 					case SYSTEM_DELAY:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_1x12_point,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(90,13,my_char_V,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_garland(8, 38, check_current, 3);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 38, back, 2);
-
-						LCD_ShowChinese_garland(8, 51, function_in_out, 4);
-						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 51, back, 2);
-
-						break;
 					case SYSTEM_CHECK_CURRENT:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_1x12_point,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(90,13,my_char_V,6,12,1);
-
-						LCD_ShowChinese_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 38, check_current, 3);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 38, back, 2);
-
-						LCD_ShowChinese_garland(8, 51, function_in_out, 4);
-						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 51, back, 2);
-
-						break;
 					case SYSTEM_IN_OUT:
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
         				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
@@ -4504,40 +5779,55 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
         				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
         				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
 
-						LCD_ShowChinese_garland(8, 13, fix_value, 4);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, fix_value, 4);
 						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_1x12_point,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(84,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(90,13,my_char_V,6,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_System_Down_Value(), 
+													num_array, 2, 3, num_idx_flush[0]);
+						lcd_number_display_in_order(64, 13, 5, 12, 
+											num_idx_flush[0], sizeof(num_array), num_array, 2);
+						lcd_state_flush_for_num(96,13,my_char_A,6,12,1);
 
-						LCD_ShowChinese_garland(8, 26, over_delay, 4);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, over_delay, 4);
 						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_System_Down_Delay(), 
+													num_array, 3, 2, num_idx_flush[1]);
+						lcd_number_display_in_order(64, 26, 5, 12, 
+											num_idx_flush[1], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,26,my_char_s,6,12,1);
 
-						LCD_ShowChinese_garland(8, 38, check_current, 3);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 8, 38, check_current, 3);
 						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 38, back, 2);
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_System_Down_Allow_trip(), 
+													num_idx_flush[2]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63, 38, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63, 38, back, 2);
+						}
 
-						LCD_ShowChinese_no_garland(8, 51, function_in_out, 4);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x08, 8, 51, function_in_out, 4);
 						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 51, back, 2);
-
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_System_Down_Eol(), 
+													num_idx_flush[3]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[3],  64, 51, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[3],  64, 51, back, 2);
+						}
+						break;
+					default:
 						break;
 				}
-				break;
 			default:
 				break;
 		}
-    }
+	}
 
     return menu_evt;
 }
@@ -5065,138 +6355,318 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 		return menu_evt;
 	}
 
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint8_t num_idx_flush[6] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[5] = {0};
+	// uint8_t op = false;
+	uint8_t int_flag = 0;
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t msg_storage = msg_context;
+
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
     if(msg_process_signal == 1)
-	{	
-		uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(power_recover_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+	{
+		if(!lcd_modify_num_env.check_num_modify)
+		{
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(power_recover_menu_array));
+		}
+		chinese_menu_idx = power_recover_menu_array[lcd_modify_num_env.menu_type_idx];
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+
+				menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
+				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				lcd_the_modified_num_env_to_be_clear_all();
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				//just for test log
+				for(int j=0;j<5;j++)
+				{
+					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+				}
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+				float_flag = app_parameter_read_Power_recovery_Value();
+				Log_d("ENTER! float_flag:%f\n",float_flag);
+				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+			}
+			key_idx_for_num = 0;
 		}
+		
+
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
             clear_screen();
-			msg_context = 0xff;
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
 			msg_lock_from_env_set(0);//unlock the msg
+			chinese_menu_idx = power_recover_menu_array[lcd_modify_num_env.menu_type_idx];
+			//init the array lcd_modify_num_array with value in the first chinese volume
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+					//update the value for the array lcd_modify_num_array
+					float_flag = app_parameter_read_Power_recovery_Value();
+					Log_d("ENTER! float_flag:%f\n",float_flag);
+					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+					break;
+				default:
+					break;
+			}
         }
-		switch(msg_context)
-		{
-			case	0xff:
-			case    KEY_UP:
-    		case	KEY_DOWN:		
-    		case	KEY_LEFT:
-			case	KEY_RIGHT:
-				clear_screen();
-				LCD_ShowChinese_garland(0, 0, power_recover_closing, 6);
-				switch(power_recover_menu_array[menu_type_idx])
+
+		if(lcd_modify_num_env.enter_flag == true){
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
 				{
-					case POWER_FIX_VALUE:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+					lcd_modify_num_env.check_num_modify = true;
+					switch(chinese_menu_idx)
+					{
+						case FIX_VALUE:
+							key_idx_for_num = 0;
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Power_recovery_Value();
+							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+							break;
+						case OVER_DELAY:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Power_recovery_Delay();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+							key_idx_for_num = 1;
+							break;
+						case FUNCTION_IN_OUT:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = app_parameter_read_Power_recovery_Eol();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 2;
+							break;
+						default:
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						case FIX_VALUE:
+							// prepare for the number modify
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Power_recovery_Value(0);
+							app_parameter_write_Power_recovery_Value(float_flag);
+							float_flag = app_parameter_read_Power_recovery_Value();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case OVER_DELAY:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Power_recovery_Delay(0);
+							app_parameter_write_Power_recovery_Delay(float_flag);
+							float_flag = app_parameter_read_Power_recovery_Delay();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case FUNCTION_IN_OUT:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							app_parameter_write_Power_recovery_Eol(0);
+							app_parameter_write_Power_recovery_Eol(int_flag);
+							int_flag = app_parameter_read_Power_recovery_Eol();
+							break;
+						default:
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
 
-						LCD_ShowChinese_no_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(82,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(88,13,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(90,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,13,my_char_W,6,12,1);
+		if(lcd_modify_num_env.check_num_modify)
+		{
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-2;
+					up_diff_num_idx_ths = 9;
+					break;
+				case OVER_DELAY:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					up_diff_num_idx_ths = 9;
+					break;
+				case FUNCTION_IN_OUT:
+					up_diff_num_idx_ths = 1;
+					right_diff_num_idx_ths = 0;
+					break;
+				default:
+					break;
+			}
 
-						LCD_ShowChinese_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
+			switch(chinese_menu_idx)
+			{
+				case FIX_VALUE:
+				case OVER_DELAY:
+				case FUNCTION_IN_OUT:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_UP://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_DOWN://-
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+		}
 
-						LCD_ShowChinese_garland(8, 38, function_in_out, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 38, back, 2);
-
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				switch(chinese_menu_idx)
+				{
+					case FIX_VALUE:
+						chinese_idx_flush &= 0x00FE;
 						break;
-					case POWER_DELAY:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(82,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(88,13,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(90,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,13,my_char_W,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_garland(8, 38, function_in_out, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 38, back, 2);
-
+					case OVER_DELAY:
+						chinese_idx_flush &= 0x00FD;
 						break;
-					case POWER_IN_OUT:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						LCD_ShowChinese_garland(8, 13, fix_value, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(82,13,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(88,13,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(90,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,13,my_char_W,6,12,1);
-
-						LCD_ShowChinese_garland(8, 26, over_delay, 4);
-						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(64,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(70,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(76,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(82,26,my_1x12_point,1,12,1);
-        				lcd_state_flush_for_num(84,26,my_num_0,5,12,1);
-        				lcd_state_flush_for_num(90,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
-
-						LCD_ShowChinese_no_garland(8, 38, function_in_out, 4);
-						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
-						LCD_ShowChinese_garland(64, 38, back, 2);
-
+					case FUNCTION_IN_OUT:
+						chinese_idx_flush &= 0x00FB;
 						break;
+					default:
+						break;
+					
 				}
 				break;
 			default:
 				break;
 		}
-    }
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, power_recover, 6);
+				switch(chinese_menu_idx)
+				{
+					case FIX_VALUE:
+					case OVER_DELAY:
+					case FUNCTION_IN_OUT:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, fix_value, 4);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Power_recovery_Value(), 
+													num_array, 2, 2, num_idx_flush[0]);
+						lcd_number_display_in_order(64, 13, 5, 12, 
+											num_idx_flush[0], sizeof(num_array)-1, num_array, 2);
+						lcd_state_flush_for_num(90,13,my_char_A,6,12,1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, over_delay, 4);
+						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Power_recovery_Delay(), 
+													num_array, 3, 2, num_idx_flush[1]);
+						lcd_number_display_in_order(64, 26, 5, 12, 
+											num_idx_flush[1], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,26,my_char_s,6,12,1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 8, 38, function_in_out, 4);
+						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Power_recovery_Eol(), 
+													num_idx_flush[2]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63, 38, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63, 38, back, 2);
+						}
+						break;
+					default:
+						break;
+				}
+			default:
+				break;
+		}
+	}
 
     return menu_evt;
 }
