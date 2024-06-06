@@ -925,7 +925,7 @@ void lcd_number_display_in_order(uint8_t hang, uint8_t lie, uint8_t length, uint
 	}
 }
 
-void lcd_showchinese_no_garland_or_garland(uint8_t garland_flush_target,
+void lcd_showchinese_no_garland_or_garland(uint32_t garland_flush_target,
 											uint8_t x, uint8_t y, uint8_t *s, uint8_t chinese_num)
 {
 	if(garland_flush_target == false)

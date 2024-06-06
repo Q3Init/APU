@@ -21,7 +21,7 @@ extern void lcd_chinese_modify_display_in_order(uint8_t num_flush_idx,
 										uint8_t x, uint8_t y, uint8_t *s, uint8_t chinese_num);
 extern void lcd_number_display_in_order(uint8_t hang, uint8_t lie, uint8_t length, uint8_t high,
 							uint8_t num_idx_flush, uint16_t array_length, uint8_t *ptr, uint8_t point_pos);
-extern void lcd_showchinese_no_garland_or_garland(uint8_t garland_flush_target,
+extern void lcd_showchinese_no_garland_or_garland(uint32_t garland_flush_target,
 											uint8_t x, uint8_t y, uint8_t *s, uint8_t chinese_num);
 extern void lcd_number_modify_array_get(float32 *float_flag, float32 value, uint8_t *array_ptr, 
 								uint8_t int_convert_length, uint8_t point_convert_length, uint8_t num_flush_idx);
