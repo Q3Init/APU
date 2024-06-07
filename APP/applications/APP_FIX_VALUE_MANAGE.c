@@ -1209,7 +1209,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
         {
 			Log_i("\r\n FLUSH_SCREEN   \r\n");
             clear_screen();
-			chinese_menu_idx = over_voltage_protection_array[lcd_modify_num_env.menu_type_idx];
+			chinese_menu_idx = over_voltage_protection_array[lcd_modify_num_env.menu_type_idx];// 数组 todo
 			lcd_modify_num_env.menu_type_idx = 0;
 			msg_storage = LCD_FLUSH_SCREEN_IND;
 			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
@@ -1220,9 +1220,9 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 			{
 				case FIRST_FIX_VALUE:
 					//update the value for the array lcd_modify_num_array
-					float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Value();
+					float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Value(); // SRAM todo
 					Log_d("ENTER! float_flag:%f\n",float_flag);
-					my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+					my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
 					break;
 				default:
 					break;
@@ -1235,7 +1235,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 				lcd_modify_num_env.enter_key_ind++;
 				if(lcd_modify_num_env.enter_key_ind == 1)
 				{
-					lcd_modify_num_env.check_num_modify = true;
+					lcd_modify_num_env.check_num_modify = true; //让中文光标停住
 					switch(chinese_menu_idx)
 					{
 						case FIRST_FIX_VALUE:
@@ -1243,7 +1243,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Value();
 							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
-							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag); // 3是整数位数，2是小数位数
 							break;
 						case FIRST_DELAY:
 							//update the value for the array lcd_modify_num_array
@@ -1458,6 +1458,8 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 				break;
 		}
 
+		//LCD driver
+		//chinese_menu_idx  中文目录的索引下标
 		switch(msg_storage)
 		{
 			case	LCD_FLUSH_SCREEN_IND:
@@ -1466,6 +1468,8 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
+
+				// 4是显示汉字的数量
 				LCD_ShowChinese_garland(0, 0, over_voltage_protection, 4);
 				switch(chinese_menu_idx)
 				{
@@ -1516,9 +1520,9 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 						// LCD_ShowChinese_no_garland(8, 13, first_fix_value, 4);
 						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, app_parameter_read_Overvoltage_protection_LV1_One_Value(), 
-													num_array, 3, 2, num_idx_flush[0]);
+													num_array, 3, 2, num_idx_flush[0]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
 						lcd_number_display_in_order(63, 13, 5, 12, 
-											num_idx_flush[0], sizeof(num_array), num_array, 3);
+											num_idx_flush[0], sizeof(num_array), num_array, 3); //一段定值的数值显示部分
 						lcd_state_flush_for_num(95,13,my_char_V,6,12,1);
 
 
