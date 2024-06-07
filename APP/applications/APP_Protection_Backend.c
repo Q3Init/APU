@@ -18,7 +18,10 @@
 #include "Lib_Log_Util.h"
 #include "MCAL_APM32.h"
 
-// #define FFT_HANNING_WIN_USED    
+// #define PROJECT_BUILD_TIME      __DATE__ " " __TIME__
+// #pragma message("Time:["PROJECT_BUILD_TIME"]") 
+
+#define FFT_HANNING_WIN_USED    
 
 #ifdef FFT_HANNING_WIN_USED
 //256点汉宁窗
@@ -88,7 +91,8 @@ float32 APP_Get_Voltage_Uc(void)
  */
 float32 APP_Get_Voltage_Uout(void)
 {
-    return pBk->value.line_uout;
+    pBk->value.volt_uout = pBk->value.line_uout / 1.73205;
+    return pBk->value.volt_uout;
 }
 
 /**
@@ -207,6 +211,26 @@ uint16 APP_Relay_Get_State(void)
     return pBk->relay_state;
 }
 
+uint8 APP_Relay_Get_State_Group_1(void)
+{
+    return pBk->relay_state & (1 << APP_RELAY_CHANNEL_HC);
+}
+
+uint8 APP_Relay_Get_State_Group_2(void)
+{
+    return pBk->relay_state & (1 << APP_RELAY_CHANNEL_TQ);
+}
+
+uint8 APP_Relay_Get_State_Group_3(void)
+{
+    return pBk->relay_state & (1 << APP_RELAY_CHANNEL_D01);
+}
+
+uint8 APP_Relay_Get_State_Group_4(void)
+{
+    return pBk->relay_state & (1 << APP_RELAY_CHANNEL_D02);
+}
+
 /**
  * @brief 谐波失真度 UA
  * 
@@ -299,17 +323,17 @@ float32 APP_Get_Apparent_Power_C(void)
 
 float32 APP_Get_Active_Power_Total(void)
 {
-    return pBk->value.apparent_power_total;
+    return pBk->value.active_power_a + pBk->value.active_power_b + pBk->value.active_power_c;
 }
 
 float32 APP_Get_Reactive_Power_Total(void)
 {
-    return pBk->value.reactive_power_total;
+    return pBk->value.reactive_power_a + pBk->value.reactive_power_b + pBk->value.reactive_power_c;
 }
 
 float32 APP_Get_Apparent_Power_Total(void)
 {
-    return pBk->value.apparent_power_total;
+    return pBk->value.apparent_power_a + pBk->value.apparent_power_b + pBk->value.apparent_power_c;     
 }
 
 /**
@@ -334,9 +358,9 @@ static boolean APP_Relay_Control(uint16 channel, boolean on)
             BSW_Dio_WriteBitValue(portList[i], pinList[i], (on == true) ? BIT_SET : BIT_RESET);
             if (((on == true) ? BIT_RESET : BIT_SET) == BSW_Dio_ReadInputBit(portList[i], pinList[i])) {
                 ret = false;
-                pBk->relay_state &= ~(1 << i);
-            } else {
-                pBk->relay_state |= (1 << i);                
+                pBk->relay_state |= (1 << i);  
+            } else {                
+                pBk->relay_state &= ~(1 << i);              
             }
         }
     }
@@ -355,7 +379,7 @@ static boolean APP_Relay_Control(uint16 channel, boolean on)
  */
 float32 APP_Get_Fundamental_Freq(void)
 {
-    return pBk->value.fundamental_freq;
+    return MIDDLE_OF_THREE(pBk->value.freq_ua, pBk->value.freq_ub, pBk->value.freq_uc);
 }
 
 /**
@@ -365,6 +389,11 @@ float32 APP_Get_Fundamental_Freq(void)
  */
 float32 APP_Get_Reverse_Power(void)
 {
+    if (APP_Get_Active_Power_Total() < 0) {
+        pBk->value.reverse_power = ABS_FLOAT(APP_Get_Active_Power_Total());
+    } else {
+        pBk->value.reverse_power = 0;
+    }
     return pBk->value.reverse_power;
 }
 
@@ -375,7 +404,7 @@ float32 APP_Get_Reverse_Power(void)
  */
 float32 APP_Get_Harmonic_Volt_Distortion(void)
 {   
-    return pBk->value.harmonic_volt_distortion;
+    return MIDDLE_OF_THREE(pBk->value.harmonic_distortion_ua, pBk->value.harmonic_distortion_ub, pBk->value.harmonic_distortion_uc);
 }
 
 float32 APP_Get_Phase_Ua(void)
@@ -682,49 +711,54 @@ uint8 APP_Remote_Signal_Input_Read_Closing_And_Locking(void)
     }
 }
 
-static float32 APP_Linear_Solution(uint16_t x1, float y1, uint16_t x2, float y2, uint16_t x)
+static boolean APP_Linear_Solution(float32 x1, float32 y1, float32 x2, float32 y2, float32 x, float32 *y_out)
 {
-    float k, b, y;	
+    float32 k = 0.0, b = 0.0;	
 
-	k = (float)(y1 - y2)/(x1 - x2);
+    if (ISZERO_FLOAT(x1) || (y_out == NULL))
+        return false;
+        
+	k = (float32)(y1 - y2)/(x1 - x2);
 	b = y1 - k*x1;
-	y = k*x + b;	
+	*y_out = k*x + b;	
 	
-	return y;
+	return true;
 }
 
-static int APP_Find_Coef_Close_Value(uint16 val, uint8 down_flag, APP_Coeff_t *array, uint8 num)
+static int APP_Find_Coef_Close_Value(float32 val, uint8 down_flag, APP_Coeff_t *array, uint8 num)
 {
     int i = 0, inx = 0;
-    uint16 sub = 0, temp = 0;
+    float32 sub = 0, temp = 0;
 
     if (array == NULL)
         return -1;
 
     for (i = 0, inx = -1; i < num; i++) {
-        if (down_flag) {
-            if (val >= array[i].coeff_value) {
-                temp = val - array[i].coeff_value;
-                if (-1 == inx) {
-                    sub = temp;
-                    inx = i;
-                } else {
-                    if (sub > temp) {
+        if (!ISZERO_FLOAT(array[i].coeff_value) || !ISZERO_FLOAT(array[i].coeff_option)) {
+            if (down_flag) {
+                if (val >= array[i].coeff_value) {
+                    temp = val - array[i].coeff_value;
+                    if (-1 == inx) {
                         sub = temp;
                         inx = i;
+                    } else {
+                        if (sub > temp) {
+                            sub = temp;
+                            inx = i;
+                        }
                     }
                 }
-            }
-        } else {
-            if (val <= array[i].coeff_value) {
-                temp = array[i].coeff_value - val;
-                if (-1 == inx) {
-                    sub = temp;
-                    inx = i;
-                } else {
-                    if (sub > temp) {
+            } else {
+                if (val <= array[i].coeff_value) {
+                    temp = array[i].coeff_value - val;
+                    if (-1 == inx) {
                         sub = temp;
                         inx = i;
+                    } else {
+                        if (sub > temp) {
+                            sub = temp;
+                            inx = i;
+                        }
                     }
                 }
             }
@@ -736,24 +770,13 @@ static int APP_Find_Coef_Close_Value(uint16 val, uint8 down_flag, APP_Coeff_t *a
 
 static float32 APP_Calibration_Conversion(APP_Coeff_t *p_coeff, uint8 cali_max, float32 src_data)
 {
-    uint16 x1, x2;
+    float32 x1, x2;
     float32 y1, y2;
     float32 result_value = 0.00;
-    int inx_l = 0, inx_h = 0, i = 0;
-    uint8 *p_check = (uint8 *)p_coeff;
+    int inx_l = 0, inx_h = 0;
 
     if (p_coeff == NULL)
         return src_data;
-
-    // 检测有无校准数据
-    for (i = 0; i < sizeof(APP_Coeff_t) * cali_max; i++) {
-        if (p_check[i] != 0x00) {
-            break;
-        }
-    }
-    if (i == sizeof(APP_Coeff_t) * cali_max) {
-        return src_data;
-    }
 
     inx_l = APP_Find_Coef_Close_Value(src_data, 1, p_coeff, cali_max);
     inx_h = APP_Find_Coef_Close_Value(src_data, 0, p_coeff, cali_max);
@@ -777,7 +800,9 @@ static float32 APP_Calibration_Conversion(APP_Coeff_t *p_coeff, uint8 cali_max, 
             x2 = p_coeff[inx_h].coeff_value;
             y2 = p_coeff[inx_h].coeff_option;
             
-            result_value = APP_Linear_Solution(x1, y1, x2, y2, src_data);
+            if (false == APP_Linear_Solution(x1, y1, x2, y2, src_data, &result_value)) {
+                result_value = src_data;
+            }
         }
     }
 
@@ -794,9 +819,8 @@ static float32 APP_Calibration_Conversion(APP_Coeff_t *p_coeff, uint8 cali_max, 
  * @param fft_point - 需要计算的FFT点数
  * @return boolean - true: 计算成功; false: 计算失败
  */
-boolean APP_RFFT_Calc(arm_rfft_fast_instance_f32 *s, float32 * p_in, float32 * p_out, float32 *p_mag_out, uint32 fft_point)
+boolean APP_RFFT_Fast_Calc(arm_rfft_fast_instance_f32 *s, float32 * p_in, float32 * p_out, float32 *p_mag_out, uint32 fft_point)
 {
-    //int i = 0;
     arm_status st;
 
     if (s == NULL || p_in == NULL || p_out == NULL || p_mag_out == NULL || fft_point == 0) {
@@ -804,9 +828,15 @@ boolean APP_RFFT_Calc(arm_rfft_fast_instance_f32 *s, float32 * p_in, float32 * p
     }
 
 #ifdef FFT_HANNING_WIN_USED
+    int i = 0;
+    float32 sum = 0.0;
+    for (i = 0; i < 256; i++) {
+        sum += hanning_win_table[i];
+    }   
     /* 添加汉宁窗，过滤噪声与干扰 */
     for (i = 0; i < fft_point; i++) {
-        p_in[i] = p_in[i] * hanning_win_table[i];
+        // p_in[i] = p_in[i] * hanning_win_table[i];
+        p_in[i] *= hanning_win_table[i]/sum;
     }
 #endif
 
@@ -820,7 +850,7 @@ boolean APP_RFFT_Calc(arm_rfft_fast_instance_f32 *s, float32 * p_in, float32 * p
     arm_cmplx_mag_f32(p_out, p_mag_out, fft_point);
     // Log_d("Result:\n");
     // for (i = 0; i < fft_point/2; i++) {
-	// 	Log_d(": %d, %.4f\n", i, p_mag_out[i]);
+	// 	Log_d(": %d, mag=%.4f,out=%.4f\n", i, p_mag_out[i], p_out[i]);
     // }
     // Log_d("END!\n");
 
@@ -851,95 +881,69 @@ float32 APP_RFFT_Get_Freq(float32 *p_mag, uint32 max_index, uint32 fft_point, fl
         scale = p_mag[max_index - 1] / (p_mag[max_index - 1] + p_mag[max_index]);
         calc = (float32) max_index - scale;
     }
-    
-    // 频谱插值，提高频率精度
-    // float32 mag0 = (max_index > 0) ? p_mag[max_index - 1] : 0.0f;
-    // float32 mag1 = p_mag[max_index];
-    // float32 mag2 = (max_index < (fft_point - 1)) ? p_mag[max_index + 1] : 0.0f;
-
-    // float32 delta = 0.5 * ((mag0 - mag2) / (mag0 - 2.0f * mag1 + mag2));
-    // calc = max_index + delta; 
-
+  
     return (float32)calc * fs / (float32)fft_point;
+}
+
+void APP_RFFT_Solution_Deal(float32 *p_cmplx_buff, float32 *p_mag, uint32 max_index, float32 fs, uint32 fft_point, float32 *p_freq, float32 *p_phase, float32 *p_amplitude, float32 *p_harmonic)
+{
+    int i = 0;
+    float32 harmonic_sum_squares = 0.0;
+    uint32 harmonic_cnt = 0;
+    float32 scale = p_mag[max_index + 1] / p_mag[max_index];
+    float32 dk = (2 * scale - 1) / (1 + scale);
+    float32 phase = atan2(p_cmplx_buff[2 * max_index + 1], p_cmplx_buff[2 * max_index]) * 180.0 /PI;
+
+    if (p_freq != NULL) {
+        *p_freq = (max_index + dk) * fs / fft_point;  
+    }
+
+    if (p_amplitude != NULL) {
+        *p_amplitude = p_mag[max_index] * (2 * PI * dk) * (1 - dk * dk) / arm_sin_f32(PI * dk);
+    } 
+
+    if (p_phase != NULL) {
+        phase = phase - dk * 180 * (fft_point - 1) / fft_point + 90;
+        if (phase > 180) {
+            phase -= 360;
+        } else if (phase < (-180)) {
+            phase += 360;
+        }
+        *p_phase = phase;
+    }
+
+    if (p_harmonic != NULL) {
+        for (i = 2; i < MAX_HARMONIC_ORDER; i++) {
+            harmonic_cnt = i * max_index;
+            if (harmonic_cnt > (fft_point / 2.0f)) {
+                break;
+            }
+            harmonic_sum_squares += p_mag[harmonic_cnt] * p_mag[harmonic_cnt];
+        }
+        *p_harmonic = sqrt(harmonic_sum_squares) / p_mag[max_index];
+    }
+
+    Log_d("scale=%.4f, dk=%.4f, freq=%.4f, Amp=%.4f, Phase=%.4f, Harmonic=%.4f\n", 
+        scale, dk, *p_freq, *p_amplitude, *p_phase, *p_harmonic);
+    
 }
 
 float32 APP_RFFT_Get_Phase(float32 *p_cmplx_buff, float32 *p_mag, uint32 max_index, uint32 fft_point)
 {
-    #if 1
     // 三点抛物线法
     float32 mag0 = (max_index > 0) ? p_mag[max_index - 1] : 0.0f;
     float32 mag1 = p_mag[max_index];
     float32 mag2 = (max_index < (fft_point - 1)) ? p_mag[max_index + 1] : 0.0f;
     float32 delta = 0.5 * ((mag0 - mag2) / (mag0 - 2.0f * mag1 + mag2));
-    float32 phase0 = atan(p_cmplx_buff[2 * max_index - 1] / p_cmplx_buff[2 * max_index - 2]) * 180.0 /PI;
-    float32 phase1 = atan(p_cmplx_buff[2 * max_index + 1] / p_cmplx_buff[2 * max_index]) * 180.0 /PI;
-    float32 phase2 = atan(p_cmplx_buff[2 * max_index + 3] / p_cmplx_buff[2 * max_index + 2]) * 180.0 /PI;
+    float32 phase0 = atan2(p_cmplx_buff[2 * max_index - 1], p_cmplx_buff[2 * max_index - 2]) * 180.0 /PI;
+    float32 phase1 = atan2(p_cmplx_buff[2 * max_index + 1], p_cmplx_buff[2 * max_index]) * 180.0 /PI;
+    float32 phase2 = atan2(p_cmplx_buff[2 * max_index + 3], p_cmplx_buff[2 * max_index + 2]) * 180.0 /PI;
     
     float32 phase = phase1 + delta * (ABS_FLOAT(phase2 - phase0)) / 2.0f;
-    // float32 phase = phase1 + delta * (ABS_FLOAT(phase2) + ABS_FLOAT(phase0)) / 2.0f;
-    // Log_d("Phase = %.4f, Calc Phase = %.4f, delta=%.4f, p0=%.4f, p1=%.4f, p2=%.4f\n", 
-    //     phase1, phase, delta, phase0, phase1, phase2);
-    return phase;
-    #endif
-
-    #if 0
-    // 三点抛物线法
-    float32 mag0 = (max_index > 0) ? p_mag[max_index - 1] : 0.0f;
-    float32 mag1 = p_mag[max_index];
-    float32 mag2 = (max_index < (fft_point - 1)) ? p_mag[max_index + 1] : 0.0f;
-    float32 delta = 0.5 * ((mag0 - mag2) / (mag0 - 2.0f * mag1 + mag2));
-    float32 phase0 = atan(p_cmplx_buff[2 * max_index - 1] / p_cmplx_buff[2 * max_index - 2]) * 180.0 /PI;
-    float32 phase1 = atan(p_cmplx_buff[2 * max_index + 1] / p_cmplx_buff[2 * max_index]) * 180.0 /PI;
-    float32 phase2 = atan(p_cmplx_buff[2 * max_index + 3] / p_cmplx_buff[2 * max_index + 2]) * 180.0 /PI;
+    Log_d("Phase = %.4f, Calc Phase = %.4f, delta=%.4f, p0=%.4f, p1=%.4f, p2=%.4f\n", 
+        phase1, phase, delta, phase0, phase1, phase2);
     
-    float32 phase = phase1 + delta * (phase2 - phase0) / 2.0f;
-    Log_d("Phase = %.4f, Calc Phase = %.4f\n", phase1, phase);
     return phase;
-    #endif
-
-    #if 0
-    // 三次样条插值
-    float32 mag0 = (max_index > 0) ? p_mag[max_index - 1] : 0.0f;
-    float32 mag1 = p_mag[max_index];
-    float32 mag2 = (max_index < (fft_point - 1)) ? p_mag[max_index + 1] : 0.0f;
-    float32 mag3 = (max_index < (fft_point - 2)) ? p_mag[max_index + 2] : 0.0f;
-
-    float32 a = 0.5f * mag0 + 1.5f * mag1 - 1.5f * mag2 + 0.5f * mag3;
-    float32 b = mag0 - 2.5 * mag1 + 2.0f * mag2 - 0.5f * mag3;
-    float32 c = -0.5f * mag0 + 0.5f * mag2;
-    float32 d = mag1;
-
-    float32 delta = -b / (3 * a);
-
-    float32 phase0 = atan(p_cmplx_buff[2 * max_index - 1] / p_cmplx_buff[2 * max_index - 2]) * 180.0 /PI;
-    float32 phase1 = atan(p_cmplx_buff[2 * max_index + 1] / p_cmplx_buff[2 * max_index]) * 180.0 /PI;
-    float32 phase2 = atan(p_cmplx_buff[2 * max_index + 3] / p_cmplx_buff[2 * max_index + 2]) * 180.0 /PI;
-    
-    float32 phase = phase1 + delta * (phase2 - phase0) / 2.0f;
-    Log_d("Phase = %.4f, Calc Phase = %.4f\n", phase1, phase);
-    // return phase;
-
-    #endif
-
-    #if 0
-    // 高斯插值法
-     // Get the magnitudes of the bins
-    float32_t mag0 = (p_mag > 0) ? p_mag[max_index - 1] : 0.0f;
-    float32_t mag1 = p_mag[max_index];
-    float32_t mag2 = (max_index < fft_point - 1) ? p_mag[max_index + 1] : 0.0f;
-
-    // Gaussian interpolation formula to find peak position
-    float32_t delta = (logf(mag0) - logf(mag2)) / (2 * (logf(mag0) - 2 * logf(mag1) + logf(mag2)));
-    
-    float32 phase0 = atan(p_cmplx_buff[2 * max_index - 1] / p_cmplx_buff[2 * max_index - 2]) * 180.0 /PI;
-    float32 phase1 = atan(p_cmplx_buff[2 * max_index + 1] / p_cmplx_buff[2 * max_index]) * 180.0 /PI;
-    float32 phase2 = atan(p_cmplx_buff[2 * max_index + 3] / p_cmplx_buff[2 * max_index + 2]) * 180.0 /PI;
-
-    float32 phase = phase1 + delta * (phase2 - phase0) / 2.0f;
-    Log_d("Phase = %.4f, Calc Phase = %.4f\n", phase1, phase);
-    return phase;
-
-    #endif
 }
 
 float32 APP_RFFT_Get_Amplitude(float32 *p_mag, uint32 max_index, uint32 fft_point)
@@ -951,7 +955,10 @@ float32 APP_RFFT_Get_Amplitude(float32 *p_mag, uint32 max_index, uint32 fft_poin
     uint8 hanning_scale = 1;
 
     min_point = (max_index < RFFT_ENERGY_COMP_MAX_POINT) ? 1 : (max_index - RFFT_ENERGY_COMP_MAX_POINT);
-    max_point = (max_index + RFFT_ENERGY_COMP_MAX_POINT) > (fft_point/2) ? (fft_point/2) : (max_index + RFFT_ENERGY_COMP_MAX_POINT);
+    max_point = (max_index + (max_index - min_point)) > (fft_point/2) ? (fft_point/2) : (max_index + (max_index - min_point));
+
+    // min_point = (max_index < RFFT_ENERGY_COMP_MAX_POINT) ? 1 : (max_index - RFFT_ENERGY_COMP_MAX_POINT);
+    // max_point = (max_index + RFFT_ENERGY_COMP_MAX_POINT) > (fft_point/2) ? (fft_point/2) : (max_index + RFFT_ENERGY_COMP_MAX_POINT);
 
 #ifdef FFT_HANNING_WIN_USED    
     hanning_scale = 2;
@@ -987,105 +994,87 @@ void APP_Sample_Raw_Adc(uint16 *p_src, uint16 sample_count, uint16 sample_channe
     // pBk->p_sample_adc = p_src;
 }
 
+// static float32 adc_array[] = {
+//     -5.1270, -0.7324, 4.3945, 8.0566, 10.9863, 13.9160, 14.6484, 13.9160, 12.4512, 10.2539, 6.5918, 2.1973, -1.4648, -4.3945, -8.0566, -8.7891, -10.9863, -12.4512, -12.4512, -9.5215, -6.5918, -2.1973, 1.4648, 6.5918, 9.5215, 12.4512, 14.6484, 13.9160, 13.1836, 11.7188, 9.5215, 3.6621, 0.7324, -2.9297, -6.5918, -8.7891, -10.2539, -12.4512, -12.4512, -10.2539, -7.3242, -5.1270, -0.7324, 3.6621, 8.7891, 11.7188, 13.9160, 13.9160, 12.4512, 12.4512, 10.9863, 7.3242, 2.9297, -1.4648, -4.3945, -6.5918, -8.7891, -12.4512, -11.7188, -12.4512, -8.7891, -6.5918, -2.1973, 2.1973, 6.5918, 10.2539, 13.1836, 13.9160, 13.9160, 13.9160, 11.7188, 9.5215, 3.6621, 0.7324, -2.9297, -5.8594, -8.0566, -10.9863, -12.4512, -10.9863, -10.2539, -7.3242, -5.1270, -1.4648, 4.3945, 8.0566, 11.7188, 13.9160, 13.9160, 13.9160, 13.9160, 10.9863, 6.5918, 2.9297, -2.1973, -4.3945, -7.3242, -10.2539, -12.4512, -11.7188, -10.9863, -9.5215, -7.3242, -2.9297, 1.4648, 5.8594, 10.2539, 12.4512, 13.9160, 13.9160, 14.6484, 12.4512, 8.7891, 4.3945, 0.7324, -2.9297, -6.5918, -9.5215, -11.7188, -11.7188, -10.9863, -10.9863, -8.7891, -5.1270, -0.7324, 4.3945, 8.7891, 11.7188, 12.4512, 13.9160, 15.3809, 13.1836, 10.2539, 6.5918, 2.1973, -1.4648, -4.3945, -8.0566, -10.2539, -10.9863, -10.9863, -10.9863, -9.5215, -6.5918, -2.1973, 1.4648, 6.5918, 9.5215, 11.7188, 14.6484, 15.3809, 13.9160, 11.7188, 8.0566, 4.3945, 0.7324, -2.9297, -6.5918, -9.5215, -10.2539, -10.9863, -10.9863, -10.2539, -8.7891, -4.3945, -0.7324, 4.3945, 8.0566, 11.7188, 13.9160, 14.6484, 14.6484, 12.4512, 10.2539, 6.5918, 2.9297, -1.4648, -5.1270, -8.0566, -9.5215, -10.9863, -11.7188, -12.4512, -10.2539, -6.5918, -2.1973, 2.1973, 6.5918, 9.5215, 12.4512, 15.3809, 14.6484, 13.1836, 10.9863, 9.5215, 4.3945, 0.0000, -2.9297, -6.5918, -8.7891, -10.2539, -11.7188, -12.4512, -10.9863, -8.0566, -4.3945, -0.7324, 4.3945, 8.0566, 11.7188, 13.9160, 14.6484, 13.9160, 12.4512, 10.9863, 7.3242, 2.9297, -1.4648, -5.1270, -7.3242, -10.2539, -10.9863, -12.4512, -11.7188, -9.5215, -6.5918, -2.9297, 2.1973, 6.5918, 10.2539, 12.4512, 13.9160, 13.1836, 13.1836, 12.4512, 8.7891, 3.6621, 0.7324, -2.9297, -6.5918, -8.0566, -10.9863, -12.4512, -12.4512, -10.2539, -8.0566, -5.1270, -0.7324, 4.3945, 8.7891, 11.7188, 13.9160, 13.9160, 13.1836, 12.4512, 11.7188
+// };
+
 void APP_Sample_Adc_Cpy(float32 *p_buff, uint32 len, APP_Sample_Adc_Ch_e ch)
 {
     int i = 0;
     int channel = (int)ch;
+    float32 dc_fval = 0.0;
 
-    for (i = 0; i < len; i++) {
-        if (ch >= APP_SMP_ADC_CH_UA){
-            p_buff[i] = APP_ADC2VOLT_CALC(DMA_ADCConvertedValue[i][channel]);
-        } else {
-            p_buff[i] = APP_ADC2CURRENT_CALC(DMA_ADCConvertedValue[i][channel]);
+    if (ch >= APP_SMP_ADC_CH_UA){ /* 电压换算 */
+        for (i = 0; i < len; i++) {
+            dc_fval = APP_ADC2VOLT_CALC(DMA_ADCConvertedValue[i][channel]);
+            p_buff[i] = APP_DC2AC_VOLT(dc_fval);
+            // p_buff[i] = adc_array[i];
+            p_buff[i] = 380*arm_sin_f32(i*2*PI*50/FFT_SAMPLE_RATE + 60.0f * PI/180.0f) + 80*arm_sin_f32(i*2*PI*60/FFT_SAMPLE_RATE + 30.0f * PI/180.0f);
+            // Log_d("CH_%d, dcVolt_mv=%.4f, acVolt_v=%.4f, adc=%d\n", channel, dc_fval, p_buff[i], DMA_ADCConvertedValue[i][channel]);
         }
-        // Log_d("CH_%d, %.4f\n", channel, p_buff[i]);
-        // p_buff[i] = 300*arm_sin_f32(i*2*PI*51/FFT_SAMPLE_RATE) + 30*arm_sin_f32(i*2*PI* 60 /FFT_SAMPLE_RATE);
-        // 相位60度
-        // p_buff[i] = 300*arm_sin_f32(i*2*PI*50.3/FFT_SAMPLE_RATE + PI/3) + 30*arm_sin_f32(i*2*PI* 60 /FFT_SAMPLE_RATE);
-        // Log_d(": %.4f\n", p_buff[i]);
+    } else {
+        for (i = 0; i < len; i++) {
+            dc_fval = APP_ADC2CURRENT_CALC(DMA_ADCConvertedValue[i][channel]);
+            p_buff[i] = APP_DC2AC_CURRENT(dc_fval);
+            // p_buff[i] = adc_array[i];
+            p_buff[i] = 10*arm_sin_f32(i*2*PI*50/FFT_SAMPLE_RATE + 120.0f * PI/180.0f) + 1*arm_sin_f32(i*2*PI*60/FFT_SAMPLE_RATE + 30.0f * PI/180.0f);
+            // Log_d("CH_%d, dcVolt_mv=%.4f, acCurrent_A=%.4f, adc=%d\n", channel, dc_fval, p_buff[i], DMA_ADCConvertedValue[i][channel]);
+        }
     }
 }
 
-// 检测正弦波零点并计算相位变化
-void APP_RFFT_Detect_Zero_Crossings(float32 *p_samples, uint32 samp_cnt, float32 *p_phases, float32 samp_rate, float32 freq) {
-    int i = 0;
-    int lastZeroIndex = 0;
-    int zeroCrossingCount = 0;
-    boolean isPreviousPositive = false;
-    boolean isCurrentPositive = false;
-    float32 timeElapsed = 0.0;
-    float32 phase = 0.0;
+boolean APP_RFFT_Common_Calc(APP_Sample_Adc_Ch_e ch, float32 *p_amplitude, float32 *p_freq, float32 *p_harmonic, float32 *p_phase)
+{
+    uint32  max_index = 0;
+    float32 max_mag   = 0.0;
 
-    for (i = 1; i < samp_cnt; i++) {
-        isPreviousPositive = p_samples[i - 1] > 0;
-        isCurrentPositive = p_samples[i] >= 0; // 使用>=避免浮点误差导致的误判
-        if (isPreviousPositive != isCurrentPositive) {
-            // 发现零点，计算相位变化需要前一个零点的时间信息
-            if (zeroCrossingCount > 0) {
-                timeElapsed = (double)(i - lastZeroIndex) / samp_rate;
-                phase = 360.0 * timeElapsed / (1.0 / freq); // 将时间转换为相位差（周期数转换为度）
-                Log_i("i=%d, phase=%.4f\n", i, phase);
-            }
-            lastZeroIndex = i;
-            zeroCrossingCount++;
-        }
-    }
+    if ((ch >= APP_SMP_ADC_CH_MAX) || ((NULL == p_amplitude) && (NULL == p_freq) && (NULL == p_harmonic) && (NULL == p_phase)))
+        return false;
+
+    APP_Sample_Adc_Cpy(pBk->fft_in_buff, FFT_POINT_CNT, ch);
+    APP_RFFT_Fast_Calc(&pBk->rfft_f32, pBk->fft_in_buff, pBk->fft_out_buff, pBk->fft_mag_buff, FFT_POINT_CNT);
+    APP_RFFT_Max_F32(pBk->fft_mag_buff, FFT_POINT_CNT/2, &max_mag, &max_index);
+    Log_i("FFT Max Index = %d, Max Value = %.4f.\n", max_index, max_mag);
+    
+    APP_RFFT_Solution_Deal(pBk->fft_out_buff, 
+                            pBk->fft_mag_buff, 
+                            max_index, 
+                            FFT_SAMPLE_RATE, 
+                            FFT_POINT_CNT,
+                            p_freq,
+                            p_phase, 
+                            p_amplitude,
+                            p_harmonic);
+    return true;
 }
 
 void APP_RFFT_Current_Calc(APP_Sample_Adc_Ch_e ch, float32 *p_current, float32 *p_phase)
 {
-    uint32 max_index = 0;
-    float32 max_value = 0.0;
+    float32 phase = 0.0;
     float32 amplitude = 0.0;
 
-    if (p_current == NULL)
-        return;
-    APP_Sample_Adc_Cpy(pBk->fft_in_buff, FFT_POINT_CNT, ch);
-    APP_RFFT_Calc(&pBk->rfft_f32, pBk->fft_in_buff, pBk->fft_out_buff, pBk->fft_mag_buff, FFT_POINT_CNT);
-    APP_RFFT_Max_F32(pBk->fft_mag_buff, FFT_POINT_CNT/2, &max_value, &max_index);
-    /* 幅值计算 */ 	
-    amplitude = APP_RFFT_Get_Amplitude(pBk->fft_mag_buff, max_index, FFT_POINT_CNT);
-    *p_current = APP_Calibration_Conversion(pBk->current_cali, CURRENT_CALI_COUNT_MAX, APP_DC2AC_CURRENT(amplitude));
-
+    APP_RFFT_Common_Calc(ch, &amplitude, NULL, NULL, &phase);
+    if (p_current != NULL) {
+        *p_current = APP_Calibration_Conversion(pBk->current_cali, CURRENT_CALI_COUNT_MAX, amplitude);
+        *p_current = (*p_current) * CURRENT_CONV_MULTIPLE;
+    }
     if (p_phase != NULL) {
-        *p_phase = APP_RFFT_Get_Phase(pBk->fft_out_buff, pBk->fft_mag_buff, max_index, FFT_POINT_CNT);
+        *p_phase = APP_Calibration_Conversion(pBk->freq_cali, PHASE_CALI_COUNT_MAX, phase);
     }
 }
 
 void APP_RFFT_Voltage_Calc(APP_Sample_Adc_Ch_e ch, float32 *p_volt, float32 *p_freq, float32 *p_harmonic, float32 *p_phase)
 {
-    uint32 max_index = 0;
-    float32 max_value = 0.0;
     float32 amplitude = 0.0;
     float32 freq = 0.0;
+    float32 phase = 0.0;
+    float32 harmonic = 0.0;
 
-    if ((p_volt == NULL) && (p_freq == NULL) && (p_harmonic == NULL))
-        return;
-    APP_Sample_Adc_Cpy(pBk->fft_in_buff, FFT_POINT_CNT, ch);
-    APP_RFFT_Calc(&pBk->rfft_f32, pBk->fft_in_buff, pBk->fft_out_buff, pBk->fft_mag_buff, FFT_POINT_CNT);
-    APP_RFFT_Max_F32(pBk->fft_mag_buff, FFT_POINT_CNT/2, &max_value, &max_index);
-    Log_i("FFT Max Index = %d, Max Value = %.4f.\n", max_index, max_value);
-    /* 频率计算 */
-    if (p_freq != NULL) {
-        freq = APP_RFFT_Get_Freq(pBk->fft_mag_buff, max_index, FFT_POINT_CNT, FFT_SAMPLE_RATE);
-        // freq = APP_Calibration_Conversion(pBk->freq_cali, FREQ_CALI_COUNT_MAX, freq);
-        *p_freq = freq;
-    }
-    /* 幅值计算 */ 	
-    if (p_volt != NULL) {
-        amplitude = APP_RFFT_Get_Amplitude(pBk->fft_mag_buff, max_index, FFT_POINT_CNT);
-        Log_i("RFFT Amplitude[CH=%d] = %.4f.\r\n", ch, amplitude);
-        *p_volt = APP_Calibration_Conversion(pBk->volt_cali, VOLT_CALI_COUNT_MAX, APP_DC2AC_VOLT(amplitude));
-    }
-    
-    /* 谐波失真度 */
-    if (p_harmonic != NULL) {
-        *p_harmonic = APP_RFFT_Get_Harmonic_Distortion(pBk->fft_mag_buff, max_index, MAX_HARMONIC_ORDER, FFT_POINT_CNT);
-    }
-
-    if (p_phase != NULL) {
-        *p_phase = APP_RFFT_Get_Phase(pBk->fft_out_buff, pBk->fft_mag_buff, max_index, FFT_POINT_CNT);
-    }
+    APP_RFFT_Common_Calc(ch, &amplitude, &freq, &harmonic, &phase);
+    *p_freq = APP_Calibration_Conversion(pBk->freq_cali, FREQ_CALI_COUNT_MAX, freq);
+    *p_phase = APP_Calibration_Conversion(pBk->freq_cali, PHASE_CALI_COUNT_MAX, phase);
+    *p_volt = APP_Calibration_Conversion(pBk->volt_cali, VOLT_CALI_COUNT_MAX, amplitude);
+    *p_harmonic = harmonic;
 }
 
 void APP_RFFT_Power_Calc(float32 line_volt, float32 line_current, float32 phase_volt, float32 phase_current, float32 *p_active_power, float32 *p_reactive_power, float32 *p_apparent_power)
@@ -1187,17 +1176,6 @@ void APP_FFT_Handler(void)
                         &pBk->value.reactive_power_c,
                         &pBk->value.apparent_power_c);          
 
-    pBk->value.active_power_total = pBk->value.active_power_a + pBk->value.active_power_b + pBk->value.active_power_c;
-    pBk->value.reactive_power_total = pBk->value.reactive_power_a + pBk->value.reactive_power_b + pBk->value.reactive_power_c;
-    pBk->value.apparent_power_total = pBk->value.apparent_power_a + pBk->value.apparent_power_b + pBk->value.apparent_power_c;                                    
-    pBk->value.fundamental_freq = MIDDLE_OF_THREE(pBk->value.freq_ua, pBk->value.freq_ub, pBk->value.freq_uc);
-    pBk->value.harmonic_volt_distortion = MIDDLE_OF_THREE(pBk->value.harmonic_distortion_ua, pBk->value.harmonic_distortion_ub, pBk->value.harmonic_distortion_uc);
-
-    if (pBk->value.active_power_total < 0) {
-        pBk->value.reverse_power = ABS_FLOAT(pBk->value.active_power_total);
-    } else {
-        pBk->value.reverse_power = 0;
-    }
 
     tick2 = APP_Get_System_Ms();
     fft_time_cost = tick2 - tick1;
@@ -1205,7 +1183,7 @@ void APP_FFT_Handler(void)
     Log_d("C_IA[%.4f], C_IB[%.4f], C_IC[%.4f], C_IOUT[%.4f]\n", 
         pBk->value.line_ia, pBk->value.line_ib, pBk->value.line_ic, pBk->value.line_iout);
     Log_d("U_A[%.4f], U_B[%.4f], U_C[%.4f], U_OUT[%.4f]\n", 
-        pBk->value.line_ua, pBk->value.line_ub, pBk->value.line_uc, pBk->value.line_uout);
+        pBk->value.line_ua, pBk->value.line_ub, pBk->value.line_uc, APP_Get_Voltage_Uout());
     Log_d("Freq_A[%.4f], Freq_B[%.4f], Freq_C[%.4f]\n", 
         pBk->value.freq_ua, pBk->value.freq_ub, pBk->value.freq_uc);
     Log_d("Harmonic_A[%.4f], Harmonic_B[%.4f], Harmonic_C[%.4f]\n", 
@@ -1215,11 +1193,11 @@ void APP_FFT_Handler(void)
     Log_d("Phase_Ia[%.4F], Phase_Ib[%.4f], Phase_Ic[%.4f]\r\n", 
         pBk->value.phase_ia, pBk->value.phase_ib, pBk->value.phase_ic);
     Log_d("P_Power_A[%.4f], P_Power_B[%.4f], P_Power_C[%.4f], P_Power_Total[%.4f]\r\n", 
-        pBk->value.active_power_a, pBk->value.active_power_b, pBk->value.active_power_c, pBk->value.active_power_total);
+        pBk->value.active_power_a, pBk->value.active_power_b, pBk->value.active_power_c, APP_Get_Active_Power_Total());
     Log_d("Q_Power_A[%.4f], Q_Power_B[%.4f], Q_Power_C[%.4f], Q_Power_Total[%.4f]\r\n", 
-        pBk->value.reactive_power_a, pBk->value.reactive_power_b, pBk->value.reactive_power_c, pBk->value.reactive_power_total);
+        pBk->value.reactive_power_a, pBk->value.reactive_power_b, pBk->value.reactive_power_c, APP_Get_Reactive_Power_Total());
     Log_d("S_Power_A[%.4f], S_Power_B[%.4f], S_Power_C[%.4f], S_Power_Total[%.4f]\r\n", 
-        pBk->value.apparent_power_a, pBk->value.apparent_power_b, pBk->value.apparent_power_c, pBk->value.apparent_power_total);
+        pBk->value.apparent_power_a, pBk->value.apparent_power_b, pBk->value.apparent_power_c, APP_Get_Apparent_Power_Total());
 
     TMR_Enable(TMR3); 
     /* 停止fft 等待中断完成 */
@@ -1239,21 +1217,62 @@ void APP_Timer_Callback(TimerHandle_t xTimer)
  */
 int APP_Protection_Backend_Init(void)
 {
+    int i = 0;
     static TimerHandle_t xTimer = NULL;
   
+      // 测试数据
+    // pBk->current_cali[0].coeff_option = 0.987;  
+    // pBk->current_cali[0].coeff_value = 1.012;  
+    // pBk->current_cali[1].coeff_option = 1.998;  
+    // pBk->current_cali[1].coeff_value = 2.030;  
+    // pBk->current_cali[2].coeff_option = 2.981;  
+    // pBk->current_cali[2].coeff_value = 3.007;
+    // pBk->current_cali[3].coeff_option = 4.005;  
+    // pBk->current_cali[3].coeff_value = 4.0307; 
+    // pBk->current_cali[4].coeff_option = 4.910;  
+    // pBk->current_cali[4].coeff_value = 4.9219;     
+
+    pBk->current_cali[0].coeff_option = 0.524;
+    pBk->current_cali[0].coeff_value  = 0.5524;
+    pBk->current_cali[1].coeff_option = 0.986;
+    pBk->current_cali[1].coeff_value  = 1.0511;
+    pBk->current_cali[2].coeff_option = 1.495;
+    pBk->current_cali[2].coeff_value  = 1.567;
+    pBk->current_cali[3].coeff_option = 1.993;
+    pBk->current_cali[3].coeff_value  = 2.0742;
+    pBk->current_cali[4].coeff_option = 2.496;
+    pBk->current_cali[4].coeff_value  = 2.6363;		
+    pBk->current_cali[5].coeff_option = 2.980;
+    pBk->current_cali[5].coeff_value  = 3.123;
+    pBk->current_cali[6].coeff_option = 3.480;
+    pBk->current_cali[6].coeff_value  = 3.6258;
+    pBk->current_cali[7].coeff_option = 4.014;
+    pBk->current_cali[7].coeff_value  = 4.229;
+    pBk->current_cali[8].coeff_option = 4.501;
+    pBk->current_cali[8].coeff_value  = 4.7112;
+    pBk->current_cali[9].coeff_option = 4.918;
+    pBk->current_cali[9].coeff_value  = 5.1846;
+
+    APP_Relay_Set_Channel((uint16)(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D03 | APP_RELAY_CHANNEL_D04));
+
+    // 装置首次上电，默认强制跳闸
+    APP_Relay_Force_Switch_Off();
+
+    pBk->fft_enable = false;
+
+    for (i = 0; i < APP_RMT_CHAN_MAX; i++) {
+        pBk->remote_signal_di_tick_list[i] = APP_Get_System_Ms();
+        pBk->remote_signal_di_state_list[i] = 0;
+    }
+
     xTimer = xTimerCreate("APP_Timer", 1, pdTRUE, (void*)0, APP_Timer_Callback);
     xTimerStart(xTimer, 0);
-
     if (g_relay_sem == NULL) {
         g_relay_sem = xSemaphoreCreateMutex();
         if (g_relay_sem == NULL) {
             Log_e("Failed To Create Relay Semaphore!\r\n");
         }
     }
-
-    APP_Relay_Set_Channel((uint16)(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D03 | APP_RELAY_CHANNEL_D04));
-
-    pBk->fft_enable = false;
 
 	return 0;
 }
@@ -1267,7 +1286,7 @@ void APP_Protection_Backend_Loop(void)
     while (1) {
 
         APP_FFT_Handler();
-        vTaskDelay(10);
+        vTaskDelay(5);
     }
 
 }

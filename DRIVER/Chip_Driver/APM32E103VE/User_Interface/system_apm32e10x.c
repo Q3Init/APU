@@ -531,7 +531,7 @@ static void SystemClock72M(void)
             110£ºHCLK 8 ·ÖÆµ
             111£ºHCLK 16 ·ÖÆµ */
         // todo casper test
-        RCM->CFG_B.APB2PSC= 6;
+        RCM->CFG_B.APB2PSC= 4;
         /* PCLK1 = HCLK / 2 */
         RCM->CFG_B.APB1PSC = 4;
 
