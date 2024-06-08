@@ -920,7 +920,7 @@ void APP_RFFT_Solution_Deal(float32 *p_cmplx_buff, float32 *p_mag, uint32 max_in
             }
             harmonic_sum_squares += p_mag[harmonic_cnt] * p_mag[harmonic_cnt];
         }
-        *p_harmonic = sqrt(harmonic_sum_squares) / p_mag[max_index];
+        *p_harmonic = 100.0 * sqrt(harmonic_sum_squares) / p_mag[max_index];
     }
 
     Log_d("scale=%.4f, dk=%.4f, freq=%.4f, Amp=%.4f, Phase=%.4f, Harmonic=%.4f\n", 

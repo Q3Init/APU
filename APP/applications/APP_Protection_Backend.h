@@ -224,12 +224,20 @@ float32 APP_Get_Line_Voltage_Min(void);
 float32 APP_Get_Line_Current_Max(void);
 float32 APP_Get_Line_Current_Min(void);
 
+/* 开关输入量 */
+/* 获取开关量输入，DI1 & DI2 组合开关 */ 
 uint8 APP_Remote_Signal_Input_Read_Group_1(void);
+/* 获取开关量输入，DI3 & DI4 组合开关 */
 uint8 APP_Remote_Signal_Input_Read_Group_2(void);
+/* 获取开关量输入，DI5 & DI6 组合开关 */
 uint8 APP_Remote_Signal_Input_Read_Group_3(void);
+/* 获取开关量输入，DI7 & DI8 组合开关 */
 uint8 APP_Remote_Signal_Input_Read_Group_4(void);
+/* 获取合闸闭锁输入状态，DI10 */
 uint8 APP_Remote_Signal_Input_Read_Closing_And_Locking(void);
+/* 全部开关量输入是否存在合位状态 */
 boolean APP_Remote_Signal_Input_Switching_Exist_On(void);
+/* 全部开关量输入是否存在开位状态 */
 boolean APP_Remote_Signal_Input_Switching_Exist_Off(void);
 
 /* 继电器相关处理 */

@@ -5,9 +5,23 @@
 #include "Lib_Log_Util.h"
 #include "freertos.h"
 #include "task.h"
+#include "semphr.h"
 
 static APP_Protection_Mnt_t APP_Protection_Mnt;
 static APP_Protection_Mnt_t *pMnt = &APP_Protection_Mnt;
+static SemaphoreHandle_t g_prt_enable_sem = NULL;
+
+#define APP_PRT_ENABLE_SEM_TAKE()   do {\
+    if (g_prt_enable_sem != NULL) {\
+        xSemaphoreTake(g_prt_enable_sem, portMAX_DELAY);\
+    }\
+} while (0)
+
+#define APP_PRT_ENABLE_SEM_GIVE()   do {\
+    if (g_prt_enable_sem != NULL) {\
+        xSemaphoreGive(g_prt_enable_sem);\
+    }\
+} while (0)
 
 /* 过压一段状态 */
 uint8 APP_Get_Over_Volt_Lv1_Switch_Off_State(void)
@@ -119,163 +133,217 @@ uint8 APP_Get_Switch_On_Charge_State(void)
 /* 过压一段功能投入 */
 void APP_Over_Volt_Lv1_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE(); 
     pMnt->enable.over_volt_lv1_switch_off_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 过压二段功能投入 */
 void APP_Over_Volt_Lv2_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.over_volt_lv2_switch_off_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 欠压一段功能投入 */
 void APP_Under_Volt_Lv1_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.under_volt_lv1_switch_off_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 欠压二段功能投入 */
 void APP_Under_Volt_Lv2_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.under_volt_lv2_switch_off_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 过频功能投入 */
 void APP_Over_Freq_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.over_freq_switch_off_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 欠频功能投入 */
 void APP_Low_Freq_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.low_freq_switch_off_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 过冲频功能投入 */
 void APP_Spike_Freq_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.spike_freq_switch_off_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 逆功率功能投入 */
 void APP_Reverse_Power_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.reverse_power_switch_off_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 谐波电压失真度功能投入 */
 void APP_Harmonic_Distortion_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.harmonic_distortion_switch_off_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 外部控制功能投入 */
 void APP_Ext_Ctrl_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.ext_ctrl_switch_off_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 速断保护功能投入 */
 void APP_Quick_Break_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.quick_break_switch_off_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 限时速断保护功能投入 */
 void APP_Time_Limit_Quick_Break_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.time_limit_quick_break_switch_off_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 过流保护功能投入 */
 void APP_Over_Current_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.over_current_switch_off_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 零序电流保护功能投入 */
 void APP_Zero_Seq_Current_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.zero_seq_current_switch_off_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
  /* 系统停电保护功能投入 */
 void APP_System_Outage_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.system_outage_switch_off_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
  /* 有压合闸功能投入 */
 void APP_On_Volt_Switch_On_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.on_volt_switch_on_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 上电合闸功能投入 */
 void APP_System_Power_Up_Switch_On_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.system_power_up_switch_on_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 欠压合闸功能投入 */
 void APP_Under_Volt_Switch_On_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.under_volt_switch_on_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 欠压合闸功能投入 */
 void APP_Over_Volt_Switch_On_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.over_volt_switch_on_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
  /* 系统停电合闸功能投入 */
 void APP_System_Outage_Switch_On_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.system_outage_switch_on_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 系统失电允许跳闸 */
 void APP_System_Outage_Permit_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.system_outage_permit_switch_off = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 过频合闸功能投入 */
 void APP_Over_Freq_Switch_On_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.over_freq_switch_on_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 欠频合闸功能投入 */
 void APP_Low_Freq_Switch_On_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.low_freq_switch_on_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 非手动合闸功能投入 */
 void APP_Power_Restoration_Switch_On_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.power_restoration_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 非手动合闸功能投入 */
 void APP_Non_Manual_Switch_On_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.non_manual_switch_on_enable = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 外部控制允许跳闸 */
 void APP_Ext_Ctrl_Permit_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.ext_ctrl_permit_switch_off = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /* 零序电流允许跳闸 */
 void APP_Zero_Seq_Permit_Switch_Off_Enable_Ctrl(uint8 ctrl)
 {
+    APP_PRT_ENABLE_SEM_TAKE();
     pMnt->enable.zero_seq_permit_switch_off = ctrl;
+    APP_PRT_ENABLE_SEM_GIVE();
 }
 
 /**
@@ -1096,6 +1164,13 @@ void APP_Protection_Management_Init(void)
 
     // 装置首次上电标志
     pMnt->system_first_power_up_flag = true;
+
+    if (g_prt_enable_sem == NULL) {
+        g_prt_enable_sem = xSemaphoreCreateMutex();
+        if (g_prt_enable_sem == NULL) {
+            Log_e("Failed To Create Protection Enable Semaphore!\r\n");
+        }
+    }
 }
 
 /**
