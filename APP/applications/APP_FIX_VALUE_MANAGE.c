@@ -1155,6 +1155,9 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 	uint8_t int_flag = 0;
 	uint8_t chinese_menu_idx = 0;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
+
 	uint8_t msg_storage = msg_context;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
@@ -1589,6 +1592,9 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 	uint8_t int_flag = 0;
 	uint8_t chinese_menu_idx = 0;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
+
 	uint8_t msg_storage = msg_context;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
@@ -2008,6 +2014,9 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
+
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -2338,6 +2347,8 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -2669,6 +2680,8 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -3008,6 +3021,8 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -3344,6 +3359,8 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -3680,6 +3697,8 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -4086,6 +4105,8 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -4451,6 +4472,8 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -4787,6 +4810,8 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -5115,6 +5140,8 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -5473,6 +5500,8 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -5832,6 +5861,8 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -6340,6 +6371,8 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)

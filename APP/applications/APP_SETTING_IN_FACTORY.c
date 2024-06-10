@@ -727,6 +727,8 @@ struct menu_event_tag * channel_factor_handler(uint8_t msg_process_signal, uint8
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = SETTING_IN_FACTORY;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -1435,6 +1437,8 @@ struct menu_event_tag * full_range_setting_handler(uint8_t msg_process_signal, u
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = SETTING_IN_FACTORY;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -1653,6 +1657,8 @@ struct menu_event_tag * open_into_configure_handler(uint8_t msg_process_signal, 
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = SETTING_IN_FACTORY;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -2399,6 +2405,8 @@ struct menu_event_tag * open_out_configure_handler(uint8_t msg_process_signal, u
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = SETTING_IN_FACTORY;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -2565,6 +2573,8 @@ struct menu_event_tag * protection_configure_handler(uint8_t msg_process_signal,
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = SETTING_IN_FACTORY;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -2629,6 +2639,8 @@ struct menu_event_tag * open_into_test_handler(uint8_t msg_process_signal, uint8
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = SETTING_IN_FACTORY;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -2827,6 +2839,8 @@ struct menu_event_tag * factory_reset_handler(uint8_t msg_process_signal, uint8_
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = SETTING_IN_FACTORY;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -2925,6 +2939,9 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 	uint8_t chinese_menu_idx = 0;
 
 	uint8_t msg_storage = msg_context;
+
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = SETTING_IN_FACTORY;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)

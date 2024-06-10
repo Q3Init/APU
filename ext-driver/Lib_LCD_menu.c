@@ -116,7 +116,7 @@ uint8_t menu_type_ptr_match(uint8_t key_signal, uint8_t menu_row_num, uint8_t me
 
 uint8_t lcd_password_num_array[6];
 
-uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_t msg_context_tag)
+uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_t msg_context_tag, uint8_t last_cursor, uint8_t menu_target)
 {
 	static uint8_t key_idx_for_num  = 0;
 	uint32_t float_flag = 0;
@@ -168,9 +168,10 @@ uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_
 
 		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
+			menu_level_from_env_set(TOP_NODE_MENU, menu_target, UNKNOW_THIRD_MENU);
 			msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+
+			cur_menu_type_ptr_from_env_set(last_cursor);
 
 			// clear the password state
 			password_check_in_state_set(UNKNOW_PASSWORD_IND);
@@ -344,6 +345,8 @@ struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_
 			clear_screen();
 			msg_context = 0xff;
 			msg_lock_from_env_set(0);//unlock the msg
+			// clear the password state
+			password_check_in_state_set(UNKNOW_PASSWORD_IND);
         }
 
 		switch(msg_context)
@@ -592,6 +595,15 @@ struct menu_event_tag * parameter_configure_handler(uint8_t msg_process_signal, 
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.top_menu_cursor;
+	uint8_t menu_target = UNKNOW_SECOND_MENU;
+	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
+	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
+	if(authentication_key)
+	{
+		return menu_evt;
+	}
+
 	if(msg_process_signal == 1)
 	{
 		uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 4, 2, sizeof(parameter_configure_menu_array));
@@ -624,6 +636,9 @@ struct menu_event_tag * parameter_configure_handler(uint8_t msg_process_signal, 
 //            LCD_ShowString(24,30,"LCD_W:",16);
 //            LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
+
+			// // clear the password state
+			// password_check_in_state_set(UNKNOW_PASSWORD_IND);
         }
 		switch(msg_context)
 		{

@@ -7,7 +7,7 @@
 #define LCD_FLUSH_SCREEN_IND 0xff
 
 extern uint8_t lcd_password_num_array[6];
-extern uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_t msg_context_tag);
+extern uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_t msg_context_tag, uint8_t last_cursor, uint8_t menu_target);
 
 struct lcd_modify_num_tag{
 	uint8_t menu_type_idx ;

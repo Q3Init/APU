@@ -155,6 +155,15 @@ struct menu_event_tag * debug_mode_handler(uint8_t msg_process_signal, uint8_t m
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.top_menu_cursor;
+	uint8_t menu_target = UNKNOW_SECOND_MENU;
+	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
+	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
+	if(authentication_key)
+	{
+		return menu_evt;
+	}
+
 	if(msg_process_signal == 1)
 	{
 		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));

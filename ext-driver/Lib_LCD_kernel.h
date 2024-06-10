@@ -5,9 +5,9 @@
 #include "Lib_Log_Util.h"
 #include "Ext_KEY.h"
 
-#define USER_PASSWORD_AUTHENTICATE() menu_user_password_authentication(msg_process_signal, msg_context)
+#define USER_PASSWORD_AUTHENTICATE() menu_user_password_authentication(msg_process_signal, msg_context, last_cursor, menu_target)
 
-extern uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_t msg_context_tag);
+extern uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_t msg_context_tag, uint8_t last_cursor, uint8_t menu_target);
 
 enum PASSWORD_AUTH_STATE_IND{
 	VALID_PASSWORD_IND = 0,
