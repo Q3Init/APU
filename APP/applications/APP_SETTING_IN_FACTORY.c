@@ -729,9 +729,8 @@ struct menu_event_tag * channel_factor_handler(uint8_t msg_process_signal, uint8
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -1438,9 +1437,8 @@ struct menu_event_tag * full_range_setting_handler(uint8_t msg_process_signal, u
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -1657,9 +1655,8 @@ struct menu_event_tag * open_into_configure_handler(uint8_t msg_process_signal, 
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -2404,9 +2401,8 @@ struct menu_event_tag * open_out_configure_handler(uint8_t msg_process_signal, u
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -2571,9 +2567,8 @@ struct menu_event_tag * protection_configure_handler(uint8_t msg_process_signal,
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -2636,9 +2631,8 @@ struct menu_event_tag * open_into_test_handler(uint8_t msg_process_signal, uint8
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -2835,9 +2829,8 @@ struct menu_event_tag * factory_reset_handler(uint8_t msg_process_signal, uint8_
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -2934,9 +2927,8 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 	uint8_t msg_storage = msg_context;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 

@@ -5,6 +5,15 @@
 #include "Lib_Log_Util.h"
 #include "Ext_KEY.h"
 
+#define USER_PASSWORD_AUTHENTICATE() menu_user_password_authentication(msg_process_signal, msg_context)
+
+extern uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_t msg_context_tag);
+
+enum PASSWORD_AUTH_STATE_IND{
+	VALID_PASSWORD_IND = 0,
+	UNKNOW_PASSWORD_IND,
+	INVALID_PASSWORD_IND,
+};
 
 #define uint8_t uint8
 #define uint32_t uint32
@@ -29,8 +38,6 @@
 #define FIRST_MENU_MASK 	(uint32_t)0x00000007
 #define SECOND_MENU_MASK 	(uint32_t)0x000000F8
 #define THIRD_MENU_MASK 	(uint32_t)0x00007F00
-
-#define USER_PASSWORD_AUTHENTICATE() 0
 
 enum menu_level_tag{
 	TOP_INTERFACE = 0, // fix it to zero
@@ -181,6 +188,7 @@ struct menu_kernel_env_tag{
 	uint32_t cur_menu_level; //storage current menu level in all
 	uint8_t last_menu_level;
 	struct menu_cursor_history_tag menu_cursor_history;
+	uint8_t password_ind;
 	uint8_t msg_lock; // bit[0]:LCD(highest Priority!)  bit[1]:other Layer
 	struct msg_info_tag msg_info;
 };
@@ -229,6 +237,7 @@ extern void msg_destination_from_env_set(uint8_t msg_destination);
 extern void msg_source_from_env_set(uint8_t msg_source);
 extern void menu_level_from_env_set(uint8_t first_level, uint8_t second_level, uint8_t third_level);
 extern void cur_menu_type_ptr_from_env_set(uint8_t cur_menu_type_ptr);
+extern void password_check_in_state_set(uint8_t ind);
 extern void msg_lock_from_env_set(uint8_t msg_lock_level);
 extern uint8_t msg_status_from_env_get(void);
 extern uint8_t msg_context_from_env_get(void);
@@ -300,6 +309,5 @@ extern struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_sign
 extern struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_t msg_context);
-
 
 #endif /* __LIB_LCD_KERNEL_H */

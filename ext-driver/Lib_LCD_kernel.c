@@ -232,6 +232,11 @@ void cur_menu_type_ptr_from_env_set(uint8_t cur_menu_type_ptr)
 	menu_kernel_env.cur_menu_type_ptr = cur_menu_type_ptr;
 }
 
+void password_check_in_state_set(uint8_t ind)
+{
+	menu_kernel_env.password_ind = ind;
+}
+
 uint8_t cur_menu_type_ptr_from_env_get()
 {
 	return menu_kernel_env.cur_menu_type_ptr;

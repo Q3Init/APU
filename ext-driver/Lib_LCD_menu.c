@@ -1,4 +1,5 @@
 #include "Lib_LCD_menu.h"
+#include "APP_Parameter.h"
 // uint8 my_flag =0;
 
 uint8 top_menu_array[]=
@@ -111,6 +112,207 @@ uint8_t menu_type_ptr_match(uint8_t key_signal, uint8_t menu_row_num, uint8_t me
     Log_d("E | cur_row_idx: %d  cur_column_idx:%d \r\n", cur_row, cur_column);
 	menu_type_ptr = cur_menu_type_ptr_from_env_get();
     return menu_type_ptr;
+}
+
+uint8_t lcd_password_num_array[6];
+
+uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_t msg_context_tag)
+{
+	static uint8_t key_idx_for_num  = 0;
+	uint32_t float_flag = 0;
+	uint8_t num_idx_flush[6] = {0};
+
+	uint8_t num_array[6] = {0};
+
+	uint8_t msg_storage = msg_context_tag;
+
+	uint8_t msg_process_signal = msg_process_signal_tag;
+	uint8_t msg_context = msg_context_tag;
+
+	static uint8_t pass_word_enter_flag = false;
+	uint8_t password_auth_state = UNKNOW_PASSWORD_IND;
+
+	do
+	{
+		if(msg_process_signal == 1)
+		{
+			//enter the handler first
+			if((pass_word_enter_flag == false) && (msg_context == FLUSH_SCREEN))
+			{
+				//clear the array of password storage and flush the screen
+				memset(lcd_password_num_array, 0x00, sizeof(lcd_password_num_array));
+				pass_word_enter_flag = true;
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+				menu_kernel_env.password_ind = UNKNOW_PASSWORD_IND;
+			}
+		}
+		else
+		{
+			if(menu_kernel_env.password_ind == VALID_PASSWORD_IND)
+			{
+				password_auth_state = VALID_PASSWORD_IND;
+			}
+			break;
+		}
+
+		if(pass_word_enter_flag != true)
+		{
+			break;
+		}
+
+		if(menu_kernel_env.password_ind == VALID_PASSWORD_IND)
+		{
+			password_auth_state = VALID_PASSWORD_IND;
+			break;
+		}
+
+		if(msg_context == KEY_RETURN)
+		{
+			menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
+			msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+
+			// clear the password state
+			password_check_in_state_set(UNKNOW_PASSWORD_IND);
+			lcd_the_modified_num_env_to_be_clear_all();
+			Log_d("key KEY_RETURN menu!\r\n");
+		}
+
+		memset(num_idx_flush, 0xff, sizeof(num_idx_flush));
+
+		if(msg_process_signal == 1)
+		{
+			if(msg_context == FLUSH_SCREEN)
+			{
+				Log_d("\r\n FLUSH_SCREEN   \r\n");
+				clear_screen();
+				lcd_modify_num_env.menu_type_idx = 0;
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+				lcd_modify_num_env.enter_flag = true;// prepare for the number modify
+				msg_lock_from_env_set(0);//unlock the msg
+
+				//init the array lcd_password_num_array with value in the first chinese volume
+				lcd_the_modified_num_env_to_be_clear_all();
+
+				//update the value for the array lcd_password_num_array
+				float_flag = 0;
+				Log_d("ENTER! float_flag:%d\n",float_flag);
+				my_convert_int_to_int_array(lcd_password_num_array, 6, float_flag);
+
+				num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+			}
+
+
+			if(msg_context == KEY_ENTER)
+			{
+				uint32_t password_array_par = my_convert_int_array_to_int_parameter(lcd_password_num_array,6);
+				uint32_t password_array_par_check = app_parameter_read_Device_password();
+				Log_d("ENTER! password_array_par_check:%d password_array_par:%d\n",password_array_par_check, password_array_par);
+				// // the valid digit is 6 int-digits.
+				// my_convert_float32_to_int_array(lcd_password_num_array, 6, 0, password_array_par);
+
+				// msg_storage = LCD_FLUSH_SCREEN_IND;
+
+				if(password_array_par == password_array_par_check)
+				{
+					menu_kernel_env.password_ind = VALID_PASSWORD_IND;
+
+					msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+					//set the original message again when enter current menu handler first
+					// *msg_process_signal_tag = 1;
+					// *msg_context_tag = FLUSH_SCREEN;
+					memset(lcd_password_num_array, 0x00, sizeof(lcd_password_num_array)); //clear the array before returning the chinese colume
+					lcd_the_modified_num_env_to_be_clear_all();
+					break;
+				}
+			}
+
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+
+			right_diff_num_idx_ths = sizeof(lcd_password_num_array)-1;
+			up_diff_num_idx_ths = 9;
+			uint8_t new_num;
+
+			switch(msg_context)
+			{
+				case    KEY_UP://+
+					if(lcd_password_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+					{
+						lcd_password_num_array[lcd_modify_num_env.limited_index]++;
+					}
+					new_num=lcd_password_num_array[lcd_modify_num_env.limited_index];
+					Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+					memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+					msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+					break;
+				case	KEY_DOWN://-
+					if(lcd_password_num_array[lcd_modify_num_env.limited_index]>0)
+					{
+						lcd_password_num_array[lcd_modify_num_env.limited_index]--;
+					}
+					new_num=lcd_password_num_array[lcd_modify_num_env.limited_index];
+					Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+					memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+					msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+					break;
+				case	KEY_LEFT:
+					if(lcd_modify_num_env.limited_index>0)
+					{
+						lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+						--lcd_modify_num_env.limited_index;
+					}
+					memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+					msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+					break;
+				case	KEY_RIGHT:
+					if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+					{
+						lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+						++lcd_modify_num_env.limited_index;
+					}
+					memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+					msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+					break;
+				default:
+					break;
+			}
+               
+            uint32_t password_array_par = my_convert_int_array_to_int_parameter(lcd_password_num_array,6);
+			switch(msg_storage)
+			{
+				case	LCD_FLUSH_SCREEN_IND:
+				case    KEY_UP:
+				case	KEY_DOWN:		
+				case	KEY_LEFT:
+				case	KEY_RIGHT:
+					
+					clear_screen();
+					LCD_ShowChinese_garland(0, 0, password_check_in, 4);
+
+					// single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+					// lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+					// lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+					// lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+					// single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+
+					// lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, over_delay, 4);
+					LCD_ShowChinese_garland(8, 26, password_check_in_please, 5);
+					lcd_state_flush_for_num(66,26,my_maohao,5,12,1);
+					lcd_number_modify_int_array_for_int_parameter_get(&float_flag, password_array_par, 
+												num_array, 6, num_idx_flush[0]);
+					lcd_number_display_in_order(74, 26, 5, 12, 
+										num_idx_flush[0], sizeof(num_array), num_array, 0xff);
+			}
+		}
+	}while(false);
+
+	return password_auth_state;
 }
 
 struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_t msg_context)
@@ -873,6 +1075,34 @@ float32 my_convert_int_to_float32_array(uint8_t * ptr, uint8_t int_convert_lengt
 	return all_sum;
 }
 
+void my_convert_int_to_int_array(uint8_t * ptr, uint8_t int_convert_length, uint32_t data)
+{
+	uint32_t conver_int_par = (uint32_t)data;
+
+	for(int j=int_convert_length-1; j>=0; j--)
+	{
+		ptr[j] = conver_int_par % 10;
+		conver_int_par = conver_int_par / 10;
+	}
+}
+
+uint32_t my_convert_int_array_to_int_parameter(uint8_t * ptr, uint8_t int_convert_length)
+{
+	uint32_t all_sum = 0;
+	uint32_t conver_int_sum = 0;
+	uint32_t co_x = 1;
+
+	for(int j=int_convert_length-1; j>=0; j--)
+	{
+		conver_int_sum += ptr[j]*co_x;
+		co_x = co_x*10;
+	}
+
+	all_sum = conver_int_sum;
+
+	return all_sum;
+}
+
 void lcd_chinese_modify_array_get(uint8_t *int_flag, uint8_t bool_value, uint8_t num_flush_idx)
 {
 	if(num_flush_idx!=0xff)
@@ -947,7 +1177,6 @@ void lcd_number_modify_array_get(float32 *float_flag, float32 value, uint8_t *ar
 		{
 			array_ptr[j] = lcd_modify_num_array[j];
 		}
-		Log_d("ENTER! lcd float_flag:%f\n",*float_flag);
 	}
 	else
 	{
@@ -955,5 +1184,21 @@ void lcd_number_modify_array_get(float32 *float_flag, float32 value, uint8_t *ar
 		*float_flag = *float_flag+ 0.0001;
 		my_convert_float32_to_int_array(array_ptr, int_convert_length, point_convert_length, *float_flag);
 	}
+}
 
+void lcd_number_modify_int_array_for_int_parameter_get(uint32_t *int_flag, uint32_t value, uint8_t *array_ptr, 
+								uint8_t int_convert_length,  uint8_t num_flush_idx)
+{
+	if(num_flush_idx!=0xff)
+	{
+		for(int j =0;j<int_convert_length;j++)
+		{
+			array_ptr[j] = lcd_password_num_array[j];
+		}
+	}
+	else
+	{
+		*int_flag = value;
+		my_convert_int_to_int_array(array_ptr, int_convert_length, *int_flag);
+	}
 }

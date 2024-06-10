@@ -892,6 +892,9 @@ struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uin
 			clear_screen();
 			msg_context = 0xff;
 			msg_lock_from_env_set(0);//unlock the msg
+
+			// clear the password state
+			password_check_in_state_set(UNKNOW_PASSWORD_IND);
         }
 
 		switch(msg_context)
@@ -1157,7 +1160,6 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
     if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -1590,9 +1592,8 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 	uint8_t msg_storage = msg_context;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -2009,9 +2010,8 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -2340,9 +2340,8 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -2672,9 +2671,8 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -3012,9 +3010,8 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -3349,9 +3346,8 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -3686,9 +3682,8 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -4093,9 +4088,8 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -4459,9 +4453,8 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -4796,9 +4789,8 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -5125,9 +5117,8 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -5484,9 +5475,8 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -5844,9 +5834,8 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 
@@ -6353,9 +6342,8 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-    if(authentication_key)
+	if(authentication_key)
 	{
-		Log_d("\r\n    \r\n");
 		return menu_evt;
 	}
 

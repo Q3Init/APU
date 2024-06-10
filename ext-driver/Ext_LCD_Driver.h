@@ -60,6 +60,8 @@ extern uint8_t communication_setting[];
 extern uint8_t recover_home_setting[];
 extern uint8_t time_setting[];
 extern uint8_t password_setting[];
+extern uint8_t password_check_in[];
+extern uint8_t password_check_in_please[];
 extern uint8_t my_num_0[];
 
 //5x12size
