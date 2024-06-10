@@ -6,13 +6,23 @@
 #include "Ext_KEY.h"
 
 #define USER_PASSWORD_AUTHENTICATE() menu_user_password_authentication(msg_process_signal, msg_context, last_cursor, menu_target)
-
+#define OS_DELAY_US(x)  			for(int j=0;j<655360;j++){for(int a=0;a<4;a++);}
 extern uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_t msg_context_tag, uint8_t last_cursor, uint8_t menu_target);
 
 enum PASSWORD_AUTH_STATE_IND{
 	VALID_PASSWORD_IND = 0,
 	UNKNOW_PASSWORD_IND,
 	INVALID_PASSWORD_IND,
+};
+
+enum PROCESS_IND_TAG{
+	PROCESS_END,
+	PROCESS_ONGOING,
+	PROCESS_RESULT_FAILED,
+	PROCESS_RESULT_SUCCESS,
+	PROCESS_START,
+	PROCESS_TO_START,
+	UNKNOW_PROCESS,
 };
 
 #define uint8_t uint8

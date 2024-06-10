@@ -316,6 +316,84 @@ uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_
 	return password_auth_state;
 }
 
+uint8_t modify_value_check_menu_unit(uint8_t msg_process_signal,uint8_t msg_context)
+{
+	uint8_t process_state = UNKNOW_PROCESS;
+	static uint8_t enter_check_num = 0;
+	uint8_t msg_context_par = msg_context;
+
+	do
+	{
+		if(msg_process_signal == 0)
+		{
+			break;
+		}
+		
+		// notice there the bug, that there are two msg_context_par parameters!
+		// if((msg_context_par != KEY_ENTER) || (msg_context_par != KEY_RETURN))
+		// if(msg_context_par != KEY_ENTER)
+		// {
+		// 	if(msg_context_par != KEY_RETURN)
+		// 	{
+		// 		break;
+		// 	}
+		// 	Log_e("HELLO!! %s msg_process_signal=%d  msg_context_par=%d\n", __func__, msg_process_signal, msg_context_par);
+		// }
+
+		if(msg_context_par == KEY_ENTER)
+		{
+			enter_check_num++;
+		}
+
+		if(enter_check_num == 0)
+		{
+			msg_context_par = KEY_UNKNOW;
+		}
+		else if(enter_check_num == 1)
+		{
+			// just for the return-key clear
+			if(msg_context != KEY_RETURN)
+			{
+				msg_context_par = KEY_UNKNOW;
+				process_state = PROCESS_TO_START;
+			}
+		}else if(enter_check_num == 2)
+		{
+			msg_context_par = 0xff;
+			enter_check_num++;
+			process_state = PROCESS_START;
+		}else
+		{
+			process_state = PROCESS_ONGOING;
+		}
+
+		switch(msg_context_par)
+		{
+			case	0xff:
+				clear_screen();
+				// LCD_ShowChinese_garland(8, 13, run_monitor, 4);
+				LCD_ShowChinese_no_garland(20, 26, modify_check_notyfication_one, 7);
+				LCD_ShowChinese_garland(8, 39, modify_check_notyfication_two, 9);
+				break;
+			case    KEY_ENTER:
+				clear_screen();
+				LCD_ShowChinese_no_garland(42, 26, storage_sccessful_check, 4);
+				process_state = PROCESS_RESULT_SUCCESS;
+				enter_check_num = 0;
+				OS_DELAY_US(1000);
+				break;
+			case	KEY_RETURN:
+				process_state = PROCESS_RESULT_FAILED;
+				enter_check_num = 0;
+				break;
+			default:
+				break;
+		}
+	} while (false);
+
+	return process_state;
+}
+
 struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! */

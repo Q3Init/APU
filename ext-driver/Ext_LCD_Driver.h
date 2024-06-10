@@ -62,6 +62,9 @@ extern uint8_t time_setting[];
 extern uint8_t password_setting[];
 extern uint8_t password_check_in[];
 extern uint8_t password_check_in_please[];
+extern uint8_t modify_check_notyfication_two[];
+extern uint8_t modify_check_notyfication_one[];
+extern uint8_t storage_sccessful_check[];
 extern uint8_t my_num_0[];
 
 //5x12size

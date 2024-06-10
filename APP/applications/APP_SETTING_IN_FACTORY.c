@@ -3020,6 +3020,24 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
         }
 
 		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;

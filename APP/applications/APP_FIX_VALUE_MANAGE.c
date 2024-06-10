@@ -1235,6 +1235,24 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
         }
 
 		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;
@@ -1670,6 +1688,23 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
         }
 
 		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;
@@ -2101,6 +2136,23 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
         }
 
 		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;
@@ -2433,6 +2485,23 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
         }
 
 		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;
@@ -2771,6 +2840,24 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
     }
 
 	if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;
@@ -3112,6 +3199,24 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
     }
 
 	if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;
@@ -3450,6 +3555,24 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
     }
 
 	if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;
@@ -3788,6 +3911,24 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
     }
 
 	if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;
@@ -4196,6 +4337,24 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
     }
 
 	if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;
@@ -4563,6 +4722,24 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
     }
 
 	if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;
@@ -4895,6 +5072,24 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
         }
 
 		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;
@@ -5226,6 +5421,24 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
         }
 
 		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;
@@ -5587,6 +5800,24 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
         }
 
 		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;
@@ -6457,6 +6688,24 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
         }
 
 		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;
