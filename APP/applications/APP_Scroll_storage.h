@@ -13,5 +13,6 @@ extern void APP_Scroll_storage_Init(void);
 extern uint8 APP_Scroll_storage_write(uint8 block, void* data);
 extern uint8 APP_Scroll_storage_read(uint8 block,uint8 pages,void* data);
 extern uint8 APP_Scroll_storage_erase(uint8 block);
+extern uint8 APP_Scroll_read_memory_number(uint8 block,uint16 *memory_number);
 
 #endif

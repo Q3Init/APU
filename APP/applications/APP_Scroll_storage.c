@@ -49,12 +49,12 @@ uint8 APP_Scroll_storage_read(uint8 block,uint8 pages,void* data)
 {
     uint8 ret = E_NOK;
     if (block == Controls_block) {
-        block2_readAddress = BASE_BLOCK2_ADRESS + (pages * 48);
-        FRAM_Read(data,block2_readAddress,48);
+        block2_readAddress = BASE_BLOCK2_ADRESS + (pages * 12);
+        FRAM_Read(data,block2_readAddress,12);
         ret = E_OK;
     } else if (block == Error_Block) {
-        block3_readAddress = BASE_BLOCK3_ADRESS + (pages * 48);
-        FRAM_Read(data,block3_readAddress,48);
+        block3_readAddress = BASE_BLOCK3_ADRESS + (pages * 12);
+        FRAM_Read(data,block3_readAddress,12);
         ret = E_OK;
     } else {
         /* nothing to do */
@@ -65,42 +65,44 @@ uint8 APP_Scroll_storage_read(uint8 block,uint8 pages,void* data)
 uint8 APP_Scroll_storage_erase(uint8 block)
 {
     uint8 ret = E_NOK;
+    uint8 ret_sram = E_NOK;
     uint8 erase_index = 0;
-    uint8 erase_block = 0;
-    uint16 erase_address = 0;
+    uint8 block2_buf[BLOCK1_BLOCK2_CNT_LEN] = {0};
+    uint8 block3_buf[BLOCK1_BLOCK3_CNT_LEN] = {0};
     if (block == Controls_block) {
-        erase_index = block2_writeIndex / 32;
-        memset(&block2_writeIndex,0,sizeof(block2_writeIndex));
-        memset(block2_cnt,0,sizeof(block2_cnt));
-        FRAM_Erase(BLOCK1_BLOCK2_CNT_ADRESS,BLOCK1_BLOCK2_CNT_LEN);
-        Log_d("block2 erase_index:%d\n",erase_index);
-        if (erase_index == 0) {
-            Log_d("block2 erase\n");
-            FRAM_Erase(BASE_BLOCK2_ADRESS,384);
+        ret_sram = FRAM_Read(block2_buf,BLOCK1_BLOCK2_CNT_ADRESS,BLOCK1_BLOCK2_CNT_LEN);
+        erase_index = (uint16)(block2_buf[1] << 8) + (uint16)block2_buf[0];
+        if (ret_sram == E_OK) {
+            FRAM_Erase(BASE_BLOCK2_ADRESS,(12 * erase_index));
+            FRAM_Erase(BLOCK1_BLOCK2_CNT_ADRESS,BLOCK1_BLOCK2_CNT_LEN);
         }
-
-        for (erase_block = 0; erase_block < erase_index; erase_block++) {
-            erase_address = BASE_BLOCK2_ADRESS + erase_block * 384;
-            FRAM_Erase(erase_address,384);
-        }
-        ret = E_OK;
     } else if (block == Error_Block) {
-        erase_index = block3_writeIndex / 32;
-        memset(&block3_writeIndex,0,sizeof(block3_writeIndex));
-        memset(block3_cnt,0,sizeof(block3_cnt));
-        FRAM_Erase(BLOCK1_BLOCK3_CNT_ADRESS,BLOCK1_BLOCK3_CNT_LEN);
-        Log_d("block3 erase_index:%d\n",erase_index);
-        if (erase_index == 0) {
-            Log_d("block3 erase\n");
-            FRAM_Erase(BASE_BLOCK3_ADRESS,384);
+        ret_sram = FRAM_Read(block3_buf,BLOCK1_BLOCK3_CNT_ADRESS,BLOCK1_BLOCK3_CNT_LEN);
+        erase_index = (uint16)(block3_buf[1] << 8) + (uint16)block3_buf[0];
+        if (ret_sram == E_OK) {
+            FRAM_Erase(BASE_BLOCK3_ADRESS,(12 * erase_index));
+            FRAM_Erase(BLOCK1_BLOCK3_CNT_ADRESS,BLOCK1_BLOCK3_CNT_LEN);
         }
-        for (erase_block = 0; erase_block < erase_index; erase_block++) {
-            erase_address = BASE_BLOCK3_ADRESS + erase_block * 384;
-            FRAM_Erase(erase_address,384);
-        }
-        ret = E_OK;
     } else {
         /* nothing to do */
     }    
     return ret;
 }
+
+uint8 APP_Scroll_read_memory_number(uint8 block,uint16 *memory_number)
+{
+    uint8 ret = E_NOK;
+    uint8 block2_buff[BLOCK1_BLOCK2_CNT_LEN] = {0};
+    uint8 block3_buff[BLOCK1_BLOCK3_CNT_LEN] = {0};
+    if (block == Controls_block) {
+        ret = FRAM_Read(block2_buff,BLOCK1_BLOCK2_CNT_ADRESS,BLOCK1_BLOCK2_CNT_LEN);
+        *memory_number = (uint16)(block2_buff[1] << 8) + (uint16)block2_buff[0];
+    } else if (block == Error_Block) {
+        ret = FRAM_Read(block3_buff,BLOCK1_BLOCK3_CNT_ADRESS,BLOCK1_BLOCK3_CNT_LEN);
+        *memory_number = (uint16)(block3_buff[1] << 8) + (uint16)block3_buff[0];
+    } else {
+        /* nothing to do */
+    }
+    return ret;
+}
+
