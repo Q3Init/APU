@@ -6179,6 +6179,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
         }
 
 		if(lcd_modify_num_env.enter_flag == true){
+			MODIFY_CHECK_MENU_UNIT();
 			if(msg_context == KEY_ENTER)
 			{
 				lcd_modify_num_env.enter_key_ind++;

@@ -6,6 +6,18 @@
 
 #define LCD_FLUSH_SCREEN_IND 0xff
 
+#define MODIFY_CHECK_MENU_UNIT()	do{uint8_t modify_check_state = UNKNOW_PROCESS;\
+										modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);\
+										if(lcd_modify_num_env.enter_key_ind == 1){\
+											if(modify_check_state == PROCESS_START){\
+												return menu_evt;\
+											}\
+											if(modify_check_state == PROCESS_ONGOING){\
+												return menu_evt;\
+											}\
+										}\
+									}while(false)\
+
 extern uint8_t lcd_password_num_array[6];
 extern uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_t msg_context_tag, uint8_t last_cursor, uint8_t menu_target);
 
