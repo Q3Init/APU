@@ -5529,11 +5529,11 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 			switch(chinese_menu_idx)
 			{
 				case OVER_SEQUENCE_FIX_VALUE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array);
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case OVER_SEQUENCE_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array);
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case OVER_SEQUENCE_CLOSE:
@@ -5908,11 +5908,11 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 			switch(chinese_menu_idx)
 			{
 				case SYSTEM_FIX_VALUE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array);
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case SYSTEM_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array);
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case SYSTEM_CHECK_CURRENT:
@@ -6305,16 +6305,16 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Voltage_Closing_Upper_Frequency_Limit(0);
-							app_parameter_write_Voltage_Closing_Upper_Frequency_Limit(int_flag);
-							int_flag = app_parameter_read_Voltage_Closing_Upper_Frequency_Limit();
+							app_parameter_write_Voltage_Closing_Upper_Frequency_Limit(float_flag);
+							float_flag = app_parameter_read_Voltage_Closing_Upper_Frequency_Limit();
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case MIN_FREQUENCE:
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Voltage_Closing_Lower_Frequency_Limit(0);
-							app_parameter_write_Voltage_Closing_Lower_Frequency_Limit(int_flag);
-							int_flag = app_parameter_read_Voltage_Closing_Lower_Frequency_Limit();
+							app_parameter_write_Voltage_Closing_Lower_Frequency_Limit(float_flag);
+							float_flag = app_parameter_read_Voltage_Closing_Lower_Frequency_Limit();
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case CLOSING_WITH_VOLTAGE:
@@ -6363,16 +6363,16 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Voltage_Closing_Charging_Delay(0);
-							app_parameter_write_Voltage_Closing_Charging_Delay(int_flag);
-							int_flag = app_parameter_read_Voltage_Closing_Charging_Delay();
+							app_parameter_write_Voltage_Closing_Charging_Delay(float_flag);
+							float_flag = app_parameter_read_Voltage_Closing_Charging_Delay();
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case CLOSING_WITH_VOLTAGE_DELAY:
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Voltage_Closing_Delay(0);
-							app_parameter_write_Voltage_Closing_Delay(int_flag);
-							int_flag = app_parameter_read_Voltage_Closing_Delay();
+							app_parameter_write_Voltage_Closing_Delay(float_flag);
+							float_flag = app_parameter_read_Voltage_Closing_Delay();
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case SWITCH_IN_OUT:
@@ -6401,7 +6401,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 				case MIN_VOLTAGE:
 				case MAX_FREQUENCE:
 				case MIN_FREQUENCE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array);
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case CLOSING_WITH_VOLTAGE:
@@ -6416,7 +6416,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 					break;
 				case CLOSING_CHARGE_DELAY:
 				case CLOSING_WITH_VOLTAGE_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array);
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case SWITCH_IN_OUT:
@@ -6741,7 +6741,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 						lcd_showchinese_no_garland_or_garland((chinese_idx_flush & 0x1000)>>8, 8, 13, closing_with_voltage_delay, 6);
 						lcd_state_flush_for_num(82,13,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, app_parameter_read_Voltage_Closing_Delay(), 
-													num_array, 2, 3, num_idx_flush[12]);
+													num_array, 3, 2, num_idx_flush[12]);
 						lcd_number_display_in_order(88, 13, 5, 12, 
 											num_idx_flush[12], sizeof(num_array), num_array, 3);
 						lcd_state_flush_for_num(120,13,my_char_s,6,12,1);

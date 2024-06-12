@@ -189,6 +189,7 @@
       <LintExecutable></LintExecutable>
       <LintConfigFile></LintConfigFile>
       <bLintAuto>0</bLintAuto>
+<<<<<<< Updated upstream
       <bAutoGenD>0</bAutoGenD>
       <LntExFlags>0</LntExFlags>
       <pMisraName></pMisraName>
@@ -199,6 +200,11 @@
       <pszMrulep></pszMrulep>
       <pSingCmdsp></pSingCmdsp>
       <pMultCmdsp></pMultCmdsp>
+=======
+      <Lin2Executable></Lin2Executable>
+      <Lin2ConfigFile></Lin2ConfigFile>
+      <bLin2Auto>0</bLin2Auto>
+>>>>>>> Stashed changes
     </TargetOption>
   </Target>
 
