@@ -1009,7 +1009,7 @@ void APP_Sample_Adc_Cpy(float32 *p_buff, uint32 len, APP_Sample_Adc_Ch_e ch)
             dc_fval = APP_ADC2VOLT_CALC(DMA_ADCConvertedValue[i][channel]);
             p_buff[i] = APP_DC2AC_VOLT(dc_fval);
             // p_buff[i] = adc_array[i];
-            p_buff[i] = 380*arm_sin_f32(i*2*PI*50/FFT_SAMPLE_RATE + 60.0f * PI/180.0f) + 80*arm_sin_f32(i*2*PI*60/FFT_SAMPLE_RATE + 30.0f * PI/180.0f);
+            // p_buff[i] = 380*arm_sin_f32(i*2*PI*50/FFT_SAMPLE_RATE + 60.0f * PI/180.0f) + 80*arm_sin_f32(i*2*PI*60/FFT_SAMPLE_RATE + 30.0f * PI/180.0f);
             // Log_d("CH_%d, dcVolt_mv=%.4f, acVolt_v=%.4f, adc=%d\n", channel, dc_fval, p_buff[i], DMA_ADCConvertedValue[i][channel]);
         }
     } else {
@@ -1017,7 +1017,7 @@ void APP_Sample_Adc_Cpy(float32 *p_buff, uint32 len, APP_Sample_Adc_Ch_e ch)
             dc_fval = APP_ADC2CURRENT_CALC(DMA_ADCConvertedValue[i][channel]);
             p_buff[i] = APP_DC2AC_CURRENT(dc_fval);
             // p_buff[i] = adc_array[i];
-            p_buff[i] = 10*arm_sin_f32(i*2*PI*50/FFT_SAMPLE_RATE + 120.0f * PI/180.0f) + 1*arm_sin_f32(i*2*PI*60/FFT_SAMPLE_RATE + 30.0f * PI/180.0f);
+            // p_buff[i] = 10*arm_sin_f32(i*2*PI*50/FFT_SAMPLE_RATE + 120.0f * PI/180.0f) + 1*arm_sin_f32(i*2*PI*60/FFT_SAMPLE_RATE + 30.0f * PI/180.0f);
             // Log_d("CH_%d, dcVolt_mv=%.4f, acCurrent_A=%.4f, adc=%d\n", channel, dc_fval, p_buff[i], DMA_ADCConvertedValue[i][channel]);
         }
     }

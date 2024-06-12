@@ -365,7 +365,7 @@ static void APP_Protection_Voltage_Handler(void)
 
         /* Ulmax 大于阈值 && （开关在合位 或 Imax > 0.1A） && 过压一段功能投入 */
         if ((APP_Get_Line_Voltage_Max() > volt_threshold) && 
-            (((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > 0.1)))) {
+            (((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > CURRENT_MIN_LIMIT_THR)))) {
 
             if ((APP_Get_System_Ms() - pMnt->anti_shake_tick[APP_PRT_OVER_VOLT_LV1]) >= ANTI_SHAKE_VOLT_DELAY) {
                 if (false == pMnt->delay_exec_list[APP_PRT_OVER_VOLT_LV1]) {
@@ -399,7 +399,7 @@ static void APP_Protection_Voltage_Handler(void)
      
         /* Ulmax 大于阈值 && （开关在合位 或 Imax > 0.1A） && 过压二段功能投入 */
         if ((APP_Get_Line_Voltage_Max() > volt_threshold) && 
-            (((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > 0.1)))) {
+            (((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > CURRENT_MIN_LIMIT_THR)))) {
 
             if ((APP_Get_System_Ms() - pMnt->anti_shake_tick[APP_PRT_OVER_VOLT_LV2]) >= ANTI_SHAKE_VOLT_DELAY) {
                 if (false == pMnt->delay_exec_list[APP_PRT_OVER_VOLT_LV2]) {
@@ -432,7 +432,7 @@ static void APP_Protection_Voltage_Handler(void)
      
         /* 30v < Ulmin < 设置定值 && （开关在合位 或 Imax > 0.1A） && 低压一段功能投入 */
         if (((APP_Get_Line_Voltage_Min() > 30.0) && (APP_Get_Line_Voltage_Min() < volt_threshold)) && 
-            (((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > 0.1)))) {
+            (((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > CURRENT_MIN_LIMIT_THR)))) {
 
             if ((APP_Get_System_Ms() - pMnt->anti_shake_tick[APP_PRT_UNDER_VOLT_LV1]) >= ANTI_SHAKE_VOLT_DELAY) {
                 if (false == pMnt->delay_exec_list[APP_PRT_UNDER_VOLT_LV1]) {
@@ -465,7 +465,7 @@ static void APP_Protection_Voltage_Handler(void)
       
         /* 30v < Ulmin < 设置定值 && （开关在合位 或 Imax > 0.1A） && 低压二段功能投入 */
         if (((APP_Get_Line_Voltage_Min() > 30.0) && (APP_Get_Line_Voltage_Min() < volt_threshold)) && 
-            (((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > 0.1)))) {
+            (((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > CURRENT_MIN_LIMIT_THR)))) {
             
             if ((APP_Get_System_Ms() - pMnt->anti_shake_tick[APP_PRT_UNDER_VOLT_LV2]) >= ANTI_SHAKE_VOLT_DELAY) {
                 if (false == pMnt->delay_exec_list[APP_PRT_UNDER_VOLT_LV2]) {
@@ -509,7 +509,7 @@ static void APP_Protection_Freq_Handler(void)
         
         /* 频率过高功能投入 && 频率值 > 定值 && Ua > 35v && （开关在合位或Imax > 0.1A）*/
         if ((APP_Get_Fundamental_Freq() > freq_threshold) && (APP_Get_Voltage_Ua() > 35.0) && 
-            ((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > 0.1))) {
+            ((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > CURRENT_MIN_LIMIT_THR))) {
 
             if ((APP_Get_System_Ms() - pMnt->anti_shake_tick[APP_PRT_OVER_FREQ]) >= ANTI_SHAKE_FREQ_DELAY) {
                 if (false == pMnt->delay_exec_list[APP_PRT_OVER_FREQ]) {
@@ -542,7 +542,7 @@ static void APP_Protection_Freq_Handler(void)
      
         /* 频率过低功能投入 && 频率值 < 定值 && Ua > 35v && （开关在合位或Imax > 0.1A）*/
         if ((APP_Get_Fundamental_Freq() < freq_threshold) && (APP_Get_Voltage_Ua() > 35.0) && 
-            ((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > 0.1))) {
+            ((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > CURRENT_MIN_LIMIT_THR))) {
 
             if ((APP_Get_System_Ms() - pMnt->anti_shake_tick[APP_PRT_LOW_FREQ]) >= ANTI_SHAKE_FREQ_DELAY) {
                 if (false == pMnt->delay_exec_list[APP_PRT_LOW_FREQ]) {
@@ -577,7 +577,7 @@ static void APP_Protection_Freq_Handler(void)
             spike_val = ABS_FLOAT((APP_Get_Fundamental_Freq() - pMnt->last_fundamental_freq)) / ((APP_Get_System_Ms() - pMnt->spike_freq_run_tick) / 1000.0);
             pMnt->spike_freq_run_tick = APP_Get_System_Ms();
             if ((spike_val > freq_threshold) && (pMnt->last_fundamental_freq > 0.0) && (APP_Get_Voltage_Ua() > 35.0) && 
-                ((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > 0.1))) {
+                ((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > CURRENT_MIN_LIMIT_THR))) {
                 
                 if (false == pMnt->delay_exec_list[APP_PRT_SPIKE_FREQ]) {
                     pMnt->delay_exec_list[APP_PRT_SPIKE_FREQ] = true;
@@ -620,7 +620,7 @@ static void APP_Protection_ReversePower_Handler(void)
        
         /* 逆功率功能投入 && 功率绝对值 > 定值 && Ua > 35V && 开关在合位或Imax > 0.1A */
         if ((ABS_FLOAT(APP_Get_Reverse_Power()) > power_threshold) && (APP_Get_Voltage_Ua() > 35.0) && 
-            ((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > 0.1))) {
+            ((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > CURRENT_MIN_LIMIT_THR))) {
             
             if ((APP_Get_System_Ms() - pMnt->anti_shake_tick[APP_PRT_REVERSE_POWER]) >= ANTI_SHAKE_REVERSE_POWER_DELAY) {
                 if (false == pMnt->delay_exec_list[APP_PRT_REVERSE_POWER]) {
@@ -1042,13 +1042,15 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
                     Log_i("System On Volt Rise Switch On Reason: Non Manual.\n");
                 }
             }                
-        } 
+        } else {
+            pMnt->delay_exec_list[APP_PRT_ON_VOLT_SWITCH_ON] = false;
+        }
         
         if (true == pMnt->delay_exec_list[APP_PRT_ON_VOLT_SWITCH_ON]) {
             if ((APP_Get_System_Ms() - pMnt->tick_list[APP_PRT_ON_VOLT_SWITCH_ON]) > delay_ms) {
                 APP_Relay_Select_Switch_On();
                 pMnt->state.on_volt_switch_on_state = 1;
-                Log_i("System On Volt Rise Switch On. Relay Select Switch On.\n");
+                // Log_i("System On Volt Rise Switch On. Relay Select Switch On.\n");
             }
         }
     }
@@ -1073,7 +1075,7 @@ static void APP_Protection_PowerRestorationOperate_Handler(void)
                                            app_parameter_read_Power_recovery_Delay()) * 1000);
         /* 功率恢复功能投入 && 开关在分位 && IA\IB\IC均<0.1A && 逆功率保护动作过 && P > 功率恢复定值 */
         if ((true == APP_Remote_Signal_Input_Switching_Exist_Off()) && (pMnt->state.reverse_power_switch_off_state) &&
-            ((APP_Get_Current_Ia() < 0.1) && (APP_Get_Current_Ib() < 0.1) && (APP_Get_Current_Ic() < 0.1) && 
+            ((APP_Get_Current_Ia() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ib() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ic() < CURRENT_MIN_LIMIT_THR) && 
             (APP_Get_Active_Power_Total() > threshold))) {
 
             if ((APP_Get_System_Ms() - pMnt->anti_shake_tick[APP_PRT_POWER_RESTORATION]) >= ANTI_SHAKE_POWER_RESTORATION_DELAY) {
@@ -1154,6 +1156,9 @@ void APP_Protection_Management_Init(void)
     pMnt->enable.non_manual_switch_on_enable              = 1;
     pMnt->enable.ext_ctrl_permit_switch_off               = 1;
     pMnt->enable.zero_seq_permit_switch_off               = 1;
+
+    // 合闸充电状态先默认为1
+    pMnt->state.switch_on_charge_state = 1;
 
     for (i = 0; i < APP_PRT_MAX; i++) {
         pMnt->tick_list[i] = APP_Get_System_Ms();
