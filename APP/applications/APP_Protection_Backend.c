@@ -586,24 +586,21 @@ boolean APP_Relay_Select_Switch_On(void)
     boolean err = false;
 
     if (BIT_RESET == APP_Remote_Signal_Input_Read_Group_1()) {
-        if (false == APP_Relay_Control(APP_RELAY_CHANNEL_HC, true)) {
-            err = true;
-        }
+        APP_Relay_Control(APP_RELAY_CHANNEL_HC, true);
+		APP_Relay_Control(APP_RELAY_CHANNEL_TQ, false);
     }
     if (BIT_RESET == APP_Remote_Signal_Input_Read_Group_2()) {
-        if (false == APP_Relay_Control(APP_RELAY_CHANNEL_TQ, true)) {
-            err = true;
-        }
+        APP_Relay_Control(APP_RELAY_CHANNEL_D01, true);
+		APP_Relay_Control(APP_RELAY_CHANNEL_D02, false);
     }
     if (BIT_RESET == APP_Remote_Signal_Input_Read_Group_3()) {
-        if (false == APP_Relay_Control(APP_RELAY_CHANNEL_D01, true)) {
-            err = true;
-        }
+        APP_Relay_Control(APP_RELAY_CHANNEL_D03, true);
+		APP_Relay_Control(APP_RELAY_CHANNEL_D04, false);
     }
     if (BIT_RESET == APP_Remote_Signal_Input_Read_Group_4()) {
-        if (false == APP_Relay_Control(APP_RELAY_CHANNEL_D02, true)) {
-            err = true;
-        }
+        // if (false == APP_Relay_Control(APP_RELAY_CHANNEL_D02, true)) {
+        //     err = true;
+        // }
     }
    
     return (err == true) ? false : true;
@@ -619,24 +616,21 @@ boolean APP_Relay_Select_Switch_Off(void)
     boolean err = false;
 
     if (BIT_SET == APP_Remote_Signal_Input_Read_Group_1()) {
-        if (false == APP_Relay_Control(APP_RELAY_CHANNEL_HC, false)) {
-            err = true;
-        }
+        APP_Relay_Control(APP_RELAY_CHANNEL_HC, false);
+		APP_Relay_Control(APP_RELAY_CHANNEL_TQ, true);
     }
     if (BIT_SET == APP_Remote_Signal_Input_Read_Group_2()) {
-        if (false == APP_Relay_Control(APP_RELAY_CHANNEL_TQ, false)) {
-            err = true;
-        }
+        APP_Relay_Control(APP_RELAY_CHANNEL_D01, false);
+		APP_Relay_Control(APP_RELAY_CHANNEL_D02, true);
     }
     if (BIT_SET == APP_Remote_Signal_Input_Read_Group_3()) {
-        if (false == APP_Relay_Control(APP_RELAY_CHANNEL_D01, false)) {
-            err = true;
-        }
+        APP_Relay_Control(APP_RELAY_CHANNEL_D03, false);
+		APP_Relay_Control(APP_RELAY_CHANNEL_D04, true);
     }
     if (BIT_SET == APP_Remote_Signal_Input_Read_Group_4()) {
-        if (false == APP_Relay_Control(APP_RELAY_CHANNEL_D02, false)) {
-            err = true;
-        }
+        // if (false == APP_Relay_Control(APP_RELAY_CHANNEL_D02, false)) {
+        //     err = true;
+        // }
     }
    
     return (err == true) ? false : true;
@@ -653,24 +647,21 @@ boolean APP_Relay_ExtCtrl_Switch_Off(void)
     boolean err = false;
 
     if (BIT_RESET == APP_Remote_Signal_Input_Read_Group_1()) {
-        if (false == APP_Relay_Control(APP_RELAY_CHANNEL_HC, false)) {
-            err = true;
-        }
+        APP_Relay_Control(APP_RELAY_CHANNEL_HC, false);
+		APP_Relay_Control(APP_RELAY_CHANNEL_TQ, true);
     }
     if (BIT_RESET == APP_Remote_Signal_Input_Read_Group_2()) {
-        if (false == APP_Relay_Control(APP_RELAY_CHANNEL_TQ, false)) {
-            err = true;
-        }
+        APP_Relay_Control(APP_RELAY_CHANNEL_D01, false);
+		APP_Relay_Control(APP_RELAY_CHANNEL_D02, true);
     }
     if (BIT_RESET == APP_Remote_Signal_Input_Read_Group_3()) {
-        if (false == APP_Relay_Control(APP_RELAY_CHANNEL_D01, false)) {
-            err = true;
-        }
+        APP_Relay_Control(APP_RELAY_CHANNEL_D03, false);
+		APP_Relay_Control(APP_RELAY_CHANNEL_D04, true);
     }
     if (BIT_RESET == APP_Remote_Signal_Input_Read_Group_4()) {
-        if (false == APP_Relay_Control(APP_RELAY_CHANNEL_D02, false)) {
-            err = true;
-        }
+        // if (false == APP_Relay_Control(APP_RELAY_CHANNEL_D02, false)) {
+        //     err = true;
+        // }
     }
    
     return (err == true) ? false : true;
@@ -684,7 +675,10 @@ boolean APP_Relay_ExtCtrl_Switch_Off(void)
  */
 boolean APP_Relay_Force_Switch_On(void)
 {
-    return APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D01 | APP_RELAY_CHANNEL_D02, true);
+    // return APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D01 | APP_RELAY_CHANNEL_D02, true);
+    APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_D01, true);
+    APP_Relay_Control(APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D02, false);
+    return true;
 }
 
 /**
@@ -694,7 +688,10 @@ boolean APP_Relay_Force_Switch_On(void)
  */
 boolean APP_Relay_Force_Switch_Off(void)
 {
-    return APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D01 | APP_RELAY_CHANNEL_D02, false);
+    // return APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D01 | APP_RELAY_CHANNEL_D02, false);
+    APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_D01, false);
+    APP_Relay_Control(APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D02, true);
+    return true;
 }
 
 /**
