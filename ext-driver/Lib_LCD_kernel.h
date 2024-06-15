@@ -49,6 +49,12 @@ enum PROCESS_IND_TAG{
 #define SECOND_MENU_MASK 	(uint32_t)0x000000F8
 #define THIRD_MENU_MASK 	(uint32_t)0x00007F00
 
+enum MSG_PROCESS_RESULT_IND_TAG{
+	MSG_TRANSMIT_SUCCESS,
+	MSG_TRANSMIT_FAILED,
+	MSG_TRANSMIT_UNKNOW_RESULT,
+};
+
 enum menu_level_tag{
 	TOP_INTERFACE = 0, // fix it to zero
 	FIRST_MENU,
@@ -146,15 +152,24 @@ enum menu_status{
 
 enum MSG_LAYER{
 	UNKNOW_LAYER,
+	INIT_LAYER,
 	LCD_LAYER,
 	SRAM_LAYER,
 	KEY_LAYER,
 	MODBUS_LAYER,
+	ERROR_INDICATION_LAYER,
+	FREE_FOR_LAYER,
 };
 
 enum MSG_PRIORITY_MASK{
+	LCD_LAYER_MSG_PRIORITY_BIT = 0,
 	LCD_LAYER_MSG_PRIORITY_MASK = 0X01,
-	OTHER_LAYER_MSG_PRIORITY_MASK = 0x02,
+
+	ERROR_APP_LAYER_MSG_PRIORITY_BIT = 1,
+	ERROR_APP_LAYER_MSG_PRIORITY_MASK = 0x02,
+
+	OTHER_LAYER_MSG_PRIORITY_BIT = 2,
+	OTHER_LAYER_MSG_PRIORITY_MASK = 0x04,
 };
 
 enum MSG_CONTEXT{
@@ -174,6 +189,11 @@ enum MSG_STATE_TYPE{
 enum RECORD_SIGNAL_TAG{
 	SRAM_RECORD_SIGNAL,
 	NO_SIGNAL,
+};
+
+enum ERROR_MENU_IND_ENABLE_TAG{
+	ERROR_MENU_IND_DISABLE = 0x00,
+	ERROR_MENU_IND_ENABLE = 0x01,
 };
 
 struct msg_info_tag 
@@ -199,8 +219,9 @@ struct menu_kernel_env_tag{
 	uint8_t last_menu_level;
 	struct menu_cursor_history_tag menu_cursor_history;
 	uint8_t password_ind;
-	uint8_t msg_lock; // bit[0]:LCD(highest Priority!)  bit[1]:other Layer
+	uint8_t msg_lock; // bit[0]:LCD(the highest Priority!)  bit[1]:other Layer
 	struct msg_info_tag msg_info;
+	uint8_t error_indication_menu;// bit[0]:unopen  bit[1]:open
 };
 
 struct menu_type_info_tag {
@@ -235,7 +256,7 @@ extern struct menu_cmd_tag first_menu_cmd_tbl[];
 extern struct menu_cmd_tag second_menu_cmd_tbl[];
 extern struct menu_cmd_tag third_menu_cmd_tbl[];
 
-extern void msg_send_to_lcd_layer(uint8_t msg_source, uint8_t msg_destination, uint8_t msg_status, uint8_t msg_context);
+extern uint8_t msg_send_to_lcd_layer(uint8_t msg_source, uint8_t msg_destination, uint8_t msg_status, uint8_t msg_context);
 
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 /* !!!!!!!!!!! Prohibit calling the fllowing function in interrupt_function !!!!!!!!!! */
@@ -249,6 +270,7 @@ extern void menu_level_from_env_set(uint8_t first_level, uint8_t second_level, u
 extern void cur_menu_type_ptr_from_env_set(uint8_t cur_menu_type_ptr);
 extern void password_check_in_state_set(uint8_t ind);
 extern void msg_lock_from_env_set(uint8_t msg_lock_level);
+extern void error_indication_menu_from_env_set(uint8_t error_ind_menu_enable);
 extern uint8_t msg_status_from_env_get(void);
 extern uint8_t msg_context_from_env_get(void);
 extern uint8_t msg_source_from_env_get(void);
@@ -256,6 +278,7 @@ extern uint8_t msg_destination_from_env_get(void);
 extern uint32_t cur_menu_level_from_env_get(void);
 extern uint8_t cur_menu_type_ptr_from_env_get(void);
 extern uint8_t msg_lock_from_env_get(void);
+extern uint8_t error_indication_menu_from_env_get(void);
 /* !!!!!!!!!!! Prohibit calling the above function in interrupt_function !!!!!!!!!!!*/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 
@@ -264,6 +287,7 @@ extern void menu_kernel_env_init(void);
 
 /* Please register here your menu handlers*/
 extern struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * error_indication_menu_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * run_monitor_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * report_display_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_t msg_context);

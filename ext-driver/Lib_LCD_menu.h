@@ -63,6 +63,7 @@ extern void lcd_showchinese_no_garland_or_garland(uint32_t garland_flush_target,
 
 /* Please register here your menu handlers*/
 extern struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * error_indication_menu_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * run_monitor_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * report_display_handler(uint8_t msg_process_signal, uint8_t msg_context);
 // extern struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_t msg_context);

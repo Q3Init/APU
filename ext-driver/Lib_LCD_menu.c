@@ -502,6 +502,46 @@ struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_
 	return menu_evt;
 }
 
+/*
+	just for special menu
+*/
+struct menu_event_tag * error_indication_menu_handler(uint8_t msg_process_signal, uint8_t msg_context)
+{
+	/* msg_evt should be malloced and return it! */
+	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
+	menu_evt->status = EVT_NO_ERROR;
+	menu_evt->msg_operation = MSG_RESUMED;
+
+	if(msg_process_signal == 1)
+	{
+		if(msg_context == KEY_RETURN)
+		{
+            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+			Log_d("key KEY_RETURN menu!\r\n");
+			error_indication_menu_from_env_set(ERROR_MENU_IND_DISABLE);
+		}
+
+        if(msg_context == FLUSH_SCREEN)
+        {
+			Log_d("\r\n    \r\n");
+			clear_screen();
+			msg_context = 0xff;
+			// msg_lock_from_env_set(0);//unlock the msg
+        }
+
+		switch(msg_context)
+		{
+			case	0xff:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, main_menu, 3);
+				break;
+			default:
+				break;
+		}
+	}
+
+	return menu_evt;
+}
 
 
 struct menu_event_tag * run_monitor_handler(uint8_t msg_process_signal, uint8_t msg_context)

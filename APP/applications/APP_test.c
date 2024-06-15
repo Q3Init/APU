@@ -54,6 +54,20 @@ void APP_test_Mainfunction(void)
                 // app_parameter_write_Undervoltage_protection_LV2_One_Eol(ddddd);
             }
         }
+
+        // {
+            // uint8_t my_flag = 0;
+            // if (my_flag <= 1) {
+            //     uint8_t state = msg_send_to_lcd_layer(ERROR_INDICATION_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+            //     if(state == MSG_TRANSMIT_SUCCESS)
+            //     {
+            //         Log_e("HELLO!!! SUCCESS!!!!\n");
+            //     }
+            //     Log_e("HELLO!!! my_flag!!\n");
+            //     my_flag++;
+            // }
+        // }
+
         key_task_test_for_lin();
         //lcd_test_main();//just for lcd driver test
         vTaskDelay(50);
@@ -176,25 +190,25 @@ void key_state_process(uint8_t key_state)
         switch(key_state)
         {
             case KEY_ENTER:
-                msg_send_to_lcd_layer(UNKNOW_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_ENTER);
+                msg_send_to_lcd_layer(KEY_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_ENTER);
                 break;
             case KEY_RETURN:
-                msg_send_to_lcd_layer(UNKNOW_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_RETURN);
+                msg_send_to_lcd_layer(KEY_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_RETURN);
                 break;
             case KEY_UP:
-                msg_send_to_lcd_layer(UNKNOW_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_UP);
+                msg_send_to_lcd_layer(KEY_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_UP);
                 break;
             case KEY_DOWN:
-                msg_send_to_lcd_layer(UNKNOW_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_DOWN);
+                msg_send_to_lcd_layer(KEY_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_DOWN);
                 break;
             case KEY_LEFT:
-                msg_send_to_lcd_layer(UNKNOW_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_LEFT);
+                msg_send_to_lcd_layer(KEY_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_LEFT);
                 break;
             case KEY_RIGHT:
-                msg_send_to_lcd_layer(UNKNOW_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_RIGHT);
+                msg_send_to_lcd_layer(KEY_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_RIGHT);
                 break;
             case KEY_PLUS:
-                msg_send_to_lcd_layer(UNKNOW_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_PLUS);
+                msg_send_to_lcd_layer(KEY_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_PLUS);
                 break;
             default:
                 break;
@@ -203,7 +217,7 @@ void key_state_process(uint8_t key_state)
     
 
 }
-
+uint8_t flag_key = 0;
 void key_task_test_for_lin(void)
 {
     uint8 key_state = key_state_get();

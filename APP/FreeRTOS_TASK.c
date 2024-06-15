@@ -25,7 +25,7 @@ void AppTaskCreate(void)
   /* BSW_Adcif_Mainfunction */
   xReturn = xTaskCreate((TaskFunction_t )BSW_Adcif_Mainfunction,
                         (const char*    )"LED1_Task",
-                        (uint16_t       )32,
+                        (uint16_t       )512,
                         (void*          )NULL,
                         (UBaseType_t    )2,
                         (TaskHandle_t*  )&BSW_Adcif_Mainfunction_Task_Handle);
@@ -36,7 +36,7 @@ void AppTaskCreate(void)
   /* menu_kernel_schedule */
   xReturn = xTaskCreate((TaskFunction_t )menu_kernel_schedule,
                         (const char*    )"LED1_Task",
-                        (uint16_t       )128,
+                        (uint16_t       )2048,
                         (void*          )NULL,
                         (UBaseType_t    )3,
                         (TaskHandle_t*  )&menu_kernel_schedule_Task_Handle);
@@ -47,7 +47,7 @@ void AppTaskCreate(void)
   /* APP_test_Mainfunction */
   xReturn = xTaskCreate((TaskFunction_t )APP_test_Mainfunction,
                         (const char*    )"LED1_Task",
-                        (uint16_t       )128,
+                        (uint16_t       )256,
                         (void*          )NULL,
                         (UBaseType_t    )4,
                         (TaskHandle_t*  )&APP_test_Mainfunction_Task_Handle);
