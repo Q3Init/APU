@@ -31,10 +31,11 @@ typedef struct
 {
     /* data */
     fault_type fault_id;
+    fault_type falut_state;
     uint8 (*callout)(void);
 }APP_fault_Rte;
 
 
-extern fault_type get_app_fault_status(void);
+extern fault_type get_app_fault_status(fault_type fault_index);
 
 #endif
