@@ -219,7 +219,7 @@ struct menu_kernel_env_tag{
 	uint8_t last_menu_level;
 	struct menu_cursor_history_tag menu_cursor_history;
 	uint8_t password_ind;
-	uint8_t msg_lock; // bit[0]:LCD(the highest Priority!)  bit[1]:other Layer
+	uint32_t msg_lock; // bit[0]:LCD(the highest Priority!)  bit[1]:other Layer
 	struct msg_info_tag msg_info;
 	uint8_t error_indication_menu;// bit[0]:unopen  bit[1]:open
 };
@@ -269,7 +269,7 @@ extern void msg_source_from_env_set(uint8_t msg_source);
 extern void menu_level_from_env_set(uint8_t first_level, uint8_t second_level, uint8_t third_level);
 extern void cur_menu_type_ptr_from_env_set(uint8_t cur_menu_type_ptr);
 extern void password_check_in_state_set(uint8_t ind);
-extern void msg_lock_from_env_set(uint8_t msg_lock_level);
+extern void msg_lock_from_env_set(uint32_t msg_lock_level);
 extern void error_indication_menu_from_env_set(uint8_t error_ind_menu_enable);
 extern uint8_t msg_status_from_env_get(void);
 extern uint8_t msg_context_from_env_get(void);

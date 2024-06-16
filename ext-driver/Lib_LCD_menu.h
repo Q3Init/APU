@@ -32,7 +32,7 @@ struct lcd_modify_num_tag{
 extern struct lcd_modify_num_tag lcd_modify_num_env;
 
 extern uint8_t cur_menu_type_ptr_from_env_get(void);
-extern void msg_lock_from_env_set(uint8_t msg_lock_level);
+extern void msg_lock_from_env_set(uint32_t msg_lock_level);
 extern void cur_menu_type_ptr_from_env_set(uint8_t cur_menu_type_ptr);
 extern void password_check_in_state_set(uint8_t ind);
 extern uint8_t menu_type_ptr_match(uint8_t key_signal, uint8_t menu_row_num, uint8_t menu_column_num, uint8_t menu_type_max_num);

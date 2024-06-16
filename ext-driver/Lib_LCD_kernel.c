@@ -242,12 +242,12 @@ uint8_t cur_menu_type_ptr_from_env_get()
 	return menu_kernel_env.cur_menu_type_ptr;
 }
 
-void msg_lock_from_env_set(uint8_t msg_lock_level)
+void msg_lock_from_env_set(uint32_t msg_lock_level)
 {
 	menu_kernel_env.msg_lock = msg_lock_level;
 }
 
-uint8_t msg_lock_from_env_get()
+uint32_t msg_lock_from_env_get()
 {
 	return menu_kernel_env.msg_lock;
 }
@@ -271,23 +271,80 @@ uint8_t error_indication_menu_from_env_get()
 uint8_t msg_send_to_lcd_layer(uint8_t msg_source, uint8_t msg_destination, uint8_t msg_status, uint8_t msg_context)
 {
 	uint8_t msg_send_state = MSG_TRANSMIT_UNKNOW_RESULT;
-	uint8_t msg_lock = msg_lock_from_env_get();
+	uint32_t msg_lock = msg_lock_from_env_get();
+	uint8_t last_msg_source = msg_source_from_env_get();
 
 	do
 	{
-		if(msg_lock & LCD_LAYER_MSG_PRIORITY_MASK)
 		{
-			msg_send_state = MSG_TRANSMIT_FAILED;
-			break;
+			if(msg_lock & LCD_LAYER_MSG_PRIORITY_MASK)
+			{
+				msg_send_state = MSG_TRANSMIT_FAILED;
+				break;
+			}
+
+			// To protect the lcd inter-message in the top priority
+			if(msg_source == LCD_LAYER)
+			{
+				msg_lock = (msg_lock | (1 << LCD_LAYER_MSG_PRIORITY_BIT));
+				msg_lock_from_env_set(msg_lock);//lock the msg
+			}
 		}
 
-		// To protect the lcd inter-message in the top priority
-		if(msg_source == LCD_LAYER)
 		{
-			msg_lock = (msg_lock | (1<<0));
-			// msg_lock = 1;
-			msg_lock_from_env_set(msg_lock);//lock the msg
+			// the second priority for ERROR_APP_LAYER
+			if((msg_lock & ERROR_APP_LAYER_MSG_PRIORITY_BIT) && (msg_source != LCD_LAYER))
+			{
+				msg_send_state = MSG_TRANSMIT_FAILED;
+			}
+			// else
+			// {
+			// 	// clear the bit
+			// 	msg_lock = (msg_lock & (uint32_t)(~ERROR_APP_LAYER_MSG_PRIORITY_MASK));
+			// }
+
+			// permit the ERROR_INDICATION_LAYER sends msg to cover last msg.
+			if((msg_source != ERROR_INDICATION_LAYER) && (msg_send_state == MSG_TRANSMIT_FAILED))
+			{
+				break;
+			}
+
+			// To protect the lcd inter-message in the second priority
+			if(msg_source == ERROR_INDICATION_LAYER)
+			{
+				msg_lock = (msg_lock | (1 << ERROR_APP_LAYER_MSG_PRIORITY_BIT));
+				msg_lock_from_env_set(msg_lock);//lock the msg
+			}
 		}
+
+
+		// /* Limit the case that there is only one valid message for every layer at the moment.
+		//  * Of course, it is not including the LCD_LAYER(the top priority) and
+		//  * KEY_LAYER(should be updated with next key-msg).
+		// */
+		// if(last_msg_source != FREE_FOR_LAYER)
+		// {
+		// 	switch(msg_source)
+		// 	{
+		// 		case INIT_LAYER:
+		// 			//TODO
+		// 			break;
+		// 		case MODBUS_LAYER:
+		// 			//TODO
+		// 			break;
+		// 		case ERROR_INDICATION_LAYER:
+		// 			//TODO
+		// 			break;
+		// 		case SRAM_LAYER:
+		// 			//TODO
+		// 			break;
+		// 		case UNKNOW_LAYER:
+		// 			//TODO
+		// 			break;
+		// 		default:
+		// 			break;
+		// 	}
+		// }
 
 		msg_source_from_env_set(msg_source);
 		msg_destination_from_env_set(msg_destination);

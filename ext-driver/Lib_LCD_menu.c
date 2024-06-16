@@ -519,6 +519,7 @@ struct menu_event_tag * error_indication_menu_handler(uint8_t msg_process_signal
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 			Log_d("key KEY_RETURN menu!\r\n");
 			error_indication_menu_from_env_set(ERROR_MENU_IND_DISABLE);
+			msg_lock_from_env_set(0);//unlock the msg
 		}
 
         if(msg_context == FLUSH_SCREEN)
