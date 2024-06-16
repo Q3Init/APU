@@ -1,14 +1,20 @@
-#ifndef __APP_LCD_RUN_MONITOR_H
-#define __APP_LCD_RUN_MONITOR_H
+#ifndef LIB_LCD_CHAR_H_
+#define LIB_LCD_CHAR_H_
 
-#include "Lib_LCD_kernel.h"
-#include "Ext_LCD_Driver.h"
-#include "Lib_LCD_words.h"
-#include "Lib_LCD_char.h"
+#include "Lib_LCD_menu.h"
 
-
-extern uint8_t menu_type_ptr_match(uint8_t key_signal, uint8_t menu_row_num, uint8_t menu_column_num, uint8_t menu_type_max_num);
-
+extern uint8_t my_char_V[];
+extern uint8_t my_char_H[];
+extern uint8_t my_char_z[];
+extern uint8_t my_char_W[];
+extern uint8_t baifenhao[];
+extern uint8_t my_char_T[];
+extern uint8_t my_char_G[];
+extern uint8_t my_char_J[];
+extern uint8_t my_char_Y[];
+extern uint8_t my_char_X[];
+extern uint8_t my_char_D[];
+extern uint8_t num_DOHC1[];
 extern uint8_t my_char_I[];
 extern uint8_t my_char_U[];
 extern uint8_t my_amount[];
@@ -18,7 +24,6 @@ extern uint8_t my_char_B[];
 extern uint8_t my_char_b[];
 extern uint8_t my_char_C[];
 extern uint8_t my_char_c[];
-extern uint8_t my_char_D[];
 extern uint8_t my_char_O[];
 extern uint8_t my_char_o[];
 extern uint8_t my_char_x[];
@@ -32,7 +37,5 @@ extern uint8_t jianhao_char[];
 extern uint8_t my_char_E[];
 extern uint8_t my_char_p[];
 extern uint8_t my_char_q[];
-
-
 
 #endif

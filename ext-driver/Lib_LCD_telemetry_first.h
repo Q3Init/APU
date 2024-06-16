@@ -12,10 +12,6 @@ extern uint8_t menu_type_ptr_match(uint8_t key_signal, uint8_t menu_row_num, uin
 
 
 
-extern uint8_t jiahao_char[];
-extern uint8_t jianhao_char[];
-extern uint8_t my_char_E[];
-extern uint8_t my_char_p[];
-extern uint8_t my_char_q[];
+
 
 #endif
