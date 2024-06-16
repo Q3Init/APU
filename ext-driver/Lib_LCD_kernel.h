@@ -277,7 +277,7 @@ extern uint8_t msg_source_from_env_get(void);
 extern uint8_t msg_destination_from_env_get(void);
 extern uint32_t cur_menu_level_from_env_get(void);
 extern uint8_t cur_menu_type_ptr_from_env_get(void);
-extern uint8_t msg_lock_from_env_get(void);
+extern uint32_t msg_lock_from_env_get(void);
 extern uint8_t error_indication_menu_from_env_get(void);
 /* !!!!!!!!!!! Prohibit calling the above function in interrupt_function !!!!!!!!!!!*/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
