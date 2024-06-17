@@ -24,7 +24,8 @@ typedef enum{
     Power_restoration_fault,            /* 功率恢复故障 */
     Switch_on_charge_fault,             /* 合闸充电故障 */
     fault_sum,
-    None_fault = 0,                     /* 无故障 */
+    None_fault,                         /* 无故障 */
+    Init_state
 }fault_type;
 
 typedef struct 
@@ -35,7 +36,7 @@ typedef struct
     uint8 (*callout)(void);
 }APP_fault_Rte;
 
-
-extern fault_type get_app_fault_status(fault_type fault_index);
+extern void App_fault_management_Init(void);
+extern void App_fault_management_mainfunction(void);
 
 #endif
