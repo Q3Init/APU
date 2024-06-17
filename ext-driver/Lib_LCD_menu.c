@@ -114,15 +114,15 @@ uint8_t menu_type_ptr_match(uint8_t key_signal, uint8_t menu_row_num, uint8_t me
     return menu_type_ptr;
 }
 
-uint8_t lcd_password_num_array[6];
+uint8_t lcd_password_num_array[PASSWORD_LENGTH];
 
 uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_t msg_context_tag, uint8_t last_cursor, uint8_t menu_target)
 {
 	static uint8_t key_idx_for_num  = 0;
 	uint32_t float_flag = 0;
-	uint8_t num_idx_flush[6] = {0};
+	uint8_t num_idx_flush[PASSWORD_LENGTH] = {0};
 
-	uint8_t num_array[6] = {0};
+	uint8_t num_array[PASSWORD_LENGTH] = {0};
 
 	uint8_t msg_storage = msg_context_tag;
 
@@ -198,7 +198,7 @@ uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_
 				//update the value for the array lcd_password_num_array
 				float_flag = 0;
 				Log_d("ENTER! float_flag:%d\n",float_flag);
-				my_convert_int_to_int_array(lcd_password_num_array, 6, float_flag);
+				my_convert_int_to_int_array(lcd_password_num_array, PASSWORD_LENGTH, float_flag);
 
 				num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 			}
@@ -206,7 +206,7 @@ uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_
 
 			if(msg_context == KEY_ENTER)
 			{
-				uint32_t password_array_par = my_convert_int_array_to_int_parameter(lcd_password_num_array,6);
+				uint32_t password_array_par = my_convert_int_array_to_int_parameter(lcd_password_num_array, PASSWORD_LENGTH);
 				uint32_t password_array_par_check = app_parameter_read_Device_password();
 				Log_d("ENTER! password_array_par_check:%d password_array_par:%d\n",password_array_par_check, password_array_par);
 				// // the valid digit is 6 int-digits.
@@ -283,7 +283,7 @@ uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_
 					break;
 			}
                
-            uint32_t password_array_par = my_convert_int_array_to_int_parameter(lcd_password_num_array,6);
+            uint32_t password_array_par = my_convert_int_array_to_int_parameter(lcd_password_num_array, PASSWORD_LENGTH);
 			switch(msg_storage)
 			{
 				case	LCD_FLUSH_SCREEN_IND:
@@ -306,7 +306,7 @@ uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_
 					LCD_ShowChinese_garland(8, 26, password_check_in_please, 5);
 					lcd_state_flush_for_num(66,26,my_maohao,5,12,1);
 					lcd_number_modify_int_array_for_int_parameter_get(&float_flag, password_array_par, 
-												num_array, 6, num_idx_flush[0]);
+												num_array, PASSWORD_LENGTH, num_idx_flush[0]);
 					lcd_number_display_in_order(74, 26, 5, 12, 
 										num_idx_flush[0], sizeof(num_array), num_array, 0xff);
 			}
