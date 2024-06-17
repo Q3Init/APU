@@ -33,34 +33,39 @@ void App_fault_management_Init(void)
 
 void App_fault_management_mainfunction(void)
 {
-    /* 遍历所有故障检测 */
-    for (uint8 index = 0 ;index < fault_sum;index++) {
-        check_fault((fault_type)index);
+    while(1) 
+    {
+        /* 遍历所有故障检测 */
+        for (uint8 index = 0 ;index < fault_sum;index++) {
+            check_fault((fault_type)index);
+        }
+
+        /* 所有故障状态为None_fault */
+        if ((APP_fault_List[Over_volt_lv1_fault].falut_state == None_fault)             &&
+            (APP_fault_List[Over_volt_lv2_fault].falut_state == None_fault)             &&
+            (APP_fault_List[Under_volt_lv1_fault].falut_state == None_fault)            &&
+            (APP_fault_List[Under_volt_lv2_fault].falut_state == None_fault)            &&
+            (APP_fault_List[Over_freq_fault].falut_state == None_fault)                 &&
+            (APP_fault_List[Low_freq_fault].falut_state == None_fault)                  &&
+            (APP_fault_List[Spike_freq_fault].falut_state == None_fault)                &&
+            (APP_fault_List[Reverse_power_fault].falut_state == None_fault)             &&
+            (APP_fault_List[Harmonic_volt_distortion_fault].falut_state == None_fault)  &&
+            (APP_fault_List[Ext_ctrl_fault].falut_state == None_fault)                  &&
+            (APP_fault_List[Quick_break_fault].falut_state == None_fault)               &&
+            (APP_fault_List[Time_limit_quick_break_fault].falut_state == None_fault)    &&
+            (APP_fault_List[Over_current_fault].falut_state == None_fault)              &&
+            (APP_fault_List[Zero_seq_current_fault].falut_state == None_fault)          &&
+            (APP_fault_List[System_outage_fault].falut_state == None_fault)             &&
+            (APP_fault_List[On_volt_fault].falut_state == None_fault)                   &&
+            (APP_fault_List[Power_restoration_fault].falut_state == None_fault)         &&
+            (APP_fault_List[Switch_on_charge_fault].falut_state == None_fault)          
+        ) 
+        {
+            App_check_fault_callback(None_fault);
+        }
+        vTaskDelay(10);
     }
 
-    /* 所有故障状态为None_fault */
-    if ((APP_fault_List[Over_volt_lv1_fault].falut_state == None_fault)             &&
-        (APP_fault_List[Over_volt_lv2_fault].falut_state == None_fault)             &&
-        (APP_fault_List[Under_volt_lv1_fault].falut_state == None_fault)            &&
-        (APP_fault_List[Under_volt_lv2_fault].falut_state == None_fault)            &&
-        (APP_fault_List[Over_freq_fault].falut_state == None_fault)                 &&
-        (APP_fault_List[Low_freq_fault].falut_state == None_fault)                  &&
-        (APP_fault_List[Spike_freq_fault].falut_state == None_fault)                &&
-        (APP_fault_List[Reverse_power_fault].falut_state == None_fault)             &&
-        (APP_fault_List[Harmonic_volt_distortion_fault].falut_state == None_fault)  &&
-        (APP_fault_List[Ext_ctrl_fault].falut_state == None_fault)                  &&
-        (APP_fault_List[Quick_break_fault].falut_state == None_fault)               &&
-        (APP_fault_List[Time_limit_quick_break_fault].falut_state == None_fault)    &&
-        (APP_fault_List[Over_current_fault].falut_state == None_fault)              &&
-        (APP_fault_List[Zero_seq_current_fault].falut_state == None_fault)          &&
-        (APP_fault_List[System_outage_fault].falut_state == None_fault)             &&
-        (APP_fault_List[On_volt_fault].falut_state == None_fault)                   &&
-        (APP_fault_List[Power_restoration_fault].falut_state == None_fault)         &&
-        (APP_fault_List[Switch_on_charge_fault].falut_state == None_fault)          
-    ) 
-    {
-        App_check_fault_callback(None_fault);
-    }
 }
 
 static void App_check_fault_callback(fault_type fault_event)

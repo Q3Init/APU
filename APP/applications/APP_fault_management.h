@@ -2,6 +2,9 @@
 #define __APP_FAULT_MANAGEMENT_H_
 
 #include "Platform_Types.h"
+#include "freertos.h"
+#include "task.h"
+#include "Lib_Log_Util.h"
 #include "APP_Protection_Management.h"
 
 typedef enum{

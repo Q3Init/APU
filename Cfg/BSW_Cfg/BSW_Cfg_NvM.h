@@ -8,6 +8,7 @@ typedef struct
     uint16 id;
     void *data;
     uint16 data_len;
+	uint32 dft;
 }BSW_NvM_Rte;
 
 /* user request define storge ID */
@@ -146,6 +147,8 @@ extern BSW_NvM_Rte nvm_datas_Lists[ID_CNT];
 #define BLOCK1_BLOCK2_CNT_LEN     (2U)
 #define BLOCK1_BLOCK3_CNT_ADRESS  (BLOCK1_BLOCK2_CNT_ADRESS + BLOCK1_BLOCK2_CNT_LEN)
 #define BLOCK1_BLOCK3_CNT_LEN     (2U)  /* User base address */
-#define APP_GENERAL_ADDRESS   (BLOCK1_BLOCK3_CNT_ADRESS + BLOCK1_BLOCK3_CNT_LEN)
+#define BLOCK1_PARAFLG_ADDRESS    (BLOCK1_BLOCK3_CNT_ADRESS + BLOCK1_BLOCK3_CNT_LEN)
+#define BLOCK1_PARAFLG_CNT_LEN    (1U)
+#define APP_GENERAL_ADDRESS   	  (BLOCK1_PARAFLG_ADDRESS + BLOCK1_PARAFLG_CNT_LEN)
 
 #endif

@@ -1093,4 +1093,8 @@ extern uint8 app_parameter_write_ZERO_CURRENT_FREQUENCY(float32 data);
 extern float32 app_parameter_read_ZERO_CURRENT_PHASE(void);
 extern uint8 app_parameter_write_ZERO_CURRENT_PHASE(float32 data);
 
+extern void app_allpara_default_init(void);
+extern uint8 app_allpara_default_update(void);
+extern uint8 app_action_default_update(void);
+
 #endif

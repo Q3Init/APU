@@ -10,6 +10,8 @@
 extern uint8 BSW_NvM_Read(uint16 id,void* data);
 extern uint8 BSW_NvM_Write(uint16 id,void* data);
 
+extern uint8 BSW_NvM_Write_Para_flag(void);
+extern uint8 BSW_NvM_Read_Para(uint8 *flag);
 
 #endif
 

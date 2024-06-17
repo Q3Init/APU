@@ -153,7 +153,19 @@ static float32 app_par_four_intbit_bytes_buf_to_float32(uint8 *datas);
 
 void APP_Parameter_Init(void)
 {
-    uint8 ret = E_NOK;
+	uint8 ret = E_NOK;	
+	uint8 flag = 0;
+	app_allpara_default_init();
+	ret = BSW_NvM_Read_Para( &flag );
+	
+	if( 0xAA != flag || ret == E_NOK )
+	{
+		app_allpara_default_update();
+		BSW_NvM_Write_Para_flag();
+		Log_d("app_allpara_default_update");
+	}
+	
+
     /* Overvoltage_protection_LV1_One_Value */
     ret = BSW_NvM_Read(Overvoltage_protection_LV1_One_Value,app_par_Overvoltage_protection_LV1_One_Value.p_buf);
     if (ret == E_OK) {
@@ -2600,3 +2612,172 @@ static float32 app_par_four_intbit_bytes_buf_to_float32(uint8 *datas)
     return ret;
 }
 
+void app_allpara_default_init(void)
+{
+	nvm_datas_Lists[Overvoltage_protection_LV1_One_Value].dft = MCM_floatToIntBit(570.0);
+	nvm_datas_Lists[Overvoltage_protection_LV1_One_Delay].dft = MCM_floatToIntBit(0.5);	
+    nvm_datas_Lists[Overvoltage_protection_LV1_One_Eol].dft = 0;	
+    nvm_datas_Lists[Overvoltage_protection_LV2_One_Value].dft = MCM_floatToIntBit(460.0);	
+    nvm_datas_Lists[Overvoltage_protection_LV2_One_Delay].dft = MCM_floatToIntBit(0.5);	
+    nvm_datas_Lists[Overvoltage_protection_LV2_One_Eol].dft = 0;	
+
+    nvm_datas_Lists[Undervoltage_protection_LV1_One_Value].dft = MCM_floatToIntBit(190.0);	
+    nvm_datas_Lists[Undervoltage_protection_LV1_One_Delay].dft = MCM_floatToIntBit(0.5);	
+    nvm_datas_Lists[Undervoltage_protection_LV1_One_Eol].dft = 0;	
+    nvm_datas_Lists[Undervoltage_protection_LV2_One_Value].dft = MCM_floatToIntBit(270.0);	
+    nvm_datas_Lists[Undervoltage_protection_LV2_One_Delay].dft = MCM_floatToIntBit(0.5);	
+    nvm_datas_Lists[Undervoltage_protection_LV2_One_Eol].dft = 0;	
+
+    nvm_datas_Lists[Overfrequency_Value].dft = MCM_floatToIntBit(51.0);	
+    nvm_datas_Lists[Overfrequency_Delay].dft = MCM_floatToIntBit(0.5);	
+    nvm_datas_Lists[Overfrequency_Eol].dft = 0;
+
+    nvm_datas_Lists[Underfrequency_Value].dft = MCM_floatToIntBit(49.0);	
+    nvm_datas_Lists[Underfrequency_Delay].dft = MCM_floatToIntBit(0.5);	
+    nvm_datas_Lists[Underfrequency_Eol].dft = 0;	
+
+    nvm_datas_Lists[Frequency_Discontinuity_Value].dft = MCM_floatToIntBit(3.0);	
+    nvm_datas_Lists[Frequency_Discontinuity_Delay].dft = MCM_floatToIntBit(0.3);	
+    nvm_datas_Lists[Frequency_Discontinuity_Eol].dft = 0;	
+
+    nvm_datas_Lists[Reverse_Power_Protection_Value].dft = MCM_floatToIntBit(100.0);	
+    nvm_datas_Lists[Reverse_Power_Protection_Delay].dft = MCM_floatToIntBit(1.0);	
+    nvm_datas_Lists[Reverse_Power_Protection_Eol].dft = 0;
+
+    nvm_datas_Lists[Harmonic_Protection_Value].dft = MCM_floatToIntBit(30.0);	
+    nvm_datas_Lists[Harmonic_Protection_Delay].dft = MCM_floatToIntBit(1.0);	
+    nvm_datas_Lists[Harmonic_Protection_Eol].dft = 1;	
+
+    nvm_datas_Lists[External_Coordination_Delay].dft = MCM_floatToIntBit(0);	
+    nvm_datas_Lists[External_Coordination_Eol].dft = 0;	
+
+    nvm_datas_Lists[Instantaneous_Overcurrent_Protection_Value].dft = MCM_floatToIntBit(30.0);	
+    nvm_datas_Lists[Instantaneous_Overcurrent_Mutation_Setting].dft = MCM_floatToIntBit(0.2);	
+    nvm_datas_Lists[Instantaneous_Overcurrent_Delay].dft =  MCM_floatToIntBit(0);	
+	nvm_datas_Lists[Instantaneous_Overcurrent_Eol].dft = 0;
+
+	nvm_datas_Lists[Speed_Limit_Break_Value].dft = MCM_floatToIntBit(20.0);	
+    nvm_datas_Lists[Speed_Limit_Break_Delay].dft = MCM_floatToIntBit(0.2);	
+    nvm_datas_Lists[Speed_Limit_Break_Eol].dft = 0;	
+
+    nvm_datas_Lists[Overcurrent_Protection_Value].dft = MCM_floatToIntBit(7.0);	
+    nvm_datas_Lists[Overcurrent_Protection_Delay].dft = MCM_floatToIntBit(0.5);	
+    nvm_datas_Lists[Overcurrent_Protection_Eol].dft =  0;	
+
+    nvm_datas_Lists[Zero_Sequence_Overflow_Value].dft = MCM_floatToIntBit(1.0);	
+    nvm_datas_Lists[Zero_Sequence_Overflow_Delay].dft = MCM_floatToIntBit(1.0);	
+    nvm_datas_Lists[Zero_Sequence_Overflow_Allow_trip].dft =0;
+    nvm_datas_Lists[Zero_Sequence_Overflow_Eol].dft = 0;
+
+    nvm_datas_Lists[System_Down_Value].dft = MCM_floatToIntBit(60.0);
+    nvm_datas_Lists[System_Down_Delay ].dft = MCM_floatToIntBit(1.0);	
+    nvm_datas_Lists[System_Down_Allow_trip].dft = 0;
+    nvm_datas_Lists[System_Down_Eol].dft = 0;
+
+    nvm_datas_Lists[Voltage_Closing_Upper_Voltage_Limit ].dft = MCM_floatToIntBit(450.0);;
+    nvm_datas_Lists[Voltage_Closing_Lower_Voltage_Limit].dft =  MCM_floatToIntBit(340.0);;
+    nvm_datas_Lists[Voltage_Closing_Upper_Frequency_Limit].dft = MCM_floatToIntBit(50.5);	
+    nvm_datas_Lists[Voltage_Closing_Lower_Frequency_Limit].dft = MCM_floatToIntBit(49.5);	
+    nvm_datas_Lists[Voltage_Closing_Power_On].dft = 1;
+    nvm_datas_Lists[Voltage_Closing_Decompression].dft =  1;
+    nvm_datas_Lists[Voltage_Closing_Low_Pressure].dft = 1;
+    nvm_datas_Lists[Voltage_Closing_High_Pressure].dft = 1;
+    nvm_datas_Lists[Voltage_Closing_Low_Frequency].dft = 1;
+    nvm_datas_Lists[Voltage_Closing_Overfrequency].dft = 1;
+    nvm_datas_Lists[Voltage_Closing_Non_manual_separation].dft = 0;
+    nvm_datas_Lists[Voltage_Closing_Charging_Delay].dft =  MCM_floatToIntBit(15.0);	
+    nvm_datas_Lists[Voltage_Closing_Delay].dft = MCM_floatToIntBit(1.0);	
+    nvm_datas_Lists[Voltage_Closing_Eol].dft =  0;
+
+    nvm_datas_Lists[Power_recovery_Value].dft = MCM_floatToIntBit(100.0);;
+    nvm_datas_Lists[Power_recovery_Delay].dft =  MCM_floatToIntBit(1.0);	
+    nvm_datas_Lists[Power_recovery_Eol].dft = 0;
+	/*定值管理*/
+    nvm_datas_Lists[Grid_PT_primary].dft =  220;
+    nvm_datas_Lists[Grid_PT_secondary].dft = 220;
+    nvm_datas_Lists[Generation_PT_primary].dft = 220; 
+    nvm_datas_Lists[Generation_PT_secondary].dft = 220;
+    nvm_datas_Lists[Protective_CT_primary].dft = 600; 
+    nvm_datas_Lists[Protected_CT_secondary].dft = 5; 
+    nvm_datas_Lists[Zero_sequence_CT_once].dft = 20; 
+    nvm_datas_Lists[Zero_sequence_CT_twice].dft = 1;
+
+    nvm_datas_Lists[Remote_letter_anti_shake_time].dft = 10;
+    nvm_datas_Lists[Remote_letter_into_the_logic].dft = 0xffff;
+
+    nvm_datas_Lists[Trip_exit_time].dft = 500;
+    nvm_datas_Lists[Closing_exit_time].dft = 500;
+    nvm_datas_Lists[D01_exit_time].dft = 500;  
+    nvm_datas_Lists[D02_exit_time].dft = 500;
+    nvm_datas_Lists[D03_exit_time].dft = 500;
+    nvm_datas_Lists[D04_exit_time].dft = 500;
+    nvm_datas_Lists[Energy_storage_exit_time].dft = 3000;
+    nvm_datas_Lists[Energy_storage_outlet_selection].dft = 0;
+
+    nvm_datas_Lists[Zero_drift_threshold].dft =  1;
+    nvm_datas_Lists[Voltage_connection].dft = 1;
+    nvm_datas_Lists[Protect_CT_channels].dft = 1;
+    nvm_datas_Lists[Switch_position].dft = 0;
+    
+    nvm_datas_Lists[Serial_protocol].dft = 0;
+    nvm_datas_Lists[Serial_check].dft = 0;
+    nvm_datas_Lists[Serial_baud_rate].dft = 9600;
+    nvm_datas_Lists[Module_address].dft = 1;
+    nvm_datas_Lists[Switch_coding].dft = 1;
+    nvm_datas_Lists[Change_threshold].dft = 2;
+
+    nvm_datas_Lists[Restore_functional_input].dft = 0;
+    nvm_datas_Lists[Restore_time].dft = 60;
+
+    nvm_datas_Lists[Device_password].dft = 1000;
+
+    nvm_datas_Lists[A_VOLTAGE_AMPLITUDE].dft = MCM_floatToIntBit(0);
+    nvm_datas_Lists[A_VOLTAGE_FREQUENCY].dft = MCM_floatToIntBit(0);  
+    nvm_datas_Lists[A_VOLTAGE_PHASE].dft = MCM_floatToIntBit(0);
+
+    nvm_datas_Lists[B_VOLTAGE_AMPLITUDE].dft =  MCM_floatToIntBit(0);  
+    nvm_datas_Lists[B_VOLTAGE_FREQUENCY].dft =  MCM_floatToIntBit(0);
+    nvm_datas_Lists[B_VOLTAGE_PHASE].dft = MCM_floatToIntBit(0);
+
+    nvm_datas_Lists[C_VOLTAGE_AMPLITUDE].dft = MCM_floatToIntBit(0);
+    nvm_datas_Lists[C_VOLTAGE_FREQUENCY].dft = MCM_floatToIntBit(0); 
+    nvm_datas_Lists[C_VOLTAGE_PHASE].dft = MCM_floatToIntBit(0);
+
+    nvm_datas_Lists[ZERO_VOLTAGE_AMPLITUDE].dft = MCM_floatToIntBit(0);
+    nvm_datas_Lists[ZERO_VOLTAGE_FREQUENCY].dft = MCM_floatToIntBit(0);
+    nvm_datas_Lists[ZERO_VOLTAGE_PHASE].dft = MCM_floatToIntBit(0);
+
+    nvm_datas_Lists[A_CURRENT_AMPLITUDE].dft = MCM_floatToIntBit(0);
+    nvm_datas_Lists[A_CURRENT_FREQUENCY].dft = MCM_floatToIntBit(0); 
+    nvm_datas_Lists[A_CURRENT_PHASE].dft = MCM_floatToIntBit(0);
+
+    nvm_datas_Lists[B_CURRENT_AMPLITUDE].dft = MCM_floatToIntBit(0);
+    nvm_datas_Lists[B_CURRENT_FREQUENCY].dft = MCM_floatToIntBit(0); 
+    nvm_datas_Lists[B_CURRENT_PHASE].dft = MCM_floatToIntBit(0);
+
+    nvm_datas_Lists[C_CURRENT_AMPLITUDE].dft = MCM_floatToIntBit(0);
+    nvm_datas_Lists[C_CURRENT_FREQUENCY].dft = MCM_floatToIntBit(0);  
+    nvm_datas_Lists[C_CURRENT_PHASE].dft = MCM_floatToIntBit(0);
+
+    nvm_datas_Lists[ZERO_CURRENT_AMPLITUDE].dft = MCM_floatToIntBit(0);
+    nvm_datas_Lists[ZERO_CURRENT_FREQUENCY].dft = MCM_floatToIntBit(0);
+    nvm_datas_Lists[ZERO_CURRENT_PHASE].dft = MCM_floatToIntBit(0);
+}
+uint8 app_allpara_default_update(void)
+{
+    uint8 ret = E_OK;
+	for( uint8 index = 0;index<ID_CNT; index++)
+	{
+		BSW_NvM_Write(index,(void*)&nvm_datas_Lists[index].dft);
+	}
+    return ret;
+}
+uint8 app_action_default_update(void)
+{
+    uint8 ret = E_OK;
+	for( uint8 index = 0;index<=Power_recovery_Eol; index++)
+	{
+		BSW_NvM_Write(index,(void*)&nvm_datas_Lists[index].dft);
+	}
+    return ret;
+}

@@ -7,6 +7,7 @@
 #include "BSW_NvM.h"
 #include "APP_Protection_Backend.h"
 #include "APP_Protection_Management.h"
+#include "APP_fault_management.h"
 
  /* 创建任务句柄 */
 TaskHandle_t AppTaskCreate_Handle = NULL;
@@ -15,6 +16,7 @@ static TaskHandle_t menu_kernel_schedule_Task_Handle = NULL;
 static TaskHandle_t APP_test_Mainfunction_Task_Handle = NULL;
 static TaskHandle_t APP_Protection_Mnt_Task_Handle = NULL;
 static TaskHandle_t APP_Protection_Backend_Task_Handle = NULL;
+static TaskHandle_t APP_fault_management_Task_Handle = NULL;
 
 void AppTaskCreate(void)
 {
@@ -24,7 +26,7 @@ void AppTaskCreate(void)
   
   /* BSW_Adcif_Mainfunction */
   xReturn = xTaskCreate((TaskFunction_t )BSW_Adcif_Mainfunction,
-                        (const char*    )"LED1_Task",
+                        (const char*    )"BSW_Adcif_Task",
                         (uint16_t       )512,
                         (void*          )NULL,
                         (UBaseType_t    )2,
@@ -35,7 +37,7 @@ void AppTaskCreate(void)
 
   /* menu_kernel_schedule */
   xReturn = xTaskCreate((TaskFunction_t )menu_kernel_schedule,
-                        (const char*    )"LED1_Task",
+                        (const char*    )"menu_kernel_schedule_Task",
                         (uint16_t       )2048,
                         (void*          )NULL,
                         (UBaseType_t    )3,
@@ -46,7 +48,7 @@ void AppTaskCreate(void)
 
   /* APP_test_Mainfunction */
   xReturn = xTaskCreate((TaskFunction_t )APP_test_Mainfunction,
-                        (const char*    )"LED1_Task",
+                        (const char*    )"APP_test_Task",
                         (uint16_t       )256,
                         (void*          )NULL,
                         (UBaseType_t    )4,
@@ -75,6 +77,17 @@ void AppTaskCreate(void)
                         (TaskHandle_t*  )&APP_Protection_Backend_Task_Handle);
   if(pdPASS == xReturn) {
     Log_d("APP_Protection_Backend_Loop task create OK!\r\n");
+  }
+
+  /* App_fault_management_Task */
+  xReturn = xTaskCreate((TaskFunction_t )App_fault_management_mainfunction,
+                        (const char*    )"App_fault_management_Task",
+                        (uint16_t       )64,
+                        (void*          )NULL,
+                        (UBaseType_t    )6,
+                        (TaskHandle_t*  )&APP_fault_management_Task_Handle);
+  if(pdPASS == xReturn) {
+    Log_d("App_fault_management task create OK!\r\n");
   }
 
     

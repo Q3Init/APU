@@ -2628,6 +2628,22 @@ struct menu_event_tag * factory_reset_handler(uint8_t msg_process_signal, uint8_
 			msg_context = 0xff;
 			msg_lock_from_env_set(0);//unlock the msg
         }
+		
+		if(msg_context == KEY_DOWN)
+        {
+			switch(factory_reset_menu_array[menu_type_idx])
+			{
+				case ALL_VALUE_RESET:
+					app_allpara_default_update();
+					break;
+				case FIX_VALUE_RESET:
+					app_action_default_update();
+					break;
+				default:
+					break;
+			}
+        }
+				
 		switch(msg_context)
 		{
 			case	0xff:
