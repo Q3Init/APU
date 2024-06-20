@@ -1103,9 +1103,9 @@ void APP_FFT_Handler(void)
 {   
     uint32 tick1 = 0;
     uint32 tick2 = 0;
-    uint32_t fft_time_cost = 0;
-
-   if (pBk->fft_enable == false)
+    uint32_t fft_time_cost = 0;	
+   
+	if (pBk->fft_enable == false)
        return;
 
     tick1 = APP_Get_System_Ms();
@@ -1195,7 +1195,7 @@ void APP_FFT_Handler(void)
         pBk->value.reactive_power_a, pBk->value.reactive_power_b, pBk->value.reactive_power_c, APP_Get_Reactive_Power_Total());
     Log_d("S_Power_A[%.4f], S_Power_B[%.4f], S_Power_C[%.4f], S_Power_Total[%.4f]\r\n", 
         pBk->value.apparent_power_a, pBk->value.apparent_power_b, pBk->value.apparent_power_c, APP_Get_Apparent_Power_Total());
-
+		
     TMR_Enable(TMR3); 
     /* 停止fft 等待中断完成 */
     pBk->fft_enable = false;

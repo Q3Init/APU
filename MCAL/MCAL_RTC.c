@@ -1,16 +1,15 @@
 #include "MCAL_RTC.h"
-//#include "./SYSTEM/delay/delay.h"
 #include "apm32e10x_rcm.h"
 #include "apm32e10x_pmu.h"
 
 /*RTC时间参数初始化默认值*/
 RTC_date RTC_date_init ={
-	.year = 24,	/*注意：该处值为目标年份-2000*/
-	.month = 6,
-	.day = 1,
+	.year = 2023,
+	.month = 12,
+	.day = 30,
 	.hour = 23,
 	.minute = 59,
-	.second = 54,
+	.second = 50,
 };
 
 static const uint8_t month_table[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -84,19 +83,17 @@ static uint8_t is_leap_year(uint16_t year)
  *    @arg      0: 设置成功
  *    @arg      1: 设置失败
  */
-uint8_t rtc_set(uint8_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t min, uint8_t sec)
+uint8_t rtc_set(uint16_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t min, uint8_t sec)
 {
-    uint16_t year_4;
     uint16_t index;
     uint32_t seccount = 0;
     
-    year_4 = year + 2000;
-    if ((year_4 < 1970) || (year_4 > 2099))
+    if ((year < 1970) || (year > 2099))
     {
         return 1;
     }
     
-    for (index=1970; index<year_4; index++)
+    for (index=1970; index<year; index++)
     {
         if (is_leap_year(index))
         {
@@ -112,7 +109,7 @@ uint8_t rtc_set(uint8_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t
     for (index=0; index<month; index++)
     {
         seccount += (uint32_t)month_table[index] * 86400;
-        if (is_leap_year(year_4) && (index == 1))
+        if (is_leap_year(year) && (index == 1))
         {
             seccount += 86400;
         }
@@ -144,11 +141,11 @@ uint8_t rtc_set(uint8_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t
  * @param       sec  : 秒钟
  * @retval      无
  */
-void rtc_get(uint8_t *year, uint8_t *month, uint8_t *date, uint8_t *week, uint8_t *hour, uint8_t *min, uint8_t *sec)
+void rtc_get(RTC_date *time)
 {
     uint32_t seccount;
-    uint16_t daycount;
-    static uint16_t last_daycount = 0;
+    uint32_t daycount;
+    static uint32_t last_daycount = 0;
     uint16_t index;
     
     /* 读取RTC计数值 */
@@ -179,12 +176,12 @@ void rtc_get(uint8_t *year, uint8_t *month, uint8_t *date, uint8_t *week, uint8_
             }
             index++;
         }
-        *year = index - 2000;
+        time->year = index;
         
         index=0;
         while (daycount >= 28)
         {
-            if (is_leap_year(*year + 2000) && (index == 1))
+            if (is_leap_year(time->year) && (index == 1))
             {
                 if (daycount >= 29)
                 {
@@ -208,15 +205,16 @@ void rtc_get(uint8_t *year, uint8_t *month, uint8_t *date, uint8_t *week, uint8_
             }
             index++;
         }
-        *month = index + 1;
-        *date = daycount + 1;
+        time->month = index + 1;
+        time->day = daycount + 1;
     }
     
     daycount = seccount % 86400;
-    *hour = daycount / 3600;
-    *min = (daycount % 3600) / 60;
-    *sec = (daycount % 3600) % 60;
-    *week = rtc_get_week(*year + 2000, *month, *date);
+    time->hour = daycount / 3600;
+    time->minute = (daycount % 3600) / 60;
+    time->second = (daycount % 3600) % 60;
+    time->week = rtc_get_week(time->year, time->month, time->day);
+		time->millisecond =(uint16_t)((prescaler_value - RTC_ReadDivider()) * 1000 /prescaler_value);
 }
 
 /**
