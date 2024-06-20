@@ -9,6 +9,8 @@
 //#include "sys.h"
 #include "apm32e10x_rtc.h"
 #include "apm32e10x_bakpr.h"
+#include "apm32e10x_rcm.h"
+#include "apm32e10x_pmu.h"
 
 #define prescaler_value 32767	/*RTC预分频系数，为32767时CNT计时器1s计数1次*/
 

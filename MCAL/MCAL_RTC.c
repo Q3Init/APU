@@ -1,6 +1,4 @@
 #include "MCAL_RTC.h"
-#include "apm32e10x_rcm.h"
-#include "apm32e10x_pmu.h"
 
 /*RTC时间参数初始化默认值*/
 RTC_date RTC_date_init ={
