@@ -676,8 +676,8 @@ boolean APP_Relay_ExtCtrl_Switch_Off(void)
 boolean APP_Relay_Force_Switch_On(void)
 {
     // return APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D01 | APP_RELAY_CHANNEL_D02, true);
-    APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_D01, true);
-    APP_Relay_Control(APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D02, false);
+    APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_D01 | APP_RELAY_CHANNEL_D03, true);
+    APP_Relay_Control(APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D02 | APP_RELAY_CHANNEL_D04, false);
     return true;
 }
 
@@ -689,9 +689,43 @@ boolean APP_Relay_Force_Switch_On(void)
 boolean APP_Relay_Force_Switch_Off(void)
 {
     // return APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D01 | APP_RELAY_CHANNEL_D02, false);
-    APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_D01, false);
-    APP_Relay_Control(APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D02, true);
+    APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_D01 | APP_RELAY_CHANNEL_D03, false);
+    APP_Relay_Control(APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D02 | APP_RELAY_CHANNEL_D04, true);
     return true;
+}
+
+void APP_Relay_Idle_Handler(void)
+{
+    static uint32 relay_tick[3];
+
+
+    if (APP_Remote_Signal_Input_Read_Group_1() == APP_Relay_Get_State_Group_1()) {
+        if ((APP_Get_System_Ms() - relay_tick[0]) >= RELAY_IDLE_DELAY_MS) {
+            APP_Relay_Control(APP_RELAY_CHANNEL_HC, false);
+            APP_Relay_Control(APP_RELAY_CHANNEL_TQ, false);
+        }
+    } else {
+        relay_tick[0] = APP_Get_System_Ms();
+    }
+
+    if (APP_Remote_Signal_Input_Read_Group_2() == APP_Relay_Get_State_Group_2()) {
+        if ((APP_Get_System_Ms() - relay_tick[1]) >= RELAY_IDLE_DELAY_MS) {
+            APP_Relay_Control(APP_RELAY_CHANNEL_D01, false);
+		    APP_Relay_Control(APP_RELAY_CHANNEL_D02, false);
+        }
+    } else {
+        relay_tick[1] = APP_Get_System_Ms();
+    }
+
+    if (APP_Remote_Signal_Input_Read_Group_3() == APP_Relay_Get_State_Group_3()) {
+        if ((APP_Get_System_Ms() - relay_tick[2]) >= RELAY_IDLE_DELAY_MS) {
+            APP_Relay_Control(APP_RELAY_CHANNEL_D03, false);
+		    APP_Relay_Control(APP_RELAY_CHANNEL_D04, false);
+        }
+    } else {
+        relay_tick[2] = APP_Get_System_Ms();
+    }
+
 }
 
 /**

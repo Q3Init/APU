@@ -48,6 +48,8 @@
 // #define FFT_SAMPLE_RATE 6144
 // #define FFT_SAMPLE_RATE 5952
 
+#define RELAY_IDLE_DELAY_MS 3000
+
 /* 能量补偿点数 */
 #define RFFT_ENERGY_COMP_MAX_POINT  10
 
@@ -252,6 +254,8 @@ boolean APP_Relay_Force_Switch_Off(void);
 boolean APP_Relay_Select_Switch_Off(void);
 boolean APP_Relay_Select_Switch_On(void);
 boolean APP_Relay_ExtCtrl_Switch_Off(void);
+/* 继电器恢复空闲检测 */
+void APP_Relay_Idle_Handler(void);
 
 // CH - APP_Remote_Signal_Input_Channel_e
 uint8 APP_Remote_Signal_Input_State(uint8 ch);

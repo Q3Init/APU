@@ -1044,6 +1044,7 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
             }                
         } else {
             pMnt->delay_exec_list[APP_PRT_ON_VOLT_SWITCH_ON] = false;
+            pMnt->state.on_volt_switch_on_state = 0;
         }
         
         if (true == pMnt->delay_exec_list[APP_PRT_ON_VOLT_SWITCH_ON]) {
@@ -1196,6 +1197,7 @@ void APP_Protection_Management_Loop(void)
         APP_Protection_SystemOutage_Handler();
         APP_Protection_OperateContactor_OnVoltageRise_Handler();
         APP_Protection_PowerRestorationOperate_Handler();
+        APP_Relay_Idle_Handler();
 
         vTaskDelay(10);
     }
