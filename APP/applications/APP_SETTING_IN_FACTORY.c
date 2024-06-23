@@ -3222,7 +3222,7 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 				case B_CURRENT_PHASE_VALUE:
 				case C_CURRENT_PHASE_VALUE:
 				case ZERO_CURRENT_PHASE_VALUE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				// case FIRST_IN_OUT:

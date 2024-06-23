@@ -339,7 +339,7 @@ uint8_t modify_value_check_menu_unit(uint8_t msg_process_signal,uint8_t msg_cont
 		// 	}
 		// 	Log_e("HELLO!! %s msg_process_signal=%d  msg_context_par=%d\n", __func__, msg_process_signal, msg_context_par);
 		// }
-
+		Log_e("HELLO!! %s \n", __func__);
 		if(msg_context_par == KEY_ENTER)
 		{
 			enter_check_num++;
@@ -566,7 +566,7 @@ struct menu_event_tag * run_monitor_handler(uint8_t msg_process_signal, uint8_t 
 			Log_d("key KEY_ENTER menu!\r\n");
 		}
 
-		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
+		Log_d("\r\n %s ???????? msg_context:%d \r\n", __func__,msg_context);
 		if(msg_context == KEY_RETURN)
 		{
 			menu_level_from_env_set(TOP_NODE_MENU, UNKNOW_SECOND_MENU, UNKNOW_THIRD_MENU);
@@ -1075,7 +1075,7 @@ struct menu_event_tag * parameter_configure_handler(uint8_t msg_process_signal, 
 // 	return menu_evt;
 // }
 
-extern uint8_t lcd_modify_num_array[5] = {0};
+extern uint8_t lcd_modify_num_array[15] = {0};
 
 struct lcd_modify_num_tag lcd_modify_num_env={
 	.menu_type_idx = 0,
@@ -1289,6 +1289,28 @@ void lcd_number_display_in_order(uint8_t hang, uint8_t lie, uint8_t length, uint
 	}
 }
 
+//Note: Both point_pos and num_idx_flush are set from zero.
+void lcd_number_display_in_order_not_modify(uint8_t hang, uint8_t lie, uint8_t length, uint8_t high,
+							uint8_t num_idx_flush, uint16_t array_length, uint8_t *ptr, uint8_t point_pos)
+{
+	for(int j=0;j<array_length;j++)
+	{
+		if(j<point_pos)
+		{
+			show_num(hang+j*6,lie,ptr[j],5,high,1);
+		}
+		else if(j==point_pos)
+		{
+			lcd_state_flush_for_num(hang+j*6,lie,my_1x12_point,1,12,1);
+			show_num(hang+j*6+2,lie,ptr[j],5,high,1);
+		}
+		else
+		{
+			show_num(hang+j*6+2,lie,ptr[j],5,high,1);
+		}
+	}
+}
+
 void lcd_showchinese_no_garland_or_garland(uint32_t garland_flush_target,
 											uint8_t x, uint8_t y, uint8_t *s, uint8_t chinese_num)
 {
@@ -1307,6 +1329,12 @@ void lcd_number_modify_array_get(float32 *float_flag, float32 value, uint8_t *ar
 {
 	if(num_flush_idx!=0xff)
 	{
+		if((int_convert_length+point_convert_length)> sizeof(lcd_modify_num_array))//EEEEEEEEEEE
+		{
+			Log_e("[%s]:ERROR!!!\n", __func__);
+			return;
+		}
+
 		for(int j =0;j<(int_convert_length+point_convert_length);j++)
 		{
 			array_ptr[j] = lcd_modify_num_array[j];
@@ -1325,6 +1353,12 @@ void lcd_number_modify_int_array_for_int_parameter_get(uint32_t *int_flag, uint3
 {
 	if(num_flush_idx!=0xff)
 	{
+		if(int_convert_length>sizeof(lcd_password_num_array))
+		{
+			Log_e("[%s]:ERROR!!!\n",__func__);
+			return;
+		}
+
 		for(int j =0;j<int_convert_length;j++)
 		{
 			array_ptr[j] = lcd_password_num_array[j];

@@ -180,5 +180,6 @@ extern uint8_t HZBS[];
 extern uint8_t GLHF[];
 extern uint8_t ZJG[];
 extern uint8_t YC[];
-
+extern uint8_t my_word_char_du[];
+extern uint8_t my_word_char_jiao[];
 #endif

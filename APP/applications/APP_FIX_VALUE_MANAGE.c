@@ -833,7 +833,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 				case FIRST_DELAY:
 				case SECOND_FIX_VALUE:
 				case SECOND_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case FIRST_IN_OUT:
@@ -1285,7 +1285,7 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 				case FIRST_DELAY:
 				case SECOND_FIX_VALUE:
 				case SECOND_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case FIRST_IN_OUT:
@@ -1689,11 +1689,11 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 			switch(chinese_menu_idx)
 			{
 				case FIX_VALUE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-2;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-2;
 					up_diff_num_idx_ths = 9;
 					break;
 				case OVER_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case FUNCTION_IN_OUT:
@@ -2038,11 +2038,11 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 			switch(chinese_menu_idx)
 			{
 				case FIX_VALUE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-2;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-2;
 					up_diff_num_idx_ths = 9;
 					break;
 				case OVER_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case FUNCTION_IN_OUT:
@@ -2394,11 +2394,11 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 			switch(chinese_menu_idx)
 			{
 				case FIX_VALUE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-2;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-2;
 					up_diff_num_idx_ths = 9;
 					break;
 				case OVER_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case FUNCTION_IN_OUT:
@@ -2753,11 +2753,11 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 			switch(chinese_menu_idx)
 			{
 				case FIX_VALUE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-2;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-2;
 					up_diff_num_idx_ths = 9;
 					break;
 				case OVER_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case FUNCTION_IN_OUT:
@@ -3109,11 +3109,11 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 			switch(chinese_menu_idx)
 			{
 				case FIX_VALUE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-2;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-2;
 					up_diff_num_idx_ths = 9;
 					break;
 				case OVER_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case FUNCTION_IN_OUT:
@@ -3492,7 +3492,7 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 				case TRIPPING_SECOND_DELAY:
 				case TRIPPING_FIRST_CLOSE:
 				case TRIPPING_SECOND_CLOSE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case TRIPPING_IN_OUT:
@@ -3905,15 +3905,15 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 			switch(chinese_menu_idx)
 			{
 				case DISCONNECT_PROTECTION_FIX_VALUE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case DISCONNECT_MUTATION_FIX_VALUE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case DISCONNECT_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case DISCONNECT_IN_OUT:
@@ -4276,11 +4276,11 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 			switch(chinese_menu_idx)
 			{
 				case FIX_VALUE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-2;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-2;
 					up_diff_num_idx_ths = 9;
 					break;
 				case OVER_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case FUNCTION_IN_OUT:
@@ -4626,11 +4626,11 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 			switch(chinese_menu_idx)
 			{
 				case FIX_VALUE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-2;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-2;
 					up_diff_num_idx_ths = 9;
 					break;
 				case OVER_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case FUNCTION_IN_OUT:
@@ -4987,11 +4987,11 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 			switch(chinese_menu_idx)
 			{
 				case OVER_SEQUENCE_FIX_VALUE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case OVER_SEQUENCE_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case OVER_SEQUENCE_CLOSE:
@@ -5366,11 +5366,11 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 			switch(chinese_menu_idx)
 			{
 				case SYSTEM_FIX_VALUE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case SYSTEM_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case SYSTEM_CHECK_CURRENT:
@@ -5859,7 +5859,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 				case MIN_VOLTAGE:
 				case MAX_FREQUENCE:
 				case MIN_FREQUENCE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case CLOSING_WITH_VOLTAGE:
@@ -5874,7 +5874,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 					break;
 				case CLOSING_CHARGE_DELAY:
 				case CLOSING_WITH_VOLTAGE_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case SWITCH_IN_OUT:
@@ -6417,11 +6417,11 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 			switch(chinese_menu_idx)
 			{
 				case FIX_VALUE:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-2;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-2;
 					up_diff_num_idx_ths = 9;
 					break;
 				case OVER_DELAY:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case FUNCTION_IN_OUT:

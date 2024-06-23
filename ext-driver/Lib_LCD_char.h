@@ -5,6 +5,7 @@
 
 extern uint8_t my_char_V[];
 extern uint8_t my_char_H[];
+extern uint8_t my_char_h[];
 extern uint8_t my_char_z[];
 extern uint8_t my_char_W[];
 extern uint8_t baifenhao[];
@@ -24,12 +25,14 @@ extern uint8_t my_char_B[];
 extern uint8_t my_char_b[];
 extern uint8_t my_char_C[];
 extern uint8_t my_char_c[];
+extern uint8_t my_char_k[];
 extern uint8_t my_char_O[];
 extern uint8_t my_char_o[];
 extern uint8_t my_char_x[];
 extern uint8_t my_char_F[];
 extern uint8_t my_char_P[];
 extern uint8_t my_char_Q[];
+extern uint8_t my_char_r[];
 extern uint8_t my_char_s[];
 extern uint8_t my_char_S[];
 extern uint8_t jiahao_char[];
