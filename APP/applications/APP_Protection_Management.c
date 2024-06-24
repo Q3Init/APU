@@ -1176,7 +1176,7 @@ void APP_Protection_Management_Init(void)
     pMnt->enable.power_restoration_enable                 = app_parameter_read_Power_recovery_Eol();
 
     // 合闸充电状态先默认为1
-    pMnt->state.switch_on_charge_state = 1;
+    pMnt->state.switch_on_charge_state = 1;                    /* 需求不明确，保留接口 */
 
     for (i = 0; i < APP_PRT_MAX; i++) {
         pMnt->tick_list[i] = APP_Get_System_Ms();
