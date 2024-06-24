@@ -5,6 +5,7 @@
 #include "string.h"
 #include "BSW_NvM.h"
 #include "Lib_Log_Util.h"
+#include "APP_Protection_Management.h"
 
 typedef struct
 {

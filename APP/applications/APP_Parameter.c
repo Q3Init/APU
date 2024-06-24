@@ -899,6 +899,7 @@ uint8 app_parameter_write_Overvoltage_protection_LV1_One_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Overvoltage_protection_LV1_One_Eol.datas = data;
+    APP_Over_Volt_Lv1_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Overvoltage_protection_LV1_One_Eol,&data);
     return ret;
 }
@@ -943,6 +944,7 @@ uint8 app_parameter_write_Overvoltage_protection_LV2_One_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Overvoltage_protection_LV2_One_Eol.datas = data;
+    APP_Over_Volt_Lv2_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Overvoltage_protection_LV2_One_Eol,&data);
     return ret;
 }
@@ -987,6 +989,7 @@ uint8 app_parameter_write_Undervoltage_protection_LV1_One_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Undervoltage_protection_LV1_One_Eol.datas = data;
+    APP_Under_Volt_Lv1_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Undervoltage_protection_LV1_One_Eol,&data);
     return ret;
 }
@@ -1031,6 +1034,7 @@ uint8 app_parameter_write_Undervoltage_protection_LV2_One_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Undervoltage_protection_LV2_One_Eol.datas = data;
+    APP_Under_Volt_Lv2_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Undervoltage_protection_LV2_One_Eol,&data);
     return ret;
 }
@@ -1075,6 +1079,7 @@ uint8 app_parameter_write_Overfrequency_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Overfrequency_Eol.datas = data;
+    APP_Over_Freq_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Overfrequency_Eol,&data);
     return ret;
 }
@@ -1119,6 +1124,7 @@ uint8 app_parameter_write_Underfrequency_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Underfrequency_Eol.datas = data;
+    APP_Low_Freq_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Underfrequency_Eol,&data);
     return ret;
 }
@@ -1164,6 +1170,7 @@ uint8 app_parameter_write_Frequency_Discontinuity_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Frequency_Discontinuity_Eol.datas = data;
+    APP_Spike_Freq_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Frequency_Discontinuity_Eol,&data);
     return ret;
 }
@@ -1209,6 +1216,7 @@ uint8 app_parameter_write_Reverse_Power_Protection_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Reverse_Power_Protection_Eol.datas = data;
+    APP_Reverse_Power_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Reverse_Power_Protection_Eol,&data);
     return ret;
 }
@@ -1253,6 +1261,7 @@ uint8 app_parameter_write_Harmonic_Protection_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Harmonic_Protection_Eol.datas = data;
+    APP_Harmonic_Distortion_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Harmonic_Protection_Eol,&data);
     return ret;
 }
@@ -1282,6 +1291,7 @@ uint8 app_parameter_write_External_Coordination_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_External_Coordination_Eol.datas = data;
+    APP_Ext_Ctrl_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(External_Coordination_Eol,&data);
     return ret;
 }
@@ -1341,6 +1351,7 @@ uint8 app_parameter_write_Instantaneous_Overcurrent_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Instantaneous_Overcurrent_Eol.datas = data;
+    APP_Quick_Break_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Instantaneous_Overcurrent_Eol,&data);
     return ret;
 }
@@ -1385,6 +1396,7 @@ uint8 app_parameter_write_Speed_Limit_Break_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Speed_Limit_Break_Eol.datas = data;
+    APP_Time_Limit_Quick_Break_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Speed_Limit_Break_Eol,&data);
     return ret;
 }
@@ -1429,6 +1441,7 @@ uint8 app_parameter_write_Overcurrent_Protection_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Overcurrent_Protection_Eol.datas = data;
+    APP_Over_Current_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Overcurrent_Protection_Eol,&data);
     return ret;
 }
@@ -1487,6 +1500,7 @@ uint8 app_parameter_write_Zero_Sequence_Overflow_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Zero_Sequence_Overflow_Eol.datas = data;
+    APP_Zero_Seq_Current_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Zero_Sequence_Overflow_Eol,&data);
     return ret;
 }
@@ -1545,6 +1559,7 @@ uint8 app_parameter_write_System_Down_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_System_Down_Eol.datas = data;
+    APP_System_Outage_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(System_Down_Eol,&data);
     return ret;
 }
@@ -1619,6 +1634,7 @@ uint8 app_parameter_write_Voltage_Closing_Power_On(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Voltage_Closing_Power_On.datas = data;
+    APP_System_Power_Up_Switch_On_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Voltage_Closing_Power_On,&data);
     return ret;
 }
@@ -1633,6 +1649,7 @@ uint8 app_parameter_write_Voltage_Closing_Decompression(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Voltage_Closing_Decompression.datas = data;
+    APP_System_Outage_Switch_On_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Voltage_Closing_Decompression,&data);
     return ret;
 }
@@ -1647,6 +1664,7 @@ uint8 app_parameter_write_Voltage_Closing_Low_Pressure(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Voltage_Closing_Low_Pressure.datas = data;
+    APP_Under_Volt_Switch_On_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Voltage_Closing_Low_Pressure,&data);
     return ret;
 }
@@ -1661,6 +1679,7 @@ uint8 app_parameter_write_Voltage_Closing_High_Pressure(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Voltage_Closing_High_Pressure.datas = data;
+    APP_Over_Volt_Switch_On_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Voltage_Closing_High_Pressure,&data);
     return ret;
 }
@@ -1675,6 +1694,7 @@ uint8 app_parameter_write_Voltage_Closing_Low_Frequency(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Voltage_Closing_Low_Frequency.datas = data;
+    APP_Low_Freq_Switch_On_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Voltage_Closing_Low_Frequency,&data);
     return ret;
 }
@@ -1689,6 +1709,7 @@ uint8 app_parameter_write_Voltage_Closing_Overfrequency(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Voltage_Closing_Overfrequency.datas = data;
+    APP_Over_Freq_Switch_On_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Voltage_Closing_Overfrequency,&data);
     return ret;
 }
@@ -1703,6 +1724,7 @@ uint8 app_parameter_write_Voltage_Closing_Non_manual_separation(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Voltage_Closing_Non_manual_separation.datas = data;
+    APP_Non_Manual_Switch_On_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Voltage_Closing_Non_manual_separation,&data);
     return ret;
 }
@@ -1746,6 +1768,7 @@ uint8 app_parameter_write_Voltage_Closing_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Voltage_Closing_Eol.datas = data;
+    APP_On_Volt_Switch_On_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Voltage_Closing_Eol,&data);
     return ret;
 }
@@ -1791,6 +1814,7 @@ uint8 app_parameter_write_Power_recovery_Eol(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Power_recovery_Eol.datas = data;
+    APP_Power_Restoration_Switch_On_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Power_recovery_Eol,&data);
     return ret;
 }

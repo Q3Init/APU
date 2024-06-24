@@ -274,7 +274,7 @@ void APP_Under_Volt_Switch_On_Enable_Ctrl(uint8 ctrl)
     APP_PRT_ENABLE_SEM_GIVE();
 }
 
-/* 欠压合闸功能投入 */
+/* 过压合闸功能投入 */
 void APP_Over_Volt_Switch_On_Enable_Ctrl(uint8 ctrl)
 {
     APP_PRT_ENABLE_SEM_TAKE();
@@ -314,7 +314,7 @@ void APP_Low_Freq_Switch_On_Enable_Ctrl(uint8 ctrl)
     APP_PRT_ENABLE_SEM_GIVE();
 }
 
-/* 非手动合闸功能投入 */
+/* 功率恢复功能投入 */
 void APP_Power_Restoration_Switch_On_Enable_Ctrl(uint8 ctrl)
 {
     APP_PRT_ENABLE_SEM_TAKE();
@@ -1130,33 +1130,50 @@ void APP_Protection_Management_Init(void)
     pMnt->state.switch_on_charge_state                    = 0;
     pMnt->state.power_restoration_switch_on_state         = 0;
     
-    pMnt->enable.over_volt_lv1_switch_off_enable          = 1;
-    pMnt->enable.over_volt_lv2_switch_off_enable          = 1;
-    pMnt->enable.under_volt_lv1_switch_off_enable         = 1;
-    pMnt->enable.under_volt_lv2_switch_off_enable         = 1;
-    pMnt->enable.over_freq_switch_off_enable              = 1;
-    pMnt->enable.low_freq_switch_off_enable               = 1;
-    pMnt->enable.spike_freq_switch_off_enable             = 1;
-    pMnt->enable.reverse_power_switch_off_enable          = 1;
-    pMnt->enable.harmonic_distortion_switch_off_enable    = 1;
-    pMnt->enable.ext_ctrl_switch_off_enable               = 1;
-    pMnt->enable.quick_break_switch_off_enable            = 1;
-    pMnt->enable.time_limit_quick_break_switch_off_enable = 1;
-    pMnt->enable.over_current_switch_off_enable           = 1;
-    pMnt->enable.zero_seq_current_switch_off_enable       = 1;
-    pMnt->enable.system_outage_switch_off_enable          = 1;
-    pMnt->enable.on_volt_switch_on_enable                 = 1;
-    pMnt->enable.system_power_up_switch_on_enable         = 1;
-    pMnt->enable.system_outage_permit_switch_off          = 1;
-    pMnt->enable.under_volt_switch_on_enable              = 1;
-    pMnt->enable.over_volt_switch_on_enable               = 1;
-    pMnt->enable.system_outage_switch_on_enable           = 1;
-    pMnt->enable.over_freq_switch_on_enable               = 1;
-    pMnt->enable.low_freq_switch_on_enable                = 1;
-    pMnt->enable.power_restoration_enable                 = 1;
-    pMnt->enable.non_manual_switch_on_enable              = 1;
-    pMnt->enable.ext_ctrl_permit_switch_off               = 1;
-    pMnt->enable.zero_seq_permit_switch_off               = 1;
+    /* 过压一段保护 */
+    pMnt->enable.over_volt_lv1_switch_off_enable          = app_parameter_read_Overvoltage_protection_LV1_One_Eol();
+    /* 过压二段保护 */
+    pMnt->enable.over_volt_lv2_switch_off_enable          = app_parameter_read_Overvoltage_protection_LV2_One_Eol();
+    /* 低压一段保护 */
+    pMnt->enable.under_volt_lv1_switch_off_enable         = app_parameter_read_Undervoltage_protection_LV1_One_Eol();
+    /* 低压二段保护 */
+    pMnt->enable.under_volt_lv2_switch_off_enable         = app_parameter_read_Undervoltage_protection_LV2_One_Eol();
+    /* 频率过高 */
+    pMnt->enable.over_freq_switch_off_enable              = app_parameter_read_Overfrequency_Eol();
+    /* 频率过低 */
+    pMnt->enable.low_freq_switch_off_enable               = app_parameter_read_Underfrequency_Eol();
+    /* 频率突变 */
+    pMnt->enable.spike_freq_switch_off_enable             = app_parameter_read_Frequency_Discontinuity_Eol();
+    /* 逆功率保护 */
+    pMnt->enable.reverse_power_switch_off_enable          = app_parameter_read_Reverse_Power_Protection_Eol();
+    /* 谐波保护 */
+    pMnt->enable.harmonic_distortion_switch_off_enable    = app_parameter_read_Harmonic_Protection_Eol();
+    /* 外部联跳 */
+    pMnt->enable.ext_ctrl_switch_off_enable               = app_parameter_read_External_Coordination_Eol();
+    pMnt->enable.ext_ctrl_permit_switch_off               = 1; /* 需求不明确，保留接口 */
+    /* 速断保护 */
+    pMnt->enable.quick_break_switch_off_enable            = app_parameter_read_Instantaneous_Overcurrent_Eol();
+    /* 限速保护 */
+    pMnt->enable.time_limit_quick_break_switch_off_enable = app_parameter_read_Speed_Limit_Break_Eol();
+    /* 过流保护 */
+    pMnt->enable.over_current_switch_off_enable           = app_parameter_read_Overcurrent_Protection_Eol();
+    /* 零序过流 */
+    pMnt->enable.zero_seq_current_switch_off_enable       = app_parameter_read_Zero_Sequence_Overflow_Eol();
+    pMnt->enable.zero_seq_permit_switch_off               = 1; /* 需求不明确，保留接口 */
+    /* 系统失电 */
+    pMnt->enable.system_outage_switch_off_enable          = app_parameter_read_System_Down_Eol();
+    pMnt->enable.system_outage_permit_switch_off          = 1; /* 需求不明确，保留接口 */
+    /* 有压合闸相关 */
+    pMnt->enable.on_volt_switch_on_enable                 = app_parameter_read_Voltage_Closing_Eol();
+    pMnt->enable.system_power_up_switch_on_enable         = app_parameter_read_Voltage_Closing_Power_On();
+    pMnt->enable.system_outage_switch_on_enable           = app_parameter_read_Voltage_Closing_Decompression(); 
+    pMnt->enable.under_volt_switch_on_enable              = app_parameter_read_Voltage_Closing_Low_Pressure();
+    pMnt->enable.over_volt_switch_on_enable               = app_parameter_read_Voltage_Closing_High_Pressure();
+    pMnt->enable.low_freq_switch_on_enable                = app_parameter_read_Voltage_Closing_Low_Frequency();
+    pMnt->enable.over_freq_switch_on_enable               = app_parameter_read_Voltage_Closing_Overfrequency();
+    pMnt->enable.non_manual_switch_on_enable              = app_parameter_read_Voltage_Closing_Non_manual_separation();
+    /* 功率恢复功能投入 */
+    pMnt->enable.power_restoration_enable                 = app_parameter_read_Power_recovery_Eol();
 
     // 合闸充电状态先默认为1
     pMnt->state.switch_on_charge_state = 1;
