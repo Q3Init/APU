@@ -964,10 +964,10 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
          /* 装置首次上电 */
         sys_first_power_on_flag = (true == pMnt->system_first_power_up_flag) && pMnt->enable.system_power_up_switch_on_enable;
         /* 低压跳闸 */
-        under_volt_flag = (pMnt->state.under_volt_switch_off_state_lv1 || pMnt->state.over_volt_switch_off_state_lv2) && 
+        under_volt_flag = (pMnt->state.under_volt_switch_off_state_lv1 || pMnt->state.under_volt_switch_off_state_lv2) && 
                         pMnt->enable.under_volt_switch_on_enable;    
         /* 高压跳闸 */
-        over_volt_flag = (pMnt->state.over_volt_switch_off_state_lv1 || pMnt->state.under_volt_switch_off_state_lv2) && 
+        over_volt_flag = (pMnt->state.over_volt_switch_off_state_lv1 || pMnt->state.over_volt_switch_off_state_lv2) && 
                         (pMnt->enable.over_volt_switch_on_enable); 
         /* 失电跳闸 */
         sys_outage_flag = pMnt->state.system_outage_switch_off_state && pMnt->enable.system_outage_switch_on_enable;
