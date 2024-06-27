@@ -1,4 +1,5 @@
 #include "APP_fault_management.h"
+#include "Ext_LED.h"
 
 static void App_check_fault_callback(fault_type fault_event);
 static void check_fault(fault_type id);
@@ -70,7 +71,7 @@ void App_fault_management_mainfunction(void)
 
 static void App_check_fault_callback(fault_type fault_event)
 {
-
+    SetLedStatus(fault_event);
 }
 
 static void check_fault(fault_type id)

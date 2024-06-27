@@ -1,59 +1,73 @@
 #include "Ext_LED.h"
+#include "APP_Protection_Backend.h"
+#include "APP_fault_management.h"
 
-/*工作指示灯，正常工作时，0.5s闪烁*/
-void LED_working_ON(void)
+static void Ledprocess( GPIO_T* port, uint16_t pin, Led_Flag led_flag );
+
+Led_struct Led_Map[] = {
+    {     LED_RUN,       DIO_PORT_working,       DIO_PIN_working, "运行", LED_OFF, 500, 0, Ledprocess},
+    {     LED_FIT,       DIO_PORT_keyopen,       DIO_PIN_keyopen, "分位", LED_OFF, 500, 0, Ledprocess},
+    {LED_QUANTILE,      DIO_PORT_keyclose,      DIO_PIN_keyclose, "合位", LED_OFF, 500, 0, Ledprocess},
+    {   LED_FAULT,         DIO_PORT_fault,         DIO_PIN_fault, "故障", LED_OFF, 500, 0, Ledprocess},
+    { LED_WARNING,       DIO_PORT_warning,       DIO_PIN_warning, "告警", LED_OFF, 500, 0, Ledprocess},
+    {  LED_COMMUN, DIO_PORT_communication, DIO_PIN_communication, "通信", LED_OFF, 500, 0, Ledprocess},
+};
+
+uint16 Led_Num = sizeof( Led_Map ) / sizeof( Led_Map[ 0 ] );
+
+static void Ledprocess( GPIO_T* port, uint16_t pin, Led_Flag led_flag )
 {
-    BSW_Dio_WriteBitValue(DIO_PORT_working,DIO_PIN_working,HIGH);
+    switch ( led_flag )
+    {
+        case LED_OFF:
+            BSW_Dio_WriteBitValue( port, pin, LOW );
+            break;
+        case LED_ON:
+            BSW_Dio_WriteBitValue( port, pin, HIGH );
+            break;
+        case LED_FLASH:
+            BSW_Dio_FlipcBit( port, pin );
+            break;
+        default:
+            break;
+    }
 }
 
-void LED_working_OFF(void)
+void SetLedStatus( fault_type fault_event )
 {
-    BSW_Dio_WriteBitValue(DIO_PORT_working,DIO_PIN_working,LOW);
-
+    if ( None_fault == fault_event )
+    {
+        Led_Map[ LED_RUN ].led_flag    = LED_FLASH;
+        Led_Map[ LED_FAULT ].led_flag  = LED_OFF;
+        Led_Map[ LED_COMMUN ].led_flag = LED_OFF;
+    }
+    else
+    {
+        Led_Map[ LED_RUN ].led_flag    = LED_OFF;
+        Led_Map[ LED_FAULT ].led_flag  = LED_ON;
+        Led_Map[ LED_COMMUN ].led_flag = LED_OFF;
+    }
 }
 
-/*开关指示灯，开关在分位时，绿灯亮，开关在合位时红灯亮*/
-void LED_keyopen(void)
+void Set_FIT_QUANTILE_Led( void )
 {
-    BSW_Dio_WriteBitValue(DIO_PORT_keyopen,DIO_PIN_keyopen,HIGH);
-    BSW_Dio_WriteBitValue(DIO_PORT_keyclose,DIO_PIN_keyclose,LOW);
+    if ( true == APP_Remote_Signal_Input_Switching_Exist_On( ) )
+    {
+        Led_Map[ LED_FIT ].led_flag      = LED_ON;
+        Led_Map[ LED_QUANTILE ].led_flag = LED_OFF;
+    }
+    //    else if ( true == APP_Remote_Signal_Input_Switching_Exist_Off( ) )
+    //    {
+    //        Led_Map[ LED_FIT ].led_flag      = LED_OFF;
+    //        Led_Map[ LED_QUANTILE ].led_flag = LED_ON;
+    //    }
+    else
+    {
+        Led_Map[ LED_FIT ].led_flag      = LED_OFF;
+        Led_Map[ LED_QUANTILE ].led_flag = LED_ON;
+    }
 }
 
-void LED_keyclose(void)
+void Set_commun_Led( void )
 {
-    BSW_Dio_WriteBitValue(DIO_PORT_keyopen,DIO_PIN_keyopen,LOW);
-    BSW_Dio_WriteBitValue(DIO_PORT_keyclose,DIO_PIN_keyclose,HIGH);
-}
-
-/*故障指示灯，故障时常亮*/
-void LED_fault_ON(void)
-{
-    BSW_Dio_WriteBitValue(DIO_PORT_fault,DIO_PIN_fault,HIGH);
-}
-
-void LED_fault_OFF(void)
-{
-    BSW_Dio_WriteBitValue(DIO_PORT_fault,DIO_PIN_fault,LOW);
-}
-
-/*警告指示灯，发生警告事件时常亮*/
-void LED_warning_ON(void)
-{
-    BSW_Dio_WriteBitValue(DIO_PORT_warning,DIO_PIN_warning,HIGH);
-}
-
-void LED_warning_OFF(void)
-{
-    BSW_Dio_WriteBitValue(DIO_PORT_warning,DIO_PIN_warning,LOW);
-}
-
-/*通信指示灯，通信正常时常亮*/
-void LED_communicatin_ON(void)
-{
-    BSW_Dio_WriteBitValue(DIO_PORT_communication,DIO_PIN_communication,HIGH);
-}
-
-void LED_communicatin_OFF(void)
-{
-    BSW_Dio_WriteBitValue(DIO_PORT_communication,DIO_PIN_communication,LOW);
 }
