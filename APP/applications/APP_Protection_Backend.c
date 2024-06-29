@@ -468,11 +468,10 @@ uint8 APP_Remote_Signal_Input_State(uint8 ch)
 static void APP_Remote_Signal_Input_Process(void)
 {
     int i = 0;
-
     for (i = 0; i < APP_RMT_CHAN_MAX; i++) {
         if (BIT_SET == APP_Remote_Signal_Input_Read(i)) {
             if (BIT_RESET == pBk->remote_signal_di_state_list[i]) {
-                if ((APP_Get_System_Ms() - pBk->remote_signal_di_tick_list[i]) >= REMOTE_SIGNAL_INPUT_DEBOUNCE_DELAY) {
+                if ((APP_Get_System_Ms() - pBk->remote_signal_di_tick_list[i]) >= REMOTE_SIGNAL_INPUT_DEBOUNCE_DELAY()) {
                     pBk->remote_signal_di_state_list[i] = BIT_SET;
                 }                
             }

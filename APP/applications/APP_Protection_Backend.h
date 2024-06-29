@@ -3,6 +3,7 @@
 
 #include "Platform_Types.h"
 #include "arm_math.h"
+#include "APP_Parameter.h"
 
 #define APP_RELAY_CHANNEL_NUM   6
 
@@ -21,7 +22,7 @@
 #define MAX_HARMONIC_ORDER  5
 
 /* 输入消抖延迟，单位：ms */
-#define REMOTE_SIGNAL_INPUT_DEBOUNCE_DELAY 10
+#define REMOTE_SIGNAL_INPUT_DEBOUNCE_DELAY() app_parameter_read_Remote_letter_anti_shake_time()
 
 #define APP_ADC2VOLT_CALC(adc_val)  (((float32)(adc_val) * ADC_REF_VOLT / 4096.0f) - ADC_VOLT_OFFSET)
 #define APP_DC2AC_VOLT(V)   ((V) * VOLTAGE_CONV_SCALE / 1000.0)
