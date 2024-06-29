@@ -493,7 +493,7 @@ static void APP_Remote_Signal_Input_Process(void)
  */
 uint8 APP_Remote_Signal_Input_Read_Group_1(void)
 {
-    if (pBk->remote_signal_di_state_list[0] && !pBk->remote_signal_di_state_list[1]) {
+    if (!pBk->remote_signal_di_state_list[0] && pBk->remote_signal_di_state_list[1]) {
         return BIT_SET;
     } else {
         return BIT_RESET;
@@ -507,7 +507,7 @@ uint8 APP_Remote_Signal_Input_Read_Group_1(void)
  */
 uint8 APP_Remote_Signal_Input_Read_Group_2(void)
 {
-    if (pBk->remote_signal_di_state_list[2] && !pBk->remote_signal_di_state_list[3]) {
+    if (!pBk->remote_signal_di_state_list[2] && pBk->remote_signal_di_state_list[3]) {
         return BIT_SET;
     } else {
         return BIT_RESET;
@@ -521,7 +521,7 @@ uint8 APP_Remote_Signal_Input_Read_Group_2(void)
  */
 uint8 APP_Remote_Signal_Input_Read_Group_3(void)
 {
-    if (pBk->remote_signal_di_state_list[4] && !pBk->remote_signal_di_state_list[5]) {
+    if (!pBk->remote_signal_di_state_list[4] && pBk->remote_signal_di_state_list[5]) {
         return BIT_SET;
     } else {
         return BIT_RESET;
@@ -535,7 +535,7 @@ uint8 APP_Remote_Signal_Input_Read_Group_3(void)
  */
 uint8 APP_Remote_Signal_Input_Read_Group_4(void)
 {
-    if (pBk->remote_signal_di_state_list[6] && !pBk->remote_signal_di_state_list[7]) {
+    if (!pBk->remote_signal_di_state_list[6] && pBk->remote_signal_di_state_list[7]) {
         return BIT_SET;
     } else {
         return BIT_RESET;
@@ -560,9 +560,9 @@ boolean APP_Remote_Signal_Input_Switching_Exist_On(void)
 }
 
 /**
- * @brief 全部开关量输入是否存在开位状态
+ * @brief 全部开关量输入是否存在分位状态
  * 
- * @return boolean - true: 存在开位状态，false: 不存在开位状态
+ * @return boolean - true: 存在分位状态，false: 不存在分位状态
  */
 boolean APP_Remote_Signal_Input_Switching_Exist_Off(void)
 {
@@ -572,7 +572,11 @@ boolean APP_Remote_Signal_Input_Switching_Exist_Off(void)
         (BIT_RESET == APP_Remote_Signal_Input_Read_Group_4())) {
         return true;
     } else {
-        return false;
+        if (APP_Remote_Signal_Input_Switching_Exist_On == false) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 

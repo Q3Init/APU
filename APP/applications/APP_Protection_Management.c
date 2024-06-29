@@ -964,10 +964,10 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
          /* 装置首次上电 */
         sys_first_power_on_flag = (true == pMnt->system_first_power_up_flag) && pMnt->enable.system_power_up_switch_on_enable;
         /* 低压跳闸 */
-        under_volt_flag = (pMnt->state.under_volt_switch_off_state_lv1 || pMnt->state.under_volt_switch_off_state_lv2) && 
+        under_volt_flag = (pMnt->state.under_volt_switch_off_state_lv1 || pMnt->state.over_volt_switch_off_state_lv2) && 
                         pMnt->enable.under_volt_switch_on_enable;    
         /* 高压跳闸 */
-        over_volt_flag = (pMnt->state.over_volt_switch_off_state_lv1 || pMnt->state.over_volt_switch_off_state_lv2) && 
+        over_volt_flag = (pMnt->state.over_volt_switch_off_state_lv1 || pMnt->state.under_volt_switch_off_state_lv2) && 
                         (pMnt->enable.over_volt_switch_on_enable); 
         /* 失电跳闸 */
         sys_outage_flag = pMnt->state.system_outage_switch_off_state && pMnt->enable.system_outage_switch_on_enable;
@@ -978,7 +978,7 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
         /* 非手分合闸 */
         non_manual_flag = (BIT_RESET == APP_Remote_Signal_Input_Read_Closing_And_Locking()) && pMnt->enable.non_manual_switch_on_enable;
 
-        enable_state = sys_first_power_on_flag || under_volt_flag || over_volt_flag || sys_outage_flag || over_freq_flag || non_manual_flag;
+        enable_state = sys_first_power_on_flag || under_volt_flag || over_volt_flag || sys_outage_flag || over_freq_flag || low_freq_flag || non_manual_flag;
 
         /* 电压上下限 */
         volt_limit = ((APP_Get_Voltage_Ua() > app_parameter_read_Voltage_Closing_Lower_Voltage_Limit()) && 
@@ -1176,7 +1176,7 @@ void APP_Protection_Management_Init(void)
     pMnt->enable.power_restoration_enable                 = app_parameter_read_Power_recovery_Eol();
 
     // 合闸充电状态先默认为1
-    pMnt->state.switch_on_charge_state = 1;                    /* 需求不明确，保留接口 */
+    pMnt->state.switch_on_charge_state = 1;
 
     for (i = 0; i < APP_PRT_MAX; i++) {
         pMnt->tick_list[i] = APP_Get_System_Ms();

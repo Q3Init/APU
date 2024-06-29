@@ -239,7 +239,7 @@ uint8 APP_Remote_Signal_Input_Read_Group_4(void);
 uint8 APP_Remote_Signal_Input_Read_Closing_And_Locking(void);
 /* 全部开关量输入是否存在合位状态 */
 boolean APP_Remote_Signal_Input_Switching_Exist_On(void);
-/* 全部开关量输入是否存在开位状态 */
+/* 全部开关量输入是否存在分位状态 */
 boolean APP_Remote_Signal_Input_Switching_Exist_Off(void);
 
 /* 继电器相关处理 */
