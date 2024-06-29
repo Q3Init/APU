@@ -5,6 +5,8 @@
 #include "Lib_Log_Util.h"
 #include "Ext_KEY.h"
 
+#define FAULT_MSG_TO_LCD(msg) FAULT_LAYER_TO_LCD_##msg
+
 #define USER_PASSWORD_AUTHENTICATE() menu_user_password_authentication(msg_process_signal, msg_context, last_cursor, menu_target)
 #define OS_DELAY_US(x)  			for(int j=0;j<655360;j++){for(int a=0;a<4;a++);}
 extern uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_t msg_context_tag, uint8_t last_cursor, uint8_t menu_target);
@@ -175,7 +177,25 @@ enum MSG_PRIORITY_MASK{
 enum MSG_CONTEXT{
 	NO_MSG_CONTEXT,
     FLUSH_SCREEN=9,			/* 9 */
-	UNKNOW_MSG_CONTEXT=10,
+	FAULT_MSG_TO_LCD(Over_volt_lv1_fault),
+	FAULT_MSG_TO_LCD(Over_volt_lv2_fault),
+	FAULT_MSG_TO_LCD(Under_volt_lv1_fault),
+	FAULT_MSG_TO_LCD(Under_volt_lv2_fault),
+	FAULT_MSG_TO_LCD(Over_freq_fault),
+	FAULT_MSG_TO_LCD(Low_freq_fault),
+	FAULT_MSG_TO_LCD(Spike_freq_fault),
+	FAULT_MSG_TO_LCD(Reverse_power_fault),
+	FAULT_MSG_TO_LCD(Harmonic_volt_distortion_fault),
+	FAULT_MSG_TO_LCD(Ext_ctrl_fault),
+	FAULT_MSG_TO_LCD(Quick_break_fault),
+	FAULT_MSG_TO_LCD(Time_limit_quick_break_fault),
+	FAULT_MSG_TO_LCD(Over_current_fault),
+	FAULT_MSG_TO_LCD(Zero_seq_current_fault),
+	FAULT_MSG_TO_LCD(System_outage_fault),
+	FAULT_MSG_TO_LCD(On_volt_fault),
+	FAULT_MSG_TO_LCD(Power_restoration_fault),
+	FAULT_MSG_TO_LCD(Switch_on_charge_fault),
+	UNKNOW_MSG_CONTEXT,
 };
 
 enum MSG_STATE_TYPE{

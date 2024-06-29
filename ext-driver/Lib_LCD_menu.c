@@ -536,6 +536,42 @@ struct menu_event_tag * error_indication_menu_handler(uint8_t msg_process_signal
 				clear_screen();
 				LCD_ShowChinese_garland(0, 0, main_menu, 3);
 				break;
+			case FAULT_MSG_TO_LCD(Over_volt_lv1_fault):
+				break;
+			case FAULT_MSG_TO_LCD(Over_volt_lv2_fault):
+				break;
+			case FAULT_MSG_TO_LCD(Under_volt_lv1_fault):
+				break;
+			case FAULT_MSG_TO_LCD(Under_volt_lv2_fault):
+				break;
+			case FAULT_MSG_TO_LCD(Over_freq_fault):
+				break;
+			case FAULT_MSG_TO_LCD(Low_freq_fault):
+				break;
+			case FAULT_MSG_TO_LCD(Spike_freq_fault):
+				break;
+			case FAULT_MSG_TO_LCD(Reverse_power_fault):
+				break;
+			case FAULT_MSG_TO_LCD(Harmonic_volt_distortion_fault):
+				break;
+			case FAULT_MSG_TO_LCD(Ext_ctrl_fault):
+				break;
+			case FAULT_MSG_TO_LCD(Quick_break_fault):
+				break;
+			case FAULT_MSG_TO_LCD(Time_limit_quick_break_fault):
+				break;
+			case FAULT_MSG_TO_LCD(Over_current_fault):
+				break;
+			case FAULT_MSG_TO_LCD(Zero_seq_current_fault):
+				break;
+			case FAULT_MSG_TO_LCD(System_outage_fault):
+				break;
+			case FAULT_MSG_TO_LCD(On_volt_fault):
+				break;
+			case FAULT_MSG_TO_LCD(Power_restoration_fault):
+				break;
+			case FAULT_MSG_TO_LCD(Switch_on_charge_fault):
+				break;
 			default:
 				break;
 		}

@@ -32,6 +32,8 @@
  */
 #include <stddef.h>
 
+#define ASSERT_ERROR(x)  while(1){}; 
+
 /*
  * If stdint.h cannot be located then:
  *   + If using GCC ensure the -nostdint options is *not* being used.

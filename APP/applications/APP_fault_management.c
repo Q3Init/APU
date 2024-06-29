@@ -1,9 +1,12 @@
 #include "APP_fault_management.h"
 #include "Ext_LED.h"
+#include "Lib_LCD_menu.h"
 
 static void App_check_fault_callback(fault_type fault_event);
-static void check_fault(fault_type id);
-static fault_type get_app_fault_status(fault_type fault_index);
+static uint8 check_fault(fault_type id);
+static APP_fault_state_tag update_and_get_app_fault_status(fault_type fault_index);
+static fault_type App_get_fault_List_member_fault_id(fault_type idx);
+static void App_fault_init_id_check(void);
 
 static APP_fault_Rte APP_fault_List[fault_sum] =
 {
@@ -27,80 +30,210 @@ static APP_fault_Rte APP_fault_List[fault_sum] =
     {.fault_id = Switch_on_charge_fault,        .falut_state = Init_state, .callout = APP_Get_Switch_On_Charge_State}
 };
 
-void App_fault_management_Init(void)
+static fault_type App_get_fault_List_member_fault_id(fault_type idx)
 {
-    App_check_fault_callback(None_fault);
+    return  APP_fault_List[idx].fault_id;
+}
+
+extern void App_fault_management_Init(void)
+{
+    App_fault_init_id_check();
+    SetLedStatus(None_fault);
+}
+
+static void App_fault_init_id_check(void)
+{
+    uint8 err_state = false;
+
+    /* 遍历所有故障检测 */
+    for (uint8 index = 0 ;index < fault_sum;index++) {
+        if(APP_fault_List[index].falut_state != index) {
+            err_state = true;
+            Log_e("[idx=%d] Init ERROR!! idx does not match the fault id", index);
+        }
+    }
+
+    if(err_state == true) {
+        while(1){
+            Log_e("[%s] Init app-fault-management ERROR!", __func__);
+        }
+    }
 }
 
 void App_fault_management_mainfunction(void)
 {
+    uint32 total_fault_state_record = 0;
+
     while(1) 
     {
+        uint32 total_fault_state = 0;
+        uint8 led_toggle_signale = false;
+
         /* 遍历所有故障检测 */
-        for (uint8 index = 0 ;index < fault_sum;index++) {
-            check_fault((fault_type)index);
+        for (uint8 index = 0 ;index < fault_sum; index++) {
+            total_fault_state |= (check_fault((fault_type)index) << index);
         }
 
-        /* 所有故障状态为None_fault */
-        if ((APP_fault_List[Over_volt_lv1_fault].falut_state == None_fault)             &&
-            (APP_fault_List[Over_volt_lv2_fault].falut_state == None_fault)             &&
-            (APP_fault_List[Under_volt_lv1_fault].falut_state == None_fault)            &&
-            (APP_fault_List[Under_volt_lv2_fault].falut_state == None_fault)            &&
-            (APP_fault_List[Over_freq_fault].falut_state == None_fault)                 &&
-            (APP_fault_List[Low_freq_fault].falut_state == None_fault)                  &&
-            (APP_fault_List[Spike_freq_fault].falut_state == None_fault)                &&
-            (APP_fault_List[Reverse_power_fault].falut_state == None_fault)             &&
-            (APP_fault_List[Harmonic_volt_distortion_fault].falut_state == None_fault)  &&
-            (APP_fault_List[Ext_ctrl_fault].falut_state == None_fault)                  &&
-            (APP_fault_List[Quick_break_fault].falut_state == None_fault)               &&
-            (APP_fault_List[Time_limit_quick_break_fault].falut_state == None_fault)    &&
-            (APP_fault_List[Over_current_fault].falut_state == None_fault)              &&
-            (APP_fault_List[Zero_seq_current_fault].falut_state == None_fault)          &&
-            (APP_fault_List[System_outage_fault].falut_state == None_fault)             &&
-            (APP_fault_List[On_volt_fault].falut_state == None_fault)                   &&
-            (APP_fault_List[Power_restoration_fault].falut_state == None_fault)         &&
-            (APP_fault_List[Switch_on_charge_fault].falut_state == None_fault)          
-        ) 
-        {
-            App_check_fault_callback(None_fault);
+        /* check if required to toggle led state */
+        if(total_fault_state_record == 0) {
+            led_toggle_signale = (total_fault_state == 0) ? false : true;
+        } else {
+            led_toggle_signale = (total_fault_state == 0) ? true : false;
         }
+
+        if(led_toggle_signale) {
+            /* check if there is any fault */ 
+            SetLedStatus((fault_type)((total_fault_state == 0) ? None_fault:(!None_fault)));
+        }
+
+        /* update the total_fault_state_record */
+        total_fault_state_record = total_fault_state;
+
         vTaskDelay(10);
     }
+}
 
+uint8_t App_fault_msg_transmited_to_lcd_layer_get(fault_type fault_event)
+{
+    uint8_t app_fault_msg = UNKNOW_MSG_CONTEXT;
+
+    switch(fault_event)
+    {
+        case Over_volt_lv1_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Over_volt_lv1_fault);
+            break;
+        case Over_volt_lv2_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Over_volt_lv2_fault);
+            break;
+        case Under_volt_lv1_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Under_volt_lv1_fault);
+            break;
+        case Under_volt_lv2_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Under_volt_lv2_fault);
+            break;
+        case Over_freq_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Over_freq_fault);
+            break;
+        case Low_freq_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Low_freq_fault);
+            break;
+        case Spike_freq_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Spike_freq_fault);
+            break;
+        case Reverse_power_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Reverse_power_fault);
+            break;
+        case Harmonic_volt_distortion_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Harmonic_volt_distortion_fault);
+            break;
+        case Ext_ctrl_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Ext_ctrl_fault);
+            break;
+        case Quick_break_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Quick_break_fault);
+            break;
+        case Time_limit_quick_break_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Time_limit_quick_break_fault);
+            break;
+        case Over_current_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Over_current_fault);
+            break;
+        case Zero_seq_current_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Zero_seq_current_fault);
+            break;
+        case System_outage_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(System_outage_fault);
+            break;
+        case On_volt_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(On_volt_fault);
+            break;
+        case Power_restoration_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Power_restoration_fault);
+            break;
+        case Switch_on_charge_fault:
+            app_fault_msg = FAULT_MSG_TO_LCD(Switch_on_charge_fault);
+            break;
+        default:
+            break;
+    }
+
+    return app_fault_msg;
+}
+
+static uint8 APP_fault_msg_send_to_lcd_layer(fault_type fault_event)
+{
+    uint8 tran_state = false;
+    uint8_t app_fault_msg = App_fault_msg_transmited_to_lcd_layer_get(fault_event);
+
+    uint8_t state = msg_send_to_lcd_layer(ERROR_INDICATION_LAYER, LCD_LAYER, MSG_AVAILABLE, app_fault_msg);
+    if(state == MSG_TRANSMIT_SUCCESS) {
+        tran_state = true;
+    } else {
+        Log_e("Failed to transmit APP-fault_msg to LCD-layer\n");
+    }
+
+    return tran_state;
 }
 
 static void App_check_fault_callback(fault_type fault_event)
 {
-    SetLedStatus(fault_event);
+    uint32 success_state = false; /* ms */
+
+    do{
+        success_state = APP_fault_msg_send_to_lcd_layer(fault_event);
+    } while (!success_state);
 }
 
-static void check_fault(fault_type id)
+static uint8 check_fault(fault_type id)
 {
-    static fault_type check_fault = None_fault;
-    check_fault = get_app_fault_status(id);
-    if ((check_fault == id) && (check_fault != APP_fault_List[id].falut_state)) {
-        APP_fault_List[id].falut_state = id;
-        App_check_fault_callback(APP_fault_List[id].falut_state);
-    } else if ((check_fault == None_fault) && (check_fault != APP_fault_List[id].falut_state)) {
-        APP_fault_List[id].falut_state = None_fault;
-    } else {
-        /* nothing to do */
+    APP_fault_state_tag check_fault = update_and_get_app_fault_status(id);
+    uint8 fault_signal = false;
+    uint8 fault_toggle_signal = false;
+    do {
+        /* check if the fault-state is invalid */
+        if(check_fault.cur_fault_state == State_value_error) {
+            ASSERT_ERROR(true);
+        }
+
+        /* check if the fault-state is changed */
+        if(check_fault.cur_fault_state == check_fault.last_fault_state) {
+            fault_toggle_signal = false;
+        }
+
+        /* match the current fault-state with id in order to check if fault occured */
+        if(check_fault.cur_fault_state == id) {
+            fault_signal = true;
+        }
+    } while (false);
+
+    if ((fault_signal == true) && (fault_toggle_signal == true)) {
+        App_check_fault_callback(App_get_fault_List_member_fault_id(id));
     }
+
+    return fault_signal;
 }
 
-static fault_type get_app_fault_status(fault_type fault_index)
+static APP_fault_state_tag update_and_get_app_fault_status(fault_type fault_index)
 {
-    fault_type ret = None_fault;
+    APP_fault_state_tag fault_state;
+    fault_state.cur_fault_state = None_fault;
+    fault_state.last_fault_state = APP_fault_List[fault_index].falut_state;
+
     if (APP_fault_List[fault_index].callout != NULL) {
         if (APP_fault_List[fault_index].callout() == 1) {
             APP_fault_List[fault_index].falut_state = APP_fault_List[fault_index].fault_id;
         } else if (APP_fault_List[fault_index].callout() == 0) {
             APP_fault_List[fault_index].falut_state = None_fault;
         } else {
-            /* nothing to do */
+            APP_fault_List[fault_index].falut_state = State_value_error;
+            Log_e("[app fault idx=%d] returned state=%d !!ERROR!!!\n", fault_index, APP_fault_List[fault_index].callout());
         }
-        ret = APP_fault_List[fault_index].falut_state;
+        fault_state.cur_fault_state = APP_fault_List[fault_index].falut_state;
     }
-    return ret; /* 无故障返回 */
+    else {
+        Log_e("[app fault idx=%d] no register callback-func !!ERROR!!!\n", fault_index);
+    }
+
+    return fault_state; /* 故障状态返回 */
 }
 

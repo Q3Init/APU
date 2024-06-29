@@ -26,8 +26,9 @@ typedef enum{
     On_volt_fault,                      /* 有压合闸故障 */
     Power_restoration_fault,            /* 功率恢复故障 */
     Switch_on_charge_fault,             /* 合闸充电故障 */
-    fault_sum,
+    fault_sum,                          /* 18, 应小于等于31 */
     None_fault,                         /* 无故障 */
+    State_value_error,                  /* 返回的状态值非二值信号(0或1) */
     Init_state
 }fault_type;
 
@@ -38,6 +39,13 @@ typedef struct
     fault_type falut_state;
     uint8 (*callout)(void);
 }APP_fault_Rte;
+
+typedef struct 
+{
+    /* data */
+    fault_type cur_fault_state;
+    fault_type last_fault_state;
+}APP_fault_state_tag;
 
 extern void App_fault_management_Init(void);
 extern void App_fault_management_mainfunction(void);
