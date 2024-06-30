@@ -47,7 +47,7 @@ static void App_fault_init_id_check(void)
 
     /* 遍历所有故障检测 */
     for (uint8 index = 0 ;index < fault_sum;index++) {
-        if(APP_fault_List[index].falut_state != index) {
+        if(APP_fault_List[index].fault_id != index) {
             err_state = true;
             Log_e("[idx=%d] Init ERROR!! idx does not match the fault id", index);
         }
