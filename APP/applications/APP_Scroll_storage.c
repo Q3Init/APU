@@ -26,8 +26,7 @@ uint8 APP_Scroll_storage_write(uint8 block,uint8 fault_event)
     RTC_date time;
     rtc_get(&time);
     p_buf[0] = fault_event;
-    memcpy(p_buf+1,&time.year,7);
-    memcpy(p_buf+8,&time.millisecond,2);
+    memcpy(p_buf+1,&time.year,sizeof(RTC_date));
     if (block == Controls_block) {
         block2_writeAddress = BASE_BLOCK2_ADRESS + (block2_writeIndex * 12);
         FRAM_Write(p_buf,block2_writeAddress,12);
