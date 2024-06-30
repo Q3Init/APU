@@ -19,12 +19,18 @@ void APP_Scroll_storage_Init(void)
     block3_writeIndex = (uint16)(block3_cnt[1] << 8) + (uint16)block3_cnt[0];
 }
 
-uint8 APP_Scroll_storage_write(uint8 block, void* data)
+uint8 APP_Scroll_storage_write(uint8 block,uint8 fault_event)
 {
     uint8 ret = E_NOK;
+    uint8 *p_buf;
+    RTC_date time;
+    rtc_get(&time);
+    p_buf[0] = fault_event;
+    memcpy(p_buf+1,&time.year,7);
+    memcpy(p_buf+8,&time.millisecond,2);
     if (block == Controls_block) {
         block2_writeAddress = BASE_BLOCK2_ADRESS + (block2_writeIndex * 12);
-        FRAM_Write(data,block2_writeAddress,12);
+        FRAM_Write(p_buf,block2_writeAddress,12);
         block2_writeIndex +=1;
         block2_cnt[0] = ((uint8)block2_writeIndex);
         block2_cnt[1] = ((uint8)((block2_writeIndex & 0xff00) >> 8));
@@ -32,7 +38,7 @@ uint8 APP_Scroll_storage_write(uint8 block, void* data)
         ret = E_OK;
     } else if (block == Error_Block) {
         block3_writeAddress = BASE_BLOCK3_ADRESS + (block3_writeIndex * 12);
-        FRAM_Write(data,block3_writeAddress,12);
+        FRAM_Write(p_buf,block3_writeAddress,12);
         block3_writeIndex +=1;
         block3_cnt[0] = ((uint8)block3_writeIndex);
         block3_cnt[1] = ((uint8)((block3_writeIndex & 0xff00) >> 8));
@@ -45,20 +51,22 @@ uint8 APP_Scroll_storage_write(uint8 block, void* data)
 }
 
 /* page : 0 - 63 */
-uint8 APP_Scroll_storage_read(uint8 block,uint8 pages,void* data)
+uint8 APP_Scroll_storage_read(uint8 block,uint8 pages,App_scroll_storage_datas *data)
 {
     uint8 ret = E_NOK;
+    uint8 *p_buf;
     if (block == Controls_block) {
         block2_readAddress = BASE_BLOCK2_ADRESS + (pages * 12);
-        FRAM_Read(data,block2_readAddress,12);
+        FRAM_Read(p_buf,block2_readAddress,12);
         ret = E_OK;
     } else if (block == Error_Block) {
         block3_readAddress = BASE_BLOCK3_ADRESS + (pages * 12);
-        FRAM_Read(data,block3_readAddress,12);
+        FRAM_Read(p_buf,block3_readAddress,12);
         ret = E_OK;
     } else {
         /* nothing to do */
     }
+    memcpy(data,p_buf,sizeof(App_scroll_storage_datas));
     return ret;
 }
 

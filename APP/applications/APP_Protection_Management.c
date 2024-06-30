@@ -1005,6 +1005,16 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
             if (false == pMnt->delay_exec_list[APP_PRT_ON_VOLT_SWITCH_ON]) {
                 pMnt->delay_exec_list[APP_PRT_ON_VOLT_SWITCH_ON] = true;
                 pMnt->tick_list[APP_PRT_ON_VOLT_SWITCH_ON] = APP_Get_System_Ms();
+            }                
+        } else {
+            pMnt->delay_exec_list[APP_PRT_ON_VOLT_SWITCH_ON] = false;
+            pMnt->state.on_volt_switch_on_state = 0;
+        }
+        
+        if (true == pMnt->delay_exec_list[APP_PRT_ON_VOLT_SWITCH_ON]) {
+            if ((APP_Get_System_Ms() - pMnt->tick_list[APP_PRT_ON_VOLT_SWITCH_ON]) > delay_ms) {
+                APP_Relay_Select_Switch_On();
+                pMnt->state.on_volt_switch_on_state = 1;
                 if (sys_first_power_on_flag) {
                     pMnt->system_first_power_up_flag = false;
                     Log_i("System On Volt Rise Switch On Reason: System First Power On.\n");
@@ -1041,17 +1051,6 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
                 if (non_manual_flag) {
                     Log_i("System On Volt Rise Switch On Reason: Non Manual.\n");
                 }
-            }                
-        } else {
-            pMnt->delay_exec_list[APP_PRT_ON_VOLT_SWITCH_ON] = false;
-            pMnt->state.on_volt_switch_on_state = 0;
-        }
-        
-        if (true == pMnt->delay_exec_list[APP_PRT_ON_VOLT_SWITCH_ON]) {
-            if ((APP_Get_System_Ms() - pMnt->tick_list[APP_PRT_ON_VOLT_SWITCH_ON]) > delay_ms) {
-                APP_Relay_Select_Switch_On();
-                pMnt->state.on_volt_switch_on_state = 1;
-                // Log_i("System On Volt Rise Switch On. Relay Select Switch On.\n");
             }
         }
     }
