@@ -195,6 +195,7 @@ enum MSG_CONTEXT{
 	FAULT_MSG_TO_LCD(On_volt_fault),
 	FAULT_MSG_TO_LCD(Power_restoration_fault),
 	FAULT_MSG_TO_LCD(Switch_on_charge_fault),
+	FAULT_MSG_TO_LCD(END),
 	UNKNOW_MSG_CONTEXT,
 };
 

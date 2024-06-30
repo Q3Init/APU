@@ -115,19 +115,22 @@ uint8 APP_Get_System_Outage_Switch_Off_State(void)
 /* 有压合闸状态 */
 uint8 APP_Get_On_Volt_Switch_On_State(void)
 {
-    return pMnt->state.on_volt_switch_on_state;
+    return 0;
+    // return pMnt->state.on_volt_switch_on_state;//TODO
 }
 
 /* 功率恢复状态 */
 uint8 APP_Get_Power_Restoration_Switch_Off_State(void)
 {
-    return pMnt->state.power_restoration_switch_on_state;
+    return 0;
+    // return pMnt->state.power_restoration_switch_on_state;//TODO
 }
 
 /* 合闸充电状态 */
 uint8 APP_Get_Switch_On_Charge_State(void)
 {
-    return pMnt->state.switch_on_charge_state;
+    // return pMnt->state.switch_on_charge_state;
+    return 0;/* there is no Switch_On_Charge function */
 }
 
 /* 过压一段功能投入 */

@@ -65,7 +65,7 @@ void App_fault_management_mainfunction(void)
     uint32 total_fault_state_record = 0;
 
     while(1) 
-    {        
+    {
         uint32 total_fault_state = 0;
         uint8 led_toggle_signale = false;
 
@@ -200,6 +200,8 @@ static uint8 check_fault(fault_type id)
         /* check if the fault-state is changed */
         if(check_fault.cur_fault_state == check_fault.last_fault_state) {
             fault_toggle_signal = false;
+        } else {
+            fault_toggle_signal = true;
         }
 
         /* match the current fault-state with id in order to check if fault occured */

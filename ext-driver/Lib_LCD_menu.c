@@ -512,67 +512,161 @@ struct menu_event_tag * error_indication_menu_handler(uint8_t msg_process_signal
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t msg_send_state = MSG_TRANSMIT_UNKNOW_RESULT;
+	uint8_t msg_par = msg_context;
+
 	if(msg_process_signal == 1)
 	{
 		if(msg_context == KEY_RETURN)
 		{
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+			msg_lock_from_env_set(0);//unlock the msg
+            msg_send_state = msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+			if(msg_send_state != MSG_TRANSMIT_SUCCESS)
+			{
+				Log_e("[%s]: RETURN ERROR!!!\r\n", __func__);
+			}
 			Log_d("key KEY_RETURN menu!\r\n");
 			error_indication_menu_from_env_set(ERROR_MENU_IND_DISABLE);
-			msg_lock_from_env_set(0);//unlock the msg
 		}
 
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
 			clear_screen();
-			msg_context = 0xff;
+			msg_par = 0xff;
 			// msg_lock_from_env_set(0);//unlock the msg
         }
 
-		switch(msg_context)
+		if((msg_par > FLUSH_SCREEN) && (msg_par < FAULT_MSG_TO_LCD(END)) )
+		{
+			clear_screen();
+		}
+
+		uint8_t gu_pos = 0;
+		uint8_t chinese_size = 12;
+		uint8_t zhang_pos = gu_pos+12;
+		switch(msg_par)
 		{
 			case	0xff:
-				clear_screen();
 				LCD_ShowChinese_garland(0, 0, main_menu, 3);
+				LCD_ShowChinese_garland(8, 13, gu, 1);
 				break;
 			case UNKNOW_MSG_CONTEXT:
+				LCD_ShowChinese_garland(8, 13, gu, 1);
+				LCD_ShowChinese_garland(20, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Over_volt_lv1_fault):
+				LCD_ShowChinese_garland(8, 13, over_voltage_protection, 2);
+				LCD_ShowChinese_garland(32, 13, first_fix_value, 2);
+				gu_pos = 32 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Over_volt_lv2_fault):
+				LCD_ShowChinese_garland(8, 13, over_voltage_protection, 2);
+				LCD_ShowChinese_garland(32, 13, second_fix_value, 2);
+				gu_pos = 32 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Under_volt_lv1_fault):
+				LCD_ShowChinese_garland(8, 13, too_low_voltage_protection, 2);
+				LCD_ShowChinese_garland(32, 13, first_fix_value, 2);
+				gu_pos = 32 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Under_volt_lv2_fault):
+				LCD_ShowChinese_garland(8, 13, too_low_voltage_protection, 2);
+				LCD_ShowChinese_garland(32, 13, second_fix_value, 2);
+				gu_pos = 32 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Over_freq_fault):
+				LCD_ShowChinese_garland(8, 13, frequency_over, 4);
+				gu_pos = 8 + 12*4 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Low_freq_fault):
+				LCD_ShowChinese_garland(8, 13, frequency_too_low, 4);
+				gu_pos = 8 + 12*4 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Spike_freq_fault):
+				LCD_ShowChinese_garland(8, 13, frequency_mutation, 4);
+				gu_pos = 8 + 12*4 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Reverse_power_fault):
+				LCD_ShowChinese_garland(8, 13, reverse_power, 4);
+				gu_pos = 8 + 12*4 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Harmonic_volt_distortion_fault):
+				LCD_ShowChinese_garland(8, 13, harmonic_protection, 2);
+				gu_pos = 8 + 12*2 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Ext_ctrl_fault):
+				LCD_ShowChinese_garland(8, 13, external_shunt_tripping, 2);
+				LCD_ShowChinese_garland(32, 13, control_word, 2);
+				gu_pos = 8 + 12*4 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Quick_break_fault):
+				LCD_ShowChinese_garland(8, 13, quick_disconnect_protection, 2);
+				gu_pos = 8 + 12*2 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Time_limit_quick_break_fault):
+				LCD_ShowChinese_garland(8, 13, limited_time_quick_disconnect, 4);
+				gu_pos = 8 + 12*4 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Over_current_fault):
+				LCD_ShowChinese_garland(8, 13, over_current_protection, 2);
+				gu_pos = 8 + 12*2 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Zero_seq_current_fault):
+				LCD_ShowChinese_garland(8, 13, over_sequence_over_current, 4);
+				gu_pos = 8 + 12*4 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(System_outage_fault):
+				LCD_ShowChinese_garland(8, 13, system_power_off, 4);
+				gu_pos = 8 + 12*4 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(On_volt_fault):
+				LCD_ShowChinese_garland(8, 13, closing_switch_with_voltage, 4);
+				gu_pos = 8 + 12*4 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Power_restoration_fault):
+				LCD_ShowChinese_garland(8, 13, power_recover, 4);
+				gu_pos = 8 + 12*4 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			case FAULT_MSG_TO_LCD(Switch_on_charge_fault):
+				LCD_ShowChinese_garland(8, 13, HZCD, 4);
+				gu_pos = 8 + 12*4 + chinese_size;
+				LCD_ShowChinese_garland(gu_pos, 13, gu, 1);
+				LCD_ShowChinese_garland(zhang_pos, 13, zhang, 1);
 				break;
 			default:
 				break;

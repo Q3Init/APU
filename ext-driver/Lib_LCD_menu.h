@@ -151,4 +151,35 @@ extern uint8_t YE_chinese[];
 
 //6x12size
 extern uint8_t XieGang_char[];
+
+extern uint8_t control_word[];
+extern uint8_t HZCD[];
+extern uint8_t over_voltage_protection[];
+extern uint8_t too_low_voltage_protection[];
+extern uint8_t frequency_over[];
+extern uint8_t frequency_too_low[];
+extern uint8_t frequency_mutation[];
+extern uint8_t reverse_power[];
+extern uint8_t harmonic_protection[];
+extern uint8_t external_shunt_tripping[];
+extern uint8_t quick_disconnect_protection[];
+extern uint8_t limited_time_quick_disconnect[];
+extern uint8_t over_current_protection[];
+extern uint8_t over_sequence_over_current[];
+extern uint8_t system_power_off[];
+extern uint8_t closing_switch_with_voltage[];
+extern uint8_t power_recover[];
+
+extern uint8_t first_fix_value[];
+extern uint8_t first_delay[];
+extern uint8_t first_in_out[];
+extern uint8_t second_fix_value[];
+extern uint8_t second_delay[];
+extern uint8_t second_in_out[];
+extern uint8_t maohao[];
+extern uint8_t gu[];
+extern uint8_t zhang[];
+extern uint8_t zong[];
+extern uint8_t gao[];
+extern uint8_t jing[];
 #endif /* __LIB_LCD_MENU_H */
