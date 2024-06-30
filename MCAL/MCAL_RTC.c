@@ -11,7 +11,6 @@ RTC_date RTC_date_init ={
 };
 
 static const uint8_t month_table[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-static const uint8_t week_table[12] = {0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5};
 
 /**
  * @brief       写备份寄存器
@@ -211,33 +210,7 @@ void rtc_get(RTC_date *time)
     time->hour = daycount / 3600;
     time->minute = (daycount % 3600) / 60;
     time->second = (daycount % 3600) % 60;
-    time->week = rtc_get_week(time->year, time->month, time->day);
 		time->millisecond =(uint16_t)((prescaler_value - RTC_ReadDivider()) * 1000 /prescaler_value);
-}
-
-/**
- * @brief       通过日期计算星期
- * @param       year : 年
- * @param       month: 月
- * @param       date : 日
- * @retval      星期
- */
-uint8_t rtc_get_week(uint16_t year, uint8_t month, uint8_t date)
-{
-    uint8_t year_l;
-    uint8_t year_h;
-    uint8_t week;
-    
-    year_h = year / 100;
-    year_l = year % 100;
-    if (year_h > 19)
-    {
-        year_l += 100;
-    }
-    
-    week = (((year_l + (year_l >> 2)) % 7) + date + week_table[month - 1] - ((((year_l % 4) == 0) && (month < 3)) ? 1 : 0)) % 7;
-    
-    return week;
 }
 
 /**
