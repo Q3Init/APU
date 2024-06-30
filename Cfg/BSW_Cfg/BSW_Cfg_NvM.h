@@ -138,16 +138,19 @@ typedef enum
 
 extern BSW_NvM_Rte nvm_datas_Lists[ID_CNT];
 
+/* Total management */
 #define BASE_BLOCK1_ADRESS ((uint16)0x0000) /* 2k */
+/* operation record*/
 #define BASE_BLOCK2_ADRESS ((uint16)0x0800) /* 3k */
+/* fault management */
 #define BASE_BLOCK3_ADRESS ((uint16)0x1400) /* 3k */
 
 /* BLOCK 1 */
-#define BLOCK1_BLOCK2_CNT_ADRESS  (BASE_BLOCK1_ADRESS)
+#define BLOCK1_BLOCK2_CNT_ADRESS  (BASE_BLOCK1_ADRESS) /* Block2 record number */
 #define BLOCK1_BLOCK2_CNT_LEN     (2U)
-#define BLOCK1_BLOCK3_CNT_ADRESS  (BLOCK1_BLOCK2_CNT_ADRESS + BLOCK1_BLOCK2_CNT_LEN)
+#define BLOCK1_BLOCK3_CNT_ADRESS  (BLOCK1_BLOCK2_CNT_ADRESS + BLOCK1_BLOCK2_CNT_LEN) /* Block3 record number */
 #define BLOCK1_BLOCK3_CNT_LEN     (2U)  /* User base address */
-#define BLOCK1_PARAFLG_ADDRESS    (BLOCK1_BLOCK3_CNT_ADRESS + BLOCK1_BLOCK3_CNT_LEN)
+#define BLOCK1_PARAFLG_ADDRESS    (BLOCK1_BLOCK3_CNT_ADRESS + BLOCK1_BLOCK3_CNT_LEN)  /* The flag for factory reset, default is !0xAA */
 #define BLOCK1_PARAFLG_CNT_LEN    (1U)
 #define APP_GENERAL_ADDRESS   	  (BLOCK1_PARAFLG_ADDRESS + BLOCK1_PARAFLG_CNT_LEN)
 

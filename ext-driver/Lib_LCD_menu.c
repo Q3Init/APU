@@ -536,6 +536,8 @@ struct menu_event_tag * error_indication_menu_handler(uint8_t msg_process_signal
 				clear_screen();
 				LCD_ShowChinese_garland(0, 0, main_menu, 3);
 				break;
+			case UNKNOW_MSG_CONTEXT:
+				break;
 			case FAULT_MSG_TO_LCD(Over_volt_lv1_fault):
 				break;
 			case FAULT_MSG_TO_LCD(Over_volt_lv2_fault):

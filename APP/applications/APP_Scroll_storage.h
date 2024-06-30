@@ -10,8 +10,11 @@
 #define Error_Block    1
 
 extern void APP_Scroll_storage_Init(void);
+/* @brief block:target_SRAM_BLOCK */
 extern uint8 APP_Scroll_storage_write(uint8 block, void* data);
+/* @brief block:target_SRAM_BLOCK  page: number_index */
 extern uint8 APP_Scroll_storage_read(uint8 block,uint8 pages,void* data);
+/* @brief block:target_SRAM_BLOCK for debug_menu*/
 extern uint8 APP_Scroll_storage_erase(uint8 block);
 extern uint8 APP_Scroll_read_memory_number(uint8 block,uint16 *memory_number);
 

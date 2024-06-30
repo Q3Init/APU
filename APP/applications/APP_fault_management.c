@@ -65,7 +65,7 @@ void App_fault_management_mainfunction(void)
     uint32 total_fault_state_record = 0;
 
     while(1) 
-    {
+    {        
         uint32 total_fault_state = 0;
         uint8 led_toggle_signale = false;
 
@@ -175,12 +175,14 @@ static uint8 APP_fault_msg_send_to_lcd_layer(fault_type fault_event)
     return tran_state;
 }
 
+/* follow the time to be delayed for moment */
 static void App_check_fault_callback(fault_type fault_event)
 {
-    uint32 success_state = false; /* ms */
+    uint32 success_state = false;
 
     do{
         success_state = APP_fault_msg_send_to_lcd_layer(fault_event);
+        vTaskDelay(10); /* let other thread run */
     } while (!success_state);
 }
 
