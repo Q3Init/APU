@@ -2635,6 +2635,7 @@ struct menu_event_tag * factory_reset_handler(uint8_t msg_process_signal, uint8_
 			{
 				case ALL_VALUE_RESET:
 					app_allpara_default_update();
+					APP_Protection_Management_Init();
 					break;
 				case FIX_VALUE_RESET:
 					app_action_default_update();
