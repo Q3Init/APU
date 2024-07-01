@@ -250,6 +250,8 @@ uint8 APP_Relay_Get_State_Group_1(void);
 uint8 APP_Relay_Get_State_Group_2(void);
 uint8 APP_Relay_Get_State_Group_3(void);
 uint8 APP_Relay_Get_State_Group_4(void);
+uint8 APP_Relay_Get_State_Group_5(void);
+uint8 APP_Relay_Get_State_Group_6(void);
 boolean APP_Relay_Force_Switch_On(void);
 boolean APP_Relay_Force_Switch_Off(void);
 boolean APP_Relay_Select_Switch_Off(void);
