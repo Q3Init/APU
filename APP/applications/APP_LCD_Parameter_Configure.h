@@ -6,7 +6,7 @@
 #include "Lib_LCD_words.h"
 #include "APP_LCD_Run_Monitor.h"
 #include "Lib_LCD_char.h"
-
+#include "APP_Parameter.h"
 
 
 #endif

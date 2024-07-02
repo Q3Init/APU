@@ -40,5 +40,6 @@ extern uint8_t jianhao_char[];
 extern uint8_t my_char_E[];
 extern uint8_t my_char_p[];
 extern uint8_t my_char_q[];
+extern uint8_t my_char_m[];
 
 #endif

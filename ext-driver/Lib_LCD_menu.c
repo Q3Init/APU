@@ -1395,6 +1395,18 @@ void lcd_chinese_modify_display_in_order(uint8_t num_flush_idx,
 		LCD_ShowChinese_garland(x, y, s, chinese_num);
 	}
 }
+void lcd_english_modify_display_in_order(uint8_t num_flush_idx,
+										uint8_t x, uint8_t y, uint8_t *s, uint8_t english_num)
+{
+	if(num_flush_idx != 0xff)
+	{
+		LCD_ShowEnglish_no_garland(x, y, s, english_num);
+	}
+	else
+	{
+		LCD_ShowEnglish_garland(x, y, s, english_num);
+	}
+}
 
 
 //Note: Both point_pos and num_idx_flush are set from zero.
@@ -1456,6 +1468,30 @@ void lcd_showchinese_no_garland_or_garland(uint32_t garland_flush_target,
 	}
 }
 
+void lcd_showenglish_no_garland_or_garland(uint32_t garland_flush_target,
+											uint8_t x, uint8_t y, uint8_t *s, uint8_t english_num)
+{
+	if(garland_flush_target == false)
+	{
+		LCD_ShowEnglish_no_garland(x, y, s, english_num);
+	}
+	else
+	{
+		LCD_ShowEnglish_garland(x, y, s, english_num);
+	}
+}
+void lcd_shownum_no_garland_or_garland(uint32_t garland_flush_target,
+											uint8_t x, uint8_t y, uint8_t *s, uint8_t num)
+{
+	if(garland_flush_target == false)
+	{
+		LCD_ShowChar_no_garland(x, y, s, num);
+	}
+	else
+	{
+		LCD_ShowChar_garland(x, y, s, num);
+	}
+}
 void lcd_number_modify_array_get(float32 *float_flag, float32 value, uint8_t *array_ptr, 
 								uint8_t int_convert_length, uint8_t point_convert_length, uint8_t num_flush_idx)
 {

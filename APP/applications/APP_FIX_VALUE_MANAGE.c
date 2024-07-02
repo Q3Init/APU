@@ -1971,20 +1971,20 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 						case FIX_VALUE:
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
-							float_flag = app_parameter_read_Frequency_Discontinuity_Value();
+							float_flag = app_parameter_read_Underfrequency_Value();
 							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 							break;
 						case OVER_DELAY:
 							//update the value for the array lcd_modify_num_array
-							float_flag = app_parameter_read_Frequency_Discontinuity_Delay();
+							float_flag = app_parameter_read_Underfrequency_Delay();
 							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
 						case FUNCTION_IN_OUT:
 							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
-							int_flag = app_parameter_read_Frequency_Discontinuity_Eol();
+							int_flag = app_parameter_read_Underfrequency_Eol();
 							lcd_modify_num_array[0] = int_flag;
 							key_idx_for_num = 2;
 							break;
@@ -2002,24 +2002,24 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 							// prepare for the number modify
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
 							float_flag = float_flag+ 0.0001;
-							app_parameter_write_Frequency_Discontinuity_Value(0);
-							app_parameter_write_Frequency_Discontinuity_Value(float_flag);
-							float_flag = app_parameter_read_Frequency_Discontinuity_Value();
+							app_parameter_write_Underfrequency_Value(0);
+							app_parameter_write_Underfrequency_Value(float_flag);
+							float_flag = app_parameter_read_Underfrequency_Value();
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
-							app_parameter_write_Frequency_Discontinuity_Delay(0);
-							app_parameter_write_Frequency_Discontinuity_Delay(float_flag);
-							float_flag = app_parameter_read_Frequency_Discontinuity_Delay();
+							app_parameter_write_Underfrequency_Delay(0);
+							app_parameter_write_Underfrequency_Delay(float_flag);
+							float_flag = app_parameter_read_Underfrequency_Delay();
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FUNCTION_IN_OUT:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
-							app_parameter_write_Frequency_Discontinuity_Eol(0);
-							app_parameter_write_Frequency_Discontinuity_Eol(int_flag);
-							int_flag = app_parameter_read_Frequency_Discontinuity_Eol();
+							app_parameter_write_Underfrequency_Eol(0);
+							app_parameter_write_Underfrequency_Eol(int_flag);
+							int_flag = app_parameter_read_Underfrequency_Eol();
 							break;
 						default:
 							break;

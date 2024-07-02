@@ -73,12 +73,16 @@ struct menu_cmd_tag third_menu_cmd_tbl[]=
 	{THIRD_MENU,		FACTORY_RESET, 					(menu_kernel_func)factory_reset_handler},
 	{THIRD_MENU,		PARAMETER_NORMINAL_VALUE_CFG,   (menu_kernel_func)parameter_norminal_value_cfg_handler},
 };
-
+struct menu_cmd_tag forth_menu_cmd_tbl[]= 
+{
+	{FORTH_MENU,		XIANGMU1, 					(menu_kernel_func)xiangmu1_handler},
+};
 struct menu_level_layer_tag menu_level_layer_tbl[]=
 {
 	{FIRST_MENU,		(struct menu_cmd_tag*)first_menu_cmd_tbl	},
 	{SECOND_MENU,		(struct menu_cmd_tag*)second_menu_cmd_tbl	},
 	{THIRD_MENU,		(struct menu_cmd_tag*)third_menu_cmd_tbl	},
+	{FORTH_MENU,        (struct menu_cmd_tag*)forth_menu_cmd_tbl	},
 };
 
 struct menu_type_info_tag * menu_type_field_get()
@@ -88,7 +92,13 @@ struct menu_type_info_tag * menu_type_field_get()
 	struct menu_type_info_tag * menu_cmd_elt = (struct menu_type_info_tag *)malloc(sizeof(struct menu_type_info_tag));
 
 	do
-	{
+	{	
+		if( menu_kernel_env.cur_menu_level & FORTH_MENU_MASK)
+		{
+			menu_level = FORTH_MENU;
+			break;
+		}
+
 		if( menu_kernel_env.cur_menu_level & THIRD_MENU_MASK)
 		{
 			menu_level = THIRD_MENU;
@@ -125,6 +135,10 @@ struct menu_type_info_tag * menu_type_field_get()
 			menu_cmd_elt->menu_type = (menu_kernel_env.cur_menu_level & THIRD_MENU_MASK)>>THIRD_MENU_BIT_BASE;
 			menu_cmd_elt->menu_level = THIRD_MENU;
 			break;
+		case FORTH_MENU:
+			menu_cmd_elt->menu_type = (menu_kernel_env.cur_menu_level & FORTH_MENU_MASK)>>FORTH_MENU_BIT_BASE;
+			menu_cmd_elt->menu_level = FORTH_MENU;
+			break;	
 		case UNKNOW_MENU:
 		default:
 			break;
@@ -153,6 +167,9 @@ uint8_t menu_type_max_idx_get(uint8_t menu_layer)
 			break;
 		case THIRD_MENU:
 			menu_type_max_idx = THIRD_LEVEL_MENU_TYPE_MAX_IDX;
+			break;
+		case FORTH_MENU:
+			menu_type_max_idx = FORTH_LEVEL_MENU_TYPE_MAX_IDX;
 			break;
 		case UNKNOW_MENU:
 		default:
@@ -501,6 +518,38 @@ void menu_level_from_env_set(uint8_t first_level, uint8_t second_level, uint8_t 
 //									 (third_level<<THIRD_MENU_BIT_BASE);
 }
 
+void menu_level_from_env_set_V2(uint8_t first_level, uint8_t second_level, uint8_t third_level,uint8_t forth_level)
+{
+	uint32_t menu_level_target = 0;
+
+	do
+	{//must be in order from first to last.
+		if(first_level != UNKNOW_FIRST_MENU)
+		{
+			menu_level_target |= (first_level<<FIRST_MENU_BIT_BASE);
+		}
+		
+		if(second_level != UNKNOW_SECOND_MENU)
+		{
+			menu_level_target |= (second_level<<SECOND_MENU_BIT_BASE);
+		}
+
+		if(third_level != UNKNOW_THIRD_MENU)
+		{
+			menu_level_target |= (third_level<<THIRD_MENU_BIT_BASE);
+		}
+		if(forth_level != UNKNOW_FORTH_MENU)
+		{
+			menu_level_target |= (forth_level<<FORTH_MENU_BIT_BASE);
+		}
+	}while(false);
+	Log_d("HELLO! set menu level:%d \r\n",menu_level_target);
+	cur_menu_level_from_env_set(menu_level_target);
+    
+//	menu_kernel_env.cur_menu_level = (first_level<<FIRST_MENU_BIT_BASE)|
+//									 (second_level<<SECOND_MENU_BIT_BASE)|
+//									 (third_level<<THIRD_MENU_BIT_BASE);
+}
 void menu_kernel_env_init(void)
 {
 	memset(&menu_kernel_env, 0x00, sizeof(struct menu_kernel_env_tag));

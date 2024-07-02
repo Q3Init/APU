@@ -40,16 +40,19 @@ enum PROCESS_IND_TAG{
    Note: every layer menu index has not to 0!
    bit[0:2]  FIRST_MENU  index
    bit[3:7]  SECOND_MENU index
-   bit[8:14]  SECOND_MENU index
+   bit[8:14]  THIRD_MENU index
+   bit[15:22]  FORTH_MENU index
 */
 #define FIRST_MENU_BIT_BASE	 (0)
 #define SECOND_MENU_BIT_BASE (3)
 #define THIRD_MENU_BIT_BASE  (8)
+#define FORTH_MENU_BIT_BASE  (15) //检索开始位置
 
 #define TOP_MENU_MASK 		(uint32_t)0xffffffff
 #define FIRST_MENU_MASK 	(uint32_t)0x00000007
 #define SECOND_MENU_MASK 	(uint32_t)0x000000F8
 #define THIRD_MENU_MASK 	(uint32_t)0x00007F00
+#define FORTH_MENU_MASK     (uint32_t)0x007F8000
 
 enum MSG_PROCESS_RESULT_IND_TAG{
 	MSG_TRANSMIT_SUCCESS,
@@ -62,6 +65,7 @@ enum menu_level_tag{
 	FIRST_MENU,
 	SECOND_MENU,
 	THIRD_MENU,
+	FORTH_MENU,
 	MAX_MENU_LEVEL_LAYER,
 	UNKNOW_MENU,
 };
@@ -138,6 +142,13 @@ enum third_level_menu_type{
 	FACTORY_RESET,
 	PARAMETER_NORMINAL_VALUE_CFG,
 	THIRD_LEVEL_MENU_TYPE_MAX_IDX,
+};
+
+enum forth_level_menu_type{
+	UNKNOW_FORTH_MENU = 0, // fix it to zero
+	XIANGMU1,
+	XIANGMU2,
+	FORTH_LEVEL_MENU_TYPE_MAX_IDX,
 };
 
 enum event_status{
@@ -288,6 +299,7 @@ extern void msg_source_from_env_set(uint8_t msg_source);
 extern void msg_destination_from_env_set(uint8_t msg_destination);
 extern void msg_source_from_env_set(uint8_t msg_source);
 extern void menu_level_from_env_set(uint8_t first_level, uint8_t second_level, uint8_t third_level);
+extern void menu_level_from_env_set_V2(uint8_t first_level, uint8_t second_level, uint8_t third_level, uint8_t forth_level);
 extern void cur_menu_type_ptr_from_env_set(uint8_t cur_menu_type_ptr);
 extern void password_check_in_state_set(uint8_t ind);
 extern void msg_lock_from_env_set(uint32_t msg_lock_level);
@@ -364,5 +376,7 @@ extern struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_sign
 extern struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_t msg_context);
+
+extern struct menu_event_tag * xiangmu1_handler(uint8_t msg_process_signal, uint8_t msg_context);
 
 #endif /* __LIB_LCD_KERNEL_H */

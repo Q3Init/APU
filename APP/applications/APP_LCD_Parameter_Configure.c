@@ -95,6 +95,7 @@ enum recover_home_setting_menu_type{
     YAOXIN_BAOCHI_SHJIAN,
     RECOVER_HOME_SETTING_MENU_TYPE_MAX_IDX,
 };
+
 uint8 recover_home_setting_menu_array[]=
 {
 	ZIDONG_FUGUI,
@@ -155,322 +156,376 @@ extern uint8_t my_char_T[];
 
 struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
-	/* msg_evt should be malloced and return it! */
+
+/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
 	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
-	if(msg_process_signal == 1)
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint8_t num_idx_flush[8] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[3] = {0};
+	uint8_t int_flag = 0;
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = PARAMETER_CONFIGURE;
+
+	uint8_t msg_storage = msg_context;
+	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
+	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
+    if(authentication_key)
 	{
-		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
-        uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 8, 1, sizeof(change_proportion_setting_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		return menu_evt;
+	}
 
-		if(msg_context == KEY_ENTER)
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+	// app_parameter_write_Overvoltage_protection_LV1_One_Value(233.33);
+    if(msg_process_signal == 1)
+	{
+
+		if(!lcd_modify_num_env.check_num_modify)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, CHANGE_PROPORTION_SETTING);//just for example!
-			cur_menu_type_ptr_from_env_set(0);
-			menu_kernel_env.menu_cursor_history.second_menu_cursor = menu_type_idx;
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			Log_d("key KEY_ENTER menu!\r\n");
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 8, 1, sizeof(change_proportion_setting_menu_array));
 		}
+		chinese_menu_idx = change_proportion_setting_menu_array[lcd_modify_num_env.menu_type_idx];
 
-		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+
 		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+				menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
+				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				lcd_the_modified_num_env_to_be_clear_all();
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				//just for test log
+				for(int j=0;j<5;j++)
+				{
+					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+				}
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+				float_flag = app_parameter_read_Grid_PT_primary();
+				Log_d("ENTER! float_flag:%f\n",float_flag);
+				my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+			}
+			key_idx_for_num = 0;
 		}
+		
 
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
             clear_screen();
-			msg_context = 0xff;
-            // LCD_ShowString(24,30,"LCD_W:",16);
-            // LCD_ShowIntNum(72,30,4,1,16);
+			chinese_menu_idx = change_proportion_setting_menu_array[lcd_modify_num_env.menu_type_idx];// 数组 todo
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
 			msg_lock_from_env_set(0);//unlock the msg
+
+			//init the array lcd_modify_num_array with value in the first chinese volume
+			switch(chinese_menu_idx)
+			{
+				case DIANWANG_PT_1:
+					//update the value for the array lcd_modify_num_array
+					float_flag = app_parameter_read_Grid_PT_primary(); // SRAM todo
+					Log_d("ENTER! float_flag:%f\n",float_flag);
+					my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
+					break;
+				default:
+					break;
+			}
         }
 
+		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
 
-		switch(msg_context)
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true; //让中文光标停住
+					switch(chinese_menu_idx)
+					{
+						case DIANWANG_PT_1:
+							key_idx_for_num = 0;
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Grid_PT_primary();
+							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag); // 3是整数位数，2是小数位数
+							break;
+						case DIANWANG_PT_2:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Grid_PT_secondary();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag);
+							key_idx_for_num = 1;
+							break;
+						case FADIAN_PT_1:
+							float_flag = app_parameter_read_Generation_PT_primary();
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag);
+							key_idx_for_num = 2;
+							break;
+						case FADIAN_PT_2:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Generation_PT_secondary();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag);
+							key_idx_for_num = 3;
+							break;
+						case BAOHU_CT_1:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Protective_CT_primary();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag);
+							key_idx_for_num = 4;
+							break;
+						case BAOHU_CT_2:
+							float_flag = app_parameter_read_Protected_CT_secondary();
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag);
+							key_idx_for_num = 5;
+							break;
+						case LINGXU_1:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Zero_sequence_CT_once();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag);
+							key_idx_for_num = 6;
+							break;
+						case LINGXU_2:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Zero_sequence_CT_twice();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag);
+							key_idx_for_num = 7;
+							break;
+						default:
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						case DIANWANG_PT_1:
+							// prepare for the number modify
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Grid_PT_primary(0);
+							app_parameter_write_Grid_PT_primary(float_flag);
+							float_flag = app_parameter_read_Grid_PT_primary();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case DIANWANG_PT_2:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Grid_PT_secondary(0);
+							app_parameter_write_Grid_PT_secondary(float_flag);
+							float_flag = app_parameter_read_Grid_PT_secondary();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case FADIAN_PT_1:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Generation_PT_primary(0);
+							app_parameter_write_Generation_PT_primary(float_flag);
+							float_flag = app_parameter_read_Generation_PT_primary();
+							break;
+						case FADIAN_PT_2:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Generation_PT_secondary(0);
+							app_parameter_write_Generation_PT_secondary(float_flag);
+							float_flag = app_parameter_read_Generation_PT_secondary();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case BAOHU_CT_1:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Protective_CT_primary(0);
+							app_parameter_write_Protective_CT_primary(float_flag);
+							float_flag = app_parameter_read_Protective_CT_primary();
+							break;
+						case BAOHU_CT_2:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Protected_CT_secondary(0);
+							app_parameter_write_Protected_CT_secondary(float_flag);
+							int_flag = app_parameter_read_Protected_CT_secondary();
+							break;
+						case LINGXU_1:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Zero_sequence_CT_once(0);
+							app_parameter_write_Zero_sequence_CT_once(float_flag);
+							float_flag = app_parameter_read_Zero_sequence_CT_once();
+							break;
+						case LINGXU_2:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Zero_sequence_CT_twice(0);
+							app_parameter_write_Zero_sequence_CT_twice(float_flag);
+							float_flag = app_parameter_read_Zero_sequence_CT_twice();
+							break;
+						default:
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
+
+		if(lcd_modify_num_env.check_num_modify)
 		{
-			case	0xff:
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case DIANWANG_PT_1:
+				case DIANWANG_PT_2:
+				case FADIAN_PT_1:
+				case FADIAN_PT_2:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					up_diff_num_idx_ths = 9;
+					break;
+				case BAOHU_CT_1:
+				case BAOHU_CT_2:
+				case LINGXU_1:
+				case LINGXU_2:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					up_diff_num_idx_ths = 9;
+					break;
+				default:
+					break;
+			}
+			switch(chinese_menu_idx)
+			{
+				case DIANWANG_PT_1:
+				case DIANWANG_PT_2:
+				case FADIAN_PT_1:
+				case FADIAN_PT_2:
+				case BAOHU_CT_1:
+				case BAOHU_CT_2:
+				case LINGXU_1:
+				case LINGXU_2:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_UP://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_DOWN://-
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-    		case	KEY_DOWN:		
-    		case	KEY_LEFT:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
 			case	KEY_RIGHT:
-				clear_screen();
-				LCD_ShowChinese_garland(0, 0, change_proportion_setting, 4);
-				switch(change_proportion_setting_menu_array[menu_type_idx])
+				switch(chinese_menu_idx)
 				{
 					case DIANWANG_PT_1:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_1,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                        LCD_ShowChinese_no_garland(8, 13, dianwang, 2);
-						LCD_ShowEnglish_no_garland(32, 13, my_char_P, 1);
-                        LCD_ShowEnglish_no_garland(38, 13, my_char_T, 1);
-                        LCD_ShowChinese_no_garland(44, 13, yici, 2);
-						LCD_ShowEnglish_garland(69, 13, maohao,1);
-
-
-                        LCD_ShowChinese_garland(8, 26, dianwang, 2);
-						LCD_ShowEnglish_garland(32, 26, my_char_P, 1);
-                        LCD_ShowEnglish_garland(38, 26, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 26, yici, 2);
-						LCD_ShowEnglish_garland(69, 26, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 38, fadian, 2);
-						LCD_ShowEnglish_garland(32, 38, my_char_P, 1);
-                        LCD_ShowEnglish_garland(38, 38, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 38, erci, 2);
-						LCD_ShowEnglish_garland(69, 38, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 51, fadian, 2);
-						LCD_ShowEnglish_garland(32, 51, my_char_P, 1);
-                        LCD_ShowEnglish_garland(38, 51, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 51, erci, 2);
-						LCD_ShowEnglish_garland(69, 51, maohao,1);
-      
+						chinese_idx_flush &= 0x00FE;
 						break;
 					case DIANWANG_PT_2:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_1,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                        LCD_ShowChinese_garland(8, 13, dianwang, 2);
-						LCD_ShowEnglish_garland(32, 13, my_char_P, 1);
-                        LCD_ShowEnglish_garland(38, 13, my_char_T, 1);
-                        LCD_ShowChinese_garland(45, 13, yici, 2);
-						LCD_ShowEnglish_garland(69, 13, maohao,1);
-
-
-                        LCD_ShowChinese_no_garland(8, 26, dianwang, 2);
-						LCD_ShowEnglish_no_garland(32, 26, my_char_P, 1);
-                        LCD_ShowEnglish_no_garland(38, 26, my_char_T, 1);
-                        LCD_ShowChinese_no_garland(44, 26, yici, 2);
-						LCD_ShowEnglish_garland(69, 26, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 38, fadian, 2);
-						LCD_ShowEnglish_garland(32, 38, my_char_P, 1);
-                        LCD_ShowEnglish_garland(38, 38, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 38, erci, 2);
-						LCD_ShowEnglish_garland(69, 38, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 51, fadian, 2);
-						LCD_ShowEnglish_garland(32, 51, my_char_P, 1);
-                        LCD_ShowEnglish_garland(38, 51, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 51, erci, 2);
-						LCD_ShowEnglish_garland(69, 51, maohao,1);
+						chinese_idx_flush &= 0x00FD;
 						break;
 					case FADIAN_PT_1:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_1,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                        LCD_ShowChinese_garland(8, 13, dianwang, 2);
-						LCD_ShowEnglish_garland(32, 13, my_char_P, 1);
-                        LCD_ShowEnglish_garland(38, 13, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 13, yici, 2);
-						LCD_ShowEnglish_garland(69, 13, maohao,1);
-
-
-                        LCD_ShowChinese_garland(8, 26, dianwang, 2);
-						LCD_ShowEnglish_garland(32, 26, my_char_P, 1);
-                        LCD_ShowEnglish_garland(38, 26, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 26, yici, 2);
-						LCD_ShowEnglish_garland(69, 26, maohao,1);
-
-                        LCD_ShowChinese_no_garland(8, 38, fadian, 2);
-						LCD_ShowEnglish_no_garland(32, 38, my_char_P, 1);
-                        LCD_ShowEnglish_no_garland(38, 38, my_char_T, 1);
-                        LCD_ShowChinese_no_garland(44, 38, erci, 2);
-						LCD_ShowEnglish_garland(69, 38, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 51, fadian, 2);
-						LCD_ShowEnglish_garland(32, 51, my_char_P, 1);
-                        LCD_ShowEnglish_garland(39, 51, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 51, erci, 2);
-						LCD_ShowEnglish_garland(69, 51, maohao,1);
-      
+						chinese_idx_flush &= 0x00FB;
 						break;
 					case FADIAN_PT_2:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_1,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                        LCD_ShowChinese_garland(8, 13, dianwang, 2);
-						LCD_ShowEnglish_garland(32, 13, my_char_P, 1);
-                        LCD_ShowEnglish_garland(38, 13, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 13, yici, 2);
-						LCD_ShowEnglish_garland(69, 13, maohao,1);
-
-
-                        LCD_ShowChinese_garland(8, 26, dianwang, 2);
-						LCD_ShowEnglish_garland(32, 26, my_char_P, 1);
-                        LCD_ShowEnglish_garland(38, 26, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 26, yici, 2);
-						LCD_ShowEnglish_garland(69, 26, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 38, fadian, 2);
-						LCD_ShowEnglish_garland(32, 38, my_char_P, 1);
-                        LCD_ShowEnglish_garland(38, 38, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 38, erci, 2);
-						LCD_ShowEnglish_garland(69, 38, maohao,1);
-
-                        LCD_ShowChinese_no_garland(8, 51, fadian, 2);
-						LCD_ShowEnglish_no_garland(32, 51, my_char_P, 1);
-                        LCD_ShowEnglish_no_garland(38, 51, my_char_T, 1);
-                        LCD_ShowChinese_no_garland(44, 51, erci, 2);
-						LCD_ShowEnglish_garland(69, 51, maohao,1);
-
-						
+						chinese_idx_flush &= 0x00F7;
 						break;
-
-
-                    case BAOHU_CT_1:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_2,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                        LCD_ShowChinese_no_garland(8, 13, baohu, 2);
-						LCD_ShowEnglish_no_garland(32, 13, my_char_C, 1);
-                        LCD_ShowEnglish_no_garland(38, 13, my_char_T, 1);
-                        LCD_ShowChinese_no_garland(44, 13, yici, 2);
-						LCD_ShowEnglish_garland(69, 13, maohao,1);
-
-
-                        LCD_ShowChinese_garland(8, 26, baohu, 2);
-						LCD_ShowEnglish_garland(32, 26, my_char_C, 1);
-                        LCD_ShowEnglish_garland(38, 26, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 26, yici, 2);
-						LCD_ShowEnglish_garland(69, 26, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 38, lingxu, 2);
-						LCD_ShowEnglish_garland(32, 38, my_char_C, 1);
-                        LCD_ShowEnglish_garland(38, 38, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 38, erci, 2);
-						LCD_ShowEnglish_garland(69, 38, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 51, lingxu, 2);
-						LCD_ShowEnglish_garland(32, 51, my_char_C, 1);
-                        LCD_ShowEnglish_garland(38, 51, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 51, erci, 2);
-						LCD_ShowEnglish_garland(69, 51, maohao,1);
-      
+					case BAOHU_CT_1:
+						chinese_idx_flush &= 0x00EF;
 						break;
 					case BAOHU_CT_2:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_2,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                        LCD_ShowChinese_garland(8, 13, baohu, 2);
-						LCD_ShowEnglish_garland(32, 13, my_char_C, 1);
-                        LCD_ShowEnglish_garland(38, 13, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 13, yici, 2);
-						LCD_ShowEnglish_garland(69, 13, maohao,1);
-
-
-                        LCD_ShowChinese_no_garland(8, 26, baohu, 2);
-						LCD_ShowEnglish_no_garland(32, 26, my_char_C, 1);
-                        LCD_ShowEnglish_no_garland(38, 26, my_char_T, 1);
-                        LCD_ShowChinese_no_garland(44, 26, yici, 2);
-						LCD_ShowEnglish_garland(69, 26, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 38, lingxu, 2);
-						LCD_ShowEnglish_garland(32, 38, my_char_C, 1);
-                        LCD_ShowEnglish_garland(38, 38, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 38, erci, 2);
-						LCD_ShowEnglish_garland(69, 38, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 51, lingxu, 2);
-						LCD_ShowEnglish_garland(32, 51, my_char_C, 1);
-                        LCD_ShowEnglish_garland(38, 51, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 51, erci, 2);
-						LCD_ShowEnglish_garland(69, 51, maohao,1);
+						chinese_idx_flush &= 0x00DF;
 						break;
 					case LINGXU_1:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_2,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                        LCD_ShowChinese_garland(8, 13, baohu, 2);
-						LCD_ShowEnglish_garland(32, 13, my_char_C, 1);
-                        LCD_ShowEnglish_garland(38, 13, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 13, yici, 2);
-						LCD_ShowEnglish_garland(69, 13, maohao,1);
-
-
-                        LCD_ShowChinese_garland(8, 26, baohu, 2);
-						LCD_ShowEnglish_garland(32, 26, my_char_C, 1);
-                        LCD_ShowEnglish_garland(38, 26, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 26, yici, 2);
-						LCD_ShowEnglish_garland(69, 26, maohao,1);
-
-                        LCD_ShowChinese_no_garland(8, 38, lingxu, 2);
-						LCD_ShowEnglish_no_garland(32, 38, my_char_C, 1);
-                        LCD_ShowEnglish_no_garland(38, 38, my_char_T, 1);
-                        LCD_ShowChinese_no_garland(44, 38, erci, 2);
-						LCD_ShowEnglish_garland(69, 38, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 51, lingxu, 2);
-						LCD_ShowEnglish_garland(32, 51, my_char_C, 1);
-                        LCD_ShowEnglish_garland(38, 51, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 51, erci, 2);
-						LCD_ShowEnglish_garland(69, 51, maohao,1);
-      
+						chinese_idx_flush &= 0x00BF;
 						break;
 					case LINGXU_2:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_2,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                        LCD_ShowChinese_garland(8, 13, baohu, 2);
-						LCD_ShowEnglish_garland(32, 13, my_char_C, 1);
-                        LCD_ShowEnglish_garland(38, 13, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 13, yici, 2);
-						LCD_ShowEnglish_garland(69, 13, maohao,1);
-
-
-                        LCD_ShowChinese_garland(8, 26, baohu, 2);
-						LCD_ShowEnglish_garland(32, 26, my_char_C, 1);
-                        LCD_ShowEnglish_garland(38, 26, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 26, yici, 2);
-						LCD_ShowEnglish_garland(69, 26, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 38, lingxu, 2);
-						LCD_ShowEnglish_garland(32, 38, my_char_C, 1);
-                        LCD_ShowEnglish_garland(38, 38, my_char_T, 1);
-                        LCD_ShowChinese_garland(44, 38, erci, 2);
-						LCD_ShowEnglish_garland(69, 38, maohao,1);
-
-                        LCD_ShowChinese_no_garland(8, 51, lingxu, 2);
-						LCD_ShowEnglish_no_garland(32, 51, my_char_C, 1);
-                        LCD_ShowEnglish_no_garland(38, 51, my_char_T, 1);
-                        LCD_ShowChinese_no_garland(44, 51, erci, 2);
-						LCD_ShowEnglish_garland(69, 51, maohao,1);
-
-						
+						chinese_idx_flush &= 0x007F;
 						break;
 					
 				}
@@ -478,245 +533,799 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 			default:
 				break;
 		}
+
+		//LCD driver
+		//chinese_menu_idx  中文目录的索引下标
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+
+				// 4是显示汉字的数量
+				LCD_ShowChinese_garland(0, 0, change_proportion_setting, 4);
+				switch(chinese_menu_idx)
+				{
+					
+					case DIANWANG_PT_1:
+					case DIANWANG_PT_2:
+					case FADIAN_PT_1:
+					case FADIAN_PT_2:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+						lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+						lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
+						single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, dianwang, 2);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x01, 32, 13, my_char_P, 1);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x01, 38, 13, my_char_T, 1);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 44, 13, yici, 2);
+						lcd_state_flush_for_num(69,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Grid_PT_primary(), 
+													num_array, 3, 0, num_idx_flush[0]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
+						lcd_number_display_in_order(75, 13, 5, 12, 
+											num_idx_flush[0], sizeof(num_array), num_array, 3); //一段定值的数值显示部分
+						lcd_state_flush_for_num(95,13,my_char_V,6,12,1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, dianwang, 2);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x02, 32, 26, my_char_P, 1);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x02, 38, 26, my_char_T, 1);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 44, 26, erci, 2);
+						lcd_state_flush_for_num(69,26,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Grid_PT_secondary(), 
+													num_array, 3, 0, num_idx_flush[1]);
+						lcd_number_display_in_order(75, 26, 5, 12, 
+											num_idx_flush[1], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,26,my_char_V,6,12,1);
+
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 8, 39, fadian, 2);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x04, 32, 39, my_char_P, 1);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x04, 38, 39, my_char_T, 1);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 44, 39, yici, 2);
+						lcd_state_flush_for_num(69,39,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Generation_PT_primary(), 
+													num_array, 3, 0, num_idx_flush[2]);
+						lcd_number_display_in_order(75, 39, 5, 12, 
+											num_idx_flush[2], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,39,my_char_V,6,12,1);
+
+
+						
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x08, 8, 51, fadian, 2);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x08, 32, 51, my_char_P, 1);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x08, 38, 51, my_char_T, 1);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x08, 44, 51, erci, 2);
+						// LCD_ShowChinese_garland(8, 51, second_fix_value, 4);
+						lcd_state_flush_for_num(69,51,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Generation_PT_secondary(), 
+													num_array, 3, 0, num_idx_flush[3]);
+						lcd_number_display_in_order(75, 51, 5, 12, 
+											num_idx_flush[3], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,51,my_char_V,6,12,1);
+
+						break;
+					case BAOHU_CT_1:
+					case BAOHU_CT_2:
+					case LINGXU_1:
+					case LINGXU_2:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+						lcd_state_flush_for_num(98,1,my_num_2,5,12,1);
+						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+						lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
+						single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x10, 8, 13, baohu, 2);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x10, 32, 13, my_char_C, 1);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x10, 38, 13, my_char_T, 1);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x10, 44, 13, yici, 2);
+						lcd_state_flush_for_num(69,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Protective_CT_primary(), 
+													num_array, 3, 0, num_idx_flush[4]);
+						lcd_number_display_in_order(75, 13, 5, 12, 
+											num_idx_flush[4], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,13,my_char_A,6,12,1);
+
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x20, 8, 26, baohu, 2);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x20, 32, 26, my_char_C, 1);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x20, 38, 26, my_char_T, 1);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x20, 44, 26, erci, 2);
+						lcd_state_flush_for_num(69,26,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Protected_CT_secondary(), 
+													num_array, 3, 0, num_idx_flush[5]);
+						lcd_number_display_in_order(75, 26, 5, 12, 
+											num_idx_flush[4], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,26,my_char_A,6,12,1);
+
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x40, 8, 39, lingxu, 2);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x40, 32, 39, my_char_C, 1);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x40, 38, 39, my_char_T, 1);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x40, 44, 39, yici, 2);
+						lcd_state_flush_for_num(69,39,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Zero_sequence_CT_once(), 
+													num_array, 3, 0, num_idx_flush[6]);
+						lcd_number_display_in_order(75, 39, 5, 12, 
+											num_idx_flush[4], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,39,my_char_A,6,12,1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x80, 8, 51, lingxu, 2);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x80, 32, 51, my_char_C, 1);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x80, 38, 51, my_char_T, 1);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x80, 44, 51, erci, 2);
+						lcd_state_flush_for_num(69,51,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Zero_sequence_CT_twice(), 
+													num_array, 3, 0, num_idx_flush[7]);
+						lcd_number_display_in_order(75, 51, 5, 12, 
+											num_idx_flush[4], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,51,my_char_A,6,12,1);
+					default:
+						break;
+				}
+			default:
+				break;
+		}
 	}
 
-	return menu_evt;
+    return menu_evt;
 }
 
 
 struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
-	/* msg_evt should be malloced and return it! */
+	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
 	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
-	if(msg_process_signal == 1)
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint8_t num_idx_flush[8] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[4] = {0};
+	uint8_t int_flag = 0;
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = PARAMETER_CONFIGURE;
+
+	uint8_t msg_storage = msg_context;
+	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
+	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
+    if(authentication_key)
 	{
-		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
-        uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 6, 1, sizeof(wire_splice_setting_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		return menu_evt;
+	}
 
-		if(msg_context == KEY_ENTER)
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+	// app_parameter_write_Overvoltage_protection_LV1_One_Value(233.33);
+    if(msg_process_signal == 1)
+	{
+
+		if(!lcd_modify_num_env.check_num_modify)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, WIRE_SPLICE_SETTING);//just for example!
-			cur_menu_type_ptr_from_env_set(0);
-			menu_kernel_env.menu_cursor_history.second_menu_cursor = menu_type_idx;
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			Log_d("key KEY_ENTER menu!\r\n");
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 4, 1, sizeof(wire_splice_setting_menu_array));
 		}
+		chinese_menu_idx = wire_splice_setting_menu_array[lcd_modify_num_env.menu_type_idx];
 
-		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+
 		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+				menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
+				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				lcd_the_modified_num_env_to_be_clear_all();
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				//just for test log
+				for(int j=0;j<5;j++)
+				{
+					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+				}
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+				float_flag = app_parameter_read_Zero_drift_threshold();
+				Log_d("ENTER! float_flag:%f\n",float_flag);
+				my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag);
+			}
+			key_idx_for_num = 0;
 		}
+		
 
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
             clear_screen();
-			msg_context = 0xff;
-            // LCD_ShowString(24,30,"LCD_W:",16);
-            // LCD_ShowIntNum(72,30,4,1,16);
+			chinese_menu_idx = wire_splice_setting_menu_array[lcd_modify_num_env.menu_type_idx];// 数组 todo
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
 			msg_lock_from_env_set(0);//unlock the msg
+
+			//init the array lcd_modify_num_array with value in the first chinese volume
+			switch(chinese_menu_idx)
+			{
+				case LINGPIAO_XIANZHI:
+					//update the value for the array lcd_modify_num_array
+					float_flag = app_parameter_read_Zero_drift_threshold(); // SRAM todo
+					Log_d("ENTER! float_flag:%f\n",float_flag);
+					my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
+					break;
+				default:
+					break;
+			}
         }
 
-		switch(msg_context)
+		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true; //让中文光标停住
+					switch(chinese_menu_idx)
+					{
+						case LINGPIAO_XIANZHI:
+							key_idx_for_num = 0;
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Zero_drift_threshold();
+							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag); // 3是整数位数，2是小数位数
+							break;
+						case JIEXIAN_FANGSHI:
+							//update the value for the array lcd_modify_num_array
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = app_parameter_read_Voltage_connection();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 1;
+							break;
+						case BAOHU_CT:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = app_parameter_read_Protect_CT_channels();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 2;
+							break;
+						case KAIGUANG_WEIZHI:
+							//update the value for the array lcd_modify_num_array
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = app_parameter_read_Switch_position();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 3;
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						case LINGPIAO_XIANZHI:
+							// prepare for the number modify
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Zero_drift_threshold(0);
+							app_parameter_write_Zero_drift_threshold(float_flag);
+							float_flag = app_parameter_read_Zero_drift_threshold();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case JIEXIAN_FANGSHI:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							app_parameter_write_Voltage_connection(0);
+							app_parameter_write_Voltage_connection(int_flag);
+							int_flag = app_parameter_read_Voltage_connection();
+							break;
+						case BAOHU_CT:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							app_parameter_write_Protect_CT_channels(0);
+							app_parameter_write_Protect_CT_channels(int_flag);
+							int_flag = app_parameter_read_Protect_CT_channels();
+							break;
+						case KAIGUANG_WEIZHI:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							app_parameter_write_Switch_position(0);
+							app_parameter_write_Switch_position(int_flag);
+							int_flag = app_parameter_read_Switch_position();
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
+
+		if(lcd_modify_num_env.check_num_modify)
 		{
-			case	0xff:
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case LINGPIAO_XIANZHI:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					up_diff_num_idx_ths = 9;
+				case JIEXIAN_FANGSHI:
+				case BAOHU_CT:
+				case KAIGUANG_WEIZHI:
+					right_diff_num_idx_ths = 0;
+					up_diff_num_idx_ths = 1;
+					break;
+				default:
+					break;
+			}
+			switch(chinese_menu_idx)
+			{
+				case LINGPIAO_XIANZHI:
+				case JIEXIAN_FANGSHI:
+				case BAOHU_CT:
+				case KAIGUANG_WEIZHI:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_UP://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_DOWN://-
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-    		case	KEY_DOWN:		
-    		case	KEY_LEFT:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
 			case	KEY_RIGHT:
-				clear_screen();
-				LCD_ShowChinese_garland(0, 0, wire_splice_setting, 4);
-				switch(wire_splice_setting_menu_array[menu_type_idx])
+				switch(chinese_menu_idx)
 				{
 					case LINGPIAO_XIANZHI:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_1,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_1,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                        LCD_ShowChinese_no_garland(8, 13, LPXZ, 4);
-						LCD_ShowEnglish_garland(57, 13, maohao,1);
-
-					LCD_ShowChinese_garland(8, 26, JXFS, 4);
-						LCD_ShowEnglish_garland(57, 26, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 38, baohu, 2);
-						LCD_ShowEnglish_garland(45, 38, my_char_C, 1);
-                        LCD_ShowEnglish_garland(51, 38, my_char_T, 1);
-						LCD_ShowEnglish_garland(57, 38, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 51, KGWZ, 4);
-						LCD_ShowEnglish_garland(57, 51, maohao,1);
-      
+						chinese_idx_flush &= 0x00FE;
 						break;
 					case JIEXIAN_FANGSHI:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_1,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_1,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                       LCD_ShowChinese_garland(8, 13, LPXZ, 4);
-						LCD_ShowEnglish_garland(57, 13, maohao,1);
-
-                        LCD_ShowChinese_no_garland(8, 26, JXFS, 4);
-						LCD_ShowEnglish_garland(57, 26, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 38, baohu, 2);
-						LCD_ShowEnglish_garland(45, 38, my_char_C, 1);
-                        LCD_ShowEnglish_garland(51, 38, my_char_T, 1);
-						LCD_ShowEnglish_garland(57, 38, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 51, KGWZ, 4);
-						LCD_ShowEnglish_garland(57, 51, maohao,1);
+						chinese_idx_flush &= 0x00FD;
 						break;
 					case BAOHU_CT:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_1,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_1,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                        LCD_ShowChinese_garland(8, 13, LPXZ, 4);
-						LCD_ShowEnglish_garland(57, 13, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 26, JXFS, 4);
-						LCD_ShowEnglish_garland(57, 26, maohao,1);
-
-                        LCD_ShowChinese_no_garland(8, 38, baohu, 2);
-						LCD_ShowEnglish_no_garland(45, 38, my_char_C, 1);
-                        LCD_ShowEnglish_no_garland(51, 38, my_char_T, 1);
-						LCD_ShowEnglish_garland(57, 38, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 51, KGWZ, 4);
-						LCD_ShowEnglish_garland(57, 51, maohao,1);
-      
+						chinese_idx_flush &= 0x00FB;
 						break;
 					case KAIGUANG_WEIZHI:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_1,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_1,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                        LCD_ShowChinese_garland(8, 13, LPXZ, 4);
-						LCD_ShowEnglish_garland(57, 13, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 26, JXFS, 4);
-						LCD_ShowEnglish_garland(57, 26, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 38, baohu, 2);
-						LCD_ShowEnglish_garland(45, 38, my_char_C, 1);
-                        LCD_ShowEnglish_garland(51, 38, my_char_T, 1);
-						LCD_ShowEnglish_garland(57, 38, maohao,1);
-
-                        LCD_ShowChinese_no_garland(8, 51, KGWZ, 4);
-						LCD_ShowEnglish_garland(57, 51, maohao,1);
-
-						
+						chinese_idx_flush &= 0x00F7;
 						break;
-
 					
 				}
 				break;
 			default:
 				break;
 		}
+
+		//LCD driver
+		//chinese_menu_idx  中文目录的索引下标
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+
+				// 4是显示汉字的数量
+				LCD_ShowChinese_garland(0, 0, wire_splice_setting, 4);
+				switch(chinese_menu_idx)
+				{
+					
+					case LINGPIAO_XIANZHI:
+					case JIEXIAN_FANGSHI:
+					case BAOHU_CT:
+					case KAIGUANG_WEIZHI:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+						lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+						lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+						single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, LPXZ, 4);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Zero_drift_threshold(), 
+													num_array, 4, 0, num_idx_flush[0]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
+						lcd_number_display_in_order(64, 13, 5, 12, 
+											num_idx_flush[0], sizeof(num_array), num_array, 4); //一段定值的数值显示部分
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, JXFS, 4);
+						// LCD_ShowChinese_garland(8, 26, second_in_out, 4);
+						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Voltage_connection(), 
+													num_idx_flush[1]);
+						if(int_flag)
+						{	
+							lcd_english_modify_display_in_order(num_idx_flush[1], 64, 26, my_char_Y,1);
+							lcd_chinese_modify_display_in_order(num_idx_flush[1],  70, 26, jiexian, 2);
+						}
+						else
+						{
+							lcd_english_modify_display_in_order(num_idx_flush[1], 64, 26, my_char_X,1);
+							lcd_chinese_modify_display_in_order(num_idx_flush[1],  70, 26, jiexian, 2);
+						}
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 8, 39, baohu, 2);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x04, 32, 39, my_char_C, 1);
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x04, 38, 39, my_char_T, 1);
+						lcd_state_flush_for_num(58,39,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Protect_CT_channels(), 
+													num_idx_flush[2]);
+						if(int_flag)
+						{	
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  64, 39, sanxiang, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  64, 39, liangxiang, 2);
+						}
+
+
+						
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x08, 8, 51, KGWZ, 4);
+						// LCD_ShowChinese_garland(8, 51, second_fix_value, 4);
+						lcd_state_flush_for_num(69,51,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Switch_position(), 
+													num_idx_flush[3]);
+						if(int_flag)
+						{	
+							lcd_chinese_modify_display_in_order(num_idx_flush[3],  64, 51, danweizhi, 3);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[3],  64, 51, duoweizhi, 3);
+						}
+
+						break;
+					default:
+						break;
+				}
+			default:
+				break;
+		}
 	}
 
-	return menu_evt;
+    return menu_evt;
 }
+
 
 
 struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
-	/* msg_evt should be malloced and return it! */
+	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
 	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
-	if(msg_process_signal == 1)
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint8_t num_idx_flush[8] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[8] = {0};
+	uint8_t int_flag = 0;
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = PARAMETER_CONFIGURE;
+
+	uint8_t msg_storage = msg_context;
+	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
+	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
+    if(authentication_key)
 	{
-		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
-        uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(open_into_setting_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		return menu_evt;
+	}
 
-		if(msg_context == KEY_ENTER)
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+	// app_parameter_write_Overvoltage_protection_LV1_One_Value(233.33);
+    if(msg_process_signal == 1)
+	{
+
+		if(!lcd_modify_num_env.check_num_modify)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, OPEN_INTO_SETTING);//just for example!
-			cur_menu_type_ptr_from_env_set(0);
-			menu_kernel_env.menu_cursor_history.second_menu_cursor = menu_type_idx;
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			Log_d("key KEY_ENTER menu!\r\n");
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 2, 1, sizeof(open_into_setting_menu_array));
 		}
+		chinese_menu_idx = open_into_setting_menu_array[lcd_modify_num_env.menu_type_idx];
 
-		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+
 		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+				menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
+				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				lcd_the_modified_num_env_to_be_clear_all();
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				//just for test log
+				for(int j=0;j<5;j++)
+				{
+					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+				}
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+				float_flag = app_parameter_read_Remote_letter_anti_shake_time();
+				Log_d("ENTER! float_flag:%f\n",float_flag);
+				my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag);
+			}
+			key_idx_for_num = 0;
 		}
+		
 
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
             clear_screen();
-			msg_context = 0xff;
-            // LCD_ShowString(24,30,"LCD_W:",16);
-            // LCD_ShowIntNum(72,30,4,1,16);
+			chinese_menu_idx = open_into_setting_menu_array[lcd_modify_num_env.menu_type_idx];// 数组 todo
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
 			msg_lock_from_env_set(0);//unlock the msg
+
+			//init the array lcd_modify_num_array with value in the first chinese volume
+			switch(chinese_menu_idx)
+			{
+				case XIAODOU_YANSHI:
+					//update the value for the array lcd_modify_num_array
+					float_flag = app_parameter_read_Remote_letter_anti_shake_time(); // SRAM todo
+					Log_d("ENTER! float_flag:%f\n",float_flag);
+					my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
+					break;
+				default:
+					break;
+			}
         }
 
-		switch(msg_context)
+		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true; //让中文光标停住
+					switch(chinese_menu_idx)
+					{
+						case XIAODOU_YANSHI:
+							key_idx_for_num = 0;
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Remote_letter_anti_shake_time();
+							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag); // 3是整数位数，2是小数位数
+							break;
+						case LUOJI:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Remote_letter_into_the_logic();
+							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 8, 0, float_flag);
+							key_idx_for_num = 1;
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						case XIAODOU_YANSHI:
+							// prepare for the number modify
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Remote_letter_anti_shake_time(0);
+							app_parameter_write_Remote_letter_anti_shake_time(float_flag);
+							float_flag = app_parameter_read_Remote_letter_anti_shake_time();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case LUOJI:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array, 8, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Remote_letter_into_the_logic(0);
+							app_parameter_write_Remote_letter_into_the_logic(float_flag);
+							float_flag = app_parameter_read_Remote_letter_into_the_logic();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
+
+		if(lcd_modify_num_env.check_num_modify)
 		{
-			case	0xff:
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case XIAODOU_YANSHI:
+				case LUOJI:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					up_diff_num_idx_ths = 9;
+					break;
+				default:
+					break;
+			}
+			switch(chinese_menu_idx)
+			{
+				case XIAODOU_YANSHI:
+				case LUOJI:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_UP://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_DOWN://-
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-    		case	KEY_DOWN:		
-    		case	KEY_LEFT:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
 			case	KEY_RIGHT:
-				clear_screen();
-				LCD_ShowChinese_garland(0, 0, open_into_setting, 4);
-				switch(open_into_setting_menu_array[menu_type_idx])
+				switch(chinese_menu_idx)
 				{
 					case XIAODOU_YANSHI:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_1,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_1,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                        LCD_ShowChinese_no_garland(8, 13, XDYS, 4);
-						LCD_ShowEnglish_garland(57, 13, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 26, luoji, 2);
-						LCD_ShowEnglish_garland(32, 26, maohao,1);
-
+						chinese_idx_flush &= 0x00FE;
 						break;
 					case LUOJI:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_1,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_1,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                        LCD_ShowChinese_garland(8, 13, XDYS, 4);
-						LCD_ShowEnglish_garland(57, 13, maohao,1);
-
-                        LCD_ShowChinese_no_garland(8, 26, luoji, 2);
-						LCD_ShowEnglish_garland(32, 26, maohao,1);
-
-
+						chinese_idx_flush &= 0x00FD;
 						break;
 					
 				}
@@ -724,305 +1333,685 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 			default:
 				break;
 		}
+
+		//LCD driver
+		//chinese_menu_idx  中文目录的索引下标
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+
+				// 4是显示汉字的数量
+				LCD_ShowChinese_garland(0, 0, open_into_setting, 4);
+				switch(chinese_menu_idx)
+				{
+					
+					case XIAODOU_YANSHI:
+					case LUOJI:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+						lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+						lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+						single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, XDYS, 4);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Remote_letter_anti_shake_time(), 
+													num_array, 4, 0, num_idx_flush[0]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
+						lcd_number_display_in_order(64, 13, 5, 12, 
+											num_idx_flush[0], sizeof(num_array)-4, num_array, 4); //一段定值的数值显示部分
+						lcd_state_flush_for_num(88,13,my_char_m,6,12,1);
+						lcd_state_flush_for_num(94,13,my_char_s,6,12,1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, luoji, 2);
+						// LCD_ShowChinese_garland(8, 26, second_in_out, 4);
+						lcd_state_flush_for_num(34,26,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Remote_letter_into_the_logic(), 
+													num_array, 8, 0, num_idx_flush[1]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
+						lcd_number_display_in_order(40, 26, 5, 12, 
+											num_idx_flush[1], sizeof(num_array), num_array, 8); //一段定值的数值显示部分
+
+						break;
+					default:
+						break;
+				}
+			default:
+				break;
+		}
 	}
 
-	return menu_evt;
+    return menu_evt;
 }
+
+
+
+
 
 struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
-	/* msg_evt should be malloced and return it! */
+
+/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
 	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
-	if(msg_process_signal == 1)
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint8_t num_idx_flush[8] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[4] = {0};
+	uint8_t int_flag = 0;
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = PARAMETER_CONFIGURE;
+
+	uint8_t msg_storage = msg_context;
+	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
+	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
+    if(authentication_key)
 	{
-		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
-        uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 8, 1, sizeof(open_out_setting_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		return menu_evt;
+	}
 
-		if(msg_context == KEY_ENTER)
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+	// app_parameter_write_Overvoltage_protection_LV1_One_Value(233.33);
+    if(msg_process_signal == 1)
+	{
+
+		if(!lcd_modify_num_env.check_num_modify)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE,OPEN_OUT_SETTING);//just for example!
-			cur_menu_type_ptr_from_env_set(0);
-			menu_kernel_env.menu_cursor_history.second_menu_cursor = menu_type_idx;
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			Log_d("key KEY_ENTER menu!\r\n");
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 8, 1, sizeof(open_out_setting_menu_array));
 		}
+		chinese_menu_idx = open_out_setting_menu_array[lcd_modify_num_env.menu_type_idx];
 
-		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+
 		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+				menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
+				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				lcd_the_modified_num_env_to_be_clear_all();
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				//just for test log
+				for(int j=0;j<5;j++)
+				{
+					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+				}
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+				float_flag = app_parameter_read_Trip_exit_time();
+				Log_d("ENTER! float_flag:%f\n",float_flag);
+				my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+			}
+			key_idx_for_num = 0;
 		}
+		
 
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
             clear_screen();
-			msg_context = 0xff;
-            // LCD_ShowString(24,30,"LCD_W:",16);
-            // LCD_ShowIntNum(72,30,4,1,16);
+			chinese_menu_idx = open_out_setting_menu_array[lcd_modify_num_env.menu_type_idx];// 数组 todo
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
 			msg_lock_from_env_set(0);//unlock the msg
+
+			//init the array lcd_modify_num_array with value in the first chinese volume
+			switch(chinese_menu_idx)
+			{
+				case HEZA_YANSHI:
+					//update the value for the array lcd_modify_num_array
+					float_flag = app_parameter_read_Trip_exit_time(); // SRAM todo
+					Log_d("ENTER! float_flag:%f\n",float_flag);
+					my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
+					break;
+				default:
+					break;
+			}
         }
 
-		switch(msg_context)
+		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true; //让中文光标停住
+					switch(chinese_menu_idx)
+					{
+						case HEZA_YANSHI:
+							key_idx_for_num = 0;
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Trip_exit_time();
+							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag); // 3是整数位数，2是小数位数
+							break;
+						case TIAOZA_YANSHI:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Closing_exit_time();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag);
+							key_idx_for_num = 1;
+							break;
+						case DO1_YANSHI:
+							float_flag = app_parameter_read_D01_exit_time();
+							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag);
+							key_idx_for_num = 2;
+							break;
+						case DO2_YANSHI:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_D02_exit_time();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag);
+							key_idx_for_num = 3;
+							break;
+						case DO3_YANSHI:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_D03_exit_time();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag);
+							key_idx_for_num = 4;
+							break;
+						case DO4_YANSHI:
+							float_flag = app_parameter_read_D04_exit_time();
+							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag);
+							key_idx_for_num = 5;
+							break;
+						case CHUNENG_YANSHI:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Energy_storage_exit_time();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag);
+							key_idx_for_num = 6;
+							break;
+						case CHUNENG_XUANZE:
+							//update the value for the array lcd_modify_num_array
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = app_parameter_read_Energy_storage_outlet_selection();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 7;
+							break;
+						default:
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						case HEZA_YANSHI:
+							// prepare for the number modify
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Grid_PT_primary(0);
+							app_parameter_write_Grid_PT_primary(float_flag);
+							float_flag = app_parameter_read_Grid_PT_primary();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case TIAOZA_YANSHI:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Grid_PT_secondary(0);
+							app_parameter_write_Grid_PT_secondary(float_flag);
+							float_flag = app_parameter_read_Grid_PT_secondary();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case DO1_YANSHI:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Generation_PT_primary(0);
+							app_parameter_write_Generation_PT_primary(float_flag);
+							float_flag = app_parameter_read_Generation_PT_primary();
+							break;
+						case DO2_YANSHI:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Generation_PT_secondary(0);
+							app_parameter_write_Generation_PT_secondary(float_flag);
+							float_flag = app_parameter_read_Generation_PT_secondary();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case DO3_YANSHI:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Protective_CT_primary(0);
+							app_parameter_write_Protective_CT_primary(float_flag);
+							float_flag = app_parameter_read_Protective_CT_primary();
+							break;
+						case DO4_YANSHI:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Protected_CT_secondary(0);
+							app_parameter_write_Protected_CT_secondary(float_flag);
+							int_flag = app_parameter_read_Protected_CT_secondary();
+							break;
+						case CHUNENG_YANSHI:
+							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
+							float_flag = float_flag+ 0.0001;
+							app_parameter_write_Zero_sequence_CT_once(0);
+							app_parameter_write_Zero_sequence_CT_once(float_flag);
+							float_flag = app_parameter_read_Zero_sequence_CT_once();
+							break;
+						case CHUNENG_XUANZE:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							app_parameter_write_Zero_sequence_CT_twice(0);
+							app_parameter_write_Zero_sequence_CT_twice(int_flag);
+							int_flag = app_parameter_read_Zero_sequence_CT_twice();
+							break;
+						default:
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
+
+		if(lcd_modify_num_env.check_num_modify)
 		{
-			case	0xff:
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case HEZA_YANSHI:
+				case TIAOZA_YANSHI:
+				case DO1_YANSHI:
+				case DO2_YANSHI:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					up_diff_num_idx_ths = 9;
+					break;
+				case DO3_YANSHI:
+				case DO4_YANSHI:
+				case CHUNENG_YANSHI:
+					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					up_diff_num_idx_ths = 9;
+				case CHUNENG_XUANZE:
+					right_diff_num_idx_ths = 0;
+					up_diff_num_idx_ths = 1;
+					
+					break;
+				default:
+					break;
+			}
+			switch(chinese_menu_idx)
+			{
+				case HEZA_YANSHI:
+				case TIAOZA_YANSHI:
+				case DO1_YANSHI:
+				case DO2_YANSHI:
+				case DO3_YANSHI:
+				case DO4_YANSHI:
+				case CHUNENG_YANSHI:
+				case CHUNENG_XUANZE:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_UP://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_DOWN://-
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-    		case	KEY_DOWN:		
-    		case	KEY_LEFT:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
 			case	KEY_RIGHT:
-				clear_screen();
-				LCD_ShowChinese_garland(0, 0, open_out_setting, 4);
-				switch(open_out_setting_menu_array[menu_type_idx])
+				switch(chinese_menu_idx)
 				{
 					case HEZA_YANSHI:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_1,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                        LCD_ShowChinese_no_garland(8, 13, hezha, 2);
-                        LCD_ShowChinese_no_garland(32, 13, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 13, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 26, tiaozha, 2);
-                        LCD_ShowChinese_garland(32, 26, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 26, maohao,1);
-
-                        LCD_ShowEnglish_garland(16, 38, my_char_D, 1);
-						LCD_ShowEnglish_garland(22, 38, my_char_O, 1);
-                        LCD_ShowNum_garland(28, 38, my_num_1, 5);
-                        LCD_ShowChinese_garland(33, 38, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 38, maohao,1);
-
-                        LCD_ShowEnglish_garland(16, 51, my_char_D, 1);
-						LCD_ShowEnglish_garland(22, 51, my_char_O, 1);
-                        LCD_ShowNum_garland(28, 51, my_num_2, 5);
-                         LCD_ShowChinese_garland(33, 51, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 51, maohao,1);
-
-                       
-
+						chinese_idx_flush &= 0x00FE;
 						break;
 					case TIAOZA_YANSHI:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_1,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
-
-                        LCD_ShowChinese_garland(8, 13, hezha, 2);
-                        LCD_ShowChinese_garland(32, 13, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 13, maohao,1);
-
-                        LCD_ShowChinese_no_garland(8, 26, tiaozha, 2);
-                        LCD_ShowChinese_no_garland(32, 26, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 26, maohao,1);
-
-                        LCD_ShowEnglish_garland(16, 38, my_char_D, 1);
-						LCD_ShowEnglish_garland(22, 38, my_char_O, 1);
-                        LCD_ShowNum_garland(28, 38, my_num_1, 5);
-                        LCD_ShowChinese_garland(33, 38, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 38, maohao,1);
-
-                        LCD_ShowEnglish_garland(16, 51, my_char_D, 1);
-						LCD_ShowEnglish_garland(22, 51, my_char_O, 1);
-                        LCD_ShowNum_garland(28, 51, my_num_2, 5);
-                         LCD_ShowChinese_garland(33, 51, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 51, maohao,1);
-
+						chinese_idx_flush &= 0x00FD;
 						break;
 					case DO1_YANSHI:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_1,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);       
-
-						LCD_ShowChinese_garland(8, 13, hezha, 2);
-                        LCD_ShowChinese_garland(32, 13, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 13, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 26, tiaozha, 2);
-                        LCD_ShowChinese_garland(32, 26, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 26, maohao,1);
-
-                        LCD_ShowEnglish_no_garland(16, 38, my_char_D, 1);
-						LCD_ShowEnglish_no_garland(22, 38, my_char_O, 1);
-                        LCD_ShowNum_no_garland(28, 38, my_num_1, 5);
-                        LCD_ShowChinese_no_garland(33, 38, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 38, maohao,1);
-
-                        LCD_ShowEnglish_garland(16, 51, my_char_D, 1);
-						LCD_ShowEnglish_garland(22, 51, my_char_O, 1);
-                        LCD_ShowNum_garland(28, 51, my_num_2, 5);
-                         LCD_ShowChinese_garland(33, 51, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 51, maohao,1);
+						chinese_idx_flush &= 0x00FB;
 						break;
-
-                    case DO2_YANSHI:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_1,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);       
-
-						LCD_ShowChinese_garland(8, 13, hezha, 2);
-                        LCD_ShowChinese_garland(32, 13, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 13, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 26, tiaozha, 2);
-                        LCD_ShowChinese_garland(32, 26, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 26, maohao,1);
-
-                        LCD_ShowEnglish_garland(16, 38, my_char_D, 1);
-						LCD_ShowEnglish_garland(22, 38, my_char_O, 1);
-                        LCD_ShowNum_garland(28, 38, my_num_1, 5);
-                        LCD_ShowChinese_garland(33, 38, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 38, maohao,1);
-
-                        LCD_ShowEnglish_no_garland(16, 51, my_char_D, 1);
-						LCD_ShowEnglish_no_garland(22, 51, my_char_O, 1);
-                        LCD_ShowNum_no_garland(28, 51, my_num_2, 5);
-                         LCD_ShowChinese_no_garland(33, 51, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 51, maohao,1);
-
+					case DO2_YANSHI:
+						chinese_idx_flush &= 0x00F7;
 						break;
-
-
-                    case DO3_YANSHI:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_2,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);       
-
-						LCD_ShowEnglish_no_garland(16, 13, my_char_D, 1);
-						LCD_ShowEnglish_no_garland(22, 13, my_char_O, 1);
-                        LCD_ShowNum_no_garland(28, 13, my_num_3, 5);
-                        LCD_ShowChinese_no_garland(33, 13, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 13, maohao,1);
-
-                        LCD_ShowEnglish_garland(16, 26, my_char_D, 1);
-						LCD_ShowEnglish_garland(22, 26, my_char_O, 1);
-                        LCD_ShowNum_garland(28, 26, my_num_4, 5);
-                         LCD_ShowChinese_garland(33, 26, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 26, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 38, CNYS, 4);
-						LCD_ShowEnglish_garland(58, 38, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 51, CNXZ, 4);
-						LCD_ShowEnglish_garland(58, 51, maohao,1);
-
-
-
+					case DO3_YANSHI:
+						chinese_idx_flush &= 0x00EF;
 						break;
-
-
-
-                    case DO4_YANSHI:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_2,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);       
-
-						LCD_ShowEnglish_garland(16, 13, my_char_D, 1);
-						LCD_ShowEnglish_garland(22, 13, my_char_O, 1);
-                        LCD_ShowNum_garland(28, 13, my_num_3, 5);
-                        LCD_ShowChinese_garland(33, 13, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 13, maohao,1);
-
-                        LCD_ShowEnglish_no_garland(16, 26, my_char_D, 1);
-						LCD_ShowEnglish_no_garland(22, 26, my_char_O, 1);
-                        LCD_ShowNum_no_garland(28, 26, my_num_4, 5);
-                         LCD_ShowChinese_no_garland(33, 26, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 26, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 38, CNYS, 4);
-						LCD_ShowEnglish_garland(58, 38, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 51, CNXZ, 4);
-						LCD_ShowEnglish_garland(58, 51, maohao,1);
-
+					case DO4_YANSHI:
+						chinese_idx_flush &= 0x00DF;
 						break;
-
-
-
-                    case CHUNENG_YANSHI:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_2,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);       
-
-						LCD_ShowEnglish_garland(16, 13, my_char_D, 1);
-						LCD_ShowEnglish_garland(22, 13, my_char_O, 1);
-                        LCD_ShowNum_garland(28, 13, my_num_3, 5);
-                        LCD_ShowChinese_garland(33, 13, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 13, maohao,1);
-
-                        LCD_ShowEnglish_garland(16, 26, my_char_D, 1);
-						LCD_ShowEnglish_garland(22, 26, my_char_O, 1);
-                        LCD_ShowNum_garland(28, 26, my_num_4, 5);
-                         LCD_ShowChinese_garland(33, 26, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 26, maohao,1);
-
-                        LCD_ShowChinese_no_garland(8, 38, CNYS, 4);
-						LCD_ShowEnglish_garland(58, 38, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 51, CNXZ, 4);
-						LCD_ShowEnglish_garland(58, 51, maohao,1);
-
+					case CHUNENG_YANSHI:
+						chinese_idx_flush &= 0x00BF;
 						break;
-
-
-                    case CHUNENG_XUANZE:
-                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
-                        LCD_ShowNum_garland(98, 1, my_num_2,5);
-                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
-                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
-                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);       
-
-						LCD_ShowEnglish_garland(16, 13, my_char_D, 1);
-						LCD_ShowEnglish_garland(22, 13, my_char_O, 1);
-                        LCD_ShowNum_garland(28, 13, my_num_3, 5);
-                        LCD_ShowChinese_garland(33, 13, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 13, maohao,1);
-
-                        LCD_ShowEnglish_garland(16, 26, my_char_D, 1);
-						LCD_ShowEnglish_garland(22, 26, my_char_O, 1);
-                        LCD_ShowNum_garland(28, 26, my_num_4, 5);
-                         LCD_ShowChinese_garland(33, 26, yanshi, 2);
-						LCD_ShowEnglish_garland(58, 26, maohao,1);
-
-                        LCD_ShowChinese_garland(8, 38, CNYS, 4);
-						LCD_ShowEnglish_garland(58, 38, maohao,1);
-
-                        LCD_ShowChinese_no_garland(8, 51, CNXZ, 4);
-						LCD_ShowEnglish_garland(58, 51, maohao,1);
-
+					case CHUNENG_XUANZE:
+						chinese_idx_flush &= 0x007F;
 						break;
-					
 					
 				}
 				break;
 			default:
 				break;
 		}
+
+		//LCD driver
+		//chinese_menu_idx  中文目录的索引下标
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+
+				// 4是显示汉字的数量
+				LCD_ShowChinese_garland(0, 0, open_out_setting, 4);
+				switch(chinese_menu_idx)
+				{
+					
+					case HEZA_YANSHI:
+					case TIAOZA_YANSHI:
+					case DO1_YANSHI:
+					case DO2_YANSHI:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+						lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+						lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
+						single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, hezha, 2);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 32, 13, yanshi, 2);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Trip_exit_time(), 
+													num_array, 4, 0, num_idx_flush[0]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
+						lcd_number_display_in_order(64, 13, 5, 12, 
+											num_idx_flush[0], sizeof(num_array), num_array, 4); //一段定值的数值显示部分
+						lcd_state_flush_for_num(90,13,my_char_m,6,12,1);
+						lcd_state_flush_for_num(96,13,my_char_s,6,12,1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, tiaozha, 2);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 32, 26, yanshi, 2);
+						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Closing_exit_time(), 
+													num_array, 4, 0, num_idx_flush[1]);
+						lcd_number_display_in_order(64, 26, 5, 12, 
+											num_idx_flush[1], sizeof(num_array), num_array, 4);
+						lcd_state_flush_for_num(90,26,my_char_m,6,12,1);
+						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
+
+
+
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x04, 8, 39, my_char_D, 1);
+						lcd_shownum_no_garland_or_garland(chinese_idx_flush & 0x04, 14, 39, my_num_0, 1);
+						lcd_shownum_no_garland_or_garland(chinese_idx_flush & 0x04, 20, 39, my_num_1, 1);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 26, 39, yanshi, 2);
+						lcd_state_flush_for_num(58,39,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_D01_exit_time(), 
+													num_array, 4, 0, num_idx_flush[2]);
+						lcd_number_display_in_order(64, 39, 5, 12, 
+											num_idx_flush[2], sizeof(num_array), num_array, 4);
+						lcd_state_flush_for_num(90,39,my_char_m,6,12,1);
+						lcd_state_flush_for_num(96,39,my_char_s,6,12,1);
+
+
+						
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x08, 8, 51, my_char_D, 1);
+						lcd_shownum_no_garland_or_garland(chinese_idx_flush & 0x08, 14, 51, my_num_0, 1);
+						lcd_shownum_no_garland_or_garland(chinese_idx_flush & 0x08, 20, 51, my_num_2, 1);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x08, 26, 51, yanshi, 2);
+						// LCD_ShowChinese_garland(8, 51, second_fix_value, 4);
+						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_D02_exit_time(), 
+													num_array, 4, 0, num_idx_flush[3]);
+						lcd_number_display_in_order(64, 51, 5, 12, 
+											num_idx_flush[3], sizeof(num_array), num_array, 4);
+						lcd_state_flush_for_num(90,51,my_char_m,6,12,1);
+						lcd_state_flush_for_num(96,51,my_char_s,6,12,1);
+
+						break;
+					case DO3_YANSHI:
+					case DO4_YANSHI:
+					case CHUNENG_YANSHI:
+					case CHUNENG_XUANZE:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+						lcd_state_flush_for_num(98,1,my_num_2,5,12,1);
+						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+						lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
+						single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x10, 8, 13, my_char_D, 1);
+						lcd_shownum_no_garland_or_garland(chinese_idx_flush & 0x10, 14, 13, my_num_0, 1);
+						lcd_shownum_no_garland_or_garland(chinese_idx_flush & 0x10, 20, 13, my_num_3, 1);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x10, 26, 13, yanshi, 2);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_D03_exit_time(), 
+													num_array, 4, 0, num_idx_flush[4]);
+						lcd_number_display_in_order(64, 13, 5, 12, 
+											num_idx_flush[4], sizeof(num_array), num_array, 4);
+						lcd_state_flush_for_num(90,13,my_char_m,6,12,1);
+						lcd_state_flush_for_num(96,13,my_char_s,6,12,1);
+
+
+
+						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x20, 8, 26, my_char_D, 1);
+						lcd_shownum_no_garland_or_garland(chinese_idx_flush & 0x20, 14, 26, my_num_0, 1);
+						lcd_shownum_no_garland_or_garland(chinese_idx_flush & 0x20, 20, 26, my_num_4, 1);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x20, 26, 26, yanshi, 2);
+						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_D04_exit_time(), 
+													num_array, 4, 0, num_idx_flush[5]);
+						lcd_number_display_in_order(64, 26, 5, 12, 
+											num_idx_flush[4], sizeof(num_array), num_array, 4);
+						lcd_state_flush_for_num(90,26,my_char_m,6,12,1);
+						lcd_state_flush_for_num(96,26,my_char_s,6,12,1);
+
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x40, 8, 39, CNYS, 4);
+						lcd_state_flush_for_num(58,39,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, app_parameter_read_Energy_storage_exit_time(), 
+													num_array, 4, 0, num_idx_flush[6]);
+						lcd_number_display_in_order(64, 39, 5, 12, 
+											num_idx_flush[4], sizeof(num_array), num_array, 4);
+						lcd_state_flush_for_num(90,39,my_char_m,6,12,1);
+						lcd_state_flush_for_num(96,39,my_char_s,6,12,1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x80, 8, 51, CNXZ, 4);
+						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Energy_storage_outlet_selection(), 
+													num_idx_flush[7]);
+						if(int_flag)
+						{	
+							lcd_chinese_modify_display_in_order(num_idx_flush[7],  64, 51, back, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[7],  64, 51, input, 2);
+						}
+
+					default:
+						break;
+				}
+			default:
+				break;
+		}
 	}
 
-	return menu_evt;
+    return menu_evt;
 }
 
+// struct menu_event_tag * communication_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
+// {
+// 	/* msg_evt should be malloced and return it! */
+// 	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
+// 	menu_evt->status = EVT_NO_ERROR;
+// 	menu_evt->msg_operation = MSG_RESUMED;
+
+// 	if(msg_process_signal == 1)
+// 	{
+// 		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
+//         uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 2, 1, sizeof(communication_setting_menu_array));
+// 		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+
+// 		if(msg_context == KEY_ENTER)
+// 		{
+// 			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, COMMUNICATION_SETTING);//just for example!
+// 			cur_menu_type_ptr_from_env_set(0);
+// 			menu_kernel_env.menu_cursor_history.second_menu_cursor = menu_type_idx;
+//             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+// 			Log_d("key KEY_ENTER menu!\r\n");
+// 		}
+
+// 		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
+// 		if(msg_context == KEY_RETURN)
+// 		{
+// 			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
+//             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+// 			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+// 			Log_d("key KEY_RETURN menu!\r\n");
+// 		}
+
+//         if(msg_context == FLUSH_SCREEN)
+//         {
+// 			Log_d("\r\n    \r\n");
+//             clear_screen();
+// 			msg_context = 0xff;
+//             // LCD_ShowString(24,30,"LCD_W:",16);
+//             // LCD_ShowIntNum(72,30,4,1,16);
+// 			msg_lock_from_env_set(0);//unlock the msg
+//         }
+
+// 		switch(msg_context)
+// 		{
+// 			case	0xff:
+// 			case    KEY_UP:
+//     		case	KEY_DOWN:		
+//     		case	KEY_LEFT:
+// 			case	KEY_RIGHT:
+// 				clear_screen();
+// 				LCD_ShowChinese_garland(0, 0, communication_setting, 4);
+// 				switch(communication_setting_menu_array[menu_type_idx])
+// 				{
+// 					case GONGGONG_SHEZHI:
+//                         LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
+//                         LCD_ShowNum_garland(98, 1, my_num_1,5);
+//                         LCD_ShowNum_garland(103, 1, XieGang_char,6);
+//                         LCD_ShowNum_garland(109, 1, my_num_1,5);  
+//                         LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
+
+//                         LCD_ShowChinese_no_garland(8, 13, GGSZ, 4);
+						
+
+//                         LCD_ShowChinese_garland(8, 26, CKSZ, 4);
+						
+// 						break;
+// 					case CHUANKOU_SHEZHI:
+//                         LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
+//                         LCD_ShowNum_garland(98, 1, my_num_1,5);
+//                         LCD_ShowNum_garland(103, 1, XieGang_char,6);
+//                         LCD_ShowNum_garland(109, 1, my_num_1,5);  
+//                         LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
+
+//                         LCD_ShowChinese_garland(8, 13, GGSZ, 4);
+		
+//                         LCD_ShowChinese_no_garland(8, 26, CKSZ, 4);
+						
+// 						break;
+					
+					
+					
+// 				}
+// 				break;
+// 			default:
+// 				break;
+// 		}
+// 	}
+
+// 	return menu_evt;
+// }
 
 struct menu_event_tag * communication_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
@@ -1039,7 +2028,7 @@ struct menu_event_tag * communication_setting_handler(uint8_t msg_process_signal
 
 		if(msg_context == KEY_ENTER)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, COMMUNICATION_SETTING);//just for example!
+			menu_level_from_env_set_V2(TOP_NODE_MENU, PARAMETER_CONFIGURE, COMMUNICATION_SETTING, XIANGMU1);//just for example!
 			cur_menu_type_ptr_from_env_set(0);
 			menu_kernel_env.menu_cursor_history.second_menu_cursor = menu_type_idx;
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
@@ -1100,8 +2089,6 @@ struct menu_event_tag * communication_setting_handler(uint8_t msg_process_signal
 		
                         LCD_ShowChinese_no_garland(8, 26, CKSZ, 4);
 						
-
-
 						break;
 					
 					
@@ -1115,6 +2102,92 @@ struct menu_event_tag * communication_setting_handler(uint8_t msg_process_signal
 
 	return menu_evt;
 }
+
+
+struct menu_event_tag * xiangmu1_handler(uint8_t msg_process_signal, uint8_t msg_context)
+{
+	/* msg_evt should be malloced and return it! */
+	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
+	menu_evt->status = EVT_NO_ERROR;
+	menu_evt->msg_operation = MSG_RESUMED;
+
+	if(msg_process_signal == 1)
+	{
+		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
+        uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 2, 1, sizeof(communication_setting_menu_array));
+		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+
+
+		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
+		if(msg_context == KEY_RETURN)
+		{
+			menu_level_from_env_set_V2(TOP_NODE_MENU, PARAMETER_CONFIGURE, COMMUNICATION_SETTING, UNKNOW_FORTH_MENU);
+            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.second_menu_cursor);
+			Log_d("key KEY_RETURN menu!\r\n");
+		}
+
+        if(msg_context == FLUSH_SCREEN)
+        {
+			Log_d("\r\n    \r\n");
+            clear_screen();
+			msg_context = 0xff;
+            // LCD_ShowString(24,30,"LCD_W:",16);
+            // LCD_ShowIntNum(72,30,4,1,16);
+			msg_lock_from_env_set(0);//unlock the msg
+        }
+
+		switch(msg_context)
+		{
+			case	0xff:
+			case    KEY_UP:
+    		case	KEY_DOWN:		
+    		case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, communication_setting, 2);
+				switch(communication_setting_menu_array[menu_type_idx])
+				{
+					case GONGGONG_SHEZHI:
+                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
+                        LCD_ShowNum_garland(98, 1, my_num_1,5);
+                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
+                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
+                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
+
+                        LCD_ShowChinese_no_garland(8, 13, GGSZ, 4);
+						
+
+                        LCD_ShowChinese_garland(8, 26, CKSZ, 4);
+						
+						break;
+					case CHUANKOU_SHEZHI:
+                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
+                        LCD_ShowNum_garland(98, 1, my_num_2,5);
+                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
+                        LCD_ShowNum_garland(109, 1, my_num_2,5);  
+                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
+
+		
+                        LCD_ShowChinese_no_garland(8, 26, CKSZ, 4);
+						
+						break;
+					
+					
+					
+				}
+				break;
+			default:
+				break;
+		}
+	}
+
+	return menu_evt;
+}
+
+
+
+
 
 struct menu_event_tag * recover_home_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {

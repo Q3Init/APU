@@ -112,14 +112,19 @@ extern uint8_t ZERO_NORMINAL_VALUE[];
 
 //parameter configure
 extern uint8_t dianwang[];
-extern uint8_t yici[];
-extern uint8_t erci[];
 extern uint8_t fadian[];
 extern uint8_t baohu[];
 extern uint8_t lingxu[];
+extern uint8_t yici[];
+extern uint8_t erci[];
 extern uint8_t LPXZ[];
 extern uint8_t JXFS[];
+extern uint8_t jiexian[];
+extern uint8_t sanxiang[];
+extern uint8_t liangxiang[];
 extern uint8_t KGWZ[];
+extern uint8_t danweizhi[];
+extern uint8_t duoweizhi[];
 extern uint8_t XDYS[];
 extern uint8_t luoji[];
 extern uint8_t yanshi[];
