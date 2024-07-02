@@ -2,6 +2,7 @@
 #include "APP_Parameter.h"
 #include "math.h"
 #include "APP_Protection_Backend.h"
+#include "APP_Protection_Management.h"
 
 /**************          telemetry_second menu is as follow         *****************************/
 #define LINE_CURRENT_FOR_IA_READ()  APP_Get_Current_Ia()
@@ -51,52 +52,52 @@
 /**************          telemetry_first menu is above             *****************************/
 
 /**************          open_into_state_menu menu is as follow         *****************************/
-#define LCD_THE_STATE_FOR_ON_READ()   1
-#define LCD_THE_STATE_FOR_OFF_READ()   2
-#define LCD_REMOTE_SIGNAL_LV3_READ()   3
-#define LCD_REMOTE_SIGNAL_LV4_READ()   4
-#define LCD_REMOTE_SIGNAL_LV5_READ()   5
-#define LCD_REMOTE_SIGNAL_LV6_READ()   6
-#define LCD_REMOTE_SIGNAL_LV7_READ()   7
-#define LCD_REMOTE_SIGNAL_LV8_READ()   8
-#define LCD_REMOTE_SIGNAL_LV9_READ()   9
-#define LCD_LATCH_LOCK_FOR_SWITCH_ON_READ()   0
+#define LCD_THE_STATE_FOR_ON_READ(x)    APP_Remote_Signal_Input_State(0)
+#define LCD_THE_STATE_FOR_OFF_READ(x)   APP_Remote_Signal_Input_State(1)
+#define LCD_REMOTE_SIGNAL_LV3_READ(x)   APP_Remote_Signal_Input_State(2)
+#define LCD_REMOTE_SIGNAL_LV4_READ(x)   APP_Remote_Signal_Input_State(3)
+#define LCD_REMOTE_SIGNAL_LV5_READ(x)   APP_Remote_Signal_Input_State(4)
+#define LCD_REMOTE_SIGNAL_LV6_READ(x)   APP_Remote_Signal_Input_State(5)
+#define LCD_REMOTE_SIGNAL_LV7_READ(x)   APP_Remote_Signal_Input_State(6)
+#define LCD_REMOTE_SIGNAL_LV8_READ(x)   APP_Remote_Signal_Input_State(7)
+#define LCD_REMOTE_SIGNAL_LV9_READ(x)   APP_Remote_Signal_Input_State(8)
+#define LCD_LATCH_LOCK_FOR_SWITCH_ON_READ()   APP_Remote_Signal_Input_Read_Closing_And_Locking()
 #define LCD_EXTERNAL_SHUNT_TRIPPING_LV1_FOR_OPEN_MENU_READ()   1
 #define LCD_EXTERNAL_SHUNT_TRIPPING_LV2_FOR_OPEN_MENU_READ()   2
 #define LCD_LCD_REMOTE_SIGNAL_LV13_READ()   3
 #define LCD_REMOTE_POSITION_READ()   4
-#define LCD_CONTROL_LOOP_FOR_OFF_READ()   5
-#define LCD_CONTROL_LOOP_FOR_ON_READ()   6
-#define LCD_REMOTE_CONTROL_A_READ()   7
-#define LCD_REMOTE_CONTROL_B_READ()   8
-#define LCD_REMOTE_CONTROL_C_READ()   9
-#define LCD_REMOTE_CONTROL_D_READ()   0
+#define LCD_CONTROL_LOOP_FOR_OFF_READ()   APP_Relay_Get_State_Group_2()
+#define LCD_CONTROL_LOOP_FOR_ON_READ()   APP_Relay_Get_State_Group_1()
+#define LCD_REMOTE_CONTROL_A_READ()   APP_Relay_Get_State_Group_3()
+#define LCD_REMOTE_CONTROL_B_READ()   APP_Relay_Get_State_Group_4()
+#define LCD_REMOTE_CONTROL_C_READ()   APP_Relay_Get_State_Group_5()
+#define LCD_REMOTE_CONTROL_D_READ()   APP_Relay_Get_State_Group_6()
 /**************          open_into_state_menu menu is above             *****************************/
 
 /**************          running_state_menu menu is as follow         *****************************/
 #define LCD_THE_TOTAL_FAULT_READ()      0
 #define LCD_THE_TOTAL_WARNING_READ()    1
-#define LCD_OVER_VOLTAGE_LV1_PROTECTION_READ()    2
-#define LCD_OVER_VOLTAGE_LV2_PROTECTION_READ()    3
-#define LCD_TOO_LOW_VOLTAGE_LV1_PROTECTION_READ()    4
-#define LCD_TOO_LOW_VOLTAGE_LV2_PROTECTION_READ()    5
-#define LCD_FREQUENCY_OVER_READ()   6
-#define LCD_FREQUENCY_TOO_LOW_READ()   7
-#define LCD_FREQUENCY_MUTATION_READ()   8
-#define LCD_REVERSE_POWER_READ()   9
-#define LCD_HARMONIC_PROTECTION_READ()   0
-#define LCD_QUICK_DISCONNECT_PROTECTION_READ()   1
-#define LCD_LIMITED_TIME_QUICK_DISCONNECT_READ()   2
-#define LCD_OVER_CURRENT_PROTECTION_READ()   3
-#define LCD_OVER_SEQUENCE_OVER_CURRENT_READ()   4
-#define LCD_SYSTEM_POWER_OFF_READ()   5
+#define LCD_OVER_VOLTAGE_LV1_PROTECTION_READ()    APP_Get_Over_Volt_Lv1_Switch_Off_State()
+#define LCD_OVER_VOLTAGE_LV2_PROTECTION_READ()    APP_Get_Over_Volt_Lv2_Switch_Off_State()
+#define LCD_TOO_LOW_VOLTAGE_LV1_PROTECTION_READ()    APP_Get_Under_Volt_Lv1_Switch_Off_State()
+#define LCD_TOO_LOW_VOLTAGE_LV2_PROTECTION_READ()    APP_Get_Under_Volt_Lv2_Switch_Off_State()
+#define LCD_FREQUENCY_OVER_READ()   APP_Get_Over_Freq_Switch_Off_State()
+#define LCD_FREQUENCY_TOO_LOW_READ()   APP_Get_low_Freq_Switch_Off_State()
+#define LCD_FREQUENCY_MUTATION_READ()   APP_Get_Spike_Freq_Switch_Off_State()
+#define LCD_REVERSE_POWER_READ()   APP_Get_Reverse_Power_Switch_Off_State()
+#define LCD_HARMONIC_PROTECTION_READ()   APP_Get_Harmonic_Distortion_Switch_Off_State()
+#define LCD_QUICK_DISCONNECT_PROTECTION_READ()   APP_Get_Quick_Break_Switch_Off_State()
+#define LCD_LIMITED_TIME_QUICK_DISCONNECT_READ()   APP_Get_Time_Limit_Quick_Break_Switch_Off_State()
+#define LCD_OVER_CURRENT_PROTECTION_READ()   APP_Get_Over_Current_Switch_Off_State()
+#define LCD_OVER_SEQUENCE_OVER_CURRENT_READ()   APP_Get_Zero_Seq_Current_Switch_Off_State()
+#define LCD_SYSTEM_POWER_OFF_READ()   APP_Get_System_Outage_Switch_Off_State()
 #define LCD_EXTERNAL_SHUNT_TRIPPING_LV1_READ()   6
 #define LCD_EXTERNAL_SHUNT_TRIPPING_LV2_READ()   7
-#define LCD_SWITCH_ON_FOR_CHARGE_READ()   8
-#define LCD_CLOSING_SWITCH_WITH_VOLTAGE_READ()   9
+#define LCD_SWITCH_ON_FOR_CHARGE_READ()   APP_Get_Switch_On_Charge_State()
+#define LCD_CLOSING_SWITCH_WITH_VOLTAGE_READ()   APP_Get_On_Volt_Switch_On_State()
 #define LCD_CLOSING_SWITCH_SUCCESS_READ()   0
-#define LCD_LATCH_LOCK_FOR_CLOSING_SWITCH_READ()   1
-#define LCD_POWER_RECOVER_READ()   2
+#define LCD_LATCH_LOCK_FOR_CLOSING_SWITCH_READ()   APP_Remote_Signal_Input_Read_Closing_And_Locking()
+#define LCD_POWER_RECOVER_READ()   APP_Get_Power_Restoration_Switch_Off_State()
 #define LCD_THE_TATOL_WARING_LV1_READ()   3
 #define LCD_THE_TATOL_WARING_LV2_READ()   4
 #define LCD_EEP_EXCEPTION_ERROR_READ()   5
@@ -1302,7 +1303,7 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
 
                         LCD_ShowChinese_garland(1, 13, HW_signal, 4);
                         LCD_ShowEnglish_garland(49, 13, maohao, 1);
-                        int_flag = LCD_THE_STATE_FOR_ON_READ();
+                        int_flag = LCD_THE_STATE_FOR_ON_READ(x);
                         if(int_flag>9)
                         {
                             Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
@@ -1313,7 +1314,7 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
 
                         LCD_ShowChinese_garland(68, 13, FW_signal, 4);
                         LCD_ShowEnglish_garland(116, 13, maohao, 1);
-                        int_flag = LCD_THE_STATE_FOR_OFF_READ();
+                        int_flag = LCD_THE_STATE_FOR_OFF_READ(x);
                         if(int_flag>9)
                         {
                             Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
@@ -1327,7 +1328,7 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
                         LCD_ShowNum_garland(38, 26, my_num_0, 5);
                         LCD_ShowNum_garland(44, 26, my_num_3, 5);
                         LCD_ShowEnglish_garland(49, 26, maohao, 1);
-                        int_flag = LCD_REMOTE_SIGNAL_LV3_READ();
+                        int_flag = LCD_REMOTE_SIGNAL_LV3_READ(x);
                         if(int_flag>9)
                         {
                             Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
@@ -1341,7 +1342,7 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
                         LCD_ShowNum_garland(105, 26, my_num_0, 5);
                         LCD_ShowNum_garland(111, 26, my_num_4, 5);
                         LCD_ShowEnglish_garland(116, 26, maohao, 1);
-                        int_flag = LCD_REMOTE_SIGNAL_LV4_READ();
+                        int_flag = LCD_REMOTE_SIGNAL_LV4_READ(x);
                         if(int_flag>9)
                         {
                             Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
@@ -1355,7 +1356,7 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
                         LCD_ShowNum_garland(39, 38, my_num_0, 5);
                         LCD_ShowNum_garland(45, 38, my_num_5, 5);
                         LCD_ShowEnglish_garland(50, 38, maohao, 1);
-                        int_flag = LCD_REMOTE_SIGNAL_LV5_READ();
+                        int_flag = LCD_REMOTE_SIGNAL_LV5_READ(x);
                         if(int_flag>9)
                         {
                             Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
@@ -1369,7 +1370,7 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
                         LCD_ShowNum_garland(105, 38, my_num_0, 5);
                         LCD_ShowNum_garland(111, 38, my_num_6, 5);
                         LCD_ShowEnglish_garland(116, 38, maohao, 1);
-                        int_flag = LCD_REMOTE_SIGNAL_LV6_READ();
+                        int_flag = LCD_REMOTE_SIGNAL_LV6_READ(x);
                         if(int_flag>9)
                         {
                             Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
@@ -1383,7 +1384,7 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
                         LCD_ShowNum_garland(39, 51, my_num_0, 5);
                         LCD_ShowNum_garland(45, 51, my_num_7, 5);
                         LCD_ShowEnglish_garland(50, 51, maohao, 1);
-                        int_flag = LCD_REMOTE_SIGNAL_LV7_READ();
+                        int_flag = LCD_REMOTE_SIGNAL_LV7_READ(x);
                         if(int_flag>9)
                         {
                             Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
@@ -1397,7 +1398,7 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
                         LCD_ShowNum_garland(105, 51, my_num_0, 5);
                         LCD_ShowNum_garland(111, 51, my_num_8, 5);
                         LCD_ShowEnglish_garland(116, 51, maohao, 1);
-                        int_flag = LCD_REMOTE_SIGNAL_LV8_READ();
+                        int_flag = LCD_REMOTE_SIGNAL_LV8_READ(x);
                         if(int_flag>9)
                         {
                             Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
@@ -1419,7 +1420,7 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
                         LCD_ShowNum_garland(38, 13, my_num_0, 5);
                         LCD_ShowNum_garland(44, 13, my_num_9, 5);
                         LCD_ShowEnglish_garland(49, 13, maohao, 1);
-                        int_flag = LCD_REMOTE_SIGNAL_LV9_READ();
+                        int_flag = LCD_REMOTE_SIGNAL_LV9_READ(x);
                         if(int_flag>9)
                         {
                             Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
