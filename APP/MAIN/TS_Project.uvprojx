@@ -798,6 +798,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\BSW\BSW_NvM.c</FilePath>
             </File>
+            <File>
+              <FileName>BSW_MODBUS.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\BSW\BSW_MODBUS.c</FilePath>
+            </File>
+            <File>
+              <FileName>crc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\BSW\crc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
