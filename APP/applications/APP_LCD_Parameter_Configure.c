@@ -168,6 +168,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 	uint16_t chinese_idx_flush = 0xff;
 	uint8_t num_array[3] = {0};
 	uint8_t int_flag = 0;
+    (void)(int_flag);
 	uint8_t chinese_menu_idx = 0;
 
 	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
@@ -1085,7 +1086,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 	uint8_t num_idx_flush[8] = {0};
 	uint16_t chinese_idx_flush = 0xff;
 	uint8_t num_array[8] = {0};
-	uint8_t int_flag = 0;
+//	uint8_t int_flag = 0;
 	uint8_t chinese_menu_idx = 0;
 
 	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;

@@ -3,6 +3,13 @@
 #include "math.h"
 #include "APP_Protection_Backend.h"
 #include "APP_Protection_Management.h"
+#include "freertos.h"
+#include "task.h"
+
+static uint32_t lcd_flush_timer_last = 0;
+static uint32_t lcd_flush_timer_cur = 0;
+#define LCD_FLUSH_PERIOD    2000  /* unit:ms */
+
 
 /**************          telemetry_second menu is as follow         *****************************/
 #define LINE_CURRENT_FOR_IA_READ()  APP_Get_Current_Ia()
@@ -335,6 +342,42 @@ extern uint8_t my_char_r[];
 // 0x00,0xC0,0x20,0x20,0xE0,0x00,0x00,0x01,0x02,0x0A,0x0F,0x08,/*"q",0*/
 // };
 
+uint32_t app_lcd_sys_ms_get()
+{
+    return xTaskGetTickCount() * 1000 / configTICK_RATE_HZ;
+}
+
+/** 
+ * delay_time: ms
+// */
+// struct lcd_timer_tag{
+//     uint32_t timer_id;
+//     uint32_t delay_time;
+// };
+
+// struct lcd_timer_tag lcd_timer_tbl[]=
+// {
+//     {TELEMETRY_SECOND,  2000},
+//     {TELEMETRY_FIRST,   2000},
+//     {OPEN_INTO_STATE,   2000},
+//     {RUNNING_STATE,     2000},
+// };
+
+// void lcd_timer_check(uint8_t timer_id, uint32_t delay_time)
+// {
+//     if(lcd_timer_tbl != NULL)
+//     {
+//         uint16_t timer_num = sizeof(lcd_timer_tbl)/sizeof(lcd_timer_tbl[0]);
+//         for(uint16_t idx=0; idx<timer_num; idx++)
+//         {
+//             if(timer_id == lcd_timer_tbl[idx].timer_id)
+//             {
+//                 //TODO
+//             }
+//         }
+//     }
+// };
+
 void only_display_the_number_array_from_SRAM_got_driver(float32 *float_flag, float32 the_read_value_form_SRAM, uint8_t *num_array, 
                                                 uint8_t int_convert_length, uint8_t point_convert_length,
                                                 uint8_t hang, uint8_t lie, uint8_t length, uint8_t high,
@@ -357,6 +400,42 @@ struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_signal, uin
     uint8_t num_array[6] = {0};
     uint8_t msg_storage = msg_context;
     float32 cosPHI;
+
+    int32_t delta_time;
+
+    if(msg_process_signal == 1)
+    {
+        if(msg_context == KEY_RETURN)
+        {
+            lcd_flush_timer_cur = 0;
+            lcd_flush_timer_last = 0;
+        }
+
+        if(msg_context == FLUSH_SCREEN)
+        {
+            lcd_flush_timer_cur = app_lcd_sys_ms_get();
+            lcd_flush_timer_last = lcd_flush_timer_cur;
+        }
+    }
+
+    {
+        lcd_flush_timer_cur = app_lcd_sys_ms_get();
+        delta_time = lcd_flush_timer_cur - lcd_flush_timer_last;
+        if(delta_time < 0)
+        {
+            lcd_flush_timer_cur = app_lcd_sys_ms_get();
+            lcd_flush_timer_last = lcd_flush_timer_cur;
+        }
+
+        if((delta_time > LCD_FLUSH_PERIOD) && (msg_process_signal == 0))
+        {
+            msg_process_signal = 1;
+            msg_context = KEY_UNKNOW;
+            msg_storage = LCD_FLUSH_SCREEN_IND;
+            lcd_flush_timer_cur = app_lcd_sys_ms_get();
+            lcd_flush_timer_last = lcd_flush_timer_cur;
+        }
+    }
 
 	if(msg_process_signal == 1)
 	{
@@ -689,6 +768,42 @@ struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint
 
     float32 float_flag = 0;
     uint8_t num_array[10] = {0};
+    uint8_t msg_storage = msg_context;
+    int32_t delta_time;
+
+    if(msg_process_signal == 1)
+    {
+        if(msg_context == KEY_RETURN)
+        {
+            lcd_flush_timer_cur = 0;
+            lcd_flush_timer_last = 0;
+        }
+
+        if(msg_context == FLUSH_SCREEN)
+        {
+            lcd_flush_timer_cur = app_lcd_sys_ms_get();
+            lcd_flush_timer_last = lcd_flush_timer_cur;
+        }
+    }
+
+    {
+        lcd_flush_timer_cur = app_lcd_sys_ms_get();
+        delta_time = lcd_flush_timer_cur - lcd_flush_timer_last;
+        if(delta_time < 0)
+        {
+            lcd_flush_timer_cur = app_lcd_sys_ms_get();
+            lcd_flush_timer_last = lcd_flush_timer_cur;
+        }
+
+        if((delta_time > LCD_FLUSH_PERIOD) && (msg_process_signal == 0))
+        {
+            msg_process_signal = 1;
+            msg_context = KEY_UNKNOW;
+            msg_storage = LCD_FLUSH_SCREEN_IND;
+            lcd_flush_timer_cur = app_lcd_sys_ms_get();
+            lcd_flush_timer_last = lcd_flush_timer_cur;
+        }
+    }
 
 	if(msg_process_signal == 1)
 	{
@@ -719,15 +834,15 @@ struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint
         {
 			Log_d("\r\n    \r\n");
             clear_screen();
-			msg_context = 0xff;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
             // LCD_ShowString(24,30,"LCD_W:",16);
             // LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
         }
 
-		switch(msg_context)
+		switch(msg_storage)
 		{
-			case	0xff:
+			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
     		case	KEY_DOWN:		
     		case	KEY_LEFT:
@@ -1248,6 +1363,42 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
 	menu_evt->msg_operation = MSG_RESUMED;
 
     uint8_t int_flag = 0;
+    uint8_t msg_storage = msg_context;
+    int32_t delta_time;
+
+    if(msg_process_signal == 1)
+    {
+        if(msg_context == KEY_RETURN)
+        {
+            lcd_flush_timer_cur = 0;
+            lcd_flush_timer_last = 0;
+        }
+
+        if(msg_context == FLUSH_SCREEN)
+        {
+            lcd_flush_timer_cur = app_lcd_sys_ms_get();
+            lcd_flush_timer_last = lcd_flush_timer_cur;
+        }
+    }
+
+    {
+        lcd_flush_timer_cur = app_lcd_sys_ms_get();
+        delta_time = lcd_flush_timer_cur - lcd_flush_timer_last;
+        if(delta_time < 0)
+        {
+            lcd_flush_timer_cur = app_lcd_sys_ms_get();
+            lcd_flush_timer_last = lcd_flush_timer_cur;
+        }
+
+        if((delta_time > LCD_FLUSH_PERIOD) && (msg_process_signal == 0))
+        {
+            msg_process_signal = 1;
+            msg_context = KEY_UNKNOW;
+            msg_storage = LCD_FLUSH_SCREEN_IND;
+            lcd_flush_timer_cur = app_lcd_sys_ms_get();
+            lcd_flush_timer_last = lcd_flush_timer_cur;
+        }
+    }
 
 	if(msg_process_signal == 1)
 	{
@@ -1277,15 +1428,15 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
         {
 			Log_d("\r\n    \r\n");
             clear_screen();
-			msg_context = 0xff;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
             // LCD_ShowString(24,30,"LCD_W:",16);
             // LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
         }
 
-		switch(msg_context)
+		switch(msg_storage)
 		{
-			case	0xff:
+			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
     		case	KEY_DOWN:		
     		case	KEY_LEFT:
@@ -1590,6 +1741,43 @@ struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_
 
     uint8_t int_flag = 0;
 
+    uint8_t msg_storage = msg_context;
+    int32_t delta_time;
+
+    if(msg_process_signal == 1)
+    {
+        if(msg_context == KEY_RETURN)
+        {
+            lcd_flush_timer_cur = 0;
+            lcd_flush_timer_last = 0;
+        }
+
+        if(msg_context == FLUSH_SCREEN)
+        {
+            lcd_flush_timer_cur = app_lcd_sys_ms_get();
+            lcd_flush_timer_last = lcd_flush_timer_cur;
+        }
+    }
+
+    {
+        lcd_flush_timer_cur = app_lcd_sys_ms_get();
+        delta_time = lcd_flush_timer_cur - lcd_flush_timer_last;
+        if(delta_time < 0)
+        {
+            lcd_flush_timer_cur = app_lcd_sys_ms_get();
+            lcd_flush_timer_last = lcd_flush_timer_cur;
+        }
+
+        if((delta_time > LCD_FLUSH_PERIOD) && (msg_process_signal == 0))
+        {
+            msg_process_signal = 1;
+            msg_context = KEY_UNKNOW;
+            msg_storage = LCD_FLUSH_SCREEN_IND;
+            lcd_flush_timer_cur = app_lcd_sys_ms_get();
+            lcd_flush_timer_last = lcd_flush_timer_cur;
+        }
+    }
+
 	if(msg_process_signal == 1)
 	{
 		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
@@ -1618,15 +1806,15 @@ struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_
         {
 			Log_d("\r\n    \r\n");
             clear_screen();
-			msg_context = 0xff;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
             // LCD_ShowString(24,30,"LCD_W:",16);
             // LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
         }
 
-		switch(msg_context)
+		switch(msg_storage)
 		{
-			case	0xff:
+			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
     		case	KEY_DOWN:		
     		case	KEY_LEFT:
