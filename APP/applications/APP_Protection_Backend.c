@@ -769,7 +769,7 @@ void APP_Relay_Idle_Handler(void)
  */
 uint8 APP_Remote_Signal_Input_Read_Closing_And_Locking(void)
 {
-    if (pBk->remote_signal_di_state_list[9]) {
+    if (!pBk->remote_signal_di_state_list[9]) {
         return BIT_SET;
     } else {
         return BIT_RESET;
