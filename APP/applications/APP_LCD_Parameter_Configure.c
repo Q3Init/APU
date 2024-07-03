@@ -1580,60 +1580,60 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 							// prepare for the number modify
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
 							float_flag = float_flag+ 0.0001;
-							app_parameter_write_Grid_PT_primary(0);
-							app_parameter_write_Grid_PT_primary(float_flag);
-							float_flag = app_parameter_read_Grid_PT_primary();
+							app_parameter_write_Trip_exit_time(0);
+							app_parameter_write_Trip_exit_time(float_flag);
+							float_flag = app_parameter_read_Trip_exit_time();
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case TIAOZA_YANSHI:
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
 							float_flag = float_flag+ 0.0001;
-							app_parameter_write_Grid_PT_secondary(0);
-							app_parameter_write_Grid_PT_secondary(float_flag);
-							float_flag = app_parameter_read_Grid_PT_secondary();
+							app_parameter_write_Closing_exit_time(0);
+							app_parameter_write_Closing_exit_time(float_flag);
+							float_flag = app_parameter_read_Closing_exit_time();
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case DO1_YANSHI:
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
 							float_flag = float_flag+ 0.0001;
-							app_parameter_write_Generation_PT_primary(0);
-							app_parameter_write_Generation_PT_primary(float_flag);
-							float_flag = app_parameter_read_Generation_PT_primary();
+							app_parameter_write_D01_exit_time(0);
+							app_parameter_write_D01_exit_time(float_flag);
+							float_flag = app_parameter_read_D01_exit_time();
 							break;
 						case DO2_YANSHI:
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
 							float_flag = float_flag+ 0.0001;
-							app_parameter_write_Generation_PT_secondary(0);
-							app_parameter_write_Generation_PT_secondary(float_flag);
-							float_flag = app_parameter_read_Generation_PT_secondary();
+							app_parameter_write_D02_exit_time(0);
+							app_parameter_write_D02_exit_time(float_flag);
+							float_flag = app_parameter_read_D02_exit_time();
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case DO3_YANSHI:
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
 							float_flag = float_flag+ 0.0001;
-							app_parameter_write_Protective_CT_primary(0);
-							app_parameter_write_Protective_CT_primary(float_flag);
-							float_flag = app_parameter_read_Protective_CT_primary();
+							app_parameter_write_D03_exit_time(0);
+							app_parameter_write_D03_exit_time(float_flag);
+							float_flag = app_parameter_read_D03_exit_time();
 							break;
 						case DO4_YANSHI:
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
 							float_flag = float_flag+ 0.0001;
-							app_parameter_write_Protected_CT_secondary(0);
-							app_parameter_write_Protected_CT_secondary(float_flag);
-							int_flag = app_parameter_read_Protected_CT_secondary();
+							app_parameter_write_D04_exit_time(0);
+							app_parameter_write_D04_exit_time(float_flag);
+							int_flag = app_parameter_read_D04_exit_time();
 							break;
 						case CHUNENG_YANSHI:
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
 							float_flag = float_flag+ 0.0001;
-							app_parameter_write_Zero_sequence_CT_once(0);
-							app_parameter_write_Zero_sequence_CT_once(float_flag);
-							float_flag = app_parameter_read_Zero_sequence_CT_once();
+							app_parameter_write_Energy_storage_exit_time(0);
+							app_parameter_write_Energy_storage_exit_time(float_flag);
+							float_flag = app_parameter_read_Energy_storage_exit_time();
 							break;
 						case CHUNENG_XUANZE:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
-							app_parameter_write_Zero_sequence_CT_twice(0);
-							app_parameter_write_Zero_sequence_CT_twice(int_flag);
-							int_flag = app_parameter_read_Zero_sequence_CT_twice();
+							app_parameter_write_Energy_storage_outlet_selection(0);
+							app_parameter_write_Energy_storage_outlet_selection(int_flag);
+							int_flag = app_parameter_read_Energy_storage_outlet_selection();
 							break;
 						default:
 							break;
