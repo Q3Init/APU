@@ -21,14 +21,6 @@
 /*定义读取状态模式：0为bit模式，1为byte模式，2为半字模式*/
 #define communication_mode 0	
 
-/*定义串口相关状态标志位及函数，方便移植*/
-#define USART_FLAG_TXC USART_FLAG_TXC	//定义发送完成状态标志位
-#define USART_FLAG_IDLE USART_FLAG_IDLE	//定义空闲中断标志位
-#define USART_ReadStatusFlag(x, y) USART_ReadStatusFlag(x, y)	//读串口状态标志位函数
-
-#define USART_RxData(x) USART_RxData(x) //定义串口RX接收数据函数
-#define USART_TxData(x,y) USART_TxData(x,y) //定义串口RX接收数据函数
-
 /* 串口接收相关定义 */
 #define USART_EN_RX                 1           /* 使能串口接收 */
 
@@ -39,7 +31,8 @@
 void USART_send_array(const uint8_t *BUF,uint16_t len);	//自动加CRC16位校验位
 uint8_t CRC16_MODBUS_check(const uint8_t *BUF,uint16_t len);	//CRC16校验
 uint16_t byte_sending_calculation(uint16_t dlc);
-
+void MODBUS_receive(uint8_t Res);
+void MODBUS_receive_end(void);
 /*MODBUS执行功能代码*/
 void MODBUS_S1(void);
 void MODBUS_S2(void);
