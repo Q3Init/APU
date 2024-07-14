@@ -9,6 +9,7 @@
 #include "APP_Protection_Management.h"
 #include "APP_fault_management.h"
 #include "APP_LED_State.h"
+#include "APP_MODBUS_FUNC.h"
 
  /* 创建任务句柄 */
 TaskHandle_t AppTaskCreate_Handle = NULL;
@@ -102,7 +103,19 @@ void AppTaskCreate(void)
     {
         Log_d( "Led_Task task create OK!\r\n" );
     }
-    
+	
+    /* App_fault_management_Task */
+    xReturn = xTaskCreate( (TaskFunction_t)app_uart_task,
+                           (const char*)"app_uart_task",
+                           (uint16_t)512,
+                           (void*)NULL,
+                           (UBaseType_t)8,
+                           (TaskHandle_t*)NULL );
+
+    if ( pdPASS == xReturn )
+    {
+        Log_d( "app_uart_task task create OK!\r\n" );
+    }    
   vTaskDelete(AppTaskCreate_Handle); //删除AppTaskCreate任务
   
   taskEXIT_CRITICAL();            //退出临界区

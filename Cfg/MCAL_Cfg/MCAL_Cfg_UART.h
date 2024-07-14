@@ -8,6 +8,10 @@ typedef struct {
     USART_T *uart;
     uint32 clock;
     USART_Config_T mcal_config_uart;
+	uint32 irq_type;
+	IRQn_Type irq;
+	uint8_t preemptionPriority; 
+	uint8_t subPriority;
 } UARTSignalsCfg;
 
 extern const UARTSignalsCfg uartSignalsCfgTable[];

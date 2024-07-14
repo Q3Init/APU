@@ -14,104 +14,52 @@
 */
 
 #include "BSW_MODBUS.h"
-
+#include "MCAL_UART.h"
 #include "apm32e10x_rcm.h"
 #include "apm32e10x_gpio.h"
 #include "apm32e10x_misc.h"
 #include "crc.h"
 
-#define slave_addr 0x01 //从机地址
-#define broadcast_addr  0xFF	//广播地址
-#define USART_REC_LEN 256	//UART接收数组长度
+uart_str uart_modbus = {0};
 
-#define CRC_error 0x0A
-#define function_error 0x1A
-
-uint8_t command[] = {0x01,0x02,0x03,0x05,0x10,0x18};	//命令
-void (*MODBUS_FUNC[])() = {MODBUS_S1,MODBUS_S2,MODBUS_S3,MODBUS_S4,MODBUS_S5,MODBUS_S6};	//命令下标对应的执行函数
-uint8_t command_index;	//记录命令数组的下标
-#if (USART_EN_RX != 0)
-
-/* 串口接收缓冲区 */
-uint8_t USART_RX_BUF[USART_REC_LEN];
-
-/* 串口接收状态
- * bit15  : 接收完成标志
- */
-uint16_t USART_RX_STA = 0;
-
-
-/*******************************串口初始化***********************************/
-/**
- * @brief       串口初始化函数
- * @param       baudrate: 通讯波特率
- * @retval      无
- */
-void usart_init(uint32_t baudrate)
+void MODBUS_SendData(uint8_t *data,uint8_t data_len)
 {
-    GPIO_Config_T gpio_init_struct = {0};
-    USART_Config_T usart_init_struct = {0};
-    
-    /* 使能时钟 */
-    USART_UX_CLK_ENABLE();
-    USART_TX_GPIO_CLK_ENABLE();
-    USART_RX_GPIO_CLK_ENABLE();
-    
-    /* 初始化串口发送引脚 */
-    gpio_init_struct.pin = USART_TX_GPIO_PIN;
-    gpio_init_struct.speed = GPIO_SPEED_50MHz;
-    gpio_init_struct.mode = GPIO_MODE_AF_PP;
-    GPIO_Config(USART_TX_GPIO_PORT, &gpio_init_struct);
-    
-    /* 初始化串口接收引脚 */
-    gpio_init_struct.pin = USART_RX_GPIO_PIN;
-    gpio_init_struct.speed = GPIO_SPEED_50MHz;
-    gpio_init_struct.mode = GPIO_MODE_IN_PU;
-    GPIO_Config(USART_RX_GPIO_PORT, &gpio_init_struct);
-    
-    /* 初始化串口 */
-    usart_init_struct.baudRate = baudrate;                      /* 通讯波特率 */
-    usart_init_struct.wordLength = USART_WORD_LEN_8B;           /* 数据位 */
-    usart_init_struct.stopBits = USART_STOP_BIT_1;              /* 停止位 */
-    usart_init_struct.parity = USART_PARITY_NONE;               /* 校验位 */
-    usart_init_struct.mode = USART_MODE_TX_RX;                  /* 收发模式 */
-    usart_init_struct.hardwareFlow = USART_HARDWARE_FLOW_NONE;  /* 无硬件流控 */
-    USART_Config(USART_UX, &usart_init_struct);
-    USART_Enable(USART_UX);
-    
-#if (USART_EN_RX != 0)
-    USART_EnableInterrupt(USART_UX, USART_INT_RXBNE);
-    USART_ClearStatusFlag(USART_UX, USART_FLAG_RXBNE);
-		USART_EnableInterrupt(USART_UX, USART_INT_IDLE);
-    NVIC_EnableIRQRequest(USART_UX_IRQn, USART1_NVIC_IRQChannelPreemptionPriority, USART1_NVIC_IRQChannelSubPriority);
-#endif  
+	for(uint16 index = 0;index < data_len; index++)
+	{
+		/* Loop until the end of transmission */
+		while (USART_ReadStatusFlag(uartSignalsCfgTable[0].uart, USART_FLAG_TXBE) == RESET);
+		USART_TxData(uartSignalsCfgTable[0].uart, data[index]);
+	}
 }
-
-/*******************************中断数据处理***********************************/
 
 /**
  * @brief       串口中断服务函数
  * @param       无
  * @retval      无
  */
-void USART_UX_IRQHandler(void)
-{
-		uint8_t Res;
-    if (USART_ReadIntFlag(USART_UX, USART_INT_RXBNE) == SET)
-    {
-				Res = USART_RxData(USART_UX);
-				MODBUS_receive(Res);
-        USART_ClearIntFlag(USART_UX, USART_INT_RXBNE);
-    }
-		
-		//空闲中断触发
-		if(USART_ReadStatusFlag(USART_UX, USART_FLAG_IDLE) != RESET)
+void USART1_IRQHandler(void)
+{	
+	if (USART_ReadIntFlag(uartSignalsCfgTable[0].uart, USART_INT_RXBNE) == SET)
+	{
+		uart_modbus.recv_buff[uart_modbus.recv_cnt++] = USART_RxData(uartSignalsCfgTable[0].uart);
+		USART_ClearIntFlag(uartSignalsCfgTable[0].uart, USART_INT_RXBNE);
+		if( uart_modbus.recv_cnt >= 256 )
 		{
-			Res = USART_RxData(USART_UX);
-			MODBUS_receive_end();
+			uart_modbus.recv_cnt = 0;
 		}
+	}
+	
+	//空闲中断触发
+	if(USART_ReadStatusFlag(uartSignalsCfgTable[0].uart, USART_FLAG_IDLE) != RESET)
+	{
+		uartSignalsCfgTable[0].uart->STS;
+		uartSignalsCfgTable[0].uart->DATA;
+		uart_modbus.recv_len = uart_modbus.recv_cnt;
+		uart_modbus.recv_cnt = 0;
+		uart_modbus.recv_flag = 1;
+	}
 }
-
+#if 0
 /***********************************状态机实现**********************************/
 /**
   * @brief  状态机实现
@@ -315,44 +263,6 @@ void MODBUS_S6()
 
 }
 
-/**************************************************************************************************/
-/**
-  * @brief  MODBUS接收指令（判断从机或广播地址正确才接收）
-  * @param  Res：RX中断接收到的字节
-	* @param  len：数组的长度
-  * @retval 为1则校验数据正确，为0则校验数据错误
-  */
-void MODBUS_receive(uint8_t Res)
-{
-	if((USART_RX_STA & 0x8000) == 0)	/*处于可以接收状态*/
-	{
-		if(USART_RX_STA & 0x4000)	/*接收到正确的从机或广播地址*/
-		{
-			USART_RX_BUF[(USART_RX_STA & 0x0FFF)] = Res;
-			USART_RX_STA++;
-		}
-		else
-		{
-			if((Res == slave_addr) || (Res == broadcast_addr))
-			{
-				USART_RX_STA |= 0x4000;
-				USART_RX_BUF[(USART_RX_STA & 0x0FFF)] = Res;
-				USART_RX_STA++;
-			}
-		}
-	}
-}
-
-/**
-  * @brief  触发空闲中断，第16位置1，MODBUS停止接收
-  * @param  BUF：需要校验的数组
-	* @param  len：数组的长度
-  * @retval 为1则校验数据正确，为0则校验数据错误
-  */
-void MODBUS_receive_end(void)
-{
-		USART_RX_STA |= 0x8000;
-}
 
 /**
   * @brief  CRC16_MODBUS校验
