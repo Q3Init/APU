@@ -1,35 +1,21 @@
-/***********MODBUS功能实现说明
-	*1.该代码主要分为4部分：依次为串口初始化、中断数据处理、状态机实现、各指令操作的函数实现
-	*2.指令及对应的功能通过command[]和(*MODBUS_FUNC[])()两个数组管理，通过下标一一对应；
-		如果有新指令及对应的功能函数，直接在两个数组中添加、再完成对应的指令函数实现即可。
-	*3.从机地址、广播地址、CRC错误码、功能错误码等均可在本文件的宏定义中直接修改；
-		错误码返回格式：从机地址+功能码+错误码+16位CRC校验
-	*4.MODBUS的使用：直接调用初始化（如果未初始化）和FSM_USART1函数即可。
-	
-	*MODBUS实现思路（默认单命令接收和处理的循环模式）：
-	*	通过USART中断接收数据（仅对从机及广播地址进行判断，正确后才接收），
-	*	然后通过空闲中断标志位来判断指令接收完成（USART_RX_STA第16位置1），
-	*	在指令操作完成之前不再对新指令接收（不影响同串口其他协议工作），
-	*	直到指令操作完成后再接收新指令。
-*/
-
 #include "BSW_MODBUS.h"
 #include "MCAL_UART.h"
 #include "apm32e10x_rcm.h"
 #include "apm32e10x_gpio.h"
 #include "apm32e10x_misc.h"
-#include "crc.h"
 
 uart_str uart_modbus = {0};
 
 void MODBUS_SendData(uint8_t *data,uint8_t data_len)
 {
+	xSemaphoreTake( SendMutex, portMAX_DELAY );
 	for(uint16 index = 0;index < data_len; index++)
 	{
 		/* Loop until the end of transmission */
 		while (USART_ReadStatusFlag(uartSignalsCfgTable[0].uart, USART_FLAG_TXBE) == RESET);
 		USART_TxData(uartSignalsCfgTable[0].uart, data[index]);
 	}
+	xSemaphoreGive( SendMutex );
 }
 
 /**
@@ -59,6 +45,8 @@ void USART1_IRQHandler(void)
 		uart_modbus.recv_flag = 1;
 	}
 }
+
+
 #if 0
 /***********************************状态机实现**********************************/
 /**

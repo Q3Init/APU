@@ -817,9 +817,9 @@
               <FilePath>..\..\BSW\BSW_MODBUS.c</FilePath>
             </File>
             <File>
-              <FileName>crc.c</FileName>
+              <FileName>BSW_CRC.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\BSW\crc.c</FilePath>
+              <FilePath>..\..\BSW\BSW_CRC.c</FilePath>
             </File>
           </Files>
         </Group>

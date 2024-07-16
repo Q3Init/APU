@@ -1,4 +1,6 @@
 #include "MCAL_UART.h"
+
+SemaphoreHandle_t SendMutex = NULL;
 /*!
  * @brief       Configures UART port.
  *
@@ -9,7 +11,8 @@
 void MCAL_UART_Init(void)
 {
     uint8 uartIndex;
-
+	
+	SendMutex = xSemaphoreCreateMutex( );
 
     RCM_EnableAPB2PeriphClock(RCM_APB2_PERIPH_USART1);
 
