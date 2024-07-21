@@ -826,6 +826,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\Cfg\BSW_Cfg\BSW_Cfg_NvM.c</FilePath>
             </File>
+            <File>
+              <FileName>BSW_Cfg_Modbus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Cfg\BSW_Cfg\BSW_Cfg_Modbus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
