@@ -146,8 +146,8 @@ enum third_level_menu_type{
 
 enum forth_level_menu_type{
 	UNKNOW_FORTH_MENU = 0, // fix it to zero
-	XIANGMU1,
-	XIANGMU2,
+	GONGGONG_SHEZHI,
+	CHUANKOU_SHEZHI,
 	FORTH_LEVEL_MENU_TYPE_MAX_IDX,
 };
 
@@ -377,6 +377,6 @@ extern struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signa
 extern struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_t msg_context);
 
-extern struct menu_event_tag * xiangmu1_handler(uint8_t msg_process_signal, uint8_t msg_context);
-
+extern struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint8_t msg_context);
 #endif /* __LIB_LCD_KERNEL_H */

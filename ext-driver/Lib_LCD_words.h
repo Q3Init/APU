@@ -187,4 +187,16 @@ extern uint8_t ZJG[];
 extern uint8_t YC[];
 extern uint8_t my_word_char_du[];
 extern uint8_t my_word_char_jiao[];
+
+extern uint8_t ZZDZ[];
+extern uint8_t BHYZ[];
+extern uint8_t GYLX[];
+extern uint8_t JOJY[];
+extern uint8_t BTL[];
+extern uint8_t YXMS[];
+extern uint8_t FS[];
+extern uint8_t WJY[];
+extern uint8_t DT[];
+extern uint8_t DuoT[];
+
 #endif

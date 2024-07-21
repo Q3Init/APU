@@ -38,12 +38,19 @@ void APP_test_Init(void)
 {
     // APP_Scroll_storage_erase(0);
 }
-
+// RTC_date time;
+// RTC_date time1;
+// uint8_t flag2=0;
 void APP_test_Mainfunction(void)
-{
+{   
     while(1) 
-    {
+    {   
+        // if(flag2==1){
 
+    //     flag2=0;
+    //     rtc_set(time1.year,time1.month,time1.day,time1.hour,time1.minute,time1.second);
+    // }
+    //     rtc_get(&time);
         BSW_Dio_FlipcBit(DIO_PORT_keyopen,DIO_PIN_keyopen);
         if (tick > 0) {
             tick--;

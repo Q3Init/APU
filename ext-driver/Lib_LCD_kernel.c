@@ -75,7 +75,8 @@ struct menu_cmd_tag third_menu_cmd_tbl[]=
 };
 struct menu_cmd_tag forth_menu_cmd_tbl[]= 
 {
-	{FORTH_MENU,		XIANGMU1, 					(menu_kernel_func)xiangmu1_handler},
+	{FORTH_MENU,		GONGGONG_SHEZHI, 					(menu_kernel_func)gonggong_shezhi_handler},
+	{FORTH_MENU,		CHUANKOU_SHEZHI, 					(menu_kernel_func)chuankou_shezhi_handler},
 };
 struct menu_level_layer_tag menu_level_layer_tbl[]=
 {

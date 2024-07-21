@@ -8,5 +8,9 @@
 #include "Lib_LCD_char.h"
 #include "APP_Parameter.h"
 
+#define app_parameter_read_zhuangzhi_dizhi() 1
+#define app_parameter_write_zhuangzhi_dizhi() 2
+#define app_parameter_read_bianhua_yuzhi() 3
+#define app_parameter_write_bianhua_yuzhi() 4
 
 #endif

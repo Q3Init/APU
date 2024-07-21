@@ -41,5 +41,8 @@ extern uint8_t my_char_E[];
 extern uint8_t my_char_p[];
 extern uint8_t my_char_q[];
 extern uint8_t my_char_m[];
-
+extern uint8_t my_char_M[];
+extern uint8_t my_char_N[];
+extern uint8_t my_char_i[];
+extern uint8_t my_char_t[];
 #endif
