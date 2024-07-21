@@ -463,11 +463,6 @@
               <FileType>1</FileType>
               <FilePath>..\applications\APP_fault_management.c</FilePath>
             </File>
-            <File>
-              <FileName>APP_MODBUS_FUNC.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\applications\APP_MODBUS_FUNC.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -922,5 +917,14 @@
     <components/>
     <files/>
   </RTE>
+
+  <LayerInfo>
+    <Layers>
+      <Layer>
+        <LayName>TS_Project</LayName>
+        <LayPrjMark>1</LayPrjMark>
+      </Layer>
+    </Layers>
+  </LayerInfo>
 
 </Project>
