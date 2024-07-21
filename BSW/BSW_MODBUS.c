@@ -10,6 +10,7 @@ void MBSReadRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func )
 {
     uint16_t  i     = 0;
     uint16_t  crc   = 0;
+	uint16 ptr;
 	
 	uint8_t tx[256] = {0};
 	
@@ -19,7 +20,9 @@ void MBSReadRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func )
 
     for ( uint16_t j = startAddr; j < startAddr + len; ++j )
     {
-
+		ptr = bsw_modbus_list[0].read_callbcak(j);
+		txx[ i++ ] = (uint8)(ptr >> 8);
+		txx[ i++ ] = (uint8)(ptr );
     }
     crc       = CRC16( tx, i );
     tx[ i++ ] = (uint8_t)( crc >> 8 );
