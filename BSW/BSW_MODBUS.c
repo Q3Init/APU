@@ -3,8 +3,22 @@
 #include "apm32e10x_rcm.h"
 #include "apm32e10x_gpio.h"
 #include "apm32e10x_misc.h"
+#include "MCAL_RTC.h"
 
 uart_str uart_modbus = {0};
+
+uint16 Set_Rtcfunc(uint8 *val)
+{
+    uint16 ret = 0;
+	uint16_t year = val[12]+2000;
+	uint8_t month = val[11];
+	uint8_t date = val[10];;
+	uint8_t hour = val[9];
+	uint8_t min = val[8];
+	uint8_t sec = val[7];
+	rtc_set(year,month,date,hour,min,sec);
+    return ret;
+}
 
 void MBSReadRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func )
 {
@@ -106,10 +120,16 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 	uint16_t modbus_len = 0;
 	uint16_t recv_crc = 0;
 	
-	recv_crc |= data[6]<<8 | data[7];
+	if(data == NULL || len <= 2)
+	{
+		return;
+	}
+	
+	recv_crc |= data[len-1]<<8 | data[len-2];
+	
 	modbus_head = data[0];
 	
-	if( SLAVE_ADDR !=  modbus_head  ) 
+	if( ( SLAVE_ADDR !=  modbus_head )&&( BOARDCASE_ADDR != modbus_head ) ) 
 	{
 		MBSResponseError(modbus_cmd,0xA1);
 		return;
@@ -123,26 +143,40 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 		return; 
 	}
 	modbus_addr = data[2]<<8 | data[3];
-	modbus_len = data[4]<<8 | data[5];
 	modbus_cmd = data[1];
 	switch ( modbus_cmd )
 	{
-		case 0x01:
-			
+		case FUNC_CODE_1:
+			modbus_len = data[4]<<8 | data[5];
 			MBSReadRegsRequst(modbus_addr,modbus_len,modbus_cmd);
 			break;
-		case 0x02:
-	
+		case FUNC_CODE_2:
 			break;
-		case 0x03:
+		case FUNC_CODE_3:
+			modbus_len = data[4]<<8 | data[5];
 			MBSReadRegsRequst(modbus_addr,modbus_len,modbus_cmd);
 			break;
 		
-		case 0x05:
+		case FUNC_CODE_5:
+			modbus_len = data[4]<<8 | data[5];
 			MBSWriteRegsRequst(modbus_addr,modbus_len,modbus_cmd);
 			break;
-		case 0x10:
+		case FUNC_CODE_10:
+			modbus_len = data[6];
+			
+			if( BOARDCASE_ADDR == modbus_head )
+			{
+				// func_len+addr+fun+addrh+addrl+regh+regl+data_len+crch+crcl
+				if(	len !=  ( modbus_len + 9 ) )
+				{
+					return;
+				}
+				Set_Rtcfunc(data);
+			}
 			break;
+		case FUNC_CODE_18:
+
+			break;		
 		default:
 			break;
 	}
