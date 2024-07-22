@@ -8,6 +8,7 @@
 #include "BSW_CRC.h"
 #include "string.h"
 #include "Platform_Types.h"
+#include "BSW_Cfg_Modbus.h"
 	
 #define USART_DATA_LEN 256
 
