@@ -2144,7 +2144,7 @@ struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint
 	uint8_t num_idx_flush[8] = {0};
 	uint16_t chinese_idx_flush = 0xff;
 	uint8_t num_array[3] = {0};
-	uint8_t int_flag = 0;
+//	uint8_t int_flag = 0;
 	uint8_t chinese_menu_idx = 0;
 
 	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
@@ -2279,16 +2279,16 @@ struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint
 							// prepare for the number modify
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
 							float_flag = float_flag+ 0.0001;
-							app_parameter_write_zhuangzhi_dizhi();
-							app_parameter_write_zhuangzhi_dizhi();
+							// app_parameter_write_zhuangzhi_dizhi();
+							// app_parameter_write_zhuangzhi_dizhi();
 							float_flag = app_parameter_read_zhuangzhi_dizhi();
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case BIANHUA_YUZHI:
 							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array, 3, 0);
 							float_flag = float_flag+ 0.0001;
-							app_parameter_write_bianhua_yuzhi();
-							app_parameter_write_bianhua_yuzhi();
+							// app_parameter_write_bianhua_yuzhi();
+							// app_parameter_write_bianhua_yuzhi();
 							float_flag = app_parameter_read_bianhua_yuzhi();
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
@@ -3023,7 +3023,7 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 	uint8_t num_idx_flush[8] = {0};
 	uint16_t chinese_idx_flush = 0xff;
 	uint8_t num_array[4] = {0};
-	uint8_t int_flag = 0;
+//	uint8_t int_flag = 0;
 	uint8_t chinese_menu_idx = 0;
 
 	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
