@@ -352,7 +352,7 @@ float32 APP_Get_Apparent_Power_Total(void)
  * @param on - true: 打开，false: 关闭
  * @return boolean - true : 成功，false: 失败
  */
-static boolean APP_Relay_Control(uint16 channel, boolean on)
+boolean APP_Relay_Control(uint16 channel, boolean on)
 {
     int     i           = 0;
     boolean ret         = true;

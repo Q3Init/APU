@@ -20,9 +20,13 @@ void MBSReadRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func )
 
     for ( uint16_t j = startAddr; j < startAddr + len; ++j )
     {
-		ptr = bsw_modbus_list[0].read_callbcak(j);
-		txx[ i++ ] = (uint8)(ptr >> 8);
-		txx[ i++ ] = (uint8)(ptr );
+		if (func == FUNC_CODE_1) {
+			ptr = bsw_modbus_list[0].read_callbcak(j);
+		} else if (func == FUNC_CODE_3) {
+			ptr = bsw_modbus_list[1].read_callbcak(j);
+		}
+		tx[ i++ ] = (uint8)(ptr >> 8);
+		tx[ i++ ] = (uint8)(ptr );
     }
     crc       = CRC16( tx, i );
     tx[ i++ ] = (uint8_t)( crc >> 8 );
@@ -31,16 +35,20 @@ void MBSReadRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func )
 }
 
 
-void MBSWriteRegsRequst( uint16_t addr, uint16_t cmd )
+void MBSWriteRegsRequst( uint16_t startAddr, uint16_t cmd, uint8_t func)
 {
-	uint8_t tx[12] = {0};
+	uint8_t tx[32] = {0};
     uint16_t  i     = 0;
     uint16_t  crc   = 0;
 
     tx[ i++ ] = SLAVE_ADDR;
-    tx[ i++ ] = 0;
-    tx[ i++ ] = (uint8_t)( addr >> 8 );
-    tx[ i++ ] = (uint8_t)( addr );
+    tx[ i++ ] = func;
+    tx[ i++ ] = (uint8_t)( startAddr >> 8 );
+    tx[ i++ ] = (uint8_t)( startAddr );
+	if (func == FUNC_CODE_5) {
+		bsw_modbus_list[2].write_callbcak(startAddr,cmd);
+	}
+
     tx[ i++ ] = (uint8_t)( cmd >> 8 );
     tx[ i++ ] = (uint8_t)( cmd );
     crc       = CRC16( tx, i );
@@ -119,22 +127,22 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 	modbus_cmd = data[1];
 	switch ( modbus_cmd )
 	{
-		case 1:
+		case 0x01:
 			
 			MBSReadRegsRequst(modbus_addr,modbus_len,modbus_cmd);
 			break;
-		case 2:
+		case 0x02:
 	
 			break;
-		case 3:
-			// callback(modbus_addr);
-			MBSWriteRegsRequst(SLAVE_ADDR,modbus_cmd);
+		case 0x03:
+			MBSReadRegsRequst(modbus_addr,modbus_len,modbus_cmd);
 			break;
 		
-		case 5:
-		
+		case 0x05:
+			MBSWriteRegsRequst(modbus_addr,modbus_len,modbus_cmd);
 			break;
-			
+		case 0x10:
+			break;
 		default:
 			break;
 	}
@@ -170,9 +178,9 @@ void MODBUS_SendData(uint8_t *data,uint8_t data_len)
 }
 
 /**
- * @brief       ´®¿ÚÖÐ¶Ï·þÎñº¯Êý
- * @param       ÎÞ
- * @retval      ÎÞ
+ * @brief       ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ï·ï¿½ï¿½ï¿½ï¿½ï¿½
+ * @param       ï¿½ï¿½
+ * @retval      ï¿½ï¿½
  */
 void USART1_IRQHandler(void)
 {	
@@ -186,7 +194,7 @@ void USART1_IRQHandler(void)
 		}
 	}
 	
-	//¿ÕÏÐÖÐ¶Ï´¥·¢
+	//ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ï´ï¿½ï¿½ï¿½
 	if(USART_ReadStatusFlag(uartSignalsCfgTable[0].uart, USART_FLAG_IDLE) != RESET)
 	{
 		uartSignalsCfgTable[0].uart->STS;

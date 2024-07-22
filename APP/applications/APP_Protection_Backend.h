@@ -257,6 +257,7 @@ boolean APP_Relay_Force_Switch_Off(void);
 boolean APP_Relay_Select_Switch_Off(void);
 boolean APP_Relay_Select_Switch_On(void);
 boolean APP_Relay_ExtCtrl_Switch_Off(void);
+boolean APP_Relay_Control(uint16 channel, boolean on);
 /* 继电器恢复空闲检测 */
 void APP_Relay_Idle_Handler(void);
 
