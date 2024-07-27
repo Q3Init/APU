@@ -4,8 +4,11 @@
 #include "apm32e10x_gpio.h"
 #include "apm32e10x_misc.h"
 #include "MCAL_RTC.h"
+#include "APP_Parameter.h"
 
 uart_str uart_modbus = {0};
+
+static void MBSResponseError( uint16_t func, uint16_t error );
 
 uint16 Set_Rtcfunc(uint8 *val)
 {
@@ -28,20 +31,57 @@ void MBSReadRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func )
 	
 	uint8_t tx[256] = {0};
 	
-    tx[ i++ ]         = SLAVE_ADDR;
+    tx[ i++ ]         = app_parameter_read_Module_address();
     tx[ i++ ]         = func;
-    tx[ i++ ]         = len * 2;
-
-    for ( uint16_t j = startAddr; j < startAddr + len; ++j )
-    {
-		if (func == FUNC_CODE_1) {
-			ptr = bsw_modbus_list[0].read_callbcak(j);
-		} else if (func == FUNC_CODE_3) {
-			ptr = bsw_modbus_list[1].read_callbcak(j);
+	if (func != FUNC_CODE_18) {
+		tx[ i++ ]         = len * 2;
+		for ( uint16_t j = startAddr; j < startAddr + len; ++j )
+		{
+			if (func == FUNC_CODE_1) {
+				ptr = bsw_modbus_list[0].read_callbcak(j);
+			} else if (func == FUNC_CODE_3) {
+				ptr = bsw_modbus_list[1].read_callbcak(j);
+			}
+			tx[ i++ ] = (uint8)(ptr >> 8);
+			tx[ i++ ] = (uint8)(ptr );
 		}
-		tx[ i++ ] = (uint8)(ptr >> 8);
-		tx[ i++ ] = (uint8)(ptr );
-    }
+	} else {
+		uint16 soe_len = 0;
+		App_scroll_storage_datas soe_datas;
+		uint16 memory_number = 0;
+		uint16 index;
+		uint8 ret = E_NOK;
+		ret = APP_Scroll_read_memory_number(Controls_block,&memory_number); /* Determine whether SOE has data */
+		if (ret == E_OK) {
+			if (memory_number == 0) {
+				soe_len = 1;
+				tx[ i++ ] = (uint8)(soe_len >> 8);
+				tx[ i++ ] = (uint8)(soe_len);
+				tx[ i++ ] = 0; /* SOE datas is NULL */
+			} else {
+				soe_len = len * ONE_STORE_SIZE; /* Multiply the number of read SOE by 12 */
+				tx[ i++ ] = (uint8)(soe_len >> 8);
+				tx[ i++ ] = (uint8)(soe_len);
+				
+				for (uint16_t j = 0; j < len + 1;j++) {
+					ret = APP_Scroll_storage_read(Controls_block,j,&soe_datas);
+					if (ret == E_OK) {
+						index = 4 + 0 * ONE_STORE_SIZE;
+						i += ONE_STORE_SIZE;
+						memcpy(tx+index,&soe_datas,sizeof(App_scroll_storage_datas));
+					} else {
+						MBSResponseError(func,0xA1);
+						return;					
+					}
+				}
+			}
+		} else {
+			MBSResponseError(func,0xA1);
+			return;					
+		}
+
+	}
+
     crc       = CRC16( tx, i );
     tx[ i++ ] = (uint8_t)( crc >> 8 );
     tx[ i++ ] = (uint8_t)crc;
@@ -55,7 +95,7 @@ void MBSWriteRegsRequst( uint16_t startAddr, uint16_t cmd, uint8_t func)
     uint16_t  i     = 0;
     uint16_t  crc   = 0;
 
-    tx[ i++ ] = SLAVE_ADDR;
+    tx[ i++ ] = app_parameter_read_Module_address();
     tx[ i++ ] = func;
     tx[ i++ ] = (uint8_t)( startAddr >> 8 );
     tx[ i++ ] = (uint8_t)( startAddr );
@@ -78,7 +118,7 @@ void MBSWriteMultiRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func, ui
     uint16_t  i       = 0; 
     uint16_t  crc     = 0;
 
-    tx[ i++ ]           = SLAVE_ADDR;
+    tx[ i++ ]           = app_parameter_read_Module_address();
     tx[ i++ ]           = func;
     tx[ i++ ]           = ( startAddr << 8 ) & 0xff;
     tx[ i++ ]           = startAddr & 0xff;
@@ -95,13 +135,13 @@ void MBSWriteMultiRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func, ui
 	MODBUS_SendData( &tx[0] ,i );
 }
 
-void MBSResponseError( uint16_t func, uint16_t error )
+static void MBSResponseError( uint16_t func, uint16_t error )
 {
     uint8_t tx[ 12 ] = { 0 };
     uint16_t i        = 0;
     uint16_t crc      = 0;
 
-    tx[ i++ ]           = SLAVE_ADDR;
+    tx[ i++ ]           = app_parameter_read_Module_address();
     tx[ i++ ]           = func;
     tx[ i++ ]           = error;
     crc                 = CRC16( tx, i );
@@ -119,6 +159,9 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 	uint16_t my_crc = 0;
 	uint16_t modbus_len = 0;
 	uint16_t recv_crc = 0;
+	uint16_t reg_len = 0;
+	uint16_t control_datas = 0;
+	uint16_t soe_cnt;
 	
 	if(data == NULL || len <= 2)
 	{
@@ -129,7 +172,7 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 	
 	modbus_head = data[0];
 	
-	if( ( SLAVE_ADDR !=  modbus_head )&&( BOARDCASE_ADDR != modbus_head ) ) 
+	if( ( app_parameter_read_Module_address() !=  modbus_head )&&( BOARDCASE_ADDR != modbus_head ) ) 
 	{
 		MBSResponseError(modbus_cmd,0xA1);
 		return;
@@ -158,24 +201,33 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 			break;
 		
 		case FUNC_CODE_5:
-			modbus_len = data[4]<<8 | data[5];
-			MBSWriteRegsRequst(modbus_addr,modbus_len,modbus_cmd);
+			control_datas = data[4]<<8 | data[5];
+			MBSWriteRegsRequst(modbus_addr,control_datas,modbus_cmd);
 			break;
 		case FUNC_CODE_10:
+			reg_len = data[4]<<8 | data[5];
 			modbus_len = data[6];
-			
-			if( BOARDCASE_ADDR == modbus_head )
-			{
-				// func_len+addr+fun+addrh+addrl+regh+regl+data_len+crch+crcl
-				if(	len !=  ( modbus_len + 9 ) )
-				{
-					return;
-				}
-				Set_Rtcfunc(data);
+			if (modbus_addr != SET_TIME_ADDRESS) {
+				MBSResponseError(modbus_cmd,0xA1);
+				return;
 			}
+			if(reg_len !=  3) {
+				MBSResponseError(modbus_cmd,0xA1);
+				return;
+			}
+			if (modbus_len != 6) {
+				MBSResponseError(modbus_cmd,0xA1);
+				return;				
+			}
+			Set_Rtcfunc(data);
 			break;
 		case FUNC_CODE_18:
-
+			soe_cnt = data[4]<<8 | data[5];
+			if (modbus_addr != SOE_REG_ADDRESS) {
+				MBSResponseError(modbus_cmd,0xA1);
+				return;	
+			}
+			MBSReadRegsRequst(modbus_addr,soe_cnt,soe_cnt);
 			break;		
 		default:
 			break;

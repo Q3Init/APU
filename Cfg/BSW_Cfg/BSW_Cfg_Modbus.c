@@ -1,6 +1,7 @@
 #include "BSW_Cfg_Modbus.h"
 #include "APP_Protection_Backend.h"
 
+
 /* 
 addr : 
 0x0-0x9 DI1~DI10 Ten external switching inputs
@@ -33,8 +34,8 @@ bit11: APP_RELAY_CHANNEL_D02
 bit12: APP_RELAY_CHANNEL_D03
 bit13: APP_RELAY_CHANNEL_D04
 val:
-0xff00 : ºÏÕ¢
-0x00ff : ·ÖÕ¢
+0xff00 : ï¿½ï¿½Õ¢
+0x00ff : ï¿½ï¿½Õ¢
 */
 uint16 function5(uint16 addr,uint16 val)
 {
@@ -55,6 +56,5 @@ BSW_Cfg_Modbus_datas bsw_modbus_list[MODBUS_TYPE_CNT] =
     {.fuc_code = FUNC_CODE_1, .read_callbcak = function1, .write_callbcak = NULL},
     {.fuc_code = FUNC_CODE_3, .read_callbcak = function3, .write_callbcak = NULL},
     {.fuc_code = FUNC_CODE_5, .read_callbcak = NULL,      .write_callbcak = function5},
-		
 };
 

@@ -8,6 +8,8 @@
 #include "MCAL_RTC.h"
 #include "string.h"
 
+#define ONE_STORE_SIZE 12
+
 #define Controls_block 0
 #define Error_Block    1
 
@@ -15,14 +17,16 @@
 typedef struct 
 {
     /* data */
-    uint8 fault_event;
     uint16 tm_year;
     uint8 tm_mon;
     uint8 tm_day;
     uint8 tm_hour;
     uint8 tm_min;
     uint8 tm_sec;
-    uint8 tm_millisec;    
+    uint8 tm_millisec;  
+    uint8 fault_event; 
+    uint16 data1;
+    uint8 data2;
 }App_scroll_storage_datas;
 
 
