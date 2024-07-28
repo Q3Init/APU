@@ -190,23 +190,39 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 	switch ( modbus_cmd )
 	{
 		case FUNC_CODE_1:
+			if (len != 8) { /* Wrong data length */
+				MBSResponseError(modbus_cmd,0xA1);
+				return;
+			} 
 			modbus_len = data[4]<<8 | data[5];
 			MBSReadRegsRequst(modbus_addr,modbus_len,modbus_cmd);
 			break;
 		case FUNC_CODE_2:
 			break;
 		case FUNC_CODE_3:
+			if (len != 8) { /* Wrong data length */
+				MBSResponseError(modbus_cmd,0xA1);
+				return;
+			} 
 			modbus_len = data[4]<<8 | data[5];
 			MBSReadRegsRequst(modbus_addr,modbus_len,modbus_cmd);
 			break;
 		
 		case FUNC_CODE_5:
+			if (len != 8) { /* Wrong data length */
+				MBSResponseError(modbus_cmd,0xA1);
+				return;
+			} 
 			control_datas = data[4]<<8 | data[5];
 			MBSWriteRegsRequst(modbus_addr,control_datas,modbus_cmd);
 			break;
 		case FUNC_CODE_10:
 			reg_len = data[4]<<8 | data[5];
 			modbus_len = data[6];
+			if (len != 15) { /* Wrong data length */
+				MBSResponseError(modbus_cmd,0xA1);
+				return;
+			} 
 			if (modbus_addr != SET_TIME_ADDRESS) {
 				MBSResponseError(modbus_cmd,0xA1);
 				return;
@@ -223,6 +239,10 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 			break;
 		case FUNC_CODE_18:
 			soe_cnt = data[4]<<8 | data[5];
+			if (len != 8) { /* Wrong data length */
+				MBSResponseError(modbus_cmd,0xA1);
+				return;
+			} 
 			if (modbus_addr != SOE_REG_ADDRESS) {
 				MBSResponseError(modbus_cmd,0xA1);
 				return;	
