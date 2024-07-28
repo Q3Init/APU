@@ -227,7 +227,7 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 				MBSResponseError(modbus_cmd,0xA1);
 				return;	
 			}
-			MBSReadRegsRequst(modbus_addr,soe_cnt,soe_cnt);
+			MBSReadRegsRequst(modbus_addr,soe_cnt,modbus_cmd);
 			break;		
 		default:
 			break;
