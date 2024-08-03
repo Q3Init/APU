@@ -178,13 +178,13 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 	
 	my_crc = CRC16( data,len - 2 );
 	
+	modbus_addr = data[2]<<8 | data[3];
+	modbus_cmd = data[1];
 	if( my_crc != recv_crc )
 	{
 		MBSResponseError(modbus_cmd,Memory_Parity_Error);
 		return; 
 	}
-	modbus_addr = data[2]<<8 | data[3];
-	modbus_cmd = data[1];
 	switch ( modbus_cmd )
 	{
 		case FUNC_CODE_1:

@@ -155,6 +155,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>Led_Map</ItemText>
         </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>app_par_Module_address</ItemText>
+        </Ww>
       </WatchWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
