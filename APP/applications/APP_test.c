@@ -51,7 +51,6 @@ void APP_test_Mainfunction(void)
     //     rtc_set(time1.year,time1.month,time1.day,time1.hour,time1.minute,time1.second);
     // }
     //     rtc_get(&time);
-        BSW_Dio_FlipcBit(DIO_PORT_keyopen,DIO_PIN_keyopen);
         if (tick > 0) {
             tick--;
 

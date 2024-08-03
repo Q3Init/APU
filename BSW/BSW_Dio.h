@@ -149,26 +149,29 @@
 #define DIO_PORT_D08_C   GPIOE
 #define DIO_PIN_D08_C    GPIO_PIN_0
 
-#define DIO_PORT_working GPIOE
-#define DIO_PIN_working  GPIO_PIN_7
-
-#define DIO_PORT_keyopen GPIOE
-#define DIO_PIN_keyopen  GPIO_PIN_8
-
-#define DIO_PORT_keyclose  GPIOE
-#define DIO_PIN_keyclose   GPIO_PIN_9
-
-#define DIO_PORT_fault   GPIOE
-#define DIO_PIN_fault    GPIO_PIN_10
-
-#define DIO_PORT_warning   GPIOE
-#define DIO_PIN_warning    GPIO_PIN_11
+// #define DIO_PORT_working GPIOE
+// #define DIO_PIN_working  GPIO_PIN_7
 
 #define DIO_PORT_communication  GPIOE
-#define DIO_PIN_communication   GPIO_PIN_12
+#define DIO_PIN_communication   GPIO_PIN_7
 
-#define DIO_PORT_EI13_m  GPIOE
-#define DIO_PIN_EI13_m   GPIO_PIN_13
+#define DIO_PORT_disconnet GPIOE
+#define DIO_PIN_disconnet  GPIO_PIN_8
+
+#define DIO_PORT_closing  GPIOE
+#define DIO_PIN_closing   GPIO_PIN_9
+
+#define DIO_PORT_warning   GPIOE
+#define DIO_PIN_warning    GPIO_PIN_10
+
+#define DIO_PORT_fault   GPIOE
+#define DIO_PIN_fault    GPIO_PIN_11
+
+#define DIO_PORT_OverVoltage  GPIOE
+#define DIO_PIN_OverVoltage   GPIO_PIN_12
+
+#define DIO_PORT_OverCurrent  GPIOE
+#define DIO_PIN_OverCurrent   GPIO_PIN_13
 
 #define DIO_PORT_HC_C    GPIOE
 #define DIO_PIN_HC_C     GPIO_PIN_14

@@ -8,11 +8,11 @@
 enum
 {
     LED_RUN,
+    LED_COMMUN,
     LED_FIT,
     LED_QUANTILE,
-    LED_FAULT,
     LED_WARNING,
-    LED_COMMUN,
+    LED_FAULT
 };
 
 typedef enum
