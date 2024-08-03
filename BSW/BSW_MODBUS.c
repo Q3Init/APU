@@ -30,7 +30,6 @@ void MBSReadRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func )
 	uint16 ptr;
 	
 	uint8_t tx[256] = {0};
-	
     tx[ i++ ]         = app_parameter_read_Module_address();
     tx[ i++ ]         = func;
 	if (func != FUNC_CODE_18) {
@@ -49,7 +48,7 @@ void MBSReadRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func )
 		uint16 soe_len = 0;
 		App_scroll_storage_datas soe_datas;
 		uint16 memory_number = 0;
-		uint16 index;
+		uint16 soe_page = (len - 1) * 8; /* group:0 ~ 31,page: 0 ~ 255 */
 		uint8 ret = E_NOK;
 		ret = APP_Scroll_read_memory_number(Controls_block,&memory_number); /* Determine whether SOE has data */
 		if (ret == E_OK) {
@@ -59,24 +58,24 @@ void MBSReadRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func )
 				tx[ i++ ] = (uint8)(soe_len);
 				tx[ i++ ] = 0; /* SOE datas is NULL */
 			} else {
-				soe_len = len * ONE_STORE_SIZE; /* Multiply the number of read SOE by 12 */
+				/* Multiply the number of read SOE by 12 */
+				soe_len = 8 * ONE_STORE_SIZE;
 				tx[ i++ ] = (uint8)(soe_len >> 8);
 				tx[ i++ ] = (uint8)(soe_len);
 				
-				for (uint16_t j = 0; j < len + 1;j++) {
+				for (uint16_t j = soe_page; j < soe_page + 8; j++) {
 					ret = APP_Scroll_storage_read(Controls_block,j,&soe_datas);
-					if (ret == E_OK) {
-						index = 4 + 0 * ONE_STORE_SIZE;
+					if (ret == E_OK) {		
+						memcpy(tx+i,&soe_datas,sizeof(App_scroll_storage_datas));
 						i += ONE_STORE_SIZE;
-						memcpy(tx+index,&soe_datas,sizeof(App_scroll_storage_datas));
 					} else {
-						MBSResponseError(func,0xA1);
+						MBSResponseError(func,Slave_Device_Failure);
 						return;					
 					}
 				}
 			}
 		} else {
-			MBSResponseError(func,0xA1);
+			MBSResponseError(func,Slave_Device_Failure);
 			return;					
 		}
 
@@ -142,7 +141,7 @@ static void MBSResponseError( uint16_t func, uint16_t error )
     uint16_t crc      = 0;
 
     tx[ i++ ]           = app_parameter_read_Module_address();
-    tx[ i++ ]           = func;
+    tx[ i++ ]           = func + 0x80;
     tx[ i++ ]           = error;
     crc                 = CRC16( tx, i );
     tx[ i++ ]           = (uint8_t)( crc >> 8 );
@@ -161,7 +160,7 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 	uint16_t recv_crc = 0;
 	uint16_t reg_len = 0;
 	uint16_t control_datas = 0;
-	uint16_t soe_cnt;
+	uint16_t soe_group;
 	
 	if(data == NULL || len <= 2)
 	{
@@ -174,7 +173,6 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 	
 	if( ( app_parameter_read_Module_address() !=  modbus_head )&&( BOARDCASE_ADDR != modbus_head ) ) 
 	{
-		MBSResponseError(modbus_cmd,0xA1);
 		return;
 	}
 	
@@ -182,7 +180,7 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 	
 	if( my_crc != recv_crc )
 	{
-		MBSResponseError(modbus_cmd,0xA1);
+		MBSResponseError(modbus_cmd,Memory_Parity_Error);
 		return; 
 	}
 	modbus_addr = data[2]<<8 | data[3];
@@ -190,66 +188,63 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 	switch ( modbus_cmd )
 	{
 		case FUNC_CODE_1:
-			if (len != 8) { /* Wrong data length */
-				MBSResponseError(modbus_cmd,0xA1);
-				return;
-			} 
 			modbus_len = data[4]<<8 | data[5];
+			if (modbus_addr > DI10_ADDRESS){
+				MBSResponseError(modbus_cmd,Illegal_Data_Address);
+				return;			
+			}
 			MBSReadRegsRequst(modbus_addr,modbus_len,modbus_cmd);
 			break;
 		case FUNC_CODE_2:
 			break;
 		case FUNC_CODE_3:
-			if (len != 8) { /* Wrong data length */
-				MBSResponseError(modbus_cmd,0xA1);
-				return;
-			} 
 			modbus_len = data[4]<<8 | data[5];
 			MBSReadRegsRequst(modbus_addr,modbus_len,modbus_cmd);
 			break;
 		
 		case FUNC_CODE_5:
-			if (len != 8) { /* Wrong data length */
-				MBSResponseError(modbus_cmd,0xA1);
-				return;
-			} 
 			control_datas = data[4]<<8 | data[5];
+			if ((modbus_addr & 0X3F00) == 0) {
+				MBSResponseError(modbus_cmd,Illegal_Data_Address);
+				return;
+			}
+			if ((control_datas != RELAY_ON) && (control_datas != RELAY_OFF)) {
+				MBSResponseError(modbus_cmd,Illegal_Data_Value);
+				return;				
+			}
 			MBSWriteRegsRequst(modbus_addr,control_datas,modbus_cmd);
 			break;
-		case FUNC_CODE_10:
+		case FUNC_CODE_10: /* No response required */
 			reg_len = data[4]<<8 | data[5];
 			modbus_len = data[6];
-			if (len != 15) { /* Wrong data length */
-				MBSResponseError(modbus_cmd,0xA1);
-				return;
-			} 
 			if (modbus_addr != SET_TIME_ADDRESS) {
-				MBSResponseError(modbus_cmd,0xA1);
+				MBSResponseError(modbus_cmd,Illegal_Data_Address);
 				return;
 			}
 			if(reg_len !=  3) {
-				MBSResponseError(modbus_cmd,0xA1);
+				MBSResponseError(modbus_cmd,Illegal_Data_Value);
 				return;
 			}
 			if (modbus_len != 6) {
-				MBSResponseError(modbus_cmd,0xA1);
+				MBSResponseError(modbus_cmd,Illegal_Data_Value);
 				return;				
 			}
 			Set_Rtcfunc(data);
 			break;
 		case FUNC_CODE_18:
-			soe_cnt = data[4]<<8 | data[5];
-			if (len != 8) { /* Wrong data length */
-				MBSResponseError(modbus_cmd,0xA1);
-				return;
-			} 
+			soe_group = data[4]<<8 | data[5];
 			if (modbus_addr != SOE_REG_ADDRESS) {
-				MBSResponseError(modbus_cmd,0xA1);
+				MBSResponseError(modbus_cmd,Illegal_Data_Address);
 				return;	
 			}
-			MBSReadRegsRequst(modbus_addr,soe_cnt,modbus_cmd);
+			if ((soe_group > 32) && (soe_group == 0)) {
+				MBSResponseError(modbus_cmd,Illegal_Data_Value);
+				return;	
+			}
+			MBSReadRegsRequst(modbus_addr,soe_group,modbus_cmd);
 			break;		
 		default:
+			MBSResponseError(modbus_cmd,Illegal_Function);
 			break;
 	}
 

@@ -17,7 +17,7 @@ uint16 function3(uint16 addr)
 {
     uint16 ret = 0;
     float32 datas = 0;
-    if (addr == 0x0a) {
+    if (addr == Voltage_Ua_ADDRESS) {
         datas = APP_Get_Voltage_Ua();
         ret = (uint16)(datas * 10);
     }
@@ -34,16 +34,16 @@ bit11: APP_RELAY_CHANNEL_D02
 bit12: APP_RELAY_CHANNEL_D03
 bit13: APP_RELAY_CHANNEL_D04
 val:
-0xff00 : ��բ
-0x00ff : ��բ
+0xff00 : Relay on
+0x00ff : Relay off
 */
 uint16 function5(uint16 addr,uint16 val)
 {
     uint16 ret = 0;
     uint16 channel = addr >> 8;
-    if (val == 0xff00) {
+    if (val == RELAY_ON) {
         APP_Relay_Control(channel, true);
-    } else if (val == 0x00ff) {
+    } else if (val == RELAY_OFF) {
         APP_Relay_Control(channel, false);
     } else {
         /* nothing to do */

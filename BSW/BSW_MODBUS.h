@@ -20,11 +20,20 @@ typedef struct{
 }uart_str;
 
 #define COMMUNATION_MODE  0
-#define SLAVE_ADDR 0x01 
+
+/* Broadcast address */
 #define BOARDCASE_ADDR  0xFF
 
-#define CRC_ERR 0x0A
-#define FUNC_ERR  0x1A
+/* modbus fault code manual£ºhttps://blog.csdn.net/lgj123xj/article/details/134557454 */
+#define Illegal_Function 				 0x01
+#define Illegal_Data_Address 			 0x02
+#define Illegal_Data_Value 				 0x03
+#define Slave_Device_Failure 			 0x04
+#define Acknowledge 					 0x05
+#define Server_Device_Busy 				 0x06
+#define Memory_Parity_Error 			 0x08
+#define Gateway_Path_Unavailable 		 0x0A
+#define Target_Device_Failed_to_Respond  0x0B
 
 extern void BSW_ModbusMainfunction(void);
 
