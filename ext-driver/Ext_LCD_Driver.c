@@ -661,7 +661,7 @@ void Initial_LCD()
 {
       lcd_cs1(0);/* set cs pin with low level */ 
 
-      lcd_LED(1); /* 打开背光 */
+      lcd_LED(0); /* 打开背光 */
 
 	lcd_cs1(0);
 	lcd_reset(0);        /* 低电平复位 */
