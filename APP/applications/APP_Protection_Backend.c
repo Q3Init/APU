@@ -14,7 +14,7 @@
 #include "arm_common_tables.h"
 #include <string.h>
 #include "stdio.h"
-#include <math.h>
+#include "arm_math.h"
 #include "Lib_Log_Util.h"
 #include "MCAL_APM32.h"
 
@@ -957,7 +957,10 @@ void APP_RFFT_Solution_Deal(float32 *p_cmplx_buff, float32 *p_mag, uint32 max_in
     uint32 harmonic_cnt = 0;
     float32 scale = p_mag[max_index + 1] / p_mag[max_index];
     float32 dk = (2 * scale - 1) / (1 + scale);
-    float32 phase = atan2(p_cmplx_buff[2 * max_index + 1], p_cmplx_buff[2 * max_index]) * 180.0 /PI;
+    float32 phase = 0;
+    arm_atan2_f32(p_cmplx_buff[2 * max_index + 1], p_cmplx_buff[2 * max_index], &phase);
+    *p_phase = phase;
+    //float32 phase = atan2(p_cmplx_buff[2 * max_index + 1], p_cmplx_buff[2 * max_index]) * 180.0 /PI;
 
     if (p_freq != NULL) {
         *p_freq = (max_index + dk) * fs / fft_point;  
@@ -967,15 +970,15 @@ void APP_RFFT_Solution_Deal(float32 *p_cmplx_buff, float32 *p_mag, uint32 max_in
         *p_amplitude = p_mag[max_index] * (2 * PI * dk) * (1 - dk * dk) / arm_sin_f32(PI * dk);
     } 
 
-    if (p_phase != NULL) {
-        phase = phase - dk * 180 * (fft_point - 1) / fft_point + 90;
-        if (phase > 180) {
-            phase -= 360;
-        } else if (phase < (-180)) {
-            phase += 360;
-        }
-        *p_phase = phase;
-    }
+    // if (p_phase != NULL) {
+    //     phase = phase - dk * 180 * (fft_point - 1) / fft_point + 90;
+    //     if (phase > 180) {
+    //         phase -= 360;
+    //     } else if (phase < (-180)) {
+    //         phase += 360;
+    //     }
+    //     *p_phase = phase;
+    // }
 
     if (p_harmonic != NULL) {
         for (i = 2; i < MAX_HARMONIC_ORDER; i++) {
