@@ -127,7 +127,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
         },
          {/* GPIOA PIN_11 : I/O */
          .GPIO = GPIOA,
-         .GPIO_level = STD_LOW,
+         .GPIO_level = STD_HIGH,
          .APB1_Clock = STD_OFF,
          .APB2_Clock = RCM_APB2_PERIPH_GPIOA,
          {

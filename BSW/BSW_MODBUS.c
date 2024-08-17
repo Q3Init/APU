@@ -167,7 +167,7 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 		return;
 	}
 	
-	recv_crc |= data[len-1]<<8 | data[len-2];
+	recv_crc |= data[len-2]<<8 | data[len-1];
 	
 	modbus_head = data[0];
 	
