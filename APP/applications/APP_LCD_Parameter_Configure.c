@@ -1,5 +1,11 @@
 #include "APP_LCD_Parameter_Configure.h"
+#include "MCAL_RTC.h"
+#include "freertos.h"
+#include "task.h"
 
+static uint32_t lcd_flush_timer_last = 0;
+static uint32_t lcd_flush_timer_cur = 0;
+#define LCD_FLUSH_PERIOD    2000  /* unit:ms */
 enum change_proportion_setting_menu_type{
     UNKNOW_CHANGE_PROPORTION_SETTING_MENU = 0,
     DIANWANG_PT_1,
@@ -3295,6 +3301,17 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
     return menu_evt;
 }
 
+void convert_all_time_parameter_to_global_int_array(RTC_date date_ptr)
+{
+	my_convert_int_to_int_array(lcd_time_num_array_env.year, sizeof(lcd_time_num_array_env.year), date_ptr.year);
+	my_convert_int_to_int_array(lcd_time_num_array_env.month, sizeof(lcd_time_num_array_env.month), date_ptr.month);
+	my_convert_int_to_int_array(lcd_time_num_array_env.day, sizeof(lcd_time_num_array_env.day), date_ptr.day);
+	my_convert_int_to_int_array(lcd_time_num_array_env.hour, sizeof(lcd_time_num_array_env.hour), date_ptr.hour);
+	my_convert_int_to_int_array(lcd_time_num_array_env.minute, sizeof(lcd_time_num_array_env.minute), date_ptr.minute);
+	my_convert_int_to_int_array(lcd_time_num_array_env.second, sizeof(lcd_time_num_array_env.second), date_ptr.second);
+}
+
+
 struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! */
@@ -3302,10 +3319,52 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
 
+	uint8_t msg_storage = msg_context;
+	uint32_t time_field = 0;
+	uint8_t num_array[LOCAL_TIME_LENGTH] = {0};
+	uint8_t num_idx_flush[LOCAL_TIME_LENGTH] = {0};
+
+    int32_t delta_time;
+
+    if(msg_process_signal == 1)
+    {
+        if(msg_context == KEY_RETURN)
+        {
+            lcd_flush_timer_cur = 0;
+            lcd_flush_timer_last = 0;
+        }
+
+        if(msg_context == FLUSH_SCREEN)
+        {
+            lcd_flush_timer_cur = app_lcd_sys_ms_get();
+            lcd_flush_timer_last = lcd_flush_timer_cur;
+        }
+    }
+
+    {
+        lcd_flush_timer_cur = app_lcd_sys_ms_get();
+        delta_time = lcd_flush_timer_cur - lcd_flush_timer_last;
+        if(delta_time < 0)
+        {
+            lcd_flush_timer_cur = app_lcd_sys_ms_get();
+            lcd_flush_timer_last = lcd_flush_timer_cur;
+        }
+
+        if((delta_time > LCD_FLUSH_PERIOD) && (msg_process_signal == 0))
+        {
+            msg_process_signal = 1;
+            msg_context = KEY_UNKNOW;
+            msg_storage = LCD_FLUSH_SCREEN_IND;
+            lcd_flush_timer_cur = app_lcd_sys_ms_get();
+            lcd_flush_timer_last = lcd_flush_timer_cur;
+        }
+    }
+
 	if(msg_process_signal == 1)
 	{
 		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
         uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 2, 1, sizeof(time_setting_menu_array));
+		RTC_date time_par;
 		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_ENTER)
@@ -3323,20 +3382,31 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+			memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 			Log_d("key KEY_RETURN menu!\r\n");
 		}
 
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			/* get the time,just once when enterring first the handler */
+			rtc_get(&time_par);
+			//my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
+			convert_all_time_parameter_to_global_int_array(time_par);
+
             clear_screen();
-			msg_context = 0xff;
-            // LCD_ShowString(24,30,"LCD_W:",16);
-            // LCD_ShowIntNum(72,30,4,1,16);
+			msg_storage = LCD_FLUSH_SCREEN_IND;
 			msg_lock_from_env_set(0);//unlock the msg
         }
 
-		switch(msg_context)
+		time_par.year = lcd_convert_time_int_array_to_int_parameter(LCD_YEAR_TIME_INVERT);
+		time_par.month = lcd_convert_time_int_array_to_int_parameter(LCD_MONTH_TIME_INVERT);
+		time_par.day = lcd_convert_time_int_array_to_int_parameter(LCD_DAY_TIME_INVERT);
+		time_par.hour = lcd_convert_time_int_array_to_int_parameter(LCD_HOUR_TIME_INVERT);
+		time_par.minute = lcd_convert_time_int_array_to_int_parameter(LCD_MINUTE_TIME_INVERT);
+		time_par.second = lcd_convert_time_int_array_to_int_parameter(LCD_SECOND_TIME_INVERT);
+		uint8_t time_raw = 0;
+		uint8_t time_col = 0;
+		switch(msg_storage)
 		{
 			case	0xff:
 			case    KEY_UP:
@@ -3359,8 +3429,52 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 
                         LCD_ShowChinese_garland(8, 26, DSSZ, 4);
 						
+						time_raw = 46;
+						time_col = 8;
+						/* YEAR number display */
+						lcd_number_modify_int_array_for_time_get(&time_field, time_par.year, 
+												num_array, YEAR_TIME_DIGIATL_NUM, num_idx_flush[0],LCD_YEAR_TIME_INVERT);//idx todo
+						lcd_number_display_in_order(time_col, time_raw, 5, 12, 
+										num_idx_flush[0], YEAR_TIME_DIGIATL_NUM, num_array, 0xff);//idx todo
+						lcd_state_flush_for_num(time_col+26,46,my_maohao,5,12,1);
 
+						/* MONTH number display */
+						lcd_number_modify_int_array_for_time_get(&time_field, time_par.month, 
+												num_array, MONTH_TIME_DIGIATL_NUM, num_idx_flush[1],LCD_MONTH_TIME_INVERT);//idx todo
+						lcd_number_display_in_order(time_col+29, time_raw, 5, 12, 
+										num_idx_flush[1], MONTH_TIME_DIGIATL_NUM, num_array, 0xff);//idx todo
+						lcd_state_flush_for_num(time_col+43,time_raw,my_maohao,5,12,1);
 
+						/* DAY number display */
+						lcd_number_modify_int_array_for_time_get(&time_field, time_par.day, 
+												num_array, DAY_TIME_DIGIATL_NUM, num_idx_flush[2],LCD_DAY_TIME_INVERT);//idx todo
+						lcd_number_display_in_order(time_col+46, time_raw, 5, 12, 
+										num_idx_flush[2], DAY_TIME_DIGIATL_NUM, num_array, 0xff);//idx todo
+						lcd_state_flush_for_num(time_col+60,time_raw,my_maohao,5,12,1);
+
+						/* HOUR number display */
+						lcd_number_modify_int_array_for_time_get(&time_field, time_par.hour, 
+												num_array, HOUR_TIME_DIGIATL_NUM, num_idx_flush[3],LCD_HOUR_TIME_INVERT);//idx todo
+						lcd_number_display_in_order(time_col+63, time_raw, 5, 12, 
+										num_idx_flush[3], HOUR_TIME_DIGIATL_NUM, num_array, 0xff);//idx todo
+						lcd_state_flush_for_num(time_col+77,time_raw,my_maohao,5,12,1);
+
+						/* MINUTES number display */
+						lcd_number_modify_int_array_for_time_get(&time_field, time_par.hour, 
+												num_array, MINUTES_TIME_DIGIATL_NUM, num_idx_flush[4],LCD_MINUTE_TIME_INVERT);//idx todo
+						lcd_number_display_in_order(time_col+80, time_raw, 5, 12, 
+										num_idx_flush[4], MINUTES_TIME_DIGIATL_NUM, num_array, 0xff);//idx todo
+						lcd_state_flush_for_num(time_col+94,time_raw,my_maohao,5,12,1);
+
+						/* SECOND number display */
+						lcd_number_modify_int_array_for_time_get(&time_field, time_par.hour, 
+												num_array, SECOND_TIME_DIGIATL_NUM, num_idx_flush[4],LCD_SECOND_TIME_INVERT);//idx todo
+						lcd_number_display_in_order(time_col+97, time_raw, 5, 12, 
+										num_idx_flush[4], SECOND_TIME_DIGIATL_NUM, num_array, 0xff);//idx todo
+
+						// /* YEAR number display */
+						// lcd_number_modify_int_array_for_time_get(&time_field, time_par.year, 
+						// 						num_array, YEAR_TIME_DIGIATL_NUM, num_idx_flush[0]);//idx todo
 						break;
 					case DUISHI_SHEZHI:
                         LCD_ShowChinese_garland(86, 0, DI_chinese, 1);

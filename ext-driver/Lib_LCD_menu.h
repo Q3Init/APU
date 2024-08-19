@@ -7,6 +7,7 @@
 #define LCD_FLUSH_SCREEN_IND 0xff
 #define LCD_MODIFY_NUM_ARRAY_LV1_LENTH  5
 #define PASSWORD_LENGTH  4
+#define LOCAL_TIME_LENGTH  14/* year/month/day/hour/minutes/second. E.M:2024/05/19/22/59/49, 14 numbers in total. */
 
 #define MODIFY_CHECK_MENU_UNIT()	do{uint8_t modify_check_state = UNKNOW_PROCESS;\
 										modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);\
@@ -32,6 +33,40 @@ struct lcd_modify_num_tag{
 	uint8_t enter_key_ind;
 };
 extern struct lcd_modify_num_tag lcd_modify_num_env;
+
+
+enum LCD_TIME_NUM_INVERT_TYPE_TAG{
+	LCD_YEAR_TIME_INVERT,
+	LCD_MONTH_TIME_INVERT,
+	LCD_DAY_TIME_INVERT,
+	LCD_HOUR_TIME_INVERT,
+	LCD_MINUTE_TIME_INVERT,
+	LCD_SECOND_TIME_INVERT,
+};
+
+#define YEAR_TIME_DIGIATL_NUM 4
+#define MONTH_TIME_DIGIATL_NUM 2
+#define DAY_TIME_DIGIATL_NUM 2
+#define HOUR_TIME_DIGIATL_NUM 2
+#define MINUTES_TIME_DIGIATL_NUM 2
+#define SECOND_TIME_DIGIATL_NUM 2
+struct lcd_time_num_array_env_tag
+{
+	uint8_t year[YEAR_TIME_DIGIATL_NUM];
+	uint8_t month[MONTH_TIME_DIGIATL_NUM];
+	uint8_t day[DAY_TIME_DIGIATL_NUM];
+	uint8_t hour[HOUR_TIME_DIGIATL_NUM];
+	uint8_t minute[MINUTES_TIME_DIGIATL_NUM];
+	uint8_t second[SECOND_TIME_DIGIATL_NUM];
+};
+
+extern struct lcd_time_num_array_env_tag lcd_time_num_array_env;
+extern void lcd_number_modify_int_array_for_time_get(uint32_t *int_flag, uint32_t value, uint8_t *array_ptr, 
+								uint8_t int_convert_length,  uint8_t num_flush_idx, uint8_t invert_type);
+extern uint32_t lcd_convert_time_int_array_to_int_parameter(uint8_t invert_type);
+
+
+
 
 extern uint8_t cur_menu_type_ptr_from_env_get(void);
 extern void msg_lock_from_env_set(uint32_t msg_lock_level);

@@ -1538,3 +1538,116 @@ void lcd_number_modify_int_array_for_int_parameter_get(uint32_t *int_flag, uint3
 		my_convert_int_to_int_array(array_ptr, int_convert_length, *int_flag);
 	}
 }
+
+struct lcd_time_num_array_env_tag lcd_time_num_array_env;
+
+void lcd_number_modify_int_array_for_time_get(uint32_t *int_flag, uint32_t value, uint8_t *array_ptr, 
+								uint8_t int_convert_length,  uint8_t num_flush_idx, uint8_t invert_type)
+{
+	uint16_t array_len = 0;
+	uint8_t *refrence_array_ptr = NULL;
+	switch(invert_type)
+	{
+		case LCD_YEAR_TIME_INVERT:
+			array_len = sizeof(lcd_time_num_array_env.year);
+			refrence_array_ptr = lcd_time_num_array_env.year;
+			break;
+		case LCD_MONTH_TIME_INVERT:
+			array_len = sizeof(lcd_time_num_array_env.month);
+			refrence_array_ptr = lcd_time_num_array_env.month;
+			break;
+		case LCD_DAY_TIME_INVERT:
+			array_len = sizeof(lcd_time_num_array_env.day);
+			refrence_array_ptr = lcd_time_num_array_env.day;
+			break;
+		case LCD_HOUR_TIME_INVERT:
+			array_len = sizeof(lcd_time_num_array_env.hour);
+			refrence_array_ptr = lcd_time_num_array_env.hour;
+			break;
+		case LCD_MINUTE_TIME_INVERT:
+			array_len = sizeof(lcd_time_num_array_env.minute);
+			refrence_array_ptr = lcd_time_num_array_env.minute;
+			break;
+		case LCD_SECOND_TIME_INVERT:
+			array_len = sizeof(lcd_time_num_array_env.second);
+			refrence_array_ptr = lcd_time_num_array_env.second;
+			break;
+		default:
+			break;
+	}
+
+	if((refrence_array_ptr == NULL) ||  (array_len == 0))
+	{
+		Log_e("[%s]ERROR!! time is failed to configure!!\n", __func__);
+		return;
+	}
+
+	if(num_flush_idx!=0xff)
+	{
+		if(int_convert_length > array_len)
+		{
+			Log_e("[%s]:ERROR!!!\n",__func__);
+			return;
+		}
+
+		for(int j = 0; j < int_convert_length; j++)
+		{
+			array_ptr[j] = refrence_array_ptr[j];
+		}
+	}
+	else
+	{
+		*int_flag = value;
+		my_convert_int_to_int_array(array_ptr, int_convert_length, *int_flag);
+	}
+}
+
+uint32_t lcd_convert_time_int_array_to_int_parameter(uint8_t invert_type)
+{
+	uint32_t all_sum = 0;
+	uint32_t conver_int_sum = 0;
+	uint32_t co_x = 1;
+	uint8_t * refrence_array_ptr = NULL;
+	uint8_t int_convert_length = 0;
+
+	switch(invert_type)
+	{
+		case LCD_YEAR_TIME_INVERT:
+			int_convert_length = sizeof(lcd_time_num_array_env.year);
+			refrence_array_ptr = lcd_time_num_array_env.year;
+			break;
+		case LCD_MONTH_TIME_INVERT:
+			int_convert_length = sizeof(lcd_time_num_array_env.month);
+			refrence_array_ptr = lcd_time_num_array_env.month;
+			break;
+		case LCD_DAY_TIME_INVERT:
+			int_convert_length = sizeof(lcd_time_num_array_env.day);
+			refrence_array_ptr = lcd_time_num_array_env.day;
+			break;
+		case LCD_HOUR_TIME_INVERT:
+			int_convert_length = sizeof(lcd_time_num_array_env.hour);
+			refrence_array_ptr = lcd_time_num_array_env.hour;
+			break;
+		case LCD_MINUTE_TIME_INVERT:
+			int_convert_length = sizeof(lcd_time_num_array_env.minute);
+			refrence_array_ptr = lcd_time_num_array_env.minute;
+			break;
+		case LCD_SECOND_TIME_INVERT:
+			int_convert_length = sizeof(lcd_time_num_array_env.second);
+			refrence_array_ptr = lcd_time_num_array_env.second;
+			break;
+		default:
+			break;
+	}
+
+	for(int j=int_convert_length-1; j>=0; j--)
+	{
+		conver_int_sum += refrence_array_ptr[j]*co_x;
+		co_x = co_x*10;
+	}
+
+	all_sum = conver_int_sum;
+
+	return all_sum;
+}
+
