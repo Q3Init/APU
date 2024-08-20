@@ -3487,9 +3487,6 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 						
                         LCD_ShowChinese_no_garland(8, 26, DSSZ, 4);
 						
-
-
-
 						break;
 					
 					
