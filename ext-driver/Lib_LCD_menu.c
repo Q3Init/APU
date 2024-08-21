@@ -1226,6 +1226,11 @@ void lcd_the_modified_num_env_to_be_clear_part(void)
 	lcd_modify_num_env.enter_key_ind = 0;
 }
 
+uint8_t lcd_the_modified_num_env_cur_idx_get(void)
+{
+	return lcd_modify_num_env.limited_index;
+}
+
 void lcd_the_modified_num_env_to_be_init(void)
 {
 	lcd_modify_num_env.menu_type_idx = 0;
@@ -1544,46 +1549,46 @@ struct lcd_time_num_array_env_tag lcd_time_num_array_env;
 void lcd_number_modify_int_array_for_time_get(uint32_t *int_flag, uint32_t value, uint8_t *array_ptr, 
 								uint8_t int_convert_length,  uint8_t num_flush_idx, uint8_t invert_type)
 {
-	uint16_t array_len = 0;
-	uint8_t *refrence_array_ptr = NULL;
-	switch(invert_type)
+	if(num_flush_idx != 0xff)
 	{
-		case LCD_YEAR_TIME_INVERT:
-			array_len = sizeof(lcd_time_num_array_env.year);
-			refrence_array_ptr = lcd_time_num_array_env.year;
-			break;
-		case LCD_MONTH_TIME_INVERT:
-			array_len = sizeof(lcd_time_num_array_env.month);
-			refrence_array_ptr = lcd_time_num_array_env.month;
-			break;
-		case LCD_DAY_TIME_INVERT:
-			array_len = sizeof(lcd_time_num_array_env.day);
-			refrence_array_ptr = lcd_time_num_array_env.day;
-			break;
-		case LCD_HOUR_TIME_INVERT:
-			array_len = sizeof(lcd_time_num_array_env.hour);
-			refrence_array_ptr = lcd_time_num_array_env.hour;
-			break;
-		case LCD_MINUTE_TIME_INVERT:
-			array_len = sizeof(lcd_time_num_array_env.minute);
-			refrence_array_ptr = lcd_time_num_array_env.minute;
-			break;
-		case LCD_SECOND_TIME_INVERT:
-			array_len = sizeof(lcd_time_num_array_env.second);
-			refrence_array_ptr = lcd_time_num_array_env.second;
-			break;
-		default:
-			break;
-	}
+		uint16_t array_len = 0;
+		uint8_t *refrence_array_ptr = NULL;
+		switch(invert_type)
+		{
+			case LCD_YEAR_TIME_INVERT:
+				array_len = sizeof(lcd_time_num_array_env.year);
+				refrence_array_ptr = lcd_time_num_array_env.year;
+				break;
+			case LCD_MONTH_TIME_INVERT:
+				array_len = sizeof(lcd_time_num_array_env.month);
+				refrence_array_ptr = lcd_time_num_array_env.month;
+				break;
+			case LCD_DAY_TIME_INVERT:
+				array_len = sizeof(lcd_time_num_array_env.day);
+				refrence_array_ptr = lcd_time_num_array_env.day;
+				break;
+			case LCD_HOUR_TIME_INVERT:
+				array_len = sizeof(lcd_time_num_array_env.hour);
+				refrence_array_ptr = lcd_time_num_array_env.hour;
+				break;
+			case LCD_MINUTE_TIME_INVERT:
+				array_len = sizeof(lcd_time_num_array_env.minute);
+				refrence_array_ptr = lcd_time_num_array_env.minute;
+				break;
+			case LCD_SECOND_TIME_INVERT:
+				array_len = sizeof(lcd_time_num_array_env.second);
+				refrence_array_ptr = lcd_time_num_array_env.second;
+				break;
+			default:
+				break;
+		}
 
-	if((refrence_array_ptr == NULL) ||  (array_len == 0))
-	{
-		Log_e("[%s]ERROR!! time is failed to configure!!\n", __func__);
-		return;
-	}
+		if((refrence_array_ptr == NULL) ||  (array_len == 0))
+		{
+			Log_e("[%s]ERROR!! time is failed to configure!!\n", __func__);
+			return;
+		}
 
-	if(num_flush_idx!=0xff)
-	{
 		if(int_convert_length > array_len)
 		{
 			Log_e("[%s]:ERROR!!!\n",__func__);

@@ -4,8 +4,12 @@
 #include "Platform_Types.h"
 #include "MCAL_CfgList.h"
 #include "string.h"
+#include "freertos.h"
+#include "task.h"
 
 #define uchar uint8_t
+
+extern uint32_t app_lcd_sys_ms_get(void);
 
 #define LCD_ShowChinese_garland(x, y, s, num)  single_row_continue_printf_12x12_chinese_in_lcd(x, y, s, num, 12, 1)
 #define LCD_ShowChinese_no_garland(x, y, s, num)  single_row_continue_printf_12x12_chinese_in_lcd(x, y, s, num, 12, 0)

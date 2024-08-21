@@ -1,6 +1,6 @@
 #include "MCAL_RTC.h"
 
-/*RTCÊ±¼ä²ÎÊý³õÊ¼»¯Ä¬ÈÏÖµ*/
+/*RTCÊ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½Ä¬ï¿½ï¿½Öµ*/
 RTC_date RTC_date_init ={
 	.year = 2023,
 	.month = 12,
@@ -13,22 +13,22 @@ RTC_date RTC_date_init ={
 static const uint8_t month_table[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 /**
- * @brief       Ð´±¸·Ý¼Ä´æÆ÷
- * @param       bkrx: ±¸·Ý¼Ä´æÆ÷£¬·¶Î§£º1~42
- * @param       data: ´ýÐ´ÈëµÄÊý¾Ý
- * @retval      ÎÞ
+ * @brief       Ð´ï¿½ï¿½ï¿½Ý¼Ä´ï¿½ï¿½ï¿½
+ * @param       bkrx: ï¿½ï¿½ï¿½Ý¼Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î§ï¿½ï¿½1~42
+ * @param       data: ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * @retval      ï¿½ï¿½
  */
 void rtc_write_bkr(BAKPR_DATA_T bkrx, uint16_t data)
 {
-    /* Ê¹ÄÜÐ´±¸·ÝÇøÓò */
+    /* Ê¹ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     PMU_EnableBackupAccess();
     BAKPR_ConfigBackupRegister(bkrx, data);
 }
 
 /**
- * @brief       ¶Á±¸·Ý¼Ä´æÆ÷
- * @param       bkrx: ±¸·Ý¼Ä´æÆ÷£¬·¶Î§£º1~42
- * @retval      ¶Á³öµÄÖµ
+ * @brief       ï¿½ï¿½ï¿½ï¿½ï¿½Ý¼Ä´ï¿½ï¿½ï¿½
+ * @param       bkrx: ï¿½ï¿½ï¿½Ý¼Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î§ï¿½ï¿½1~42
+ * @retval      ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
  */
 uint16_t rtc_read_bkr(BAKPR_DATA_T bkrx)
 {
@@ -36,11 +36,11 @@ uint16_t rtc_read_bkr(BAKPR_DATA_T bkrx)
 }
 
 /**
- * @brief       ÅÐ¶ÏÖ¸¶¨Äê·ÝÊÇ·ñÎªÈòÄê
- * @param       year : Ö¸¶¨Äê·Ý
- * @retval      ÅÐ¶Ï½á¹û
- *    @arg      0: ²»ÊÇ
- *    @arg      1: ÊÇ
+ * @brief       ï¿½Ð¶ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Îªï¿½ï¿½ï¿½ï¿½
+ * @param       year : Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½
+ * @retval      ï¿½Ð¶Ï½ï¿½ï¿½
+ *    @arg      0: ï¿½ï¿½ï¿½ï¿½
+ *    @arg      1: ï¿½ï¿½
  */
 static uint8_t is_leap_year(uint16_t year)
 {
@@ -69,16 +69,16 @@ static uint8_t is_leap_year(uint16_t year)
 }
 
 /**
- * @brief       ÉèÖÃRTCÊ±¼ä
- * @param       year : Äê
- * @param       month: ÔÂ
- * @param       date : ÈÕ
+ * @brief       ï¿½ï¿½ï¿½ï¿½RTCÊ±ï¿½ï¿½
+ * @param       year : ï¿½ï¿½
+ * @param       month: ï¿½ï¿½
+ * @param       date : ï¿½ï¿½
  * @param       hour : Ð¡Ê±
- * @param       min  : ·ÖÖÓ
- * @param       sec  : ÃëÖÓ
- * @retval      ÉèÖÃ½á¹û
- *    @arg      0: ÉèÖÃ³É¹¦
- *    @arg      1: ÉèÖÃÊ§°Ü
+ * @param       min  : ï¿½ï¿½ï¿½ï¿½
+ * @param       sec  : ï¿½ï¿½ï¿½ï¿½
+ * @retval      ï¿½ï¿½ï¿½Ã½ï¿½ï¿½
+ *    @arg      0: ï¿½ï¿½ï¿½Ã³É¹ï¿½
+ *    @arg      1: ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½
  */
 uint8_t rtc_set(uint16_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t min, uint8_t sec)
 {
@@ -117,26 +117,30 @@ uint8_t rtc_set(uint16_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_
     seccount += (uint32_t)min * 60;
     seccount += sec;
     
-    RCM_EnableAPB1PeriphClock(RCM_APB1_PERIPH_PMU);     /* Ê¹ÄÜPMUÊ±ÖÓ */
-    RCM_EnableAPB1PeriphClock(RCM_APB1_PERIPH_BAKR);    /* Ê¹ÄÜBAKPRÊ±ÖÓ */
-    PMU_EnableBackupAccess();                           /* Ê¹ÄÜ·ÃÎÊ±¸·Ý¼Ä´æÆ÷ */
+    RCM_EnableAPB1PeriphClock(RCM_APB1_PERIPH_PMU);     /* Ê¹ï¿½ï¿½PMUÊ±ï¿½ï¿½ */
+    RCM_EnableAPB1PeriphClock(RCM_APB1_PERIPH_BAKR);    /* Ê¹ï¿½ï¿½BAKPRÊ±ï¿½ï¿½ */
+    PMU_EnableBackupAccess();                           /* Ê¹ï¿½Ü·ï¿½ï¿½Ê±ï¿½ï¿½Ý¼Ä´ï¿½ï¿½ï¿½ */
     
-    RTC_ConfigCounter(seccount);                        /* ÉèÖÃRTC¼ÆÊýÖµ */
+    RTC_ConfigCounter(seccount);                        /* ï¿½ï¿½ï¿½ï¿½RTCï¿½ï¿½ï¿½ï¿½Öµ */
     RTC_WaitForLastTask();
     
     return 0;
 }
 
+uint8_t basic_rtc_set(RTC_date time)
+{
+    return rtc_set(time.year, time.month, time.day, time.hour, time.minute, time.second);
+}
 /**
- * @brief       »ñÈ¡RTCÊ±¼ä
- * @param       year : Äê
- * @param       month: ÔÂ
- * @param       date : ÈÕ
- * @param       week : ÐÇÆÚ
+ * @brief       ï¿½ï¿½È¡RTCÊ±ï¿½ï¿½
+ * @param       year : ï¿½ï¿½
+ * @param       month: ï¿½ï¿½
+ * @param       date : ï¿½ï¿½
+ * @param       week : ï¿½ï¿½ï¿½ï¿½
  * @param       hour : Ð¡Ê±
- * @param       min  : ·ÖÖÓ
- * @param       sec  : ÃëÖÓ
- * @retval      ÎÞ
+ * @param       min  : ï¿½ï¿½ï¿½ï¿½
+ * @param       sec  : ï¿½ï¿½ï¿½ï¿½
+ * @retval      ï¿½ï¿½
  */
 void rtc_get(RTC_date *time)
 {
@@ -145,7 +149,7 @@ void rtc_get(RTC_date *time)
     static uint32_t last_daycount = 0;
     uint16_t index;
     
-    /* ¶ÁÈ¡RTC¼ÆÊýÖµ */
+    /* ï¿½ï¿½È¡RTCï¿½ï¿½ï¿½ï¿½Öµ */
     seccount = RTC_ReadCounter();
     daycount = seccount / 86400;
     if (last_daycount != daycount)
@@ -214,40 +218,40 @@ void rtc_get(RTC_date *time)
 }
 
 /**
- * @brief       ³õÊ¼»¯RTC
- * @param       ÎÞ
- * @retval      ³õÊ¼»¯½á¹û
- *    @arg      0: ³õÊ¼»¯³É¹¦
- *    @arg      1: ³õÊ¼»¯Ê§°Ü
+ * @brief       ï¿½ï¿½Ê¼ï¿½ï¿½RTC
+ * @param       ï¿½ï¿½
+ * @retval      ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½
+ *    @arg      0: ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½É¹ï¿½
+ *    @arg      1: ï¿½ï¿½Ê¼ï¿½ï¿½Ê§ï¿½ï¿½
  */
 uint8_t rtc_init(void)
 {
     uint16_t bkpflag;
     
-    RCM_EnableAPB1PeriphClock(RCM_APB1_PERIPH_PMU);             /* Ê¹ÄÜPMUÊ±ÖÓ */
-    RCM_EnableAPB1PeriphClock(RCM_APB1_PERIPH_BAKR);            /* Ê¹ÄÜBAKPRÊ±ÖÓ */
-    PMU_EnableBackupAccess();                                   /* Ê¹ÄÜ·ÃÎÊ±¸·Ý¼Ä´æÆ÷ */
-    bkpflag = rtc_read_bkr(BAKPR_DATA1);                        /* ¶ÁÈ¡±¸·Ý¼Ä´æÆ÷1µÄÖµ */
+    RCM_EnableAPB1PeriphClock(RCM_APB1_PERIPH_PMU);             /* Ê¹ï¿½ï¿½PMUÊ±ï¿½ï¿½ */
+    RCM_EnableAPB1PeriphClock(RCM_APB1_PERIPH_BAKR);            /* Ê¹ï¿½ï¿½BAKPRÊ±ï¿½ï¿½ */
+    PMU_EnableBackupAccess();                                   /* Ê¹ï¿½Ü·ï¿½ï¿½Ê±ï¿½ï¿½Ý¼Ä´ï¿½ï¿½ï¿½ */
+    bkpflag = rtc_read_bkr(BAKPR_DATA1);                        /* ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ý¼Ä´ï¿½ï¿½ï¿½1ï¿½ï¿½Öµ */
     
-    RCM_ConfigLSE(RCM_LSE_OPEN);                                /* ³¢ÊÔÊ¹ÄÜLSE */
+    RCM_ConfigLSE(RCM_LSE_OPEN);                                /* ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½LSE */
     
     while (RCM->BDCTRL_B.LSERDYFLG != SET){}
     
-		RCM_ConfigRTCCLK(RCM_RTCCLK_LSE);                       /* Ñ¡ÔñRTCµÄÊ±ÖÓÔ´ÎªLSE */
+		RCM_ConfigRTCCLK(RCM_RTCCLK_LSE);                       /* Ñ¡ï¿½ï¿½RTCï¿½ï¿½Ê±ï¿½ï¿½Ô´ÎªLSE */
 		rtc_write_bkr(BAKPR_DATA1, 0x5050);
     
-    RCM_EnableRTCCLK();                                         /* Ê¹ÄÜRTCÊ±ÖÓ */
-    RTC_WaitForSynchro();                                       /* µÈ´ýRTC¼Ä´æÆ÷Í¬²½ */
-    RTC_WaitForLastTask();                                      /* µÈ´ýRTC²Ù×÷Íê³É */
+    RCM_EnableRTCCLK();                                         /* Ê¹ï¿½ï¿½RTCÊ±ï¿½ï¿½ */
+    RTC_WaitForSynchro();                                       /* ï¿½È´ï¿½RTCï¿½Ä´ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ */
+    RTC_WaitForLastTask();                                      /* ï¿½È´ï¿½RTCï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     
     RTC_ConfigPrescaler(prescaler_value); 
     
-    /* ÅäÖÃRTCÔ¤·ÖÆµ¼Ä´æÆ÷ */
+    /* ï¿½ï¿½ï¿½ï¿½RTCÔ¤ï¿½ï¿½Æµï¿½Ä´ï¿½ï¿½ï¿½ */
     RTC_WaitForLastTask();
     
-    if ((bkpflag != 0x5050) && (bkpflag != 0x5051))             /* Ö®Ç°´ÓÎ´ÅäÖÃ¹ý */
+    if ((bkpflag != 0x5050) && (bkpflag != 0x5051))             /* Ö®Ç°ï¿½ï¿½Î´ï¿½ï¿½ï¿½Ã¹ï¿½ */
     {
-        rtc_set(RTC_date_init.year,RTC_date_init.month, RTC_date_init.day, RTC_date_init.hour, RTC_date_init.minute, RTC_date_init.second);                           /* ÉèÖÃRTCÊ±¼ä */
+        rtc_set(RTC_date_init.year,RTC_date_init.month, RTC_date_init.day, RTC_date_init.hour, RTC_date_init.minute, RTC_date_init.second);                           /* ï¿½ï¿½ï¿½ï¿½RTCÊ±ï¿½ï¿½ */
     }
     
     return 0;

@@ -634,6 +634,11 @@ void delay(int n_ms)
  for(k=0;k<110;k++);
 }
 
+uint32_t app_lcd_sys_ms_get()
+{
+    return xTaskGetTickCount() * 1000 / configTICK_RATE_HZ;
+}
+
 /* 全屏清屏 */
 void clear_screen()
 {

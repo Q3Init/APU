@@ -42,6 +42,7 @@ enum LCD_TIME_NUM_INVERT_TYPE_TAG{
 	LCD_HOUR_TIME_INVERT,
 	LCD_MINUTE_TIME_INVERT,
 	LCD_SECOND_TIME_INVERT,
+	LCD_MAX_TIME_INVERT,
 };
 
 #define YEAR_TIME_DIGIATL_NUM 4
@@ -76,7 +77,7 @@ extern uint8_t menu_type_ptr_match(uint8_t key_signal, uint8_t menu_row_num, uin
 extern void lcd_the_modified_num_env_to_be_init(void);
 extern void lcd_the_modified_num_env_to_be_clear_part(void);
 extern void lcd_the_modified_num_env_to_be_clear_all(void);
-
+extern uint8_t lcd_the_modified_num_env_cur_idx_get(void);
 
 extern uint8_t lcd_modify_num_array[15];
 

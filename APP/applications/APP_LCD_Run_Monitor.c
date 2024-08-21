@@ -342,11 +342,6 @@ extern uint8_t my_char_r[];
 // 0x00,0xC0,0x20,0x20,0xE0,0x00,0x00,0x01,0x02,0x0A,0x0F,0x08,/*"q",0*/
 // };
 
-uint32_t app_lcd_sys_ms_get()
-{
-    return xTaskGetTickCount() * 1000 / configTICK_RATE_HZ;
-}
-
 /** 
  * delay_time: ms
 // */

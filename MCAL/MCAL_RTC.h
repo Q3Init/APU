@@ -1,6 +1,6 @@
-/********RTCÅäÖÃËµÃ÷**********
- *Íâ²¿µÍËÙ¾§ÕñÆµÂÊÎª32.768KHz
- *Ä¬ÈÏ¿ªÆôÍâ²¿µÍËÙ¾§Õñ×÷ÎªRTCÊ±ÖÓÔ´
+/********RTCï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½**********
+ *ï¿½â²¿ï¿½ï¿½ï¿½Ù¾ï¿½ï¿½ï¿½Æµï¿½ï¿½Îª32.768KHz
+ *Ä¬ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½Ù¾ï¿½ï¿½ï¿½ï¿½ï¿½ÎªRTCÊ±ï¿½ï¿½Ô´
  */
 
 #ifndef __RTC_H
@@ -12,9 +12,9 @@
 #include "apm32e10x_rcm.h"
 #include "apm32e10x_pmu.h"
 
-#define prescaler_value 32767	/*RTCÔ¤·ÖÆµÏµÊý£¬Îª32767Ê±CNT¼ÆÊ±Æ÷1s¼ÆÊý1´Î*/
+#define prescaler_value 32767	/*RTCÔ¤ï¿½ï¿½ÆµÏµï¿½ï¿½ï¿½ï¿½Îª32767Ê±CNTï¿½ï¿½Ê±ï¿½ï¿½1sï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½*/
 
-/*RTCÊ±¼ä½á¹¹Ìå*/
+/*RTCÊ±ï¿½ï¿½á¹¹ï¿½ï¿½*/
 typedef struct {
 	uint16_t year;
 	uint8_t month;
@@ -25,11 +25,12 @@ typedef struct {
 	uint16_t millisecond;
 }RTC_date;
 
-void rtc_write_bkr(BAKPR_DATA_T bkrx, uint16_t data);  /* Ð´±¸·Ý¼Ä´æÆ÷ */
-uint16_t rtc_read_bkr(BAKPR_DATA_T bkrx);	/* ¶Á±¸·Ý¼Ä´æÆ÷ */
+void rtc_write_bkr(BAKPR_DATA_T bkrx, uint16_t data);  /* Ð´ï¿½ï¿½ï¿½Ý¼Ä´ï¿½ï¿½ï¿½ */
+uint16_t rtc_read_bkr(BAKPR_DATA_T bkrx);	/* ï¿½ï¿½ï¿½ï¿½ï¿½Ý¼Ä´ï¿½ï¿½ï¿½ */
 
-/*¶ÔÍâ½Ó¿Ú*/
-uint8_t rtc_init(void); /* ³õÊ¼»¯RTC */
-uint8_t rtc_set(uint16_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t min, uint8_t sec); /* ÉèÖÃRTCÊ±¼ä */
-void rtc_get(RTC_date *time);   /* »ñÈ¡RTCÊ±¼ä */
+/*ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½*/
+uint8_t rtc_init(void); /* ï¿½ï¿½Ê¼ï¿½ï¿½RTC */
+uint8_t rtc_set(uint16_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t min, uint8_t sec); /* ï¿½ï¿½ï¿½ï¿½RTCÊ±ï¿½ï¿½ */
+void rtc_get(RTC_date *time);   /* ï¿½ï¿½È¡RTCÊ±ï¿½ï¿½ */
+extern uint8_t basic_rtc_set(RTC_date time);
 #endif
