@@ -1,9 +1,9 @@
 #include "APP_LCD_Parameter_Configure.h"
 
+// #define LCD_FLUSH_PERIOD    2000  /* unit:ms */
+// static uint32_t lcd_flush_timer_last = 0;
+// static uint32_t lcd_flush_timer_cur = 0;
 
-static uint32_t lcd_flush_timer_last = 0;
-static uint32_t lcd_flush_timer_cur = 0;
-#define LCD_FLUSH_PERIOD    2000  /* unit:ms */
 enum change_proportion_setting_menu_type{
     UNKNOW_CHANGE_PROPORTION_SETTING_MENU = 0,
     DIANWANG_PT_1,
@@ -3344,7 +3344,6 @@ void convert_all_time_parameter_into_global_int_array(RTC_date date_ptr)
 	}
 }
 
-	uint8_t num_idx_flush[LOCAL_TIME_LENGTH] = {0};
 struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! */
@@ -3353,44 +3352,45 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 	menu_evt->msg_operation = MSG_RESUMED;
 
 	uint8_t msg_storage = msg_context;
+	uint8_t num_idx_flush[LOCAL_TIME_LENGTH] = {0};
 
 	RTC_date time_par;
 
-    int32_t delta_time;
+    // int32_t delta_time;
 
-    if(msg_process_signal == 1)
-    {
-        if(msg_context == KEY_RETURN)
-        {
-            lcd_flush_timer_cur = 0;
-            lcd_flush_timer_last = 0;
-        }
+    // if(msg_process_signal == 1)
+    // {
+    //     if(msg_context == KEY_RETURN)
+    //     {
+    //         lcd_flush_timer_cur = 0;
+    //         lcd_flush_timer_last = 0;
+    //     }
 
-        if(msg_context == FLUSH_SCREEN)
-        {
-            lcd_flush_timer_cur = app_lcd_sys_ms_get();
-            lcd_flush_timer_last = lcd_flush_timer_cur;
-        }
-    }
+    //     if(msg_context == FLUSH_SCREEN)
+    //     {
+    //         lcd_flush_timer_cur = app_lcd_sys_ms_get();
+    //         lcd_flush_timer_last = lcd_flush_timer_cur;
+    //     }
+    // }
 
-    {
-        lcd_flush_timer_cur = app_lcd_sys_ms_get();
-        delta_time = lcd_flush_timer_cur - lcd_flush_timer_last;
-        if(delta_time < 0)
-        {
-            lcd_flush_timer_cur = app_lcd_sys_ms_get();
-            lcd_flush_timer_last = lcd_flush_timer_cur;
-        }
+    // {
+    //     lcd_flush_timer_cur = app_lcd_sys_ms_get();
+    //     delta_time = lcd_flush_timer_cur - lcd_flush_timer_last;
+    //     if(delta_time < 0)
+    //     {
+    //         lcd_flush_timer_cur = app_lcd_sys_ms_get();
+    //         lcd_flush_timer_last = lcd_flush_timer_cur;
+    //     }
 
-        if((delta_time > LCD_FLUSH_PERIOD) && (msg_process_signal == 0))
-        {
-            msg_process_signal = 1;
-            msg_context = KEY_UNKNOW;
-            msg_storage = LCD_FLUSH_SCREEN_IND;
-            lcd_flush_timer_cur = app_lcd_sys_ms_get();
-            lcd_flush_timer_last = lcd_flush_timer_cur;
-        }
-    }
+    //     if((delta_time > LCD_FLUSH_PERIOD) && (msg_process_signal == 0))
+    //     {
+    //         msg_process_signal = 1;
+    //         msg_context = KEY_UNKNOW;
+    //         msg_storage = LCD_FLUSH_SCREEN_IND;
+    //         lcd_flush_timer_cur = app_lcd_sys_ms_get();
+    //         lcd_flush_timer_last = lcd_flush_timer_cur;
+    //     }
+    // }
 
 	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 	if(msg_process_signal == 1)
@@ -3593,10 +3593,6 @@ uint8_t *date_number_ptr_from_struct_get(uint8_t type)
 	return ptr;
 }
 
-// from 0
-uint16_t current_cursor_for_date_number = 0;
-uint16_t last_index = 0;
-
 RTC_date user_time_set_operation_first(uint8_t msg_context, uint8_t *num_idx_flush)
 {
     int8_t delta = 0;
@@ -3673,10 +3669,18 @@ void num_idx_flush_operation(uint8_t *num_idx_flush, uint8_t date_start_idx, uin
 		default:
 			break;
 	}
-	//num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
-	//num_idx_flush[key_idx_for_num] = last_index;
-	memset(num_idx_flush, 0xff, 5); 
-	num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index-date_start_idx;
+
+	memset(num_idx_flush, 0xff, 5);
+
+	if(lcd_modify_num_env.limited_index != 0)
+	{
+		num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index-date_start_idx;
+	}
+	else
+	{
+		num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+	}
+	
 }
 
 void user_time_set_operation_second(uint8_t msg_context, uint8_t * date_array_ptr)
