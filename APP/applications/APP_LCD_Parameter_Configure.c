@@ -3760,7 +3760,7 @@ void lcd_display_time_date(uint16_t time_col, uint16_t time_raw, RTC_date time_p
 							num_array, YEAR_TIME_DIGIATL_NUM, num_idx_flush[0],LCD_YEAR_TIME_INVERT);//idx todo
 	lcd_number_display_in_order(time_col, time_raw, 5, 12, 
 					num_idx_flush[0], YEAR_TIME_DIGIATL_NUM, num_array, 0xff);//idx todo
-	lcd_state_flush_for_num(time_col+26,46,my_maohao,5,12,1);
+	lcd_state_flush_for_num(time_col+26,time_raw,my_maohao,5,12,1);
 
 	/* MONTH number display */
 	lcd_number_modify_int_array_for_time_get(&time_field, time_par.month, 
