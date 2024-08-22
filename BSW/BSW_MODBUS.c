@@ -29,7 +29,7 @@ void MBSReadRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func )
     uint16_t  crc   = 0;
 	uint16 ptr;
 	
-	uint8_t tx[256] = {0};
+	uint8_t tx[1024] = {0};
     tx[ i++ ]         = app_parameter_read_Module_address();
     tx[ i++ ]         = func;
 	if (func != FUNC_CODE_18) {
@@ -56,13 +56,11 @@ void MBSReadRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func )
 		if (ret == E_OK) {
 			if (memory_number == 0) {
 				soe_len = 1;
-				tx[ i++ ] = (uint8)(soe_len >> 8);
 				tx[ i++ ] = (uint8)(soe_len);
 				tx[ i++ ] = 0; /* SOE datas is NULL */
 			} else {
 				/* Multiply the number of read SOE by 12 */
 				soe_len = 8 * ONE_STORE_SIZE;
-				tx[ i++ ] = (uint8)(soe_len >> 8);
 				tx[ i++ ] = (uint8)(soe_len);
 				
 				for (uint16_t j = soe_page; j < soe_page + 8; j++) {
