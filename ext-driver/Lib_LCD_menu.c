@@ -1546,6 +1546,11 @@ void lcd_number_modify_int_array_for_int_parameter_get(uint32_t *int_flag, uint3
 
 struct lcd_time_num_array_env_tag lcd_time_num_array_env;
 
+void lcd_number_modify_int_array_for_time_clear_all(void)
+{
+	memset(&lcd_time_num_array_env, 0x00, sizeof(lcd_time_num_array_env)); 
+}
+
 void lcd_number_modify_int_array_for_time_get(uint32_t *int_flag, uint32_t value, uint8_t *array_ptr, 
 								uint8_t int_convert_length,  uint8_t num_flush_idx, uint8_t invert_type)
 {

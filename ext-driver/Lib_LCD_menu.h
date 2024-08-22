@@ -65,7 +65,7 @@ extern struct lcd_time_num_array_env_tag lcd_time_num_array_env;
 extern void lcd_number_modify_int_array_for_time_get(uint32_t *int_flag, uint32_t value, uint8_t *array_ptr, 
 								uint8_t int_convert_length,  uint8_t num_flush_idx, uint8_t invert_type);
 extern uint32_t lcd_convert_time_int_array_to_int_parameter(uint8_t invert_type);
-
+extern void lcd_number_modify_int_array_for_time_clear_all(void);
 
 
 

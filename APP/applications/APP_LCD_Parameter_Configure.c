@@ -3354,8 +3354,6 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 	uint8_t msg_storage = msg_context;
 	uint8_t num_idx_flush[LOCAL_TIME_LENGTH] = {0};
 
-	RTC_date time_par;
-
     // int32_t delta_time;
 
     // if(msg_process_signal == 1)
@@ -3395,6 +3393,7 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 	if(msg_process_signal == 1)
 	{
+		RTC_date time_par;
 		uint8_t chinese_menu_idx = 0;
 		if(!lcd_modify_num_env.check_num_modify)
 		{
@@ -3403,28 +3402,48 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 		chinese_menu_idx = time_setting_menu_array[lcd_modify_num_env.menu_type_idx];
 
 		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
-		rtc_get(&time_par);
 
-		if(msg_context == KEY_ENTER)
+		if(lcd_modify_num_env.enter_flag == true)
 		{
-			//menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, TIME_SETTING);//just for example!
-			// cur_menu_type_ptr_from_env_set(0);
-	
-			// menu_kernel_env.menu_cursor_history.second_menu_cursor = menu_type_idx;
-            // msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-
-			lcd_modify_num_env.enter_key_ind++;
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
 			if(lcd_modify_num_env.enter_key_ind == 1)
 			{
-				lcd_modify_num_env.check_num_modify = true;
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
 			}
-			else
+
+			if(msg_context == KEY_ENTER)
 			{
-				time_par = user_time_set_operation_first(KEY_UNKNOW, NULL);
-				basic_rtc_set(time_par);
-				lcd_the_modified_num_env_to_be_clear_part();
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					rtc_get(&time_par);
+					convert_all_time_parameter_into_global_int_array(time_par);
+					lcd_modify_num_env.check_num_modify = true;
+				}
+				else
+				{
+					time_par = user_time_set_operation_first(KEY_UNKNOW, NULL);
+					while(basic_rtc_set(time_par));
+					// rtc_get(&time_par);
+					memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+					lcd_the_modified_num_env_to_be_clear_part();
+					lcd_number_modify_int_array_for_time_clear_all();
+					// msg_storage = LCD_FLUSH_SCREEN_IND;
+				}
+				Log_d("key KEY_ENTER menu!\r\n");
 			}
-			Log_d("key KEY_ENTER menu!\r\n");
+			msg_storage = LCD_FLUSH_SCREEN_IND;
 		}
 
 		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
@@ -3435,33 +3454,43 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 				menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_all();
+				lcd_number_modify_int_array_for_time_clear_all();
+
 				Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_all();
+				lcd_number_modify_int_array_for_time_clear_all();
+				lcd_modify_num_env.enter_flag = false;
+				msg_storage = LCD_FLUSH_SCREEN_IND;
 			}
 
 		}
 
         if(msg_context == FLUSH_SCREEN)
         {
+			memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 			lcd_the_modified_num_env_to_be_clear_all();
+			lcd_number_modify_int_array_for_time_clear_all();
 			memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+			lcd_modify_num_env.enter_flag = true;
             clear_screen();
 			/* get the time,just once when enterring first the handler */
-			rtc_get(&time_par);
+			// rtc_get(&time_par);
 			//my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
-			convert_all_time_parameter_into_global_int_array(time_par);
+			// convert_all_time_parameter_into_global_int_array(time_par);
 			msg_storage = LCD_FLUSH_SCREEN_IND;
 			msg_lock_from_env_set(0);//unlock the msg
         }
 
 		if(lcd_modify_num_env.check_num_modify == true)
 		{
+
 			switch(chinese_menu_idx)
 			{
 				case SHIJIAN_SHEZHI:
@@ -3527,6 +3556,7 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 				time_raw = 26;
 				time_col = 8;
 				JUST_DISPLAY_ONE_TIME_PARAMETER(time_col, time_raw, time_par);
+				break;
 			default:
 				break;
 		}
