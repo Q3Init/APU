@@ -856,6 +856,11 @@
               <FileType>4</FileType>
               <FilePath>..\..\LIB\arm_cortexM3l_math.lib</FilePath>
             </File>
+            <File>
+              <FileName>arm_atan2_f32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\LIB\arm_atan2_f32.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -922,5 +927,14 @@
     <components/>
     <files/>
   </RTE>
+
+  <LayerInfo>
+    <Layers>
+      <Layer>
+        <LayName>TS_Project</LayName>
+        <LayPrjMark>1</LayPrjMark>
+      </Layer>
+    </Layers>
+  </LayerInfo>
 
 </Project>

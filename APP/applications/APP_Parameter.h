@@ -952,7 +952,7 @@ extern uint8 app_parameter_read_Voltage_Closing_Overfrequency(void);
 extern uint8 app_parameter_write_Voltage_Closing_Overfrequency(uint8 data);
 extern uint8 app_parameter_read_Voltage_Closing_Non_manual_separation(void);
 extern uint8 app_parameter_write_Voltage_Closing_Non_manual_separation(uint8 data);
-extern uint8 app_parameter_read_Voltage_Closing_Charging_Delay(void);
+extern float32 app_parameter_read_Voltage_Closing_Charging_Delay(void);
 extern uint8 app_parameter_write_Voltage_Closing_Charging_Delay(uint8 data);
 extern float32 app_parameter_read_Voltage_Closing_Delay(void);
 extern uint8 app_parameter_write_Voltage_Closing_Delay(float32 data);

@@ -1729,9 +1729,9 @@ uint8 app_parameter_write_Voltage_Closing_Non_manual_separation(uint8 data)
     return ret;
 }
 
-uint8 app_parameter_read_Voltage_Closing_Charging_Delay(void)
+float32 app_parameter_read_Voltage_Closing_Charging_Delay(void)
 {
-    uint8 ret = app_par_Voltage_Closing_Charging_Delay.datas;
+    float32 ret = app_par_Voltage_Closing_Charging_Delay.datas;
     return ret;
 }
 
@@ -1739,7 +1739,8 @@ uint8 app_parameter_write_Voltage_Closing_Charging_Delay(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Voltage_Closing_Charging_Delay.datas = data;
-    ret = BSW_NvM_Write(Voltage_Closing_Charging_Delay,&data);
+    uint32 value = MCM_floatToIntBit(data);
+    ret = BSW_NvM_Write(Voltage_Closing_Charging_Delay,&value);
     return ret;
 }
 

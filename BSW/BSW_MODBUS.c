@@ -38,8 +38,10 @@ void MBSReadRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func )
 		{
 			if (func == FUNC_CODE_1) {
 				ptr = bsw_modbus_list[0].read_callbcak(j);
-			} else if (func == FUNC_CODE_3) {
+			} else if (func == FUNC_CODE_2) {
 				ptr = bsw_modbus_list[1].read_callbcak(j);
+			} else if (func == FUNC_CODE_3) {
+				ptr = bsw_modbus_list[2].read_callbcak(j);
 			}
 			tx[ i++ ] = (uint8)(ptr >> 8);
 			tx[ i++ ] = (uint8)(ptr );
@@ -196,6 +198,8 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 			MBSReadRegsRequst(modbus_addr,modbus_len,modbus_cmd);
 			break;
 		case FUNC_CODE_2:
+			modbus_len = data[4]<<8 | data[5];
+			MBSReadRegsRequst(modbus_addr,modbus_len,modbus_cmd);
 			break;
 		case FUNC_CODE_3:
 			modbus_len = data[4]<<8 | data[5];
