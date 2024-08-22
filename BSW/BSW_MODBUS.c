@@ -189,18 +189,38 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 	{
 		case FUNC_CODE_1:
 			modbus_len = data[4]<<8 | data[5];
-			if (modbus_addr > DI10_ADDRESS){
+			if (modbus_addr > DI10_ADDRESS) {
 				MBSResponseError(modbus_cmd,Illegal_Data_Address);
 				return;			
+			}
+			if ((modbus_addr + modbus_len) > DI10_ADDRESS) {
+				MBSResponseError(modbus_cmd,Illegal_Data_Value);
+				return;	
 			}
 			MBSReadRegsRequst(modbus_addr,modbus_len,modbus_cmd);
 			break;
 		case FUNC_CODE_2:
 			modbus_len = data[4]<<8 | data[5];
+		    if ((modbus_addr < Voltage_Ua_ADDRESS) || (modbus_addr > Fundamental_Freq_ADDRESS)) {
+				MBSResponseError(modbus_cmd,Illegal_Data_Address);
+				return;			
+			}
+			if ((modbus_addr + modbus_len) > Fundamental_Freq_ADDRESS) {
+				MBSResponseError(modbus_cmd,Illegal_Data_Value);
+				return;	
+			}
 			MBSReadRegsRequst(modbus_addr,modbus_len,modbus_cmd);
 			break;
 		case FUNC_CODE_3:
 			modbus_len = data[4]<<8 | data[5];
+		    if ((modbus_addr < Overvoltage_protection_LV1_One_Value_ADDRESS) || (modbus_addr > Restore_time_ADDRESS)) {
+				MBSResponseError(modbus_cmd,Illegal_Data_Address);
+				return;			
+			}
+			if ((modbus_addr + modbus_len) > Restore_time_ADDRESS) {
+				MBSResponseError(modbus_cmd,Illegal_Data_Value);
+				return;	
+			}
 			MBSReadRegsRequst(modbus_addr,modbus_len,modbus_cmd);
 			break;
 		
