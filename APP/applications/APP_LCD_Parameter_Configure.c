@@ -3010,10 +3010,10 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 	menu_evt->msg_operation = MSG_RESUMED;
 
 	static uint8_t key_idx_for_num  = 0;
-	float32 float_flag = 0;
+	uint32_t float_flag = 0;
 	uint8_t num_idx_flush[8] = {0};
 	uint16_t chinese_idx_flush = 0xff;
-	uint8_t num_array[4] = {0};
+	uint8_t num_array[PASSWORD_LENGTH] = {0};
 //	uint8_t int_flag = 0;
 	uint8_t chinese_menu_idx = 0;
 
@@ -3065,8 +3065,7 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Device_password();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
-				my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag);
+				my_convert_int_to_int_array(lcd_modify_num_array, PASSWORD_LENGTH, float_flag);
 			}
 			key_idx_for_num = 0;
 		}
@@ -3088,8 +3087,7 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 				case MIMA_SHEZHI:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Device_password(); // SRAM todo
-					Log_d("ENTER! float_flag:%f\n",float_flag);
-					my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
+					my_convert_int_to_int_array(lcd_modify_num_array, PASSWORD_LENGTH, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
 					break;
 				default:
 					break;
@@ -3127,8 +3125,7 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Device_password();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
-							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag); // 3是整数位数，2是小数位数
+							my_convert_int_to_int_array(lcd_modify_num_array, PASSWORD_LENGTH, float_flag); // 3是整数位数，2是小数位数
 							break;
 					}
 					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
@@ -3140,12 +3137,10 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 					{
 						case MIMA_SHEZHI:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
-							float_flag = float_flag+ 0.0001;
+							float_flag = my_convert_int_array_to_int_parameter(lcd_modify_num_array, PASSWORD_LENGTH);
 							app_parameter_write_Device_password(0);
 							app_parameter_write_Device_password(float_flag);
 							float_flag = app_parameter_read_Device_password();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 					}
 					key_idx_for_num = 0;
@@ -3162,7 +3157,7 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 			switch(chinese_menu_idx)
 			{
 				case MIMA_SHEZHI:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = PASSWORD_LENGTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				default:
@@ -3236,8 +3231,6 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 					case XIAODOU_YANSHI:
 						chinese_idx_flush &= 0x00FE;
 						break;
-					
-					
 				}
 				break;
 			default:
@@ -3268,10 +3261,10 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 						single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
 
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, MMSZ, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_number_modify_array_get(&float_flag, app_parameter_read_Device_password(), 
-													num_array, 4, 0, num_idx_flush[0]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
-						lcd_number_display_in_order(64, 13, 5, 12, 
+						lcd_state_flush_for_num(58,13,my_maohao,5,10,1);
+						lcd_number_modify_array_get((float32 *)&float_flag, app_parameter_read_Device_password(), 
+													num_array, PASSWORD_LENGTH, 0, num_idx_flush[0]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
+						lcd_number_display_in_order(64, 13, 5, 10, 
 											num_idx_flush[0], sizeof(num_array), num_array, 4); //一段定值的数值显示部分
 
 						break;
