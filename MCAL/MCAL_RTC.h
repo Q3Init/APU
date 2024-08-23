@@ -24,7 +24,7 @@ typedef struct {
 	uint8_t second;
 	uint16_t millisecond;
 }RTC_date;
-
+extern RTC_date RTC_date_init;
 void rtc_write_bkr(BAKPR_DATA_T bkrx, uint16_t data);  /* д���ݼĴ��� */
 uint16_t rtc_read_bkr(BAKPR_DATA_T bkrx);	/* �����ݼĴ��� */
 

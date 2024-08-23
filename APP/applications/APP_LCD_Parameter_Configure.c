@@ -4,6 +4,10 @@
 // static uint32_t lcd_flush_timer_last = 0;
 // static uint32_t lcd_flush_timer_cur = 0;
 
+#define TIME_FROM_MODBUS_GET()	RTC_date_init /* TODO*/
+#define LCD_TIME_SET(x)	 	basic_rtc_set(x) /* while(basic_rtc_set(x)) */
+#define TIME_FROM_LOCAL_GET(x)		rtc_get(x)
+
 enum change_proportion_setting_menu_type{
     UNKNOW_CHANGE_PROPORTION_SETTING_MENU = 0,
     DIANWANG_PT_1,
@@ -3427,15 +3431,39 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 				lcd_modify_num_env.enter_key_ind++;
 				if(lcd_modify_num_env.enter_key_ind == 1)
 				{
-					rtc_get(&time_par);
-					convert_all_time_parameter_into_global_int_array(time_par);
 					lcd_modify_num_env.check_num_modify = true;
+					switch(chinese_menu_idx)
+					{
+						case SHIJIAN_SHEZHI:
+							//time_par = RTC_date_init;////just for test, get the time
+							TIME_FROM_LOCAL_GET(&time_par);
+							convert_all_time_parameter_into_global_int_array(time_par);
+							break;
+						case DUISHI_SHEZHI:
+							time_par = TIME_FROM_MODBUS_GET();////just for test, get the time
+							//time_par = time_from_MODBUS_get();
+						default:
+							//nothing to do
+							break;
+					}
 				}
 				else
 				{
-					time_par = user_time_set_operation_first(KEY_UNKNOW, NULL);
-					while(basic_rtc_set(time_par));
-					// rtc_get(&time_par);
+					switch(chinese_menu_idx)
+					{
+						case SHIJIAN_SHEZHI:
+							time_par = user_time_set_operation_first(KEY_UNKNOW, NULL);
+							// RTC_date_init = time_par;//just for test, set the time
+
+							break;
+						case DUISHI_SHEZHI:
+							// RTC_date_init = time_par;//just for test, set the time
+							time_par = TIME_FROM_MODBUS_GET();
+							LCD_TIME_SET(time_par);
+							break;
+						default:
+							break;
+					}
 					memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 					lcd_the_modified_num_env_to_be_clear_part();
 					lcd_number_modify_int_array_for_time_clear_all();
@@ -3454,22 +3482,17 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 				menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-
-				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_all();
-				lcd_number_modify_int_array_for_time_clear_all();
-
 				Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
-				lcd_the_modified_num_env_to_be_clear_all();
-				lcd_number_modify_int_array_for_time_clear_all();
-				lcd_modify_num_env.enter_flag = false;
+				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND;
 			}
 
+			memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+			lcd_number_modify_int_array_for_time_clear_all();
 		}
 
         if(msg_context == FLUSH_SCREEN)
@@ -3480,10 +3503,7 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 			memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
 			lcd_modify_num_env.enter_flag = true;
             clear_screen();
-			/* get the time,just once when enterring first the handler */
-			// rtc_get(&time_par);
-			//my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
-			// convert_all_time_parameter_into_global_int_array(time_par);
+
 			msg_storage = LCD_FLUSH_SCREEN_IND;
 			msg_lock_from_env_set(0);//unlock the msg
         }
@@ -3498,6 +3518,7 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 					msg_storage = TIME_DISPLAY_IND;
 					break;
 				case DUISHI_SHEZHI:
+					//it is possible to get the time here and assign the time to time_par
 					convert_all_time_parameter_into_global_int_array(time_par);
 					msg_storage = DUISHI_TIME_DISPLAY_IND;
 					break;
@@ -3641,6 +3662,10 @@ RTC_date user_time_set_operation_first(uint8_t msg_context, uint8_t *num_idx_flu
 			judge = true;
 			break;
 		default:
+			if(lcd_the_modified_num_env_cur_idx_get() == 0)
+			{
+				num_idx_flush[0] = lcd_the_modified_num_env_cur_idx_get();
+			}
 			break;
 	}
 
