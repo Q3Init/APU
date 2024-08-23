@@ -23,11 +23,15 @@ static SemaphoreHandle_t g_prt_enable_sem = NULL;
     }\
 } while (0)
 
+//static uint16 Error_year;
+
 /* 过压一段状态 */
 uint8 APP_Get_Over_Volt_Lv1_Switch_Off_State(void)
 {
-    return pMnt->state.over_volt_switch_off_state_lv1;
-}
+//    Error_year = 2024;
+     return 1;
+    //  pMnt->state.over_volt_switch_off_state_lv1;
+ }
 
 /* 过压二段状态 */
 uint8 APP_Get_Over_Volt_Lv2_Switch_Off_State(void)

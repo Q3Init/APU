@@ -3,6 +3,9 @@
 
 #include "Lib_LCD_kernel.h"
 #include "Ext_LCD_Driver.h"
+#include "APP_Scroll_storage.h"
+#include "APP_LCD_Parameter_Configure.h"
+#include "MCAL_RTC.h"
 
 #define LCD_FLUSH_SCREEN_IND 0xff
 #define LCD_MODIFY_NUM_ARRAY_LV1_LENTH  5

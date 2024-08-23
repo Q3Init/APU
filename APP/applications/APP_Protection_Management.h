@@ -300,6 +300,8 @@ void APP_Ext_Ctrl_Permit_Switch_Off_Enable_Ctrl(uint8 ctrl);
 /* 零序电流允许跳闸 */
 void APP_Zero_Seq_Permit_Switch_Off_Enable_Ctrl(uint8 ctrl);
 
+// extern uint16 Error_year;
+
 #endif
 
 

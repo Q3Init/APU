@@ -3077,7 +3077,7 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
-				float_flag = app_parameter_read_Remote_letter_anti_shake_time();
+				float_flag = app_parameter_read_Device_password();
 				Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag);
 			}
