@@ -1675,18 +1675,18 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 				case TIAOZA_YANSHI:
 				case DO1_YANSHI:
 				case DO2_YANSHI:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = 4-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case DO3_YANSHI:
 				case DO4_YANSHI:
 				case CHUNENG_YANSHI:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = 4-1;
 					up_diff_num_idx_ths = 9;
+					break;
 				case CHUNENG_XUANZE:
 					right_diff_num_idx_ths = 0;
 					up_diff_num_idx_ths = 1;
-					
 					break;
 				default:
 					break;
