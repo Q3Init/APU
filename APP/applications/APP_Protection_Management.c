@@ -7,6 +7,8 @@
 #include "task.h"
 #include "semphr.h"
 
+// #define APP_PRO_DEBUG_TEST
+
 static APP_Protection_Mnt_t APP_Protection_Mnt;
 static APP_Protection_Mnt_t *pMnt = &APP_Protection_Mnt;
 static SemaphoreHandle_t g_prt_enable_sem = NULL;
@@ -23,118 +25,190 @@ static SemaphoreHandle_t g_prt_enable_sem = NULL;
     }\
 } while (0)
 
-//static uint16 Error_year;
+#ifdef APP_PRO_DEBUG_TEST
+uint8_t app_pro_management_switch_test[25];
+#endif
 
 /* 过压一段状态 */
 uint8 APP_Get_Over_Volt_Lv1_Switch_Off_State(void)
 {
-//    Error_year = 2024;
-     return 1;
-    //  pMnt->state.over_volt_switch_off_state_lv1;
- }
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[0];
+#else
+    return pMnt->state.over_volt_switch_off_state_lv1;
+#endif
+}
 
 /* 过压二段状态 */
 uint8 APP_Get_Over_Volt_Lv2_Switch_Off_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[1];
+#else
     return pMnt->state.over_volt_switch_off_state_lv2;
+#endif
 }
 
 /* 欠压一段状态 */
 uint8 APP_Get_Under_Volt_Lv1_Switch_Off_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[2];
+#else
     return pMnt->state.under_volt_switch_off_state_lv1;
+#endif
 }
 
 /* 欠压二段状态 */
 uint8 APP_Get_Under_Volt_Lv2_Switch_Off_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[3];
+#else
     return pMnt->state.under_volt_switch_off_state_lv2;
+#endif
 }
 
 /* 过频状态 */
 uint8 APP_Get_Over_Freq_Switch_Off_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[4];
+#else
     return pMnt->state.over_freq_switch_off_state;
+#endif
 }
 
 /* 低频状态 */
 uint8 APP_Get_low_Freq_Switch_Off_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[5];
+#else
     return pMnt->state.low_freq_switch_off_state;
+#endif
 }
 
 /* 过冲频状态 */
 uint8 APP_Get_Spike_Freq_Switch_Off_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[6];
+#else
     return pMnt->state.spike_freq_switch_off_state;
+#endif
 }
 
 /* 反向功率状态 */
 uint8 APP_Get_Reverse_Power_Switch_Off_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[7];
+#else
     return pMnt->state.reverse_power_switch_off_state;
+#endif
 }
 
 /* 谐波电压状态 */
 uint8 APP_Get_Harmonic_Distortion_Switch_Off_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[8];
+#else
     return pMnt->state.harmonic_volt_distortion_switch_off_state;
+#endif
 }
 
 /* 外部控制状态 */
 uint8 APP_Get_Ext_Ctrl_Switch_Off_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[9];
+#else
     return pMnt->state.ext_ctrl_switch_off_state;
+#endif
 }
 
 /* 快速断路状态 */
 uint8 APP_Get_Quick_Break_Switch_Off_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[10];
+#else
     return pMnt->state.quick_break_switch_off_state;
+#endif
 }
 
 /* 快速断路时间限制状态 */
 uint8 APP_Get_Time_Limit_Quick_Break_Switch_Off_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[11];
+#else
     return pMnt->state.time_limit_quick_break_switch_off_state;
+#endif
 }
 /* 过流状态 */
 uint8 APP_Get_Over_Current_Switch_Off_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[12];
+#else
     return pMnt->state.over_current_switch_off_state;
+#endif
 }
 
 /* 零序电流状态 */
 uint8 APP_Get_Zero_Seq_Current_Switch_Off_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[13];
+#else
     return pMnt->state.zero_seq_current_switch_off_state;
+#endif
 }
 
 /* 系统失电状态 */
 uint8 APP_Get_System_Outage_Switch_Off_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[14];
+#else
     return pMnt->state.system_outage_switch_off_state;
+#endif
 }
 
 /* 有压合闸状态 */
 uint8 APP_Get_On_Volt_Switch_On_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[15];;
+#else
     return 0;
     // return pMnt->state.on_volt_switch_on_state;//TODO
+#endif
 }
 
 /* 功率恢复状态 */
 uint8 APP_Get_Power_Restoration_Switch_Off_State(void)
 {
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[16];
+#else
     return 0;
     // return pMnt->state.power_restoration_switch_on_state;//TODO
+#endif
 }
 
 /* 合闸充电状态 */
 uint8 APP_Get_Switch_On_Charge_State(void)
 {
-    // return pMnt->state.switch_on_charge_state;
+#ifdef APP_PRO_DEBUG_TEST
+    return app_pro_management_switch_test[17];
+#else
     return 0;/* there is no Switch_On_Charge function */
+    // return pMnt->state.switch_on_charge_state;
+#endif
 }
 
 /* 过压一段功能投入 */
