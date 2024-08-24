@@ -1,8 +1,14 @@
 #include "Lib_LCD_menu.h"
 #include "APP_Parameter.h"
 #include "APP_LCD_Parameter_Configure.h"
+#include "APP_Scroll_storage.h"
 
 #define LCD_LOCAL_TIME_GET(X) rtc_get(X)
+#define TOP_MENU_TIME_DISPLAY 0xFE
+
+static uint32_t lcd_flush_timer_last = 0;
+static uint32_t lcd_flush_timer_cur = 0;
+#define LCD_FLUSH_PERIOD    1000
 
 uint8 top_menu_array[]=
 {
@@ -396,42 +402,125 @@ uint8_t modify_value_check_menu_unit(uint8_t msg_process_signal,uint8_t msg_cont
 	return process_state;
 }
 
+enum TOP_MENU_DISPLAY_TIME_TAG{
+	LCD_TOP_MENU_IND,
+	LCD_TOP_MENU_DISPLAY_TIME_IND,
+	LCD_TOP_MENU_UNKNOW,
+};
+
 struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! */
 	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
+	static uint8_t top_menu_time_display_flag = LCD_TOP_MENU_IND;
+	uint8_t msg_storage = msg_context;
+
+	if(top_menu_time_display_flag == LCD_TOP_MENU_DISPLAY_TIME_IND)
+	{
+		int32_t delta_time;
+
+		if(msg_process_signal == 1)
+		{
+			if(msg_context == KEY_RETURN)
+			{
+				lcd_flush_timer_cur = 0;
+				lcd_flush_timer_last = 0;
+			}
+
+			if(msg_context == FLUSH_SCREEN)
+			{
+				lcd_flush_timer_cur = app_lcd_sys_ms_get();
+				lcd_flush_timer_last = lcd_flush_timer_cur;
+			}
+		}
+
+		{
+			lcd_flush_timer_cur = app_lcd_sys_ms_get();
+			delta_time = lcd_flush_timer_cur - lcd_flush_timer_last;
+			if(delta_time < 0)
+			{
+				lcd_flush_timer_cur = app_lcd_sys_ms_get();
+				lcd_flush_timer_last = lcd_flush_timer_cur;
+			}
+
+			if((delta_time > LCD_FLUSH_PERIOD) && (msg_process_signal == 0))
+			{
+				msg_process_signal = 1;
+				msg_context = KEY_UNKNOW;
+				msg_storage = TOP_MENU_TIME_DISPLAY;
+				lcd_flush_timer_cur = app_lcd_sys_ms_get();
+				lcd_flush_timer_last = lcd_flush_timer_cur;
+			}
+		}	
+	}
 
 	if(msg_process_signal == 1)
 	{
+		uint8_t menu_type_idx = 0xff;
 		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
-        uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 2, sizeof(top_menu_array));
+		if(top_menu_time_display_flag == LCD_TOP_MENU_IND)
+		{
+			menu_type_idx = menu_type_ptr_match(msg_context, 3, 2, sizeof(top_menu_array));
+		}
 		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_ENTER)
 		{
-			Log_d("top_menu_array[menu_type_idx]:%d \r\n", top_menu_array[menu_type_idx]);
-			menu_level_from_env_set(TOP_NODE_MENU, top_menu_array[menu_type_idx], UNKNOW_SECOND_MENU);
-			menu_kernel_env.menu_cursor_history.top_menu_cursor = menu_type_idx;
-			cur_menu_type_ptr_from_env_set(0);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			Log_d("key KEY_ENTER menu!\r\n");
+			if(top_menu_time_display_flag == LCD_TOP_MENU_IND)
+			{
+				Log_d("top_menu_array[menu_type_idx]:%d \r\n", top_menu_array[menu_type_idx]);
+				menu_level_from_env_set(TOP_NODE_MENU, top_menu_array[menu_type_idx], UNKNOW_SECOND_MENU);
+				menu_kernel_env.menu_cursor_history.top_menu_cursor = menu_type_idx;
+				cur_menu_type_ptr_from_env_set(0);
+				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				Log_d("key KEY_ENTER menu!\r\n");
+			}
+		}
+
+		if(top_menu_time_display_flag == LCD_TOP_MENU_DISPLAY_TIME_IND)
+		{
+			switch(msg_context)
+			{
+				case    KEY_UP:
+				case	KEY_DOWN:
+				case	KEY_LEFT:
+				case	KEY_RIGHT:
+				case 	KEY_ENTER:
+					top_menu_time_display_flag = LCD_TOP_MENU_IND;
+					msg_storage = LCD_FLUSH_SCREEN_IND;
+					menu_type_idx = menu_type_ptr_match(KEY_UNKNOW, 3, 2, sizeof(top_menu_array));
+					break;
+				default:
+					break;
+			}
+		}
+
+		if(msg_context == KEY_RETURN)
+		{
+			top_menu_time_display_flag = LCD_TOP_MENU_DISPLAY_TIME_IND;
+			msg_storage = TOP_MENU_TIME_DISPLAY;
 		}
 
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
 			clear_screen();
-			msg_context = 0xff;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
 			msg_lock_from_env_set(0);//unlock the msg
 			// clear the password state
 			password_check_in_state_set(UNKNOW_PASSWORD_IND);
         }
-
-		switch(msg_context)
+		
+		uint8_t time_col;
+		uint8_t time_raw;
+		uint8_t version_col;
+		uint8_t version_raw;
+		RTC_date date_time;
+		switch(msg_storage)
 		{
-			case	0xff:
+			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
     		case	KEY_DOWN:		
     		case	KEY_LEFT:
@@ -495,6 +584,24 @@ struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_
 						LCD_ShowChinese_no_garland(64, 39, setting_in_factory, 4);
 						break;
 				}
+				break;
+			case TOP_MENU_TIME_DISPLAY:
+				clear_screen();
+				time_col = 18;
+				time_raw = 33;
+				version_col = 26;
+				version_raw = 21;
+				App_scroll_storage_datas error_time;
+				LCD_ShowChinese_garland(version_col, version_raw, version_info, 4);
+				lcd_state_flush_for_num(version_col+50,version_raw,my_maohao,5,12,1);
+				lcd_state_flush_for_num(version_col+56,version_raw,my_char_V,6,12,1);
+				lcd_state_flush_for_num(version_col+62,version_raw,my_num_1,5,12,1);
+				lcd_state_flush_for_num(version_col+68,version_raw,my_1x12_point,1,12,1);
+				lcd_state_flush_for_num(version_col+72,version_raw,my_num_0,5,12,1);
+
+				LCD_LOCAL_TIME_GET(&date_time);
+				memcpy(&error_time, &date_time, sizeof(date_time));
+				DISPALY_ERROR_TIME(time_col, time_raw, error_time);
 				break;
 			default:
 				break;

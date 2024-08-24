@@ -202,5 +202,5 @@ extern uint8_t DuoT[];
 extern uint8_t year[];
 extern uint8_t month[];
 extern uint8_t day[];
-
+extern uint8_t version_info[];
 #endif
