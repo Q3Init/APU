@@ -7,7 +7,7 @@
 #include "task.h"
 #include "semphr.h"
 
-// #define APP_PRO_DEBUG_TEST
+#define APP_PRO_DEBUG_TEST
 
 static APP_Protection_Mnt_t APP_Protection_Mnt;
 static APP_Protection_Mnt_t *pMnt = &APP_Protection_Mnt;

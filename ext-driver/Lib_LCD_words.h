@@ -199,4 +199,8 @@ extern uint8_t WJY[];
 extern uint8_t DT[];
 extern uint8_t DuoT[];
 
+extern uint8_t year[];
+extern uint8_t month[];
+extern uint8_t day[];
+
 #endif

@@ -3846,3 +3846,62 @@ void lcd_display_time_date(uint16_t time_col, uint16_t time_raw, RTC_date time_p
 	lcd_number_display_in_order(time_col+97, time_raw, 5, 12, 
 					num_idx_flush[5], SECOND_TIME_DIGIATL_NUM, num_array, 0xff);//idx todo
 }
+
+void lcd_display_error_time_date(uint16_t time_col, uint16_t time_raw, App_scroll_storage_datas time_par, uint8_t use_global_par_value, uint8_t *flush_reference_ptr)
+{
+	uint8_t num_idx_flush_par[LOCAL_TIME_LENGTH] = {0};
+	uint8_t * num_idx_flush= NULL;
+	uint32_t time_field = 0;
+	uint8_t num_array[LOCAL_TIME_LENGTH] = {0};
+
+	if(use_global_par_value == true)
+	{
+		num_idx_flush = flush_reference_ptr;
+	}
+	else
+	{
+		memset(num_idx_flush_par, 0xff, sizeof(num_idx_flush_par));
+		num_idx_flush = num_idx_flush_par;
+	}
+
+	/* YEAR number display */
+	lcd_number_modify_int_array_for_time_get(&time_field, time_par.tm_year, 
+							num_array, YEAR_TIME_DIGIATL_NUM, num_idx_flush[0],LCD_YEAR_TIME_INVERT);//idx todo
+	lcd_number_display_in_order(time_col, time_raw, 5, 12, 
+					num_idx_flush[0], YEAR_TIME_DIGIATL_NUM, num_array, 0xff);//idx todo
+	LCD_ShowChinese_garland(time_col+26,time_raw,year,1);
+
+	/* MONTH number display */
+	lcd_number_modify_int_array_for_time_get(&time_field, time_par.tm_mon, 
+							num_array, MONTH_TIME_DIGIATL_NUM, num_idx_flush[1],LCD_MONTH_TIME_INVERT);//idx todo
+	lcd_number_display_in_order(time_col+40, time_raw, 5, 12, 
+					num_idx_flush[1], MONTH_TIME_DIGIATL_NUM, num_array, 0xff);//idx todo
+	LCD_ShowChinese_garland(time_col+54,time_raw,month,1);
+
+	/* DAY number display */
+	lcd_number_modify_int_array_for_time_get(&time_field, time_par.tm_day, 
+							num_array, DAY_TIME_DIGIATL_NUM, num_idx_flush[2],LCD_DAY_TIME_INVERT);//idx todo
+	lcd_number_display_in_order(time_col+68, time_raw, 5, 12, 
+					num_idx_flush[2], DAY_TIME_DIGIATL_NUM, num_array, 0xff);//idx todo
+	LCD_ShowChinese_garland(time_col+82,time_raw,day,1);
+
+	/* HOUR number display */
+	lcd_number_modify_int_array_for_time_get(&time_field, time_par.tm_hour, 
+							num_array, HOUR_TIME_DIGIATL_NUM, num_idx_flush[3],LCD_HOUR_TIME_INVERT);//idx todo
+	lcd_number_display_in_order(time_col+26, time_raw+13, 5, 12, 
+					num_idx_flush[3], HOUR_TIME_DIGIATL_NUM, num_array, 0xff);//idx todo
+	lcd_state_flush_for_num(time_col+40,time_raw+13,my_maohao,5,12,1);
+
+	/* MINUTES number display */
+	lcd_number_modify_int_array_for_time_get(&time_field, time_par.tm_min, 
+							num_array, MINUTES_TIME_DIGIATL_NUM, num_idx_flush[4],LCD_MINUTE_TIME_INVERT);//idx todo
+	lcd_number_display_in_order(time_col+46, time_raw+13, 5, 12, 
+					num_idx_flush[4], MINUTES_TIME_DIGIATL_NUM, num_array, 0xff);//idx todo
+	lcd_state_flush_for_num(time_col+60,time_raw+13,my_maohao,5,12,1);
+
+	/* SECOND number display */
+	lcd_number_modify_int_array_for_time_get(&time_field, time_par.tm_sec, 
+							num_array, SECOND_TIME_DIGIATL_NUM, num_idx_flush[5],LCD_SECOND_TIME_INVERT);//idx todo
+	lcd_number_display_in_order(time_col+66, time_raw+13, 5, 12, 
+					num_idx_flush[5], SECOND_TIME_DIGIATL_NUM, num_array, 0xff);//idx todo
+}

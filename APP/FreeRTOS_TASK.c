@@ -84,7 +84,7 @@ void AppTaskCreate(void)
   /* App_fault_management_Task */
   xReturn = xTaskCreate((TaskFunction_t )App_fault_management_mainfunction,
                         (const char*    )"App_fault_management_Task",
-                        (uint16_t       )512,
+                        (uint16_t       )1536,
                         (void*          )NULL,
                         (UBaseType_t    )6,
                         (TaskHandle_t*  )&APP_fault_management_Task_Handle);
