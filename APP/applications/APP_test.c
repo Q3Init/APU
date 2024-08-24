@@ -18,61 +18,40 @@ void key_state_process(uint8_t key_state);
 void key_task_test_for_lin(void);
 extern void FFT(void);
 
-uint8 tx1_buffer[12] = {0xdd,0xaa,0x13,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11};
-uint8 tx2_buffer[12] = {0xaa,0xbb,0xcc,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11,0x11};
-uint8 rx1_buffer[48] = {0};
-uint8 rx2_buffer[48] = {0};
-uint8 block2[2] = {0};
-uint8 block3[2] = {0};
-static uint8 flag = 1;
-uint8 tick = 1;
-float32 pro1 = 577.7;
-float32 pro2 = 455.5;
-float32 delay_tick1 = 52.5;
-float32 delay_tick2 = 47.3;
-uint8 block_pro1[9] = {0};
-uint8 block_pro2[9] = {0};
-uint8 ddddd = 0;
+uint8 ctrl_datas;
+uint8 event = 1;
+App_scroll_storage_datas read_datas;
+uint16 memory_cnt;
+uint8 pages;
 
 void APP_test_Init(void)
 {
-    // APP_Scroll_storage_erase(0);
+
 }
-// RTC_date time;
-// RTC_date time1;
-// uint8_t flag2=0;
+
 void APP_test_Mainfunction(void)
 {   
     while(1) 
     {   
-        // if(flag2==1){
-
-    //     flag2=0;
-    //     rtc_set(time1.year,time1.month,time1.day,time1.hour,time1.minute,time1.second);
-    // }
-    //     rtc_get(&time);
-        if (tick > 0) {
-            tick--;
-
-        } else {
-            if (flag == 1) {
-                flag =0;
-                // app_parameter_write_Undervoltage_protection_LV2_One_Eol(ddddd);
-            }
+        switch (ctrl_datas)
+        {
+        case 1:
+            APP_Scroll_storage_write(Error_Block,event);
+            ctrl_datas= 4;
+            break;
+        case 2:
+            APP_Scroll_read_memory_number(Error_Block,&memory_cnt);
+            APP_Scroll_storage_read(Error_Block,pages,&read_datas);
+            ctrl_datas = 4;
+            break;
+        case 3:
+            APP_Scroll_storage_erase(Error_Block);
+            ctrl_datas = 4;
+            break;
+        
+        default:
+            break;
         }
-
-        // {
-            // uint8_t my_flag = 0;
-            // if (my_flag <= 1) {
-            //     uint8_t state = msg_send_to_lcd_layer(ERROR_INDICATION_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-            //     if(state == MSG_TRANSMIT_SUCCESS)
-            //     {
-            //         Log_e("HELLO!!! SUCCESS!!!!\n");
-            //     }
-            //     Log_e("HELLO!!! my_flag!!\n");
-            //     my_flag++;
-            // }
-        // }
 
         key_task_test_for_lin();
         //lcd_test_main();//just for lcd driver test

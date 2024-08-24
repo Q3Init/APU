@@ -23,10 +23,10 @@ typedef struct
     uint8 tm_hour;
     uint8 tm_min;
     uint8 tm_sec;
-    uint8 tm_millisec;  
-    uint8 fault_event; 
-    uint16 data1;
-    uint8 data2;
+    uint8 data1;
+    uint16 tm_millisec;  
+    uint8 fault_event;
+    uint8 data2; 
 }App_scroll_storage_datas;
 
 
