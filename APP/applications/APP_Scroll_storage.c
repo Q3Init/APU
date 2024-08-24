@@ -22,7 +22,7 @@ void APP_Scroll_storage_Init(void)
 uint8 APP_Scroll_storage_write(uint8 block,uint8 fault_event)
 {
     uint8 ret = E_NOK;
-    uint8 *p_buf;
+    uint8 p_buf[12];
     RTC_date time;
     rtc_get(&time);
     p_buf[9] = fault_event;
@@ -53,7 +53,7 @@ uint8 APP_Scroll_storage_write(uint8 block,uint8 fault_event)
 uint8 APP_Scroll_storage_read(uint8 block,uint8 pages,App_scroll_storage_datas *data)
 {
     uint8 ret = E_NOK;
-    uint8 *p_buf;
+    uint8 p_buf[12];
     if (block == Controls_block) {
         block2_readAddress = BASE_BLOCK2_ADRESS + (pages * ONE_STORE_SIZE);
         FRAM_Read(p_buf,block2_readAddress,ONE_STORE_SIZE);
