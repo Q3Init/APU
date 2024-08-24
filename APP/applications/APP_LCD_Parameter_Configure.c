@@ -8,6 +8,9 @@
 #define LCD_TIME_SET(x)	 	basic_rtc_set(x) /* while(basic_rtc_set(x)) */
 #define TIME_FROM_LOCAL_GET(x)		rtc_get(x)
 
+#define SOE_SEND_SWITCH_STATE_FORM_SRAM_GET() app_parameter_read_Switch_coding()
+#define SOE_SEND_SWITCH_STATE_FORM_SRAM_SET(x) app_parameter_write_Switch_coding(x)
+
 enum change_proportion_setting_menu_type{
     UNKNOW_CHANGE_PROPORTION_SETTING_MENU = 0,
     DIANWANG_PT_1,
@@ -2596,7 +2599,7 @@ struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint
 						case SOE_FASONG:
 							//update the value for the array lcd_modify_num_array
 							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
-							int_flag = app_parameter_read_Switch_coding();
+							int_flag = SOE_SEND_SWITCH_STATE_FORM_SRAM_GET();
 							lcd_modify_num_array[0] = int_flag;
 							key_idx_for_num = 4;
 							break;
@@ -2637,9 +2640,9 @@ struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint
 							break;
 						case SOE_FASONG:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
-							app_parameter_write_Switch_coding(0);
-							app_parameter_write_Switch_coding(int_flag);
-							int_flag = app_parameter_read_Switch_coding();
+							SOE_SEND_SWITCH_STATE_FORM_SRAM_SET(0);
+							SOE_SEND_SWITCH_STATE_FORM_SRAM_SET(int_flag);
+							int_flag = SOE_SEND_SWITCH_STATE_FORM_SRAM_GET();
 							break;
 						default:
 							break;
@@ -2879,7 +2882,7 @@ struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint
 						lcd_state_flush_for_num(43, 26, my_char_NULL, 5, 12, 1);
 						lcd_state_flush_for_num(48, 26, my_char_NULL, 5, 12, 1);
 						lcd_state_flush_for_num(58,13,my_maohao,5,10,1);
-						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Switch_coding(), 
+						lcd_chinese_modify_array_get(&int_flag, SOE_SEND_SWITCH_STATE_FORM_SRAM_GET(), 
 													num_idx_flush[4]);
 						if(int_flag)
 						{	
