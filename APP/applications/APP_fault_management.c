@@ -1,6 +1,7 @@
 #include "APP_fault_management.h"
 #include "Ext_LED.h"
 #include "Lib_LCD_menu.h"
+#include "APP_Scroll_storage.h"
 
 static void App_check_fault_callback(fault_type fault_event);
 static uint8 check_fault(fault_type id);
@@ -181,6 +182,7 @@ static void App_check_fault_callback(fault_type fault_event)
     uint32 success_state = false;
 
     do{
+        APP_Scroll_storage_write(Error_Block,fault_event);
         success_state = APP_fault_msg_send_to_lcd_layer(fault_event);
         vTaskDelay(10); /* let other thread run */
     } while (!success_state);
