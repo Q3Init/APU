@@ -198,7 +198,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 	menu_evt->msg_operation = MSG_RESUMED;
 
 	static uint8_t key_idx_for_num  = 0;
-	float32 float_flag = 0;
+	uint32_t float_flag = 0;
 	uint8_t num_idx_flush[8] = {0};
 	uint16_t chinese_idx_flush = 0xff;
 	uint8_t num_array[3] = {0};
@@ -245,17 +245,11 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 			else
 			{
 				Log_d("RETURN\n");
-				//just for test log
-				for(int j=0;j<5;j++)
-				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
-				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Grid_PT_primary();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
-				my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+				my_convert_int_to_int_array(lcd_modify_num_array, 3, float_flag);
 			}
 			key_idx_for_num = 0;
 		}
@@ -277,8 +271,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 				case DIANWANG_PT_1:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Grid_PT_primary(); // SRAM todo
-					Log_d("ENTER! float_flag:%f\n",float_flag);
-					my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
+					my_convert_int_to_int_array(lcd_modify_num_array, 3, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
 					break;
 				default:
 					break;
@@ -316,52 +309,46 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Grid_PT_primary();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
-							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag); // 3是整数位数，2是小数位数
+							my_convert_int_to_int_array(lcd_modify_num_array, 3, float_flag); // 3是整数位数，2是小数位数
 							break;
 						case DIANWANG_PT_2:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Grid_PT_secondary();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
-							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag);
+							my_convert_int_to_int_array(lcd_modify_num_array, 3, float_flag);
 							key_idx_for_num = 1;
 							break;
 						case FADIAN_PT_1:
 							float_flag = app_parameter_read_Generation_PT_primary();
-							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag);
+							my_convert_int_to_int_array(lcd_modify_num_array, 3, float_flag);
 							key_idx_for_num = 2;
 							break;
 						case FADIAN_PT_2:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Generation_PT_secondary();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
-							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag);
+							my_convert_int_to_int_array(lcd_modify_num_array, 3, float_flag);
 							key_idx_for_num = 3;
 							break;
 						case BAOHU_CT_1:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Protective_CT_primary();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
-							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag);
+							my_convert_int_to_int_array(lcd_modify_num_array, 3, float_flag);
 							key_idx_for_num = 4;
 							break;
 						case BAOHU_CT_2:
 							float_flag = app_parameter_read_Protected_CT_secondary();
-							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag);
+							my_convert_int_to_int_array(lcd_modify_num_array, 3, float_flag);
 							key_idx_for_num = 5;
 							break;
 						case LINGXU_1:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Zero_sequence_CT_once();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
-							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag);
+							my_convert_int_to_int_array(lcd_modify_num_array, 3, float_flag);
 							key_idx_for_num = 6;
 							break;
 						case LINGXU_2:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Zero_sequence_CT_twice();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
-							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag);
+							my_convert_int_to_int_array(lcd_modify_num_array, 3, float_flag);
 							key_idx_for_num = 7;
 							break;
 						default:
@@ -376,60 +363,49 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 					{
 						case DIANWANG_PT_1:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
-							float_flag = float_flag+ 0.0001;
+							float_flag = my_convert_int_array_to_int_parameter(lcd_modify_num_array,3);
 							app_parameter_write_Grid_PT_primary(0);
 							app_parameter_write_Grid_PT_primary(float_flag);
 							float_flag = app_parameter_read_Grid_PT_primary();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case DIANWANG_PT_2:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
-							float_flag = float_flag+ 0.0001;
+							float_flag = my_convert_int_array_to_int_parameter(lcd_modify_num_array,3);
 							app_parameter_write_Grid_PT_secondary(0);
 							app_parameter_write_Grid_PT_secondary(float_flag);
 							float_flag = app_parameter_read_Grid_PT_secondary();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FADIAN_PT_1:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
-							float_flag = float_flag+ 0.0001;
+							float_flag = my_convert_int_array_to_int_parameter(lcd_modify_num_array,3);
 							app_parameter_write_Generation_PT_primary(0);
 							app_parameter_write_Generation_PT_primary(float_flag);
 							float_flag = app_parameter_read_Generation_PT_primary();
 							break;
 						case FADIAN_PT_2:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
-							float_flag = float_flag+ 0.0001;
+							float_flag = my_convert_int_array_to_int_parameter(lcd_modify_num_array,3);
 							app_parameter_write_Generation_PT_secondary(0);
 							app_parameter_write_Generation_PT_secondary(float_flag);
 							float_flag = app_parameter_read_Generation_PT_secondary();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case BAOHU_CT_1:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
-							float_flag = float_flag+ 0.0001;
+							float_flag = my_convert_int_array_to_int_parameter(lcd_modify_num_array,3);
 							app_parameter_write_Protective_CT_primary(0);
 							app_parameter_write_Protective_CT_primary(float_flag);
 							float_flag = app_parameter_read_Protective_CT_primary();
 							break;
 						case BAOHU_CT_2:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
-							float_flag = float_flag+ 0.0001;
+							float_flag = my_convert_int_array_to_int_parameter(lcd_modify_num_array,3);
 							app_parameter_write_Protected_CT_secondary(0);
 							app_parameter_write_Protected_CT_secondary(float_flag);
 							int_flag = app_parameter_read_Protected_CT_secondary();
 							break;
 						case LINGXU_1:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
-							float_flag = float_flag+ 0.0001;
+							float_flag = my_convert_int_array_to_int_parameter(lcd_modify_num_array,3);
 							app_parameter_write_Zero_sequence_CT_once(0);
 							app_parameter_write_Zero_sequence_CT_once(float_flag);
 							float_flag = app_parameter_read_Zero_sequence_CT_once();
 							break;
 						case LINGXU_2:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 0);
-							float_flag = float_flag+ 0.0001;
+							float_flag = my_convert_int_array_to_int_parameter(lcd_modify_num_array,3);
 							app_parameter_write_Zero_sequence_CT_twice(0);
 							app_parameter_write_Zero_sequence_CT_twice(float_flag);
 							float_flag = app_parameter_read_Zero_sequence_CT_twice();
@@ -454,14 +430,14 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 				case DIANWANG_PT_2:
 				case FADIAN_PT_1:
 				case FADIAN_PT_2:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = 3-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case BAOHU_CT_1:
 				case BAOHU_CT_2:
 				case LINGXU_1:
 				case LINGXU_2:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = 3-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				default:
@@ -601,7 +577,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x01, 38, 13, my_char_T, 1);
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 44, 13, yici, 2);
 						lcd_state_flush_for_num(69,13,my_maohao,5,12,1);
-						lcd_number_modify_array_get(&float_flag, app_parameter_read_Grid_PT_primary(), 
+						lcd_number_modify_array_get((float32 *)&float_flag, app_parameter_read_Grid_PT_primary(), 
 													num_array, 3, 0, num_idx_flush[0]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
 						lcd_number_display_in_order(75, 13, 5, 12, 
 											num_idx_flush[0], sizeof(num_array), num_array, 3); //一段定值的数值显示部分
@@ -612,7 +588,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x02, 38, 26, my_char_T, 1);
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 44, 26, erci, 2);
 						lcd_state_flush_for_num(69,26,my_maohao,5,12,1);
-						lcd_number_modify_array_get(&float_flag, app_parameter_read_Grid_PT_secondary(), 
+						lcd_number_modify_array_get((float32 *)&float_flag, app_parameter_read_Grid_PT_secondary(), 
 													num_array, 3, 0, num_idx_flush[1]);
 						lcd_number_display_in_order(75, 26, 5, 12, 
 											num_idx_flush[1], sizeof(num_array), num_array, 3);
@@ -625,7 +601,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x04, 38, 39, my_char_T, 1);
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 44, 39, yici, 2);
 						lcd_state_flush_for_num(69,39,my_maohao,5,12,1);
-						lcd_number_modify_array_get(&float_flag, app_parameter_read_Generation_PT_primary(), 
+						lcd_number_modify_array_get((float32 *)&float_flag, app_parameter_read_Generation_PT_primary(), 
 													num_array, 3, 0, num_idx_flush[2]);
 						lcd_number_display_in_order(75, 39, 5, 12, 
 											num_idx_flush[2], sizeof(num_array), num_array, 3);
@@ -639,7 +615,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x08, 44, 51, erci, 2);
 						// LCD_ShowChinese_garland(8, 51, second_fix_value, 4);
 						lcd_state_flush_for_num(69,51,my_maohao,5,12,1);
-						lcd_number_modify_array_get(&float_flag, app_parameter_read_Generation_PT_secondary(), 
+						lcd_number_modify_array_get((float32 *)&float_flag, app_parameter_read_Generation_PT_secondary(), 
 													num_array, 3, 0, num_idx_flush[3]);
 						lcd_number_display_in_order(75, 51, 5, 12, 
 											num_idx_flush[3], sizeof(num_array), num_array, 3);
@@ -662,7 +638,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x10, 38, 13, my_char_T, 1);
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x10, 44, 13, yici, 2);
 						lcd_state_flush_for_num(69,13,my_maohao,5,12,1);
-						lcd_number_modify_array_get(&float_flag, app_parameter_read_Protective_CT_primary(), 
+						lcd_number_modify_array_get((float32 *)&float_flag, app_parameter_read_Protective_CT_primary(), 
 													num_array, 3, 0, num_idx_flush[4]);
 						lcd_number_display_in_order(75, 13, 5, 12, 
 											num_idx_flush[4], sizeof(num_array), num_array, 3);
@@ -675,10 +651,10 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x20, 38, 26, my_char_T, 1);
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x20, 44, 26, erci, 2);
 						lcd_state_flush_for_num(69,26,my_maohao,5,12,1);
-						lcd_number_modify_array_get(&float_flag, app_parameter_read_Protected_CT_secondary(), 
+						lcd_number_modify_array_get((float32 *)&float_flag, app_parameter_read_Protected_CT_secondary(), 
 													num_array, 3, 0, num_idx_flush[5]);
 						lcd_number_display_in_order(75, 26, 5, 12, 
-											num_idx_flush[4], sizeof(num_array), num_array, 3);
+											num_idx_flush[5], sizeof(num_array), num_array, 3);
 						lcd_state_flush_for_num(95,26,my_char_A,6,12,1);
 
 
@@ -688,10 +664,10 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x40, 38, 39, my_char_T, 1);
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x40, 44, 39, yici, 2);
 						lcd_state_flush_for_num(69,39,my_maohao,5,12,1);
-						lcd_number_modify_array_get(&float_flag, app_parameter_read_Zero_sequence_CT_once(), 
+						lcd_number_modify_array_get((float32 *)&float_flag, app_parameter_read_Zero_sequence_CT_once(), 
 													num_array, 3, 0, num_idx_flush[6]);
 						lcd_number_display_in_order(75, 39, 5, 12, 
-											num_idx_flush[4], sizeof(num_array), num_array, 3);
+											num_idx_flush[6], sizeof(num_array), num_array, 3);
 						lcd_state_flush_for_num(95,39,my_char_A,6,12,1);
 
 
@@ -700,10 +676,10 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x80, 38, 51, my_char_T, 1);
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x80, 44, 51, erci, 2);
 						lcd_state_flush_for_num(69,51,my_maohao,5,12,1);
-						lcd_number_modify_array_get(&float_flag, app_parameter_read_Zero_sequence_CT_twice(), 
+						lcd_number_modify_array_get((float32 *)&float_flag, app_parameter_read_Zero_sequence_CT_twice(), 
 													num_array, 3, 0, num_idx_flush[7]);
 						lcd_number_display_in_order(75, 51, 5, 12, 
-											num_idx_flush[4], sizeof(num_array), num_array, 3);
+											num_idx_flush[7], sizeof(num_array), num_array, 3);
 						lcd_state_flush_for_num(95,51,my_char_A,6,12,1);
 					default:
 						break;
@@ -725,7 +701,7 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
 	menu_evt->msg_operation = MSG_RESUMED;
 
 	static uint8_t key_idx_for_num  = 0;
-	float32 float_flag = 0;
+	uint32_t int_num_flag = 0;
 	uint8_t num_idx_flush[8] = {0};
 	uint16_t chinese_idx_flush = 0xff;
 	uint8_t num_array[4] = {0};
@@ -779,9 +755,8 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
-				float_flag = app_parameter_read_Zero_drift_threshold();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
-				my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag);
+				int_num_flag = app_parameter_read_Zero_drift_threshold();
+				my_convert_int_to_int_array(lcd_modify_num_array, 4, int_num_flag);
 			}
 			key_idx_for_num = 0;
 		}
@@ -802,9 +777,8 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
 			{
 				case LINGPIAO_XIANZHI:
 					//update the value for the array lcd_modify_num_array
-					float_flag = app_parameter_read_Zero_drift_threshold(); // SRAM todo
-					Log_d("ENTER! float_flag:%f\n",float_flag);
-					my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
+					int_num_flag = app_parameter_read_Zero_drift_threshold(); // SRAM todo
+					my_convert_int_to_int_array(lcd_modify_num_array, 4, int_num_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
 					break;
 				default:
 					break;
@@ -841,9 +815,8 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
 						case LINGPIAO_XIANZHI:
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
-							float_flag = app_parameter_read_Zero_drift_threshold();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
-							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag); // 3是整数位数，2是小数位数
+							int_num_flag = app_parameter_read_Zero_drift_threshold();
+							my_convert_int_to_int_array(lcd_modify_num_array, 4, int_num_flag); // 3是整数位数，2是小数位数
 							break;
 						case JIEXIAN_FANGSHI:
 							//update the value for the array lcd_modify_num_array
@@ -875,12 +848,10 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
 					{
 						case LINGPIAO_XIANZHI:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
-							float_flag = float_flag+ 0.0001;
+							int_num_flag = my_convert_int_array_to_int_parameter(lcd_modify_num_array,4);
 							app_parameter_write_Zero_drift_threshold(0);
-							app_parameter_write_Zero_drift_threshold(float_flag);
-							float_flag = app_parameter_read_Zero_drift_threshold();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							app_parameter_write_Zero_drift_threshold(int_num_flag);
+							int_num_flag = app_parameter_read_Zero_drift_threshold();
 							break;
 						case JIEXIAN_FANGSHI:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -915,8 +886,9 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
 			switch(chinese_menu_idx)
 			{
 				case LINGPIAO_XIANZHI:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = 4-1;
 					up_diff_num_idx_ths = 9;
+					break;
 				case JIEXIAN_FANGSHI:
 				case BAOHU_CT:
 				case KAIGUANG_WEIZHI:
@@ -1041,7 +1013,7 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
 
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, LPXZ, 4);
 						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_number_modify_array_get(&float_flag, app_parameter_read_Zero_drift_threshold(), 
+						lcd_number_modify_array_get((float32 *)&int_num_flag, app_parameter_read_Zero_drift_threshold(), 
 													num_array, 4, 0, num_idx_flush[0]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
 						lcd_number_display_in_order(64, 13, 5, 12, 
 											num_idx_flush[0], sizeof(num_array), num_array, 4); //一段定值的数值显示部分
@@ -1107,7 +1079,47 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
     return menu_evt;
 }
 
+uint32_t my_convert_int_parameter_into_reverse_bit_int_parameter(uint8_t int_convert_length, uint32_t data)
+{
+	uint32_t conver_int_par = (uint32_t)data;
+	uint32_t sum = 0;
+	uint32_t co_x = 1;
 
+	for(int j = 0; j < int_convert_length; j++)
+	{
+		sum += ((conver_int_par >> j) & 0x01) * co_x;
+		co_x = co_x*10;
+	}
+
+	return sum;
+}
+
+//reverse LSB (idx = 0 is HIGH)
+void my_convert_int_parameter_into_bit_array(uint8_t * ptr, uint8_t int_convert_length, uint32_t data)
+{
+	uint32_t conver_int_par = (uint32_t)data;
+	uint8_t idx = 0;
+	for(int j=int_convert_length-1; j>=0; j--)
+	{
+		ptr[idx] = (conver_int_par >> j) & 0x01;
+		idx++;
+	}
+}
+
+//reverse LSB (idx = 0 is HIGH)
+uint32_t my_convert_bit_array_into_int_parameter(uint8_t * ptr, uint8_t int_convert_length)
+{
+	uint32_t conver_int_par = 0;
+	uint8_t idx = 0;
+
+	for(int j=int_convert_length-1; j>=0; j--)
+	{
+		conver_int_par |= (ptr[idx] << j);
+		idx++;
+	}
+
+	return conver_int_par;
+}
 
 struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
@@ -1117,11 +1129,11 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 	menu_evt->msg_operation = MSG_RESUMED;
 
 	static uint8_t key_idx_for_num  = 0;
-	float32 float_flag = 0;
+	uint32_t float_flag = 0;
+
 	uint8_t num_idx_flush[8] = {0};
 	uint16_t chinese_idx_flush = 0xff;
 	uint8_t num_array[8] = {0};
-//	uint8_t int_flag = 0;
 	uint8_t chinese_menu_idx = 0;
 
 	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
@@ -1162,18 +1174,11 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 			}
 			else
 			{
-				Log_d("RETURN\n");
-				//just for test log
-				for(int j=0;j<5;j++)
-				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
-				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Remote_letter_anti_shake_time();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
-				my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag);
+				my_convert_int_to_int_array(lcd_modify_num_array, 4, float_flag);
 			}
 			key_idx_for_num = 0;
 		}
@@ -1195,8 +1200,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 				case XIAODOU_YANSHI:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Remote_letter_anti_shake_time(); // SRAM todo
-					Log_d("ENTER! float_flag:%f\n",float_flag);
-					my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
+					my_convert_int_to_int_array(lcd_modify_num_array, 4, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
 					break;
 				default:
 					break;
@@ -1234,14 +1238,12 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Remote_letter_anti_shake_time();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
-							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 0, float_flag); // 3是整数位数，2是小数位数
+							my_convert_int_to_int_array(lcd_modify_num_array, 4, float_flag); // 3是整数位数，2是小数位数
 							break;
 						case LUOJI:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Remote_letter_into_the_logic();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
-							my_convert_float32_to_int_array(lcd_modify_num_array, 8, 0, float_flag);
+							my_convert_int_parameter_into_bit_array(lcd_modify_num_array, 8, float_flag);
 							key_idx_for_num = 1;
 							break;
 					}
@@ -1254,20 +1256,16 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 					{
 						case XIAODOU_YANSHI:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,4, 0);
-							float_flag = float_flag+ 0.0001;
+							float_flag = my_convert_int_array_to_int_parameter(lcd_modify_num_array,4);
 							app_parameter_write_Remote_letter_anti_shake_time(0);
 							app_parameter_write_Remote_letter_anti_shake_time(float_flag);
 							float_flag = app_parameter_read_Remote_letter_anti_shake_time();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case LUOJI:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array, 8, 0);
-							float_flag = float_flag+ 0.0001;
+							float_flag = my_convert_bit_array_into_int_parameter(lcd_modify_num_array, 8);
 							app_parameter_write_Remote_letter_into_the_logic(0);
 							app_parameter_write_Remote_letter_into_the_logic(float_flag);
 							float_flag = app_parameter_read_Remote_letter_into_the_logic();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 					}
 					key_idx_for_num = 0;
@@ -1284,9 +1282,12 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 			switch(chinese_menu_idx)
 			{
 				case XIAODOU_YANSHI:
-				case LUOJI:
-					right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+					right_diff_num_idx_ths = 4-1;
 					up_diff_num_idx_ths = 9;
+					break;
+				case LUOJI:
+					right_diff_num_idx_ths = 8-1;
+					up_diff_num_idx_ths = 1;
 					break;
 				default:
 					break;
@@ -1362,14 +1363,14 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 						break;
 					case LUOJI:
 						chinese_idx_flush &= 0x00FD;
-						break;
-					
+						break;	
 				}
 				break;
 			default:
 				break;
 		}
 
+		uint32_t bit_num_display = 0;
 		//LCD driver
 		//chinese_menu_idx  中文目录的索引下标
 		switch(msg_storage)
@@ -1394,22 +1395,29 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 						lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
 						single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
 
+						/* “消抖延时” */
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, XDYS, 4);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
-						lcd_number_modify_array_get(&float_flag, app_parameter_read_Remote_letter_anti_shake_time(), 
+						lcd_state_flush_for_num(58,13,my_maohao,5,10,1);
+						lcd_number_modify_array_get((float32 *)&float_flag, app_parameter_read_Remote_letter_anti_shake_time(), 
 													num_array, 4, 0, num_idx_flush[0]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
 						lcd_number_display_in_order(64, 13, 5, 12, 
 											num_idx_flush[0], sizeof(num_array)-4, num_array, 4); //一段定值的数值显示部分
 						lcd_state_flush_for_num(88,13,my_char_m,6,12,1);
 						lcd_state_flush_for_num(94,13,my_char_s,6,12,1);
 
+						/* “逻辑” */
+						bit_num_display = app_parameter_read_Remote_letter_into_the_logic();
+						bit_num_display = my_convert_int_parameter_into_reverse_bit_int_parameter(8, bit_num_display);
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, luoji, 2);
 						// LCD_ShowChinese_garland(8, 26, second_in_out, 4);
 						lcd_state_flush_for_num(34,26,my_maohao,5,12,1);
-						lcd_number_modify_array_get(&float_flag, app_parameter_read_Remote_letter_into_the_logic(), 
+						lcd_number_modify_array_get((float32 *)&float_flag, bit_num_display, 
 													num_array, 8, 0, num_idx_flush[1]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
 						lcd_number_display_in_order(40, 26, 5, 12, 
 											num_idx_flush[1], sizeof(num_array), num_array, 8); //一段定值的数值显示部分
+						lcd_state_flush_for_num(88,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(93,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(98,26,my_char_NULL,6,12,1);
 
 						break;
 					default:
@@ -2655,7 +2663,7 @@ struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint
 					up_diff_num_idx_ths = 1;
 					break;
 				case BOTELV:
-				right_diff_num_idx_ths = sizeof(lcd_modify_num_array)-1;
+				right_diff_num_idx_ths = 5-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case TONGXIN_MOSHI:
@@ -2861,7 +2869,16 @@ struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint
 						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x10, 14, 13, my_char_O, 1);
 						lcd_showenglish_no_garland_or_garland(chinese_idx_flush & 0x10, 20, 13, my_char_E, 1);
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x10, 26, 13, FS, 2);
-						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_state_flush_for_num(8, 26, my_char_NULL, 5, 12, 1);
+						lcd_state_flush_for_num(13, 26, my_char_NULL, 5, 12, 1);
+						lcd_state_flush_for_num(18, 26, my_char_NULL, 5, 12, 1);
+						lcd_state_flush_for_num(23, 26, my_char_NULL, 5, 12, 1);
+						lcd_state_flush_for_num(28, 26, my_char_NULL, 5, 12, 1);
+						lcd_state_flush_for_num(33, 26, my_char_NULL, 5, 12, 1);
+						lcd_state_flush_for_num(38, 26, my_char_NULL, 5, 12, 1);
+						lcd_state_flush_for_num(43, 26, my_char_NULL, 5, 12, 1);
+						lcd_state_flush_for_num(48, 26, my_char_NULL, 5, 12, 1);
+						lcd_state_flush_for_num(58,13,my_maohao,5,10,1);
 						lcd_chinese_modify_array_get(&int_flag, app_parameter_read_Switch_coding(), 
 													num_idx_flush[4]);
 						if(int_flag)
@@ -2872,7 +2889,6 @@ struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint
 						{
 							lcd_chinese_modify_display_in_order(num_idx_flush[4],  64, 13, DuoT, 2);
 						}
-
 					default:
 						break;
 				}

@@ -91,7 +91,7 @@ extern void lcd_number_modify_int_array_for_int_parameter_get(uint32_t *float_fl
 								uint8_t int_convert_length,  uint8_t num_flush_idx);
 extern void show_num(uint8_t hang, uint8_t lie, uint8_t num, uint8_t length, uint8_t high, uint8_t level);
 extern void my_convert_float32_to_int_array(uint8_t * ptr, uint8_t int_convert_length, uint8_t point_convert_length, float32 data);
-extern float32 my_convert_int_to_float32_array(uint8_t * ptr, uint8_t int_convert_length, uint8_t point_convert_length);
+extern float32 my_convert_int_array_to_float32_parameter(uint8_t * ptr, uint8_t int_convert_length, uint8_t point_convert_length);
 extern void lcd_number_modify_array_get(float32 *float_flag, float32 value, uint8_t *array_ptr, 
 								uint8_t int_convert_length, uint8_t point_convert_length, uint8_t num_flush_idx);
 extern void lcd_chinese_modify_array_get(uint8_t *int_flag, uint8_t bool_value, uint8_t num_flush_idx);

@@ -1375,7 +1375,7 @@ void my_convert_float32_to_int_array(uint8_t * ptr, uint8_t int_convert_length, 
 	}
 }
 
-float32 my_convert_int_to_float32_array(uint8_t * ptr, uint8_t int_convert_length, uint8_t point_convert_length)
+float32 my_convert_int_array_to_float32_parameter(uint8_t * ptr, uint8_t int_convert_length, uint8_t point_convert_length)
 {
 	float32 all_sum = 0;
 	uint32_t conver_int_sum = 0;

@@ -771,7 +771,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 					{
 						case FIRST_FIX_VALUE:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Overvoltage_protection_LV1_One_Value(0);
 							app_parameter_write_Overvoltage_protection_LV1_One_Value(float_flag);
@@ -779,7 +779,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FIRST_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Overvoltage_protection_LV1_One_Delay(0);
 							app_parameter_write_Overvoltage_protection_LV1_One_Delay(float_flag);
@@ -793,7 +793,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 							int_flag = app_parameter_read_Overvoltage_protection_LV1_One_Eol();
 							break;
 						case SECOND_FIX_VALUE:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Overvoltage_protection_LV2_One_Value(0);
 							app_parameter_write_Overvoltage_protection_LV2_One_Value(float_flag);
@@ -801,7 +801,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case SECOND_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Overvoltage_protection_LV2_One_Delay(0);
 							app_parameter_write_Overvoltage_protection_LV2_One_Delay(float_flag);
@@ -1223,7 +1223,7 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 					{
 						case FIRST_FIX_VALUE:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Undervoltage_protection_LV1_One_Value(0);
 							app_parameter_write_Undervoltage_protection_LV1_One_Value(float_flag);
@@ -1231,7 +1231,7 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FIRST_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Undervoltage_protection_LV1_One_Delay(0);
 							app_parameter_write_Undervoltage_protection_LV1_One_Delay(float_flag);
@@ -1245,7 +1245,7 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 							int_flag = app_parameter_read_Undervoltage_protection_LV1_One_Eol();
 							break;
 						case SECOND_FIX_VALUE:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Undervoltage_protection_LV2_One_Value(0);
 							app_parameter_write_Undervoltage_protection_LV2_One_Value(float_flag);
@@ -1253,7 +1253,7 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case SECOND_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Undervoltage_protection_LV2_One_Delay(0);
 							app_parameter_write_Undervoltage_protection_LV2_One_Delay(float_flag);
@@ -1651,7 +1651,7 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 					{
 						case FIX_VALUE:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Overfrequency_Value(0);
 							app_parameter_write_Overfrequency_Value(float_flag);
@@ -1659,7 +1659,7 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Overfrequency_Delay(0);
 							app_parameter_write_Overfrequency_Delay(float_flag);
@@ -2000,7 +2000,7 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 					{
 						case FIX_VALUE:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Underfrequency_Value(0);
 							app_parameter_write_Underfrequency_Value(float_flag);
@@ -2008,7 +2008,7 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Underfrequency_Delay(0);
 							app_parameter_write_Underfrequency_Delay(float_flag);
@@ -2356,7 +2356,7 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 					{
 						case FIX_VALUE:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Frequency_Discontinuity_Value(0);
 							app_parameter_write_Frequency_Discontinuity_Value(float_flag);
@@ -2364,7 +2364,7 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Frequency_Discontinuity_Delay(0);
 							app_parameter_write_Frequency_Discontinuity_Delay(float_flag);
@@ -2715,7 +2715,7 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 					{
 						case FIX_VALUE:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Reverse_Power_Protection_Value(0);
 							app_parameter_write_Reverse_Power_Protection_Value(float_flag);
@@ -2723,7 +2723,7 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Reverse_Power_Protection_Delay(0);
 							app_parameter_write_Reverse_Power_Protection_Delay(float_flag);
@@ -3071,7 +3071,7 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 					{
 						case FIX_VALUE:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Harmonic_Protection_Value(0);
 							app_parameter_write_Harmonic_Protection_Value(float_flag);
@@ -3079,7 +3079,7 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Harmonic_Protection_Delay(0);
 							app_parameter_write_Harmonic_Protection_Delay(float_flag);
@@ -3439,7 +3439,7 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 					{
 						case TRIPPING_FIRST_DELAY:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_External_Coordination_Delay(0);
 							app_parameter_write_External_Coordination_Delay(float_flag);
@@ -3447,7 +3447,7 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case TRIPPING_SECOND_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_External_Coordination_Delay(0);
 							app_parameter_write_External_Coordination_Delay(float_flag);
@@ -3859,7 +3859,7 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 					{
 						case DISCONNECT_PROTECTION_FIX_VALUE:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Instantaneous_Overcurrent_Protection_Value(0);
 							app_parameter_write_Instantaneous_Overcurrent_Protection_Value(float_flag);
@@ -3867,7 +3867,7 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case DISCONNECT_MUTATION_FIX_VALUE:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,1, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,1, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Instantaneous_Overcurrent_Mutation_Setting(0);
 							app_parameter_write_Instantaneous_Overcurrent_Mutation_Setting(float_flag);
@@ -3875,7 +3875,7 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case DISCONNECT_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Instantaneous_Overcurrent_Delay(0);
 							app_parameter_write_Instantaneous_Overcurrent_Delay(float_flag);
@@ -4238,7 +4238,7 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 					{
 						case FIX_VALUE:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Speed_Limit_Break_Value(0);
 							app_parameter_write_Speed_Limit_Break_Value(float_flag);
@@ -4246,7 +4246,7 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Speed_Limit_Break_Delay(0);
 							app_parameter_write_Speed_Limit_Break_Delay(float_flag);
@@ -4588,7 +4588,7 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 					{
 						case FIX_VALUE:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Overcurrent_Protection_Value(0);
 							app_parameter_write_Overcurrent_Protection_Value(float_flag);
@@ -4596,7 +4596,7 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Overcurrent_Protection_Delay(0);
 							app_parameter_write_Overcurrent_Protection_Delay(float_flag);
@@ -4943,7 +4943,7 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 					{
 						case OVER_SEQUENCE_FIX_VALUE:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 3);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 3);
 							float_flag = float_flag+ 0.00001;
 							app_parameter_write_Zero_Sequence_Overflow_Value(0);
 							app_parameter_write_Zero_Sequence_Overflow_Value(float_flag);
@@ -4951,7 +4951,7 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_SEQUENCE_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Zero_Sequence_Overflow_Delay(0);
 							app_parameter_write_Zero_Sequence_Overflow_Delay(float_flag);
@@ -5322,7 +5322,7 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 					{
 						case SYSTEM_FIX_VALUE:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 3);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 3);
 							float_flag = float_flag+ 0.00001;
 							app_parameter_write_System_Down_Value(0);
 							app_parameter_write_System_Down_Value(float_flag);
@@ -5330,7 +5330,7 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case SYSTEM_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_System_Down_Delay(0);
 							app_parameter_write_System_Down_Delay(float_flag);
@@ -5744,7 +5744,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 					{
 						case MAX_VOLTAGE:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 3);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 3);
 							float_flag = float_flag+ 0.00001;
 							app_parameter_write_Voltage_Closing_Upper_Voltage_Limit(0);
 							app_parameter_write_Voltage_Closing_Upper_Voltage_Limit(float_flag);
@@ -5752,7 +5752,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case MIN_VOLTAGE:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Voltage_Closing_Lower_Voltage_Limit(0);
 							app_parameter_write_Voltage_Closing_Lower_Voltage_Limit(float_flag);
@@ -5760,7 +5760,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case MAX_FREQUENCE:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Voltage_Closing_Upper_Frequency_Limit(0);
 							app_parameter_write_Voltage_Closing_Upper_Frequency_Limit(float_flag);
@@ -5768,7 +5768,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case MIN_FREQUENCE:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Voltage_Closing_Lower_Frequency_Limit(0);
 							app_parameter_write_Voltage_Closing_Lower_Frequency_Limit(float_flag);
@@ -5818,7 +5818,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							int_flag = app_parameter_read_Voltage_Closing_Non_manual_separation();
 							break;
 						case CLOSING_CHARGE_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Voltage_Closing_Charging_Delay(0);
 							app_parameter_write_Voltage_Closing_Charging_Delay(float_flag);
@@ -5826,7 +5826,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case CLOSING_WITH_VOLTAGE_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Voltage_Closing_Delay(0);
 							app_parameter_write_Voltage_Closing_Delay(float_flag);
@@ -6379,7 +6379,7 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 					{
 						case FIX_VALUE:
 							// prepare for the number modify
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,2, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Power_recovery_Value(0);
 							app_parameter_write_Power_recovery_Value(float_flag);
@@ -6387,7 +6387,7 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
-							float_flag = my_convert_int_to_float32_array(lcd_modify_num_array,3, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Power_recovery_Delay(0);
 							app_parameter_write_Power_recovery_Delay(float_flag);
