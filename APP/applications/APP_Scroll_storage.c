@@ -28,23 +28,27 @@ uint8 APP_Scroll_storage_write(uint8 block,uint8 fault_event)
     p_buf[10] = fault_event;
     memcpy(p_buf,&time.year,sizeof(RTC_date));
     if (block == Controls_block) {
-        block2_writeAddress = BASE_BLOCK2_ADRESS + (block2_writeIndex * ONE_STORE_SIZE);
-        p_buf[11] = block2_writeIndex + 1;
-        FRAM_Write(p_buf,block2_writeAddress,ONE_STORE_SIZE);
-        block2_writeIndex +=1;
-        block2_cnt[0] = ((uint8)block2_writeIndex);
-        block2_cnt[1] = ((uint8)((block2_writeIndex & 0xff00) >> 8));
-        FRAM_Write(block2_cnt,BLOCK1_BLOCK2_CNT_ADRESS,BLOCK1_BLOCK2_CNT_LEN);
-        ret = E_OK;
+        if (block2_writeIndex < STORE_NUMBER_MAX) {
+            block2_writeAddress = BASE_BLOCK2_ADRESS + (block2_writeIndex * ONE_STORE_SIZE);
+            p_buf[11] = block2_writeIndex;
+            FRAM_Write(p_buf,block2_writeAddress,ONE_STORE_SIZE);
+            block2_writeIndex +=1;
+            block2_cnt[0] = ((uint8)block2_writeIndex);
+            block2_cnt[1] = ((uint8)((block2_writeIndex & 0xff00) >> 8));
+            FRAM_Write(block2_cnt,BLOCK1_BLOCK2_CNT_ADRESS,BLOCK1_BLOCK2_CNT_LEN);
+            ret = E_OK;            
+        }
     } else if (block == Error_Block) {
-        block3_writeAddress = BASE_BLOCK3_ADRESS + (block3_writeIndex * ONE_STORE_SIZE);
-        p_buf[11] = block3_writeIndex + 1;
-        FRAM_Write(p_buf,block3_writeAddress,ONE_STORE_SIZE);
-        block3_writeIndex +=1;
-        block3_cnt[0] = ((uint8)block3_writeIndex);
-        block3_cnt[1] = ((uint8)((block3_writeIndex & 0xff00) >> 8));
-        FRAM_Write(block3_cnt,BLOCK1_BLOCK3_CNT_ADRESS,BLOCK1_BLOCK3_CNT_LEN);
-        ret = E_OK;
+        if (block3_writeIndex < STORE_NUMBER_MAX) {
+            block3_writeAddress = BASE_BLOCK3_ADRESS + (block3_writeIndex * ONE_STORE_SIZE);
+            p_buf[11] = block3_writeIndex;
+            FRAM_Write(p_buf,block3_writeAddress,ONE_STORE_SIZE);
+            block3_writeIndex +=1;
+            block3_cnt[0] = ((uint8)block3_writeIndex);
+            block3_cnt[1] = ((uint8)((block3_writeIndex & 0xff00) >> 8));
+            FRAM_Write(block3_cnt,BLOCK1_BLOCK3_CNT_ADRESS,BLOCK1_BLOCK3_CNT_LEN);
+            ret = E_OK;            
+        }
     } else {
         /* nothing to do */
     }
