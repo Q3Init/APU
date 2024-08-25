@@ -12,6 +12,7 @@
 extern uint32_t app_lcd_sys_ms_get(void);
 
 #define LCD_ShowChinese_garland(x, y, s, num)  single_row_continue_printf_12x12_chinese_in_lcd(x, y, s, num, 12, 1)
+/* 这些函数的num 都不能超过一定大小，比如设置为15时，指针会访问过界*/
 #define LCD_ShowChinese_no_garland(x, y, s, num)  single_row_continue_printf_12x12_chinese_in_lcd(x, y, s, num, 12, 0)
 #define LCD_ShowChar_garland(x1, y1, s_1, num_1)  single_row_continue_printf_COLnxROW12_char_in_lcd(x1, y1, s_1, num_1, 6,12,1)
 #define LCD_ShowChar_no_garland(x1, y1, s_1, num_1)  single_row_continue_printf_COLnxROW12_char_in_lcd(x1, y1, s_1, num_1, 6, 12,0)
@@ -69,6 +70,14 @@ extern uint8_t password_check_in_please[];
 extern uint8_t modify_check_notyfication_two[];
 extern uint8_t modify_check_notyfication_one[];
 extern uint8_t storage_sccessful_check[];
+extern uint8_t check_process_notification[];
+extern uint8_t process_success_notify[];
+
+extern uint8_t fou[];
+extern uint8_t shi[];
+extern uint8_t zhongkouhao_r[];
+extern uint8_t zhongkouhao_l[];
+
 extern uint8_t my_num_0[];
 
 //5x12size

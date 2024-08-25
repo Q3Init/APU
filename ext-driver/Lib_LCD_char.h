@@ -33,6 +33,7 @@ extern uint8_t my_char_F[];
 extern uint8_t my_char_P[];
 extern uint8_t my_char_Q[];
 extern uint8_t my_char_r[];
+extern uint8_t my_char_R[];
 extern uint8_t my_char_s[];
 extern uint8_t my_char_S[];
 extern uint8_t my_char_NULL[];

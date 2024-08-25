@@ -187,7 +187,7 @@ enum MSG_PRIORITY_MASK{
 
 enum MSG_CONTEXT{
 	NO_MSG_CONTEXT,
-    FLUSH_SCREEN=9,			/* 9 */
+    FLUSH_SCREEN=10,			/* 10 */
 	FAULT_MSG_TO_LCD(Over_volt_lv1_fault),
 	FAULT_MSG_TO_LCD(Over_volt_lv2_fault),
 	FAULT_MSG_TO_LCD(Under_volt_lv1_fault),

@@ -10,7 +10,7 @@
 /* USART2 data register address */
 #define USART2_DR_ADDRESS        ((uint32_t)USART2_BASE+0x04)
 /* ADC1 data register address */
-#define ADC_SAMPLS_DATAS    1024
+#define ADC_SAMPLS_DATAS    256
 #define ADC_CHANNEL_NUMS    8
 #define ADC_DR_ADDR         ((uint32_t)ADC1_BASE + 0x4C)
 /* API2 data register address */

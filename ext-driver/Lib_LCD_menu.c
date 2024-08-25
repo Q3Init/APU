@@ -324,6 +324,77 @@ uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_
 	return password_auth_state;
 }
 
+uint8_t enter_key_check_notify_menu_unit(uint8_t msg_process_signal,uint8_t msg_context)
+{
+	uint8_t process_state = UNKNOW_PROCESS;
+	static uint8_t enter_check_num = 0;
+	uint8_t msg_context_par = msg_context;
+
+	do
+	{
+		if(msg_process_signal == 0)
+		{
+			break;
+		}
+
+		if(msg_context_par == KEY_ENTER)
+		{
+			enter_check_num++;
+		}
+
+		if(enter_check_num == 0)
+		{
+			msg_context_par = KEY_UNKNOW;
+		}
+		else if(enter_check_num == 1)
+		{
+			msg_context_par = 0xff;
+			enter_check_num++;
+			process_state = PROCESS_START;
+		}else
+		{
+			process_state = PROCESS_ONGOING;
+		}
+
+		uint8_t x_col = 9;
+		uint8_t y_raw = 38;
+		switch(msg_context_par)
+		{
+			case	0xff:
+				clear_screen();
+				// LCD_ShowChinese_garland(8, 13, run_monitor, 4);
+				LCD_ShowChinese_garland(36, 20, check_process_notification, 5);
+				LCD_ShowChinese_garland(x_col, y_raw, zhongkouhao_r, 1);
+				LCD_ShowEnglish_garland(x_col+12, y_raw, my_char_E, 1);
+				LCD_ShowChinese_garland(x_col+18, y_raw, zhongkouhao_l, 1);
+				LCD_ShowChinese_garland(x_col+30, y_raw, shi, 1);
+
+				x_col = x_col+20;
+				LCD_ShowChinese_garland(x_col+42, y_raw, zhongkouhao_r, 1);
+				LCD_ShowEnglish_garland(x_col+54, y_raw, my_char_R, 1);
+				LCD_ShowChinese_garland(x_col+60, y_raw, zhongkouhao_l, 1);
+				LCD_ShowChinese_garland(x_col+72, y_raw, fou, 1);
+				// LCD_ShowChinese_garland(8, 39, modify_check_notyfication_two, 9);
+				break;
+			case    KEY_ENTER:
+				clear_screen();
+				LCD_ShowChinese_no_garland(42, 26, process_success_notify, 4);
+				process_state = PROCESS_RESULT_SUCCESS;
+				enter_check_num = 0;
+				OS_DELAY_US(1000);
+				break;
+			case	KEY_RETURN:
+				process_state = PROCESS_RESULT_FAILED;
+				enter_check_num = 0;
+				break;
+			default:
+				break;
+		}
+	} while (false);
+
+	return process_state;
+}
+
 uint8_t modify_value_check_menu_unit(uint8_t msg_process_signal,uint8_t msg_context)
 {
 	uint8_t process_state = UNKNOW_PROCESS;

@@ -84,6 +84,7 @@ extern uint8_t lcd_the_modified_num_env_cur_idx_get(void);
 
 extern uint8_t lcd_modify_num_array[15];
 
+extern uint8_t enter_key_check_notify_menu_unit(uint8_t msg_process_signal,uint8_t msg_context);
 extern uint8_t modify_value_check_menu_unit(uint8_t msg_process_signal,uint8_t msg_context);
 extern void my_convert_int_to_int_array(uint8_t * ptr, uint8_t int_convert_length, uint32_t data);
 extern uint32_t my_convert_int_array_to_int_parameter(uint8_t * ptr, uint8_t int_convert_length);

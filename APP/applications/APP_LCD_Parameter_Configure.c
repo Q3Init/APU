@@ -2190,11 +2190,6 @@ struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint
 			else
 			{
 				Log_d("RETURN\n");
-				//just for test log
-				for(int j=0;j<5;j++)
-				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
-				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume

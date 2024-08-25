@@ -4,6 +4,6 @@
 #include "Lib_LCD_kernel.h"
 #include "Lib_LCD_words.h"
 #include "Lib_LCD_char.h"
-
+#include "Lib_LCD_menu.h"
 
 #endif

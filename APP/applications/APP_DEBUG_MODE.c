@@ -1,4 +1,5 @@
 #include "APP_DEBUG_MODE.h"
+#include "APP_Protection_Backend.h"
 
 uint8 debug_mode_menu_array[]=
 {
@@ -156,6 +157,7 @@ struct menu_event_tag * debug_mode_handler(uint8_t msg_process_signal, uint8_t m
 
 	return menu_evt;
 }
+
 struct menu_event_tag * driver_test_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! */
@@ -165,29 +167,102 @@ struct menu_event_tag * driver_test_handler(uint8_t msg_process_signal, uint8_t 
 
 	if(msg_process_signal == 1)
 	{
+		uint8_t msg_storage = msg_context;
 		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
-        uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 2, 1, sizeof(driver_test_menu_array));
+        uint8_t menu_type_idx = 0xff;
+		if(!lcd_modify_num_env.check_num_modify)
+		{
+			menu_type_idx = menu_type_ptr_match(msg_context, 2, 1, sizeof(driver_test_menu_array));
+		}
+
 		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
-        if(msg_context == KEY_RETURN)
+		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, DEBUG_MODE, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				menu_level_from_env_set(TOP_NODE_MENU, DEBUG_MODE, UNKNOW_THIRD_MENU);
+				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				lcd_the_modified_num_env_to_be_clear_all();
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+			}
 		}
-        
+
+        // if(msg_context == KEY_RETURN)
+		// {
+		// 	menu_level_from_env_set(TOP_NODE_MENU, DEBUG_MODE, UNKNOW_THIRD_MENU);
+        //     msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+		// 	cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+		// 	Log_d("key KEY_RETURN menu!\r\n");
+		// }
+
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
 			clear_screen();
-			msg_context = 0xff;
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;
 			msg_lock_from_env_set(0);//unlock the msg
         }
 
-		switch(msg_context)
+		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = enter_key_check_notify_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true; //让中文光标停住
+				}
+				else
+				{
+					//ENTER has checked.
+					menu_type_idx = menu_type_ptr_match(KEY_UNKNOW, 2, 1, sizeof(driver_test_menu_array));
+					switch(driver_test_menu_array[menu_type_idx])
+					{
+						case OPEN_TEST:
+							APP_Relay_Force_Switch_On();
+							break;
+						case CLOSE_TEST:
+							APP_Relay_Force_Switch_Off();
+							break;
+						default:
+							break;
+					}
+					msg_storage = LCD_FLUSH_SCREEN_IND;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+			}
+		}
+
+		switch(msg_storage)
 		{
-			case	0xff:
+			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
     		case	KEY_DOWN:		
     		case	KEY_LEFT:
