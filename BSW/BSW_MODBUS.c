@@ -29,22 +29,28 @@ void MBSReadRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func )
     uint16_t  crc   = 0;
 	uint16 ptr;
 	
-	uint8_t tx[1024] = {0};
+	uint8_t tx[512] = {0};
     tx[ i++ ]         = app_parameter_read_Module_address();
     tx[ i++ ]         = func;
 	if (func != FUNC_CODE_18) {
-		tx[ i++ ]         = len * 2;
-		for ( uint16_t j = startAddr; j < startAddr + len; ++j )
-		{
-			if (func == FUNC_CODE_1) {
-				ptr = bsw_modbus_list[0].read_callbcak(j);
-			} else if (func == FUNC_CODE_2) {
-				ptr = bsw_modbus_list[1].read_callbcak(j);
-			} else if (func == FUNC_CODE_3) {
-				ptr = bsw_modbus_list[2].read_callbcak(j);
+		
+		if (func == FUNC_CODE_10) {
+			tx[ i++ ] = 1;
+			tx[ i++ ] = 0x01; /* default set time OK */
+		} else {
+			tx[ i++ ] = len * 2;
+			for ( uint16_t j = startAddr; j < startAddr + len; ++j )
+			{
+				if (func == FUNC_CODE_1) {
+					ptr = bsw_modbus_list[0].read_callbcak(j);
+				} else if (func == FUNC_CODE_2) {
+					ptr = bsw_modbus_list[1].read_callbcak(j);
+				} else if (func == FUNC_CODE_3) {
+					ptr = bsw_modbus_list[2].read_callbcak(j);
+				}
+				tx[ i++ ] = (uint8)(ptr >> 8);
+				tx[ i++ ] = (uint8)(ptr );
 			}
-			tx[ i++ ] = (uint8)(ptr >> 8);
-			tx[ i++ ] = (uint8)(ptr );
 		}
 	} else {
 		uint16 soe_len = 0;
@@ -252,6 +258,9 @@ void uart_recv_func( uint8_t *data , uint16_t len )
 				return;				
 			}
 			Set_Rtcfunc(data);
+			if (modbus_head != BOARDCASE_ADDR) { /* The broadcast address does not respond */
+				MBSReadRegsRequst(modbus_addr,reg_len,modbus_cmd);
+			}
 			break;
 		case FUNC_CODE_18:
 			soe_group = data[4]<<8 | data[5];
