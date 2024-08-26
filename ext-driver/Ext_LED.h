@@ -8,11 +8,13 @@
 enum
 {
     LED_RUN,
-    LED_COMMUN,
+    LED_FAULT,
+    LED_WARNING,
     LED_FIT,
     LED_QUANTILE,
-    LED_WARNING,
-    LED_FAULT
+    LED_COMMUN,
+    LED_SELFTEST,
+    LED_FAFR
 };
 
 typedef enum
@@ -44,4 +46,5 @@ extern Led_struct Led_Map[];
 extern uint16     Led_Num;
 extern void       SetLedStatus( fault_type fault_event );
 extern void       Set_FIT_QUANTILE_Led( void );
+extern void       Set_commun_Led( uint8_t status );
 #endif
