@@ -5,6 +5,7 @@
 #include "apm32e10x_gpio.h"
 #include "apm32e10x_misc.h"
 #include "apm32e10x_rcm.h"
+#include "Ext_led.h"
 
 uart_str uart_modbus = { 0 };
 
