@@ -203,6 +203,8 @@ typedef struct {
     float32 last_fundamental_freq;
     float32 spike_freq_value;
 
+    uint32 init_delay_tick;         /* 系统首次供电，待稳定再打开保护功能检测 */
+
 } APP_Protection_Mnt_t;
 
 void APP_Protection_Management_Init(void);
