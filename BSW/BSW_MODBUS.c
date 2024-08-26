@@ -31,7 +31,7 @@ void MBSReadRegsRequst( uint16_t startAddr, uint16_t len, uint8_t func )
     uint16_t crc = 0;
     uint16   ptr;
 
-    uint8_t tx[ 512 ] = { 0 };
+    uint8_t tx[ 256 ] = { 0 };
     tx[ i++ ]         = app_parameter_read_Module_address( );
     tx[ i++ ]         = func;
     if ( func != FUNC_CODE_18 )
