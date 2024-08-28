@@ -133,6 +133,7 @@ typedef enum
     ZERO_CURRENT_AMPLITUDE,
     ZERO_CURRENT_FREQUENCY,
     ZERO_CURRENT_PHASE,
+    External_Coordination_Trip,
     ID_CNT
 }bsw_nvm_storge_id;
 

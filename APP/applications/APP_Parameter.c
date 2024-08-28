@@ -37,6 +37,7 @@ static app_par_Harmonic_Protection_Delay_Rte app_par_Harmonic_Protection_Delay;
 static app_par_Harmonic_Protection_Eol_Rte   app_par_Harmonic_Protection_Eol;
 /* 外部联跳 */
 static app_par_External_Coordination_Delay_Rte app_par_External_Coordination_Delay;
+static app_par_External_Coordination_Trip_Rte   app_par_External_Coordination_Trip;
 static app_par_External_Coordination_Eol_Rte   app_par_External_Coordination_Eol;
 /* 速断保护 */
 static app_par_Instantaneous_Overcurrent_Protection_Value_Rte app_par_Instantaneous_Overcurrent_Protection_Value;
@@ -336,6 +337,12 @@ void APP_Parameter_Init(void)
     if (ret == E_OK) {
         app_par_External_Coordination_Delay.datas = app_par_four_intbit_bytes_buf_to_float32(app_par_External_Coordination_Delay.p_buf);
         Log_d("app_par_External_Coordination_Delay.datas:%f\r\n",app_par_External_Coordination_Delay.datas);
+    }
+    /* External_Coordination_Trip */
+    ret = BSW_NvM_Read(External_Coordination_Trip,app_par_External_Coordination_Trip.p_buf); 
+    if (ret == E_OK) {
+        app_par_External_Coordination_Trip.datas = *app_par_External_Coordination_Trip.p_buf;
+        Log_d("app_par_External_Coordination_Trip.datas:%d\r\n",app_par_External_Coordination_Trip.datas);
     }
     /* External_Coordination_Eol */
     ret = BSW_NvM_Read(External_Coordination_Eol,app_par_External_Coordination_Eol.p_buf); 
@@ -1283,6 +1290,21 @@ uint8 app_parameter_write_External_Coordination_Delay(float32 data)
     return ret;
 }
 
+uint8 app_parameter_read_External_Coordination_Trip(void)
+{
+    uint8 ret = app_par_External_Coordination_Trip.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_External_Coordination_Trip(uint8 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_External_Coordination_Trip.datas = data;
+    APP_Ext_Ctrl_Permit_Switch_Off_Enable_Ctrl(data);
+    ret = BSW_NvM_Write(External_Coordination_Trip,&data);
+    return ret;
+}
+
 uint8 app_parameter_read_External_Coordination_Eol(void)
 {
     uint8 ret = app_par_External_Coordination_Eol.datas;
@@ -1488,6 +1510,7 @@ uint8 app_parameter_write_Zero_Sequence_Overflow_Allow_trip(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_Zero_Sequence_Overflow_Allow_trip.datas = data;
+    APP_Zero_Seq_Permit_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(Zero_Sequence_Overflow_Allow_trip,&data);
     return ret;
 }
@@ -1547,6 +1570,7 @@ uint8 app_parameter_write_System_Down_Allow_trip(uint8 data)
 {
     uint8 ret = E_NOK; 
     app_par_System_Down_Allow_trip.datas = data;
+    APP_System_Outage_Permit_Switch_Off_Enable_Ctrl(data);
     ret = BSW_NvM_Write(System_Down_Allow_trip,&data);
     return ret;
 }
@@ -2675,7 +2699,8 @@ void app_allpara_default_init(void)
     nvm_datas_Lists[Harmonic_Protection_Delay].dft = MCM_floatToIntBit(1.0);	
     nvm_datas_Lists[Harmonic_Protection_Eol].dft = 1;	
 
-    nvm_datas_Lists[External_Coordination_Delay].dft = MCM_floatToIntBit(0);	
+    nvm_datas_Lists[External_Coordination_Delay].dft = MCM_floatToIntBit(0);
+    nvm_datas_Lists[External_Coordination_Trip].dft = 0;		
     nvm_datas_Lists[External_Coordination_Eol].dft = 0;	
 
     nvm_datas_Lists[Instantaneous_Overcurrent_Protection_Value].dft = MCM_floatToIntBit(30.0);	

@@ -209,6 +209,13 @@ typedef struct
     /* data */
     uint8 datas;
     uint8 p_buf[1];
+}app_par_External_Coordination_Trip_Rte;
+
+typedef struct
+{
+    /* data */
+    uint8 datas;
+    uint8 p_buf[1];
 }app_par_External_Coordination_Eol_Rte;
 
 typedef struct
@@ -881,6 +888,8 @@ extern uint8 app_parameter_write_Harmonic_Protection_Eol(uint8 data);
 /* 外部联跳 */
 extern float32 app_parameter_read_External_Coordination_Delay(void);
 extern uint8 app_parameter_write_External_Coordination_Delay(float32 data);
+extern uint8 app_parameter_read_External_Coordination_Trip(void);
+extern uint8 app_parameter_write_External_Coordination_Trip(uint8 data);
 extern uint8 app_parameter_read_External_Coordination_Eol(void);
 extern uint8 app_parameter_write_External_Coordination_Eol(uint8 data);
 

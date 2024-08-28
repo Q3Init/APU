@@ -455,7 +455,8 @@ static void APP_Protection_Voltage_Handler(void)
                 }  
             }            
         } else {
-            pMnt->anti_shake_tick[APP_PRT_OVER_VOLT_LV1] = APP_Get_System_Ms();
+            pMnt->state.over_volt_switch_off_state_lv1 = 0;
+            pMnt->delay_exec_list[APP_PRT_OVER_VOLT_LV1] = false;
         }
 
         if (true == pMnt->delay_exec_list[APP_PRT_OVER_VOLT_LV1]) {
@@ -489,7 +490,8 @@ static void APP_Protection_Voltage_Handler(void)
                 }  
             }
         } else {
-            pMnt->anti_shake_tick[APP_PRT_OVER_VOLT_LV2] = APP_Get_System_Ms();
+            pMnt->state.over_volt_switch_off_state_lv2 = 0;
+            pMnt->delay_exec_list[APP_PRT_OVER_VOLT_LV2] = false;
         }
         /* Priority: If the first stage overvoltage is satisfied, the second stage overvoltage fault is not triggered */
         if ((true == pMnt->delay_exec_list[APP_PRT_OVER_VOLT_LV2]) && (false == pMnt->delay_exec_list[APP_PRT_OVER_VOLT_LV1])) {
@@ -522,7 +524,8 @@ static void APP_Protection_Voltage_Handler(void)
                 }         
             }     
         } else {
-            pMnt->anti_shake_tick[APP_PRT_UNDER_VOLT_LV1] = APP_Get_System_Ms();
+            pMnt->state.under_volt_switch_off_state_lv1 = 0;
+            pMnt->delay_exec_list[APP_PRT_UNDER_VOLT_LV1] = false;
         }
         /* Priority: If the second undervoltage is met, the first undervoltage fault is not triggered */
         if ((true == pMnt->delay_exec_list[APP_PRT_UNDER_VOLT_LV1]) && (false == pMnt->delay_exec_list[APP_PRT_UNDER_VOLT_LV2])) {
@@ -555,7 +558,8 @@ static void APP_Protection_Voltage_Handler(void)
                 }  
             }
         } else {
-            pMnt->anti_shake_tick[APP_PRT_UNDER_VOLT_LV2] = APP_Get_System_Ms();
+            pMnt->state.under_volt_switch_off_state_lv2 = 0;
+            pMnt->delay_exec_list[APP_PRT_UNDER_VOLT_LV2] = false;
         }
 
         if (true == pMnt->delay_exec_list[APP_PRT_UNDER_VOLT_LV2]) {
@@ -599,7 +603,8 @@ static void APP_Protection_Freq_Handler(void)
                 }    
             }          
         } else {
-            pMnt->anti_shake_tick[APP_PRT_OVER_FREQ] = APP_Get_System_Ms();
+            pMnt->state.over_freq_switch_off_state = 0;
+            pMnt->delay_exec_list[APP_PRT_OVER_FREQ] = false;
         }
         /* If a frequency mutation occurs, neither too high nor too low a frequency fault will trigger */
         if ((true == pMnt->delay_exec_list[APP_PRT_OVER_FREQ]) && (false == pMnt->delay_exec_list[APP_PRT_SPIKE_FREQ])) {
@@ -632,7 +637,8 @@ static void APP_Protection_Freq_Handler(void)
                 }  
             }                
         } else {
-            pMnt->anti_shake_tick[APP_PRT_LOW_FREQ] = APP_Get_System_Ms();
+            pMnt->state.low_freq_switch_off_state = 0;
+            pMnt->delay_exec_list[APP_PRT_LOW_FREQ] = false;
         }
         /* If a frequency mutation occurs, neither too high nor too low a frequency fault will trigger */
         if ((true == pMnt->delay_exec_list[APP_PRT_LOW_FREQ]) && (false == pMnt->delay_exec_list[APP_PRT_SPIKE_FREQ])) {
@@ -666,7 +672,10 @@ static void APP_Protection_Freq_Handler(void)
                     Log_w("Freq Protection: Spike Freq. Fundamental Freq = %f, Spike = %f, Threshold = %f.\r\n", 
                         APP_Get_Fundamental_Freq(), pMnt->spike_freq_value, freq_threshold);
                 }                                
-            } 
+            } else {
+                pMnt->state.spike_freq_switch_off_state = 0;
+                pMnt->delay_exec_list[APP_PRT_SPIKE_FREQ] = false;
+            }
             
             if (true == pMnt->delay_exec_list[APP_PRT_SPIKE_FREQ]) {
                 if (((APP_Get_System_Ms() - pMnt->tick_list[APP_PRT_SPIKE_FREQ]) >= delay_ms) && (!pMnt->state.spike_freq_switch_off_state)){
@@ -711,7 +720,7 @@ static void APP_Protection_ReversePower_Handler(void)
                 }    
             }             
         } else {
-            pMnt->anti_shake_tick[APP_PRT_REVERSE_POWER] = APP_Get_System_Ms();
+            pMnt->delay_exec_list[APP_PRT_REVERSE_POWER] = false; /* 故障发生的时间过短，还未置故障标志位，需要清除 */
         }
         
         if (true == pMnt->delay_exec_list[APP_PRT_REVERSE_POWER]) {
@@ -757,7 +766,8 @@ static void APP_Protection_Harmonic_Handler(void)
                 }               
             }        
         } else {
-            pMnt->anti_shake_tick[APP_PRT_HARMONIC_VOLT_DISTORTION] = APP_Get_System_Ms();
+            pMnt->state.harmonic_volt_distortion_switch_off_state = 0;
+            pMnt->delay_exec_list[APP_PRT_HARMONIC_VOLT_DISTORTION] = false;
         }
         
         if (true == pMnt->delay_exec_list[APP_PRT_HARMONIC_VOLT_DISTORTION]) {
@@ -777,13 +787,12 @@ static void APP_Protection_Harmonic_Handler(void)
 static void APP_Protection_ExtCtrl_Handler(void)
 {
     uint8_t delay_ms = 0;
-
+    /* 外部联跳信号输入 && 联跳允许跳闸投入 && 外部联跳功能投入 */
     if (pMnt->enable.ext_ctrl_switch_off_enable && pMnt->enable.ext_ctrl_permit_switch_off) { /* 外部联跳保护 */
         delay_ms = (uint32)(LIMIT_RANGE(EXT_CTRL_DELAY_MIN_RANGE, 
                                         EXT_CTRL_DELAY_MAX_RANGE, 
                                         app_parameter_read_External_Coordination_Delay()) * 1000);
-        /* 外部联跳信号输入 && 联跳允许跳闸投入 && 外部联跳功能投入 */
-        if (true == APP_Remote_Signal_Input_Switching_Exist_Off()) { /* 存在跳闸输入 */
+        if (BIT_SET == APP_Remote_Signal_Input_Read_ExtCtrl()) { /* 存在外部联跳信号输入 */
             
             if ((APP_Get_System_Ms() - pMnt->anti_shake_tick[APP_PRT_EXT_CTRL]) >= ANTI_SHAKE_EXTCTRL_DELAY) {
                 if (false == pMnt->delay_exec_list[APP_PRT_EXT_CTRL]) {
@@ -793,15 +802,14 @@ static void APP_Protection_ExtCtrl_Handler(void)
                 }            
             } 
         } else {
-            pMnt->anti_shake_tick[APP_PRT_EXT_CTRL] = APP_Get_System_Ms();
+            pMnt->delay_exec_list[APP_PRT_EXT_CTRL] = true;
+            pMnt->state.ext_ctrl_switch_off_state = 0;
         }
 
         if (true == pMnt->delay_exec_list[APP_PRT_EXT_CTRL]) {
-            if ((APP_Get_System_Ms() - pMnt->tick_list[APP_PRT_EXT_CTRL]) >= delay_ms) {
-                if (APP_Relay_Get_State_Group_1() || APP_Relay_Get_State_Group_2() || APP_Relay_Get_State_Group_3() || APP_Relay_Get_State_Group_4()) {
-                    APP_Relay_ExtCtrl_Switch_Off();
-                }                 
+            if ((APP_Get_System_Ms() - pMnt->tick_list[APP_PRT_EXT_CTRL]) >= delay_ms) {                
                 if (!pMnt->state.ext_ctrl_switch_off_state) {
+                    APP_Relay_ExtCtrl_Switch_Off();
                     pMnt->state.ext_ctrl_switch_off_state = 1;
                     Log_i("ExtCtrl Protection. Relay Select Switch Off.\n");
                 }
@@ -852,6 +860,9 @@ static void APP_Protection_Current_Handler(void)
                     Log_w("Current Protection: Quick Break Protection. Ia = %f, Ib = %f, Ic = %f, Threshold = %f, Spike Ths = %.4f.\r\n",
                         APP_Get_Current_Ia(), APP_Get_Current_Ib(), APP_Get_Current_Ic(), threshold, spike_threshold);    
                 }                                 
+            } else {
+                pMnt->state.quick_break_switch_off_state = 0;
+                pMnt->delay_exec_list[APP_PRT_QUICK_BREAK] = false;
             }
             
             if (true == pMnt->delay_exec_list[APP_PRT_QUICK_BREAK]) {
@@ -886,7 +897,8 @@ static void APP_Protection_Current_Handler(void)
                 } 
             }                     
         } else {
-            pMnt->anti_shake_tick[APP_PRT_TIME_LIMIT_QUICK_BREAK] = APP_Get_System_Ms();
+            pMnt->state.time_limit_quick_break_switch_off_state = 0;
+            pMnt->delay_exec_list[APP_PRT_TIME_LIMIT_QUICK_BREAK] = false;
         }
         /* If the quick break protection occurs, the speed limit break protection fault will not trigger */
         if ((true == pMnt->delay_exec_list[APP_PRT_TIME_LIMIT_QUICK_BREAK]) && (false == pMnt->delay_exec_list[APP_PRT_QUICK_BREAK])) {
@@ -918,7 +930,8 @@ static void APP_Protection_Current_Handler(void)
                 }  
             }           
         } else {
-            pMnt->anti_shake_tick[APP_PRT_OVER_CURRENT] = APP_Get_System_Ms();
+            pMnt->state.over_current_switch_off_state = 0;
+            pMnt->delay_exec_list[APP_PRT_OVER_CURRENT] = false;
         }
         /* If the quick-break protection occurs, the overcurrent protection fault is not triggered */
         if ((true == pMnt->delay_exec_list[APP_PRT_OVER_CURRENT]) && (false == pMnt->delay_exec_list[APP_PRT_QUICK_BREAK]) && (false == pMnt->delay_exec_list[APP_PRT_TIME_LIMIT_QUICK_BREAK])) {
@@ -951,7 +964,8 @@ static void APP_Protection_Current_Handler(void)
                 }   
             }               
         } else {
-            pMnt->anti_shake_tick[APP_PRT_ZERO_SEQUENCE_CURRENT] = APP_Get_System_Ms();
+            pMnt->state.zero_seq_current_switch_off_state = 0; 
+            pMnt->delay_exec_list[APP_PRT_ZERO_SEQUENCE_CURRENT] = false;
         }
         
         if (true == pMnt->delay_exec_list[APP_PRT_ZERO_SEQUENCE_CURRENT]) {
@@ -1003,7 +1017,8 @@ static void APP_Protection_SystemOutage_Handler(void)
                 }    
             }            
         } else {
-            pMnt->anti_shake_tick[APP_PRT_SYSTEM_OUTAGE] = APP_Get_System_Ms();
+            pMnt->state.system_outage_switch_off_state = 0;
+            pMnt->delay_exec_list[APP_PRT_SYSTEM_OUTAGE] = false;
         }
         
         if (true == pMnt->delay_exec_list[APP_PRT_SYSTEM_OUTAGE]) {
@@ -1043,6 +1058,7 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
     uint8 time_limit_quick_break_switch_off_flag = 0;
     uint8 over_current_switch_off_flag = 0;
     uint8 zero_seq_current_switch_off_flag = 0;
+    uint8 reverse_Power = 0;
 
     /* 有压合闸功能投入 && 下限 < 任意线电压 < 上限 && 下限 < 频率 < 上限 && 没有合闸闭锁信号 && 
         三相电流均小于0.1A && 开关在分位 && 发电侧UX < 30V && 合闸充电标志=1 */
@@ -1050,36 +1066,39 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
          /* 装置首次上电 */
         sys_first_power_on_flag = (true == pMnt->system_first_power_up_flag) && pMnt->enable.system_power_up_switch_on_enable;
         /* 低压跳闸 */
-        under_volt_flag = (pMnt->state.under_volt_switch_off_state_lv1 || pMnt->state.under_volt_switch_off_state_lv2) && 
+        under_volt_flag = ((pMnt->state.under_volt_switch_off_state_lv1 != 1) || (pMnt->state.under_volt_switch_off_state_lv2 != 1)) && 
                         pMnt->enable.under_volt_switch_on_enable;    
         /* 高压跳闸 */
-        over_volt_flag = (pMnt->state.over_volt_switch_off_state_lv1 || pMnt->state.over_volt_switch_off_state_lv2) && 
+        over_volt_flag = ((pMnt->state.over_volt_switch_off_state_lv1 != 1) || (pMnt->state.over_volt_switch_off_state_lv2 != 1)) && 
                         (pMnt->enable.over_volt_switch_on_enable); 
         /* 失电跳闸 */
-        sys_outage_flag = pMnt->state.system_outage_switch_off_state && pMnt->enable.system_outage_switch_on_enable;
+        sys_outage_flag = (pMnt->state.system_outage_switch_off_state != 1) && pMnt->enable.system_outage_switch_on_enable;
         /* 高频跳闸 */ 
-        over_freq_flag = pMnt->state.over_freq_switch_off_state && pMnt->enable.over_freq_switch_on_enable;
+        over_freq_flag = (pMnt->state.over_freq_switch_off_state != 1) && pMnt->enable.over_freq_switch_on_enable;
         /* 低频跳闸 */
-        low_freq_flag = pMnt->state.low_freq_switch_off_state && pMnt->enable.low_freq_switch_on_enable;
+        low_freq_flag = (pMnt->state.low_freq_switch_off_state != 1) && pMnt->enable.low_freq_switch_on_enable;
         /* 非手分合闸 */
         non_manual_flag = (BIT_RESET == APP_Remote_Signal_Input_Read_Closing_And_Locking()) && pMnt->enable.non_manual_switch_on_enable;
         /* 谐波保护 */
-        harmonic_flag = pMnt->state.harmonic_volt_distortion_switch_off_state && pMnt->enable.harmonic_distortion_switch_off_enable;
+        harmonic_flag = (pMnt->state.harmonic_volt_distortion_switch_off_state != 1) && pMnt->enable.harmonic_distortion_switch_off_enable;
         /* 外部联跳 */
-        extCtrl_flag = pMnt->state.ext_ctrl_switch_off_state && pMnt->enable.ext_ctrl_switch_off_enable;
+        extCtrl_flag = (pMnt->state.ext_ctrl_switch_off_state != 1) && pMnt->enable.ext_ctrl_switch_off_enable;
         /* 速断保护 */
-        qucik_break_switch_off_flag = pMnt->state.quick_break_switch_off_state && pMnt->enable.quick_break_switch_off_enable;
+        qucik_break_switch_off_flag = (pMnt->state.quick_break_switch_off_state != 1) && pMnt->enable.quick_break_switch_off_enable;
         /* 限时速断保护 */
-        time_limit_quick_break_switch_off_flag = pMnt->state.time_limit_quick_break_switch_off_state && pMnt->enable.time_limit_quick_break_switch_off_enable;
+        time_limit_quick_break_switch_off_flag = (pMnt->state.time_limit_quick_break_switch_off_state != 1) && pMnt->enable.time_limit_quick_break_switch_off_enable;
         /* 过流保护 */
-        over_current_switch_off_flag = pMnt->state.over_current_switch_off_state && pMnt->enable.over_current_switch_off_enable;
+        over_current_switch_off_flag = (pMnt->state.over_current_switch_off_state != 1) && pMnt->enable.over_current_switch_off_enable;
         /* 零序过流保护 */
-        zero_seq_current_switch_off_flag = pMnt->state.zero_seq_current_switch_off_state && pMnt->enable.zero_seq_current_switch_off_enable;
+        zero_seq_current_switch_off_flag = (pMnt->state.zero_seq_current_switch_off_state != 1) && pMnt->enable.zero_seq_current_switch_off_enable;
+        /* 逆功率保护 */
+        reverse_Power = (pMnt->state.reverse_power_switch_off_state != 1) && pMnt->enable.reverse_power_switch_off_enable;
 
-        enable_state = sys_first_power_on_flag || under_volt_flag || over_volt_flag || 
-        sys_outage_flag || over_freq_flag || low_freq_flag || non_manual_flag || 
-        harmonic_flag || qucik_break_switch_off_flag || time_limit_quick_break_switch_off_flag ||
-        over_current_switch_off_flag || zero_seq_current_switch_off_flag;
+        /* 所有故障标志位集合 enable_state: 0代表有故障，1代表没故障 */
+        enable_state = sys_first_power_on_flag || (under_volt_flag && over_volt_flag && 
+        sys_outage_flag && over_freq_flag && low_freq_flag && non_manual_flag && 
+        harmonic_flag && qucik_break_switch_off_flag && time_limit_quick_break_switch_off_flag &&
+        over_current_switch_off_flag && zero_seq_current_switch_off_flag && extCtrl_flag && reverse_Power);
 
         /* 电压上下限 */
         volt_limit = ((APP_Get_Voltage_Ua() > app_parameter_read_Voltage_Closing_Lower_Voltage_Limit()) && 
@@ -1101,7 +1120,7 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
         if (volt_limit && freq_limit && current_limit && enable_state && 
             (BIT_RESET == APP_Remote_Signal_Input_Read_Closing_And_Locking()) && 
             (true == APP_Remote_Signal_Input_Switching_Exist_Off()) &&
-            (APP_Get_Voltage_Uout() < 30.0) && pMnt->state.switch_on_charge_state) { /* 合闸充电状态 */
+            (APP_Get_Voltage_Uout() < 30.0) && pMnt->state.switch_on_charge_state) { 
             
             if (false == pMnt->delay_exec_list[APP_PRT_ON_VOLT_SWITCH_ON]) {
                 pMnt->delay_exec_list[APP_PRT_ON_VOLT_SWITCH_ON] = true;
@@ -1119,68 +1138,6 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
                 if (sys_first_power_on_flag) {
                     pMnt->system_first_power_up_flag = false;
                     Log_i("System On Volt Rise Switch On Reason: System First Power On.\n");
-                }
-                if (under_volt_flag) {
-                    pMnt->state.under_volt_switch_off_state_lv1 = 0;
-                    pMnt->state.under_volt_switch_off_state_lv2 = 0;
-                    pMnt->delay_exec_list[APP_PRT_UNDER_VOLT_LV1] = false;
-                    pMnt->delay_exec_list[APP_PRT_UNDER_VOLT_LV2] = false;
-                    Log_i("System On Volt Rise Switch On Reason: Under Volt.\n");
-                }
-                if (over_volt_flag) {
-                    pMnt->state.over_volt_switch_off_state_lv1 = 0;
-                    pMnt->state.over_volt_switch_off_state_lv2 = 0;
-                    pMnt->delay_exec_list[APP_PRT_OVER_VOLT_LV1] = false;
-                    pMnt->delay_exec_list[APP_PRT_OVER_VOLT_LV2] = false;
-                    Log_i("System On Volt Rise Switch On Reason: Over Volt.\n");
-                }
-                if (sys_outage_flag) {
-                    pMnt->state.system_outage_switch_off_state = 0;
-                    pMnt->delay_exec_list[APP_PRT_SYSTEM_OUTAGE] = false;
-                    Log_i("System On Volt Rise Switch On Reason: System Outage.\n");
-                }
-                if (over_freq_flag) {
-                    pMnt->state.over_freq_switch_off_state = 0;
-                    pMnt->delay_exec_list[APP_PRT_OVER_FREQ] = false;
-                    Log_i("System On Volt Rise Switch On Reason: Over Freq.\n");
-                }
-                if (low_freq_flag) {
-                    pMnt->state.low_freq_switch_off_state = 0;
-                    pMnt->delay_exec_list[APP_PRT_LOW_FREQ] = false;
-                    Log_i("System On Volt Rise Switch On Reason: Low Freq.\n");
-                }
-                if (non_manual_flag) {
-                    Log_i("System On Volt Rise Switch On Reason: Non Manual.\n");
-                }
-                if (harmonic_flag) {
-                    pMnt->state.harmonic_volt_distortion_switch_off_state = 0;
-                    pMnt->delay_exec_list[APP_PRT_HARMONIC_VOLT_DISTORTION] = false;
-                    Log_i("System On Volt Rise Switch On Reason: Harmonic.\n");
-                }
-                if (extCtrl_flag) {
-                    pMnt->state.ext_ctrl_switch_off_state = 0;
-                    pMnt->delay_exec_list[APP_PRT_EXT_CTRL] = false;
-                    Log_i("System On Volt Rise Switch On Reason: ExtCtrl.\n");
-                }
-                if (qucik_break_switch_off_flag) {
-                    pMnt->state.quick_break_switch_off_state = 0;
-                    pMnt->delay_exec_list[APP_PRT_QUICK_BREAK] = false;
-                    Log_i("System On Volt Rise Switch On Reason: Quick Beak.\n");
-                }
-                if (time_limit_quick_break_switch_off_flag) {
-                    pMnt->state.time_limit_quick_break_switch_off_state = 0;
-                    pMnt->tick_list[APP_PRT_TIME_LIMIT_QUICK_BREAK] = false;
-                    Log_i("System On Volt Rise Switch On Reason: Time Limit Quick Beak.\n");
-                }
-                if (over_current_switch_off_flag) {
-                    pMnt->state.over_current_switch_off_state = 0;
-                    pMnt->delay_exec_list[APP_PRT_OVER_CURRENT] = false;
-                    Log_i("System On Volt Rise Switch On Reason: Over Current.\n");
-                }
-                if (zero_seq_current_switch_off_flag) {
-                    pMnt->state.zero_seq_current_switch_off_state = 0;  
-                    pMnt->delay_exec_list[APP_PRT_ZERO_SEQUENCE_CURRENT] = false;
-                    Log_i("System On Volt Rise Switch On Reason: Zero Seq Over Current.\n");
                 }
             }
         }
@@ -1218,7 +1175,8 @@ static void APP_Protection_PowerRestorationOperate_Handler(void)
                 }  
             }                         
         } else {
-            pMnt->anti_shake_tick[APP_PRT_POWER_RESTORATION] = APP_Get_System_Ms();
+            pMnt->state.power_restoration_switch_on_state = 0;
+            pMnt->delay_exec_list[APP_PRT_POWER_RESTORATION] = false;
         }
         
         if (true == pMnt->delay_exec_list[APP_PRT_POWER_RESTORATION]) {
@@ -1227,6 +1185,9 @@ static void APP_Protection_PowerRestorationOperate_Handler(void)
 
                 APP_Relay_Select_Switch_On();
                 pMnt->state.power_restoration_switch_on_state = 1;
+                /* 清除逆功率标志位 */
+                pMnt->state.reverse_power_switch_off_state = 0;
+                pMnt->delay_exec_list[APP_PRT_REVERSE_POWER] = false;
                 Log_i("Power Restoration Protection. Relay Select Switch On.\n");
             }    
         }
@@ -1280,7 +1241,7 @@ void APP_Protection_Management_Init(void)
     pMnt->enable.harmonic_distortion_switch_off_enable    = app_parameter_read_Harmonic_Protection_Eol();
     /* 外部联跳 */
     pMnt->enable.ext_ctrl_switch_off_enable               = app_parameter_read_External_Coordination_Eol();
-    pMnt->enable.ext_ctrl_permit_switch_off               = 1; /* 需求不明确，保留接口 */
+    pMnt->enable.ext_ctrl_permit_switch_off               = app_parameter_read_External_Coordination_Trip();
     /* 速断保护 */
     pMnt->enable.quick_break_switch_off_enable            = app_parameter_read_Instantaneous_Overcurrent_Eol();
     /* 限速保护 */
@@ -1289,10 +1250,10 @@ void APP_Protection_Management_Init(void)
     pMnt->enable.over_current_switch_off_enable           = app_parameter_read_Overcurrent_Protection_Eol();
     /* 零序过流 */
     pMnt->enable.zero_seq_current_switch_off_enable       = app_parameter_read_Zero_Sequence_Overflow_Eol();
-    pMnt->enable.zero_seq_permit_switch_off               = 1; /* 需求不明确，保留接口 */
+    pMnt->enable.zero_seq_permit_switch_off               = app_parameter_read_Zero_Sequence_Overflow_Allow_trip();
     /* 系统失电 */
     pMnt->enable.system_outage_switch_off_enable          = app_parameter_read_System_Down_Eol();
-    pMnt->enable.system_outage_permit_switch_off          = 1; /* 需求不明确，保留接口 */
+    pMnt->enable.system_outage_permit_switch_off          = app_parameter_read_System_Down_Allow_trip();
     /* 有压合闸相关 */
     pMnt->enable.on_volt_switch_on_enable                 = app_parameter_read_Voltage_Closing_Eol();
     pMnt->enable.system_power_up_switch_on_enable         = app_parameter_read_Voltage_Closing_Power_On();

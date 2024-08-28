@@ -234,8 +234,11 @@ uint8 APP_Remote_Signal_Input_Read_Group_1(void);
 uint8 APP_Remote_Signal_Input_Read_Group_2(void);
 /* 获取开关量输入，DI5 & DI6 组合开关 */
 uint8 APP_Remote_Signal_Input_Read_Group_3(void);
-/* 获取开关量输入，DI7 & DI8 组合开关 */
-uint8 APP_Remote_Signal_Input_Read_Group_4(void);
+
+/* 获取联跳信号，DI18 */
+uint8 APP_Remote_Signal_Input_Read_ExtCtrl(void);
+/* 获取检修信号，DI19 */
+uint8 APP_Remote_Signal_Input_Read_Overhaul(void);
 /* 获取合闸闭锁输入状态，DI10 */
 uint8 APP_Remote_Signal_Input_Read_Closing_And_Locking(void);
 /* 全部开关量输入是否存在合位状态 */

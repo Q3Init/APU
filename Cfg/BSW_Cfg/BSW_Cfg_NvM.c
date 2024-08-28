@@ -479,6 +479,10 @@ BSW_NvM_Rte nvm_datas_Lists[ID_CNT] =
         .id = ZERO_CURRENT_PHASE,
         .data_len = 4
     },
+    {
+        .id = External_Coordination_Trip,
+        .data_len = 1
+    }
 };
 
 
