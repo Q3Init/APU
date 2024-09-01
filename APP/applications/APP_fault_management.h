@@ -29,8 +29,16 @@ typedef enum{
     fault_sum,                          /* 18, 应小于等于31 */
     None_fault,                         /* 无故障 */
     State_value_error,                  /* 返回的状态值非二值信号(0或1) */
-    Init_state
+    Init_state,
+    SOE_EVENT_TYPE,
 }fault_type;
+
+/* SOE event type 记录 */
+typedef enum{
+    SOE_EVENT_START=SOE_EVENT_TYPE,
+    Over_volt_lv1_SOE_EVENT,            /* 过压一段 */
+    MAX_SOE_EVENT,
+}SOE_EVENT_type;
 
 typedef struct 
 {
