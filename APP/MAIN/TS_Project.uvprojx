@@ -463,6 +463,11 @@
               <FileType>1</FileType>
               <FilePath>..\applications\APP_fault_management.c</FilePath>
             </File>
+            <File>
+              <FileName>APP_Report_Display.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\applications\APP_Report_Display.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -927,5 +932,14 @@
     <components/>
     <files/>
   </RTE>
+
+  <LayerInfo>
+    <Layers>
+      <Layer>
+        <LayName>TS_Project</LayName>
+        <LayPrjMark>1</LayPrjMark>
+      </Layer>
+    </Layers>
+  </LayerInfo>
 
 </Project>
