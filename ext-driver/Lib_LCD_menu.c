@@ -234,6 +234,15 @@ uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_
 					lcd_the_modified_num_env_to_be_clear_all();
 					break;
 				}
+				else
+				{
+					clear_screen();
+					LCD_ShowChinese_garland(36, 26, password_check_in, 2);
+					LCD_ShowChinese_garland(61, 26, ERROR_array, 2);
+					OS_DELAY_US(100);
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+					msg_storage = LCD_FLUSH_SCREEN_IND;
+				}
 			}
 
 			uint8_t right_diff_num_idx_ths = 0;
@@ -317,6 +326,8 @@ uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_
 												num_array, PASSWORD_LENGTH, num_idx_flush[0]);
 					lcd_number_display_in_order(74, 26, 5, 12, 
 										num_idx_flush[0], sizeof(num_array), num_array, 0xff);
+				default:
+					break;
 			}
 		}
 	}while(false);
