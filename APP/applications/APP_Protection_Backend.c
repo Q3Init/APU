@@ -136,6 +136,82 @@ float32 APP_Get_Current_Iout(void)
 }
 
 /**
+ * @brief 获取A相和B相的相电压
+ * 
+ * @return float32 
+ */
+float32 APP_Get_Current_Uab(void)
+{
+    float32 Ua_par = APP_Get_Voltage_Ua();
+    float32 Ub_par = APP_Get_Voltage_Ub();
+    float32 Ua_phase_par = APP_Get_Voltage_Ua();
+    float32 Ub_phase_par = APP_Get_Voltage_Ub();
+
+    uint8_t x = 0;
+    uint8_t y = 1;
+    float32 vol[2];
+    vol[x] = Ua_par * arm_cos_f32(Ua_phase_par) + Ub_par * arm_cos_f32(Ub_phase_par);
+    vol[y] = Ua_par * arm_sin_f32(Ua_phase_par) + Ub_par * arm_sin_f32(Ub_phase_par);
+
+    float32 Uab = 0;
+    arm_power_f32(vol, 2, &Uab);
+    arm_sqrt_f32(Uab, &Uab);
+
+    return Uab;
+}
+
+/**
+ * @brief 获取B相和C相的相电压
+ * 
+ * @return float32 
+ */
+float32 APP_Get_Current_Ubc(void)
+{
+    float32 Uc_par = APP_Get_Voltage_Uc();
+    float32 Ub_par = APP_Get_Voltage_Ub();
+    float32 Uc_phase_par = APP_Get_Voltage_Uc();
+    float32 Ub_phase_par = APP_Get_Voltage_Ub();
+
+    uint8_t x = 0;
+    uint8_t y = 1;
+    float32 vol[2];
+    vol[x] = Ub_par * arm_cos_f32(Ub_phase_par) + Uc_par * arm_cos_f32(Uc_phase_par);
+    vol[y] = Ub_par * arm_sin_f32(Ub_phase_par) + Uc_par * arm_sin_f32(Uc_phase_par);
+
+    float32 Ubc = 0;
+    arm_power_f32(vol, 2, &Ubc);
+    arm_sqrt_f32(Ubc, &Ubc);
+
+    return Ubc;
+}
+
+
+/**
+ * @brief 获取C相和A相的相电压
+ * 
+ * @return float32 
+ */
+float32 APP_Get_Current_Uca(void)
+{
+    float32 Uc_par = APP_Get_Voltage_Uc();
+    float32 Ua_par = APP_Get_Voltage_Ua();
+    float32 Uc_phase_par = APP_Get_Voltage_Uc();
+    float32 Ua_phase_par = APP_Get_Voltage_Ua();
+
+    uint8_t x = 0;
+    uint8_t y = 1;
+    float32 vol[2];
+    vol[x] = Uc_par * arm_cos_f32(Uc_phase_par) + Ua_par * arm_cos_f32(Ua_phase_par);
+    vol[y] = Uc_par * arm_sin_f32(Uc_phase_par) + Ua_par * arm_sin_f32(Ua_phase_par);
+
+    float32 Uca = 0;
+    arm_power_f32(vol, 2, &Uca);
+    arm_sqrt_f32(Uca, &Uca);
+
+    return Uca;
+}
+
+/**
  * @brief 获取三相线电压最大值
  * 
  * @return float32 - 电压值，单位：v
