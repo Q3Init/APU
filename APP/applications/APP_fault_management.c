@@ -8,6 +8,9 @@ static uint8 check_fault(fault_type id);
 static APP_fault_state_tag update_and_get_app_fault_status(fault_type fault_index);
 static fault_type App_get_fault_List_member_fault_id(fault_type idx);
 static void App_fault_init_id_check(void);
+static void App_fault_number_present_signal_check_and_set(uint32 total_fault_state);
+
+static uint8_t fault_total_occur_signal = false;
 
 static APP_fault_Rte APP_fault_List[fault_sum] =
 {
@@ -89,9 +92,27 @@ void App_fault_management_mainfunction(void)
 
         /* update the total_fault_state_record */
         total_fault_state_record = total_fault_state;
+        App_fault_number_present_signal_check_and_set(total_fault_state);
 
         vTaskDelay(10);
     }
+}
+
+static void App_fault_number_present_signal_check_and_set(uint32 total_fault_state)
+{
+    if(!total_fault_state)
+    {
+        fault_total_occur_signal = false;
+    }
+    else
+    {
+        fault_total_occur_signal = true;
+    }
+}
+
+uint8_t App_fault_number_present_signal_get(void)
+{
+    return fault_total_occur_signal;
 }
 
 uint8_t App_fault_msg_transmited_to_lcd_layer_get(uint8_t fault_event)

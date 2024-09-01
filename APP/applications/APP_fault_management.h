@@ -58,4 +58,6 @@ typedef struct
 extern void App_fault_management_Init(void);
 extern void App_fault_management_mainfunction(void);
 extern uint8_t App_fault_msg_transmited_to_lcd_layer_get(uint8_t fault_event);
+extern uint8_t App_fault_number_present_signal_get(void);
+
 #endif

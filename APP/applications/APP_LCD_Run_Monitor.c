@@ -5,6 +5,7 @@
 #include "APP_Protection_Management.h"
 #include "freertos.h"
 #include "task.h"
+#include "APP_fault_management.h"
 
 static uint32_t lcd_flush_timer_last = 0;
 static uint32_t lcd_flush_timer_cur = 0;
@@ -82,8 +83,8 @@ static uint32_t lcd_flush_timer_cur = 0;
 /**************          open_into_state_menu menu is above             *****************************/
 
 /**************          running_state_menu menu is as follow         *****************************/
-#define LCD_THE_TOTAL_FAULT_READ()      0
-#define LCD_THE_TOTAL_WARNING_READ()    1
+#define LCD_THE_TOTAL_FAULT_READ()      App_fault_number_present_signal_get()
+#define LCD_THE_TOTAL_WARNING_READ()    0
 #define LCD_OVER_VOLTAGE_LV1_PROTECTION_READ()    APP_Get_Over_Volt_Lv1_Switch_Off_State()
 #define LCD_OVER_VOLTAGE_LV2_PROTECTION_READ()    APP_Get_Over_Volt_Lv2_Switch_Off_State()
 #define LCD_TOO_LOW_VOLTAGE_LV1_PROTECTION_READ()    APP_Get_Under_Volt_Lv1_Switch_Off_State()
@@ -105,9 +106,9 @@ static uint32_t lcd_flush_timer_cur = 0;
 #define LCD_CLOSING_SWITCH_SUCCESS_READ()   0
 #define LCD_LATCH_LOCK_FOR_CLOSING_SWITCH_READ()   APP_Remote_Signal_Input_Read_Closing_And_Locking()
 #define LCD_POWER_RECOVER_READ()   APP_Get_Power_Restoration_Switch_Off_State()
-#define LCD_THE_TATOL_WARING_LV1_READ()   3
-#define LCD_THE_TATOL_WARING_LV2_READ()   4
-#define LCD_EEP_EXCEPTION_ERROR_READ()   5
+#define LCD_THE_TATOL_WARING_LV1_READ()   0
+#define LCD_THE_TATOL_WARING_LV2_READ()   0
+#define LCD_EEP_EXCEPTION_ERROR_READ()   0
 /**************          running_state_menu menu is above             *****************************/
 
 
