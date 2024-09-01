@@ -12,6 +12,9 @@
 #include "BSW_FFT_APP.h"
 #include "APP_Scroll_storage.h"
 #include "APP_Parameter.h"
+#include "arm_math.h"
+
+// #define APP_TEST_MODE
 
 void lcd_test_main(void);
 void key_state_process(uint8_t key_state);
@@ -29,10 +32,22 @@ void APP_test_Init(void)
 
 }
 
+#ifdef APP_TEST_MODE
+enum LEVEL
+{
+    HIGH = 1,
+    LOW  = 0,
+};
+#endif
+
 void APP_test_Mainfunction(void)
 {   
     while(1) 
-    {   
+    {
+#ifdef APP_TEST_MODE
+        BSW_Dio_WriteBitValue(GPIOE, GPIO_PIN_13, HIGH);
+        BSW_Dio_WriteBitValue(GPIOE, GPIO_PIN_13, LOW);
+#endif
         switch (ctrl_datas)
         {
         case 1:

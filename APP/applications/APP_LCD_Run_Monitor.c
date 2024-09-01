@@ -17,10 +17,10 @@ static uint32_t lcd_flush_timer_cur = 0;
 #define LINE_CURRENT_FOR_IB_READ()  APP_Get_Current_Ib()
 #define LINE_CURRENT_FOR_IC_READ()  APP_Get_Current_Ic()
 #define LINE_CURRENT_FOR_IOUT_READ()  APP_Get_Current_Iout()
-#define PHASE_VOLTAGE_FOR_UAB_READ()  1
-#define PHASE_VOLTAGE_FOR_UBC_READ()  2
-#define PHASE_VOLTAGE_FOR_UCA_READ()  3
-#define PHASE_VOLTAGE_FOR_UX_READ()  4
+#define PHASE_VOLTAGE_FOR_UAB_READ()  APP_Get_Current_Uab()
+#define PHASE_VOLTAGE_FOR_UBC_READ()  APP_Get_Current_Ubc()
+#define PHASE_VOLTAGE_FOR_UCA_READ()  APP_Get_Current_Uca()
+#define PHASE_VOLTAGE_FOR_UX_READ()  APP_Get_Voltage_Uout()
 #define LINE_VOLTAGE_FOR_UA_READ()  APP_Get_Voltage_Ua()
 #define LINE_VOLTAGE_FOR_UB_READ()  APP_Get_Voltage_Ub()
 #define LINE_VOLTAGE_FOR_UC_READ()  APP_Get_Voltage_Uc()

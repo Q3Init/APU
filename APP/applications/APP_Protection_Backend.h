@@ -188,6 +188,11 @@ float32 APP_Get_Phase_Ia(void);
 float32 APP_Get_Phase_Ib(void);
 float32 APP_Get_Phase_Ic(void);
 
+/* 获取三相电压  各两相电压之间的相电压， 单位: V*/
+float32 APP_Get_Current_Uab(void);
+float32 APP_Get_Current_Ubc(void);
+float32 APP_Get_Current_Uca(void);
+
 /* 获取三相电压的谐波失真度，单位：% */
 float32 APP_Get_Harmonic_Distortion_Ua(void);
 float32 APP_Get_Harmonic_Distortion_Ub(void);
