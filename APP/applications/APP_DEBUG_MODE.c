@@ -249,10 +249,10 @@ struct menu_event_tag * driver_test_handler(uint8_t msg_process_signal, uint8_t 
 					switch(driver_test_menu_array[menu_type_idx])
 					{
 						case OPEN_TEST:
-							APP_Relay_Force_Switch_On();
+							APP_Relay_Force_Switch_Off();
 							break;
 						case CLOSE_TEST:
-							APP_Relay_Force_Switch_Off();
+							APP_Relay_Force_Switch_On();
 							break;
 						default:
 							break;
