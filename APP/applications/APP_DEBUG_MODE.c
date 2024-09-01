@@ -518,10 +518,10 @@ struct menu_event_tag * clear_record_handler(uint8_t msg_process_signal, uint8_t
 					switch(clear_record_menu_array[menu_type_idx])
 					{
 						case DEBUG_SOE_RECORD:
-							APP_Scroll_storage_erase(Controls_block);
+							APP_Scroll_storage_erase(Error_Block);
 							break;
 						case DEBUG_FAULT_RECORD:
-							APP_Scroll_storage_erase(Error_Block);
+							APP_Scroll_storage_erase(Controls_block);
 							break;
 						default:
 							break;

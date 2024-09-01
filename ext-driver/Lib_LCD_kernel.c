@@ -28,8 +28,8 @@ struct menu_cmd_tag third_menu_cmd_tbl[]=
 	{THIRD_MENU,		RUNNING_STATE, 					(menu_kernel_func)running_state_handler},
 
 	/* REPORT_DISPLAY MENU */
-	{THIRD_MENU,		SOE_RECORD, 					(menu_kernel_func)time_setting_handler},
-	{THIRD_MENU,		FAULT_EVENT, 					(menu_kernel_func)time_setting_handler},
+	{THIRD_MENU,		SOE_RECORD, 					(menu_kernel_func)soe_record_handler},
+	{THIRD_MENU,		FAULT_EVENT, 					(menu_kernel_func)fault_event_handler},
 	
 	/* PARAMETER_CONFIGURE MENU */
 	{THIRD_MENU,		CHANGE_PROPORTION_SETTING, 		(menu_kernel_func)change_proportion_setting_handler},

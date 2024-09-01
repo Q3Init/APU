@@ -188,24 +188,24 @@ enum MSG_PRIORITY_MASK{
 enum MSG_CONTEXT{
 	NO_MSG_CONTEXT,
     FLUSH_SCREEN=10,			/* 10 */
-	FAULT_MSG_TO_LCD(Over_volt_lv1_fault),
-	FAULT_MSG_TO_LCD(Over_volt_lv2_fault),
-	FAULT_MSG_TO_LCD(Under_volt_lv1_fault),
-	FAULT_MSG_TO_LCD(Under_volt_lv2_fault),
-	FAULT_MSG_TO_LCD(Over_freq_fault),
-	FAULT_MSG_TO_LCD(Low_freq_fault),
-	FAULT_MSG_TO_LCD(Spike_freq_fault),
-	FAULT_MSG_TO_LCD(Reverse_power_fault),
-	FAULT_MSG_TO_LCD(Harmonic_volt_distortion_fault),
-	FAULT_MSG_TO_LCD(Ext_ctrl_fault),
-	FAULT_MSG_TO_LCD(Quick_break_fault),
-	FAULT_MSG_TO_LCD(Time_limit_quick_break_fault),
-	FAULT_MSG_TO_LCD(Over_current_fault),
-	FAULT_MSG_TO_LCD(Zero_seq_current_fault),
-	FAULT_MSG_TO_LCD(System_outage_fault),
-	FAULT_MSG_TO_LCD(On_volt_fault),
-	FAULT_MSG_TO_LCD(Power_restoration_fault),
-	FAULT_MSG_TO_LCD(Switch_on_charge_fault),
+	FAULT_MSG_TO_LCD(Over_volt_lv1_fault),	/* 11 */
+	FAULT_MSG_TO_LCD(Over_volt_lv2_fault),	/* 12 */
+	FAULT_MSG_TO_LCD(Under_volt_lv1_fault),	/* 13 */
+	FAULT_MSG_TO_LCD(Under_volt_lv2_fault),	/* 14 */
+	FAULT_MSG_TO_LCD(Over_freq_fault),	/* 15 */
+	FAULT_MSG_TO_LCD(Low_freq_fault),	/* 16 */
+	FAULT_MSG_TO_LCD(Spike_freq_fault),	/* 17 */
+	FAULT_MSG_TO_LCD(Reverse_power_fault),	/* 18 */
+	FAULT_MSG_TO_LCD(Harmonic_volt_distortion_fault),	/* 19 */
+	FAULT_MSG_TO_LCD(Ext_ctrl_fault),	/* 20 */
+	FAULT_MSG_TO_LCD(Quick_break_fault),	/* 21 */
+	FAULT_MSG_TO_LCD(Time_limit_quick_break_fault),	/* 22 */
+	FAULT_MSG_TO_LCD(Over_current_fault),	/* 23 */
+	FAULT_MSG_TO_LCD(Zero_seq_current_fault),	/* 24 */
+	FAULT_MSG_TO_LCD(System_outage_fault),	/* 25 */
+	FAULT_MSG_TO_LCD(On_volt_fault),	/* 26 */
+	FAULT_MSG_TO_LCD(Power_restoration_fault),	/* 27 */
+	FAULT_MSG_TO_LCD(Switch_on_charge_fault),	/* 28 */
 	FAULT_MSG_TO_LCD(END),
 	UNKNOW_MSG_CONTEXT,
 };
@@ -331,6 +331,9 @@ extern struct menu_event_tag * debug_mode_handler(uint8_t msg_process_signal, ui
 extern struct menu_event_tag * setting_in_factory_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint8_t msg_context);
+
+extern struct menu_event_tag * soe_record_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * fault_event_handler(uint8_t msg_process_signal, uint8_t msg_context);
 
 extern struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_signal, uint8_t msg_context);

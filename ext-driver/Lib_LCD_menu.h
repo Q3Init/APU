@@ -27,6 +27,8 @@
 extern uint8_t lcd_password_num_array[PASSWORD_LENGTH];
 extern uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_t msg_context_tag, uint8_t last_cursor, uint8_t menu_target);
 
+extern void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data);
+
 struct lcd_modify_num_tag{
 	uint8_t menu_type_idx ;
 	uint8_t limited_index;
@@ -124,6 +126,8 @@ extern struct menu_event_tag * parameter_configure_handler(uint8_t msg_process_s
 // extern struct menu_event_tag * setting_in_factory_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_signal, uint8_t msg_context);
 
+extern struct menu_event_tag * soe_record_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * fault_event_handler(uint8_t msg_process_signal, uint8_t msg_context);
 
 /* add your chars */
 extern uint8_t first_runing_monitor[];

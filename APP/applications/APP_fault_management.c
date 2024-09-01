@@ -94,7 +94,7 @@ void App_fault_management_mainfunction(void)
     }
 }
 
-uint8_t App_fault_msg_transmited_to_lcd_layer_get(fault_type fault_event)
+uint8_t App_fault_msg_transmited_to_lcd_layer_get(uint8_t fault_event)
 {
     uint8_t app_fault_msg = UNKNOW_MSG_CONTEXT;
 
