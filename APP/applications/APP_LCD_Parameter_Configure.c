@@ -6,7 +6,7 @@
 
 #define TIME_FROM_MODBUS_GET()	RTC_date_init /* TODO*/
 #define LCD_TIME_SET(x)	 	basic_rtc_set(x) /* while(basic_rtc_set(x)) */
-#define TIME_FROM_LOCAL_GET(x)		rtc_get(x)
+#define TIME_FROM_LOCAL_GET()		rtc_get()
 
 #define SOE_SEND_SWITCH_STATE_FORM_SRAM_GET() app_parameter_read_Switch_coding()
 #define SOE_SEND_SWITCH_STATE_FORM_SRAM_SET(x) app_parameter_write_Switch_coding(x)
@@ -3426,7 +3426,7 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 					{
 						case SHIJIAN_SHEZHI:
 							//time_par = RTC_date_init;////just for test, get the time
-							TIME_FROM_LOCAL_GET(&time_par);
+							time_par = *TIME_FROM_LOCAL_GET();
 							convert_all_time_parameter_into_global_int_array(time_par);
 							break;
 						case DUISHI_SHEZHI:

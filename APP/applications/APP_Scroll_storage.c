@@ -23,10 +23,8 @@ uint8 APP_Scroll_storage_write(uint8 block,uint8 fault_event)
 {
     uint8 ret = E_NOK;
     uint8 p_buf[12] = {0};
-    RTC_date time;
-    rtc_get(&time);
     p_buf[10] = fault_event;
-    memcpy(p_buf,&time.year,sizeof(RTC_date));
+    memcpy(p_buf,rtc_get(),sizeof(RTC_date));
     if (block == Controls_block) {
         if (block2_writeIndex < STORE_NUMBER_MAX) {
             block2_writeAddress = BASE_BLOCK2_ADRESS + (block2_writeIndex * ONE_STORE_SIZE);

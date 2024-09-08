@@ -1,5 +1,7 @@
 #include "MCAL_RTC.h"
 
+static RTC_date rtc_date;
+
 /*RTCʱ�������ʼ��Ĭ��ֵ*/
 RTC_date RTC_date_init ={
 	.year = 2023,
@@ -84,7 +86,7 @@ uint8_t rtc_set(uint16_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_
 {
     uint16_t index;
     uint32_t seccount = 0;
-    
+    taskENTER_CRITICAL();
     if ((year < 1970) || (year > 2099))
     {
         return 1;
@@ -123,7 +125,7 @@ uint8_t rtc_set(uint16_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_
     
     RTC_ConfigCounter(seccount);                        /* ����RTC����ֵ */
     RTC_WaitForLastTask();
-    
+    taskEXIT_CRITICAL();
     return 0;
 }
 
@@ -142,13 +144,14 @@ uint8_t basic_rtc_set(RTC_date time)
  * @param       sec  : ����
  * @retval      ��
  */
-void rtc_get(RTC_date *time)
+const RTC_date* rtc_get()
 {
     uint32_t seccount;
     uint32_t daycount;
     static uint32_t last_daycount = 0;
     uint16_t index;
     
+	taskENTER_CRITICAL();
     /* ��ȡRTC����ֵ */
     seccount = RTC_ReadCounter();
     daycount = seccount / 86400;
@@ -177,12 +180,12 @@ void rtc_get(RTC_date *time)
             }
             index++;
         }
-        time->year = index;
+        rtc_date.year = index;
         
         index=0;
         while (daycount >= 28)
         {
-            if (is_leap_year(time->year) && (index == 1))
+            if (is_leap_year(rtc_date.year) && (index == 1))
             {
                 if (daycount >= 29)
                 {
@@ -206,15 +209,17 @@ void rtc_get(RTC_date *time)
             }
             index++;
         }
-        time->month = index + 1;
-        time->day = daycount + 1;
+        rtc_date.month = index + 1;
+        rtc_date.day = daycount + 1;
     }
     
     daycount = seccount % 86400;
-    time->hour = daycount / 3600;
-    time->minute = (daycount % 3600) / 60;
-    time->second = (daycount % 3600) % 60;
-		time->millisecond =(uint16_t)((prescaler_value - RTC_ReadDivider()) * 1000 /prescaler_value);
+    rtc_date.hour = daycount / 3600;
+    rtc_date.minute = (daycount % 3600) / 60;
+    rtc_date.second = (daycount % 3600) % 60;
+		rtc_date.millisecond =(uint16_t)((prescaler_value - RTC_ReadDivider()) * 1000 /prescaler_value);
+		taskEXIT_CRITICAL();
+		return &rtc_date;
 }
 
 /**

@@ -3,7 +3,7 @@
 #include "APP_LCD_Parameter_Configure.h"
 #include "APP_Scroll_storage.h"
 
-#define LCD_LOCAL_TIME_GET(X) rtc_get(X)
+#define LCD_LOCAL_TIME_GET() rtc_get()
 #define TOP_MENU_TIME_DISPLAY 0xFE
 
 static uint32_t lcd_flush_timer_last = 0;
@@ -599,7 +599,6 @@ struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_
 		uint8_t time_raw;
 		uint8_t version_col;
 		uint8_t version_raw;
-		RTC_date date_time;
 		switch(msg_storage)
 		{
 			case	LCD_FLUSH_SCREEN_IND:
@@ -681,8 +680,7 @@ struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_
 				lcd_state_flush_for_num(version_col+68,version_raw,my_1x12_point,1,12,1);
 				lcd_state_flush_for_num(version_col+72,version_raw,my_num_0,5,12,1);
 
-				LCD_LOCAL_TIME_GET(&date_time);
-				memcpy(&error_time, &date_time, sizeof(date_time));
+				memcpy(&error_time, LCD_LOCAL_TIME_GET(), sizeof(RTC_date));
 				DISPALY_ERROR_TIME(time_col, time_raw, error_time);
 				break;
 			default:

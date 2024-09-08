@@ -11,6 +11,8 @@
 #include "apm32e10x_bakpr.h"
 #include "apm32e10x_rcm.h"
 #include "apm32e10x_pmu.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 #define prescaler_value 32767	/*RTCԤ��Ƶϵ����Ϊ32767ʱCNT��ʱ��1s����1��*/
 
@@ -31,6 +33,6 @@ uint16_t rtc_read_bkr(BAKPR_DATA_T bkrx);	/* �����ݼĴ��� */
 /*����ӿ�*/
 uint8_t rtc_init(void); /* ��ʼ��RTC */
 uint8_t rtc_set(uint16_t year, uint8_t month, uint8_t date, uint8_t hour, uint8_t min, uint8_t sec); /* ����RTCʱ�� */
-void rtc_get(RTC_date *time);   /* ��ȡRTCʱ�� */
+const RTC_date* rtc_get(void);    /* ��ȡRTCʱ�� */
 extern uint8_t basic_rtc_set(RTC_date time);
 #endif

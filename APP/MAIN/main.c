@@ -13,7 +13,6 @@
 int main(void)
 {
 	rtc_init();
-	
 #ifdef EASY_OS
 	uint8 Priority;
 	(void)RTE_Init();
