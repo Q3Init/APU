@@ -11,6 +11,14 @@
 
 extern uint32_t app_lcd_sys_ms_get(void);
 
+#define lcd_sclk(x)  do{ if(x){GPIO_SetBit(GPIOE,GPIO_PIN_3);}else{GPIO_ResetBit(GPIOE,GPIO_PIN_3);} }while(false);
+#define lcd_rs(x)  do{ if(x){GPIO_SetBit(GPIOE,GPIO_PIN_4);}else{GPIO_ResetBit(GPIOE,GPIO_PIN_4);} }while(false);
+#define lcd_reset(x)  do{ if(x){GPIO_SetBit(GPIOE,GPIO_PIN_5);}else{GPIO_ResetBit(GPIOE,GPIO_PIN_5);} }while(false);
+#define lcd_cs1(x)  do{ if(x){GPIO_SetBit(GPIOE,GPIO_PIN_6);}else{GPIO_ResetBit(GPIOE,GPIO_PIN_6);} }while(false);
+#define lcd_sid(x)  do{ if(x){GPIO_SetBit(GPIOE,GPIO_PIN_2);}else{GPIO_ResetBit(GPIOE,GPIO_PIN_2);} }while(false);
+#define lcd_LED(x)  do{ if(x){GPIO_SetBit(GPIOC,GPIO_PIN_13);}else{GPIO_ResetBit(GPIOC,GPIO_PIN_13);} }while(false);
+
+
 #define LCD_ShowChinese_garland(x, y, s, num)  single_row_continue_printf_12x12_chinese_in_lcd(x, y, s, num, 12, 1)
 /* 这些函数的num 都不能超过一定大小，比如设置为15时，指针会访问过界*/
 #define LCD_ShowChinese_no_garland(x, y, s, num)  single_row_continue_printf_12x12_chinese_in_lcd(x, y, s, num, 12, 0)

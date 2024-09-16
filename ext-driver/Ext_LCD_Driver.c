@@ -1,12 +1,6 @@
 #include "Ext_LCD_Driver.h"
 #include "Lib_Log_Util.h"
 
-#define lcd_sclk(x)  do{ if(x){GPIO_SetBit(GPIOE,GPIO_PIN_3);}else{GPIO_ResetBit(GPIOE,GPIO_PIN_3);} }while(false);
-#define lcd_rs(x)  do{ if(x){GPIO_SetBit(GPIOE,GPIO_PIN_4);}else{GPIO_ResetBit(GPIOE,GPIO_PIN_4);} }while(false);
-#define lcd_reset(x)  do{ if(x){GPIO_SetBit(GPIOE,GPIO_PIN_5);}else{GPIO_ResetBit(GPIOE,GPIO_PIN_5);} }while(false);
-#define lcd_cs1(x)  do{ if(x){GPIO_SetBit(GPIOE,GPIO_PIN_6);}else{GPIO_ResetBit(GPIOE,GPIO_PIN_6);} }while(false);
-#define lcd_sid(x)  do{ if(x){GPIO_SetBit(GPIOE,GPIO_PIN_2);}else{GPIO_ResetBit(GPIOE,GPIO_PIN_2);} }while(false);
-#define lcd_LED(x)  do{ if(x){GPIO_SetBit(GPIOC,GPIO_PIN_13);}else{GPIO_ResetBit(GPIOC,GPIO_PIN_13);} }while(false);
 
 
 uint32_t lcd_state_first_tbl[128]={0};//1~64 columes

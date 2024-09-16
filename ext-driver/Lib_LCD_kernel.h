@@ -254,6 +254,8 @@ struct menu_kernel_env_tag{
 	uint32_t msg_lock; // bit[0]:LCD(the highest Priority!)  bit[1]:other Layer
 	struct msg_info_tag msg_info;
 	uint8_t error_indication_menu;// bit[0]:unopen  bit[1]:open
+	uint8_t lcd_state;// bit[0]:lcd off  bit[1]:lcd on
+	uint32_t last_msg_time;//record the time of last message sent to LCD layer
 };
 
 struct menu_type_info_tag {
@@ -280,6 +282,11 @@ struct menu_cmd_tag {
 struct menu_level_layer_tag{
 	uint8_t menu_level;
 	struct menu_cmd_tag* menu_level_tbl_ptr;
+};
+
+enum LCD_STATE_TAG{
+	LCD_ON,
+	LCD_OFF,
 };
 
 /* LCD kernel environment */
@@ -312,6 +319,10 @@ extern uint32_t cur_menu_level_from_env_get(void);
 extern uint8_t cur_menu_type_ptr_from_env_get(void);
 extern uint32_t msg_lock_from_env_get(void);
 extern uint8_t error_indication_menu_from_env_get(void);
+extern void lcd_state_from_env_set(uint8_t lcd_state);
+extern uint8_t lcd_state_from_env_get(void);
+extern void last_msg_time_from_env_set(uint32_t last_msg_time);
+extern uint32_t last_msg_time_from_env_get(void);
 /* !!!!!!!!!!! Prohibit calling the above function in interrupt_function !!!!!!!!!!!*/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 

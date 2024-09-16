@@ -1,6 +1,7 @@
 #include "Lib_LCD_kernel.h"
 #include "freertos.h"
 #include "task.h"
+#include "Ext_LCD_Driver.h"
 
 struct menu_kernel_env_tag menu_kernel_env;
 
@@ -205,6 +206,26 @@ uint8_t msg_status_from_env_get()
 	return menu_kernel_env.msg_info.msg_status;
 }
 
+void lcd_state_from_env_set(uint8_t lcd_state)
+{
+	menu_kernel_env.lcd_state = lcd_state;
+}
+
+uint8_t lcd_state_from_env_get(void)
+{
+	return menu_kernel_env.lcd_state;
+}
+
+void last_msg_time_from_env_set(uint32_t last_msg_time)
+{
+	menu_kernel_env.last_msg_time = last_msg_time;
+}
+
+uint32_t last_msg_time_from_env_get(void)
+{
+	return menu_kernel_env.last_msg_time;
+}
+
 void msg_context_from_env_set(uint8_t msg_context)
 {
 	menu_kernel_env.msg_info.msg_context = msg_context;
@@ -286,15 +307,29 @@ uint8_t error_indication_menu_from_env_get()
 	return menu_kernel_env.error_indication_menu;
 }
 
+uint32_t lcd_kernel_time_get()
+{
+	return (xTaskGetTickCount() * 1000 / configTICK_RATE_HZ);
+}
+
 uint8_t msg_send_to_lcd_layer(uint8_t msg_source, uint8_t msg_destination, uint8_t msg_status, uint8_t msg_context)
 {
 	uint8_t msg_send_state = MSG_TRANSMIT_UNKNOW_RESULT;
 	uint32_t msg_lock = msg_lock_from_env_get();
 	uint8_t last_msg_source = msg_source_from_env_get();
 
+	uint32_t cur_time = lcd_kernel_time_get();
+	last_msg_time_from_env_set(cur_time);
+
 	do
 	{
 		{
+
+			if(lcd_state_from_env_get() == LCD_OFF)
+			{
+				lcd_state_from_env_set(LCD_ON);
+			}
+
 			if(msg_lock & LCD_LAYER_MSG_PRIORITY_MASK)
 			{
 				msg_send_state = MSG_TRANSMIT_FAILED;
@@ -551,6 +586,9 @@ void menu_level_from_env_set_V2(uint8_t first_level, uint8_t second_level, uint8
 //									 (second_level<<SECOND_MENU_BIT_BASE)|
 //									 (third_level<<THIRD_MENU_BIT_BASE);
 }
+
+
+
 void menu_kernel_env_init(void)
 {
 	memset(&menu_kernel_env, 0x00, sizeof(struct menu_kernel_env_tag));
@@ -562,9 +600,44 @@ void menu_kernel_env_init(void)
 /* Please schedule the function !*/
 void menu_kernel_schedule(void)
 {
+	uint8_t lcd_state_storage = lcd_state_from_env_get();
+	uint32_t cur_time_ms = lcd_kernel_time_get();
+	uint32_t last_time_ms = cur_time_ms;
+
+    uint8_t time_set_flag = true;
 	while(1)
 	{
-		lcd_menu_level_search_and_action();
+		uint8_t lcd_state = lcd_state_from_env_get();
+		if(lcd_state == LCD_ON)
+		{
+			if(lcd_state_storage != lcd_state)
+			{
+                time_set_flag = true;
+				lcd_LED(0); /* 打开背光 */
+			}
+			lcd_menu_level_search_and_action();
+		}
+		else{
+			if(lcd_state_storage != lcd_state)
+			{
+                time_set_flag = false;
+				lcd_LED(1); /* 关闭背光 */
+			}
+		}
+
+		lcd_state_storage = lcd_state;
+
+        if(time_set_flag == true)
+        {
+            cur_time_ms = lcd_kernel_time_get();
+            last_time_ms = last_msg_time_from_env_get();
+            uint32_t delat_time = (cur_time_ms - last_time_ms + 0xFFFFFFFF) % 0xFFFFFFFF;//ms
+            if(delat_time > 60000)
+            {
+                lcd_state_from_env_set(LCD_OFF);
+            }
+        }
+
 		vTaskDelay(10);
 	}
 }
