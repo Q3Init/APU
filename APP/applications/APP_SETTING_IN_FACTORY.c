@@ -2602,6 +2602,10 @@ struct menu_event_tag * factory_reset_handler(uint8_t msg_process_signal, uint8_
 
 	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
 	uint8_t menu_target = SETTING_IN_FACTORY;
+
+	uint8_t chinese_menu_idx = 0;
+	uint8_t msg_storage = msg_context;
+
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
 	if(authentication_key)
@@ -2610,51 +2614,104 @@ struct menu_event_tag * factory_reset_handler(uint8_t msg_process_signal, uint8_
 	}
 
     if(msg_process_signal == 1)
-	{	
-		uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(factory_reset_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+	{
+		if(!lcd_modify_num_env.check_num_modify)
+		{
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(factory_reset_menu_array));
+		}
+		chinese_menu_idx = factory_reset_menu_array[lcd_modify_num_env.menu_type_idx];
+	
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
-			menu_level_from_env_set(TOP_NODE_MENU, SETTING_IN_FACTORY, UNKNOW_THIRD_MENU);
-            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+				menu_level_from_env_set(TOP_NODE_MENU, SETTING_IN_FACTORY, UNKNOW_THIRD_MENU);
+				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				lcd_the_modified_num_env_to_be_clear_all();
+			}
+			else
+			{
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+			}
+
 			Log_d("key KEY_RETURN menu!\r\n");
 		}
+
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
             clear_screen();
-			msg_context = 0xff;
+			chinese_menu_idx = factory_reset_menu_array[lcd_modify_num_env.menu_type_idx];// 数组 todo
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
 			msg_lock_from_env_set(0);//unlock the msg
         }
-		
-		if(msg_context == KEY_DOWN)
-        {
-			switch(factory_reset_menu_array[menu_type_idx])
-			{
-				case ALL_VALUE_RESET:
-					app_allpara_default_update();
-					APP_Protection_Management_Init();
-					break;
-				case FIX_VALUE_RESET:
-					app_action_default_update();
-					break;
-				default:
-					break;
-			}
-        }
-				
-		switch(msg_context)
+
+		if(lcd_modify_num_env.enter_flag == true)
 		{
-			case	0xff:
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+
+			// One target to the return clear
+			modify_check_state = enter_key_check_notify_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true; //让中文光标停住
+				}
+				else
+				{
+					switch(chinese_menu_idx)
+					{
+						case ALL_VALUE_RESET:
+							app_allpara_default_update();
+							APP_Protection_Management_Init();
+							break;
+						case FIX_VALUE_RESET:
+							app_action_default_update();
+							break;
+						default:
+							break;
+					}
+					lcd_the_modified_num_env_to_be_clear_part();
+					msg_storage = LCD_FLUSH_SCREEN_IND;
+				}
+			}
+		}
+				
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
     		case	KEY_DOWN:		
     		case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
 				LCD_ShowChinese_garland(0, 0, factory_reset, 4);
-				switch(factory_reset_menu_array[menu_type_idx])
+				switch(chinese_menu_idx)
 				{
 					case FIX_VALUE_RESET:
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
