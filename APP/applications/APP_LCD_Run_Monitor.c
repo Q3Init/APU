@@ -34,29 +34,34 @@ static uint32_t lcd_flush_timer_cur = 0;
 /**************          telemetry_second menu is above             *****************************/
 
 
+#define DIANWANG_PT_K (app_parameter_read_Grid_PT_primary()/(app_parameter_read_Grid_PT_secondary()*1.0))
+#define GERNARATE_PT_K (app_parameter_read_Generation_PT_primary()/(app_parameter_read_Generation_PT_secondary()*1.0))
+#define PROTECTION_CT_K (app_parameter_read_Protective_CT_primary()/(app_parameter_read_Protected_CT_secondary()*1.0))
+#define ZERO_CT_K (app_parameter_read_Zero_sequence_CT_once()/(app_parameter_write_Zero_sequence_CT_twice()*1.0))
+
 /**************          telemetry_first menu is as follow         *****************************/
-#define LCD_FIRST_THE_ACTIVE_POWER_FOR_PLUS_EP_READ()   3.1
-#define LCD_FIRST_THE_ACTIVE_POWER_FOR_MINUS_EP_READ()   3.2
-#define LCD_FIRST_THE_REACTIVE_POWER_FOR_PLUS_EQ_READ()   3.3
-#define LCD_FIRST_THE_REACTIVE_POWER_FOR_MINUS_EQ_READ()   3.4
-#define LCD_FIRST_LINE_CURRENT_FOR_IA_READ()   3.5
-#define LCD_FIRST_LINE_CURRENT_FOR_IB_READ()   3.6
-#define LCD_FIRST_LINE_CURRENT_FOR_IC_READ()   3.7
-#define LCD_FIRST_LINE_CURRENT_FOR_IO_READ()   3.8
-#define LCD_FIRST_PHASE_VOLTAGE_FOR_UAB_READ()   3.9
-#define LCD_FIRST_PHASE_VOLTAGE_FOR_UBC_READ()   4.1
-#define LCD_FIRST_PHASE_VOLTAGE_FOR_UCA_READ()   4.2
-#define LCD_FIRST_THE_TOTAL_ACTIVE_POWER_FOR_PS_READ()   4.3
-#define LCD_FIRST_THE_TOTAL_REACTIVE_POWER_FOR_QS_READ()   4.4
-#define LCD_FIRST_THE_ANGLE_FOR_UAUB_READ()   4.5
-#define LCD_FIRST_THE_ANGLE_FOR_UBUC_READ()   4.6
-#define LCD_FIRST_THE_ANGLE_FOR_UCUA_READ()   4.7
-#define LCD_FIRST_THE_ANGLE_FOR_UABIA_READ()   4.8
-#define LCD_FIRST_THE_ANGLE_FOR_UCBIC_READ()   4.9
-#define LCD_FIRST_THE_ANGLE_FOR_UOIO_READ()   5.1
-#define LCD_FIRST_THE_ANGLE_FOR_IAIB_READ()   5.2
-#define LCD_FIRST_THE_ANGLE_FOR_IBIC_READ()   5.3
-#define LCD_FIRST_THE_ANGLE_FOR_ICIA_READ()   5.4
+#define LCD_FIRST_THE_ACTIVE_POWER_FOR_PLUS_EP_READ()   0.0
+#define LCD_FIRST_THE_ACTIVE_POWER_FOR_MINUS_EP_READ()   0.0
+#define LCD_FIRST_THE_REACTIVE_POWER_FOR_PLUS_EQ_READ()   0.0
+#define LCD_FIRST_THE_REACTIVE_POWER_FOR_MINUS_EQ_READ()  0.0
+#define LCD_FIRST_LINE_CURRENT_FOR_IA_READ()   PROTECTION_CT_K * LINE_CURRENT_FOR_IA_READ()
+#define LCD_FIRST_LINE_CURRENT_FOR_IB_READ()   PROTECTION_CT_K * LINE_CURRENT_FOR_IB_READ()
+#define LCD_FIRST_LINE_CURRENT_FOR_IC_READ()   PROTECTION_CT_K * LINE_CURRENT_FOR_IC_READ()
+#define LCD_FIRST_LINE_CURRENT_FOR_IO_READ()   ZERO_CT_K * LINE_CURRENT_FOR_IOUT_READ()
+#define LCD_FIRST_PHASE_VOLTAGE_FOR_UAB_READ()   GERNARATE_PT_K * PHASE_VOLTAGE_FOR_UAB_READ()
+#define LCD_FIRST_PHASE_VOLTAGE_FOR_UBC_READ()   GERNARATE_PT_K * PHASE_VOLTAGE_FOR_UBC_READ()
+#define LCD_FIRST_PHASE_VOLTAGE_FOR_UCA_READ()   GERNARATE_PT_K * PHASE_VOLTAGE_FOR_UCA_READ()
+#define LCD_FIRST_THE_TOTAL_ACTIVE_POWER_FOR_PS_READ()   0.0
+#define LCD_FIRST_THE_TOTAL_REACTIVE_POWER_FOR_QS_READ()   0.0
+#define LCD_FIRST_THE_ANGLE_FOR_UAUB_READ()   0.0
+#define LCD_FIRST_THE_ANGLE_FOR_UBUC_READ()   0.0
+#define LCD_FIRST_THE_ANGLE_FOR_UCUA_READ()   0.0
+#define LCD_FIRST_THE_ANGLE_FOR_UABIA_READ()   0.0
+#define LCD_FIRST_THE_ANGLE_FOR_UCBIC_READ()   0.0
+#define LCD_FIRST_THE_ANGLE_FOR_UOIO_READ()   0.0
+#define LCD_FIRST_THE_ANGLE_FOR_IAIB_READ()   0.0
+#define LCD_FIRST_THE_ANGLE_FOR_IBIC_READ()   0.0
+#define LCD_FIRST_THE_ANGLE_FOR_ICIA_READ()   0.0
 /**************          telemetry_first menu is above             *****************************/
 
 /**************          open_into_state_menu menu is as follow         *****************************/

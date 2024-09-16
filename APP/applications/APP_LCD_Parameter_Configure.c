@@ -3444,7 +3444,7 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 						case SHIJIAN_SHEZHI:
 							time_par = user_time_set_operation_first(KEY_UNKNOW, NULL);
 							// RTC_date_init = time_par;//just for test, set the time
-
+							LCD_TIME_SET(time_par);
 							break;
 						case DUISHI_SHEZHI:
 							// RTC_date_init = time_par;//just for test, set the time
