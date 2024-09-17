@@ -1,6 +1,6 @@
 #include "APP_Parameter.h"
 /* 过压一段保护 */
-app_par_Overvoltage_protection_LV1_One_Value_Rte app_par_Overvoltage_protection_LV1_One_Value;
+static app_par_Overvoltage_protection_LV1_One_Value_Rte app_par_Overvoltage_protection_LV1_One_Value;
 static app_par_Overvoltage_protection_LV1_One_Delay_Rte app_par_Overvoltage_protection_LV1_One_Delay;
 static app_par_Overvoltage_protection_LV1_One_Eol_Rte   app_par_Overvoltage_protection_LV1_One_Eol;
 /* 过压二段保护 */
@@ -2822,7 +2822,7 @@ uint8 app_allpara_default_update(void)
 	{
 		BSW_NvM_Write(index,(void*)&nvm_datas_Lists[index].dft);
 	}
-    app_allpara_default_init();
+    APP_Parameter_Init();
     return ret;
 }
 uint8 app_action_default_update(void)
@@ -2832,6 +2832,6 @@ uint8 app_action_default_update(void)
 	{
 		BSW_NvM_Write(index,(void*)&nvm_datas_Lists[index].dft);
 	}
-    app_allpara_default_init();
+    APP_Parameter_Init();
     return ret;
 }
