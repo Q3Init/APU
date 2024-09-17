@@ -1,9 +1,10 @@
 #include "APP_Report_Display.h"
 #include "APP_LCD_Parameter_Configure.h"
 #include "APP_fault_management.h"
+#include "APP_Scroll_storage.h"
 
-#define SOE_RECORD_MAX_COUNT 128
-#define FAULT_EVENT_MAX_COUNT 128
+#define SOE_RECORD_MAX_COUNT STORE_NUMBER_MAX
+#define FAULT_EVENT_MAX_COUNT STORE_NUMBER_MAX
 
 #define LCD_MSG_ACCORDING_TO_FAULT_TYPE_GET(x)	App_fault_msg_transmited_to_lcd_layer_get(x)
 #define LCD_MSG_ACCORDING_TO_SOE_TYPE_GET(x)	0
