@@ -5,7 +5,7 @@
 #include "arm_math.h"
 #include "APP_Parameter.h"
 
-#define APP_RELAY_CHANNEL_NUM   6
+#define APP_RELAY_CHANNEL_NUM   10
 
 // 电压换算系数
 #define VOLTAGE_CONV_SCALE  ((300*1000/510.0f) * 1.254f)

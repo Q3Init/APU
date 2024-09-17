@@ -432,8 +432,8 @@ boolean APP_Relay_Control(uint16 channel, boolean on)
 {
     int     i           = 0;
     boolean ret         = true;
-    GPIO_T  *portList[] = {DIO_PORT_HC_C, DIO_PORT_TQ_C, DIO_PORT_D01_C, DIO_PORT_D02_C, DIO_PORT_D03_C, DIO_PORT_D04_C};
-    uint16  pinList[]   = {DIO_PIN_HC_C, DIO_PIN_TQ_C, DIO_PIN_D01_C, DIO_PIN_D02_C, DIO_PIN_D03_C, DIO_PIN_D04_C};
+    GPIO_T  *portList[] = {DIO_PORT_HC_C, DIO_PORT_TQ_C, DIO_PORT_D01_C, DIO_PORT_D02_C, DIO_PORT_D03_C, DIO_PORT_D04_C, DIO_PORT_D05_C, DIO_PORT_D06_C, DIO_PORT_D07_C, DIO_PORT_D08_C};
+    uint16  pinList[]   = {DIO_PIN_HC_C, DIO_PIN_TQ_C, DIO_PIN_D01_C, DIO_PIN_D02_C, DIO_PIN_D03_C, DIO_PIN_D04_C, DIO_PIN_D05_C, DIO_PIN_D06_C, DIO_PIN_D07_C, DIO_PIN_D08_C};
 
     if (g_relay_sem != NULL) {
         xSemaphoreTake(g_relay_sem, portMAX_DELAY);
