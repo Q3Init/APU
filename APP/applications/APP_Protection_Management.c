@@ -752,7 +752,7 @@ static void APP_Protection_Harmonic_Handler(void)
                                         app_parameter_read_Harmonic_Protection_Delay()) * 1000);
         
         /* 任意相电压大于60v且电压失真度大于定值 && 谐波保护功能投入 */
-        if ((APP_Get_Voltage_Ua() > 60.0) && (APP_Get_Voltage_Ub() > 60.0) && (APP_Get_Voltage_Ub() > 60.0) && 
+        if ((APP_Get_Voltage_Ua() > 60.0) || (APP_Get_Voltage_Ub() > 60.0) || (APP_Get_Voltage_Ub() > 60.0) && 
             ((APP_Get_Harmonic_Distortion_Ua() > distortion_threshold) || 
             (APP_Get_Harmonic_Distortion_Ub() > distortion_threshold) || 
             (APP_Get_Harmonic_Distortion_Uc() > distortion_threshold))) {

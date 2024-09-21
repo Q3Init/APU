@@ -9,7 +9,7 @@
 #include "string.h"
 
 #define ONE_STORE_SIZE 12
-#define STORE_NUMBER_MAX 256
+#define STORE_NUMBER_MAX 255
 
 #define Controls_block 0
 #define Error_Block    1
