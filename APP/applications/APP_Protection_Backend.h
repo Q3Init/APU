@@ -7,6 +7,8 @@
 
 #define APP_RELAY_CHANNEL_NUM   10
 
+#define LINE_VOLTAGE_RATIO 1.73205
+
 // 电压换算系数
 #define VOLTAGE_CONV_SCALE  ((300*1000/510.0f) * 1.254f)
 // 电流换算系数

@@ -21,10 +21,12 @@
 // #define PROJECT_BUILD_TIME      __DATE__ " " __TIME__
 // #pragma message("Time:["PROJECT_BUILD_TIME"]") 
 
+#define COORDINATE_CALCULATE_MODE 0
+
 #define FFT_HANNING_WIN_USED    
 
 #ifdef FFT_HANNING_WIN_USED
-//256点汉宁窗
+//256点汉宁窗, 0.5+0.5cos(2*pi*n/(M-1))
 const float hanning_win_table[256] = {
 0.000149421078453171, 0.000597595007177931, 0.00134425391964726, 0.00238895154954133, 
 0.00373106349747415, 0.00536978760418699, 0.00730414442998667, 0.00953297784014107,         
@@ -136,77 +138,92 @@ float32 APP_Get_Current_Iout(void)
 }
 
 /**
- * @brief 获取A相和B相的相电压
+ * @brief 获取A相和B相的real线电压
  * 
  * @return float32 
  */
 float32 APP_Get_Current_Uab(void)
 {
-    float32 Ua_par = APP_Get_Voltage_Ua();
-    float32 Ub_par = APP_Get_Voltage_Ub();
-    float32 Ua_phase_par = APP_Get_Voltage_Ua();
-    float32 Ub_phase_par = APP_Get_Voltage_Ub();
+    float32 Ua_par = APP_Get_Voltage_Ua()/LINE_VOLTAGE_RATIO;
+    float32 Ub_par = APP_Get_Voltage_Ub()/LINE_VOLTAGE_RATIO;
+    float32 Ua_phase_par = APP_Get_Phase_Ua();
+    float32 Ub_phase_par = APP_Get_Phase_Ub();
+    float32 Uab = 0;
 
+#if COORDINATE_CALCULATE_MODE
     uint8_t x = 0;
     uint8_t y = 1;
     float32 vol[2];
     vol[x] = Ua_par * arm_cos_f32(Ua_phase_par) + Ub_par * arm_cos_f32(Ub_phase_par);
     vol[y] = Ua_par * arm_sin_f32(Ua_phase_par) + Ub_par * arm_sin_f32(Ub_phase_par);
 
-    float32 Uab = 0;
     arm_power_f32(vol, 2, &Uab);
     arm_sqrt_f32(Uab, &Uab);
+#else
+    Uab = Ub_par * Ub_par + Ua_par * Ua_par - 2 * Ub_par * Ua_par * arm_cos_f32(Ub_phase_par - Ua_phase_par);
+    arm_sqrt_f32(Uab, &Uab);
+#endif
 
     return Uab;
 }
 
 /**
- * @brief 获取B相和C相的相电压
+ * @brief 获取B相和C相的real线电压,未知零线相序（无法使用基坐标拆解计算），故只能使用相对相位进行计算
  * 
  * @return float32 
  */
 float32 APP_Get_Current_Ubc(void)
 {
-    float32 Uc_par = APP_Get_Voltage_Uc();
-    float32 Ub_par = APP_Get_Voltage_Ub();
-    float32 Uc_phase_par = APP_Get_Voltage_Uc();
-    float32 Ub_phase_par = APP_Get_Voltage_Ub();
+    float32 Uc_par = APP_Get_Voltage_Uc()/LINE_VOLTAGE_RATIO;
+    float32 Ub_par = APP_Get_Voltage_Ub()/LINE_VOLTAGE_RATIO;
+    float32 Uc_phase_par = APP_Get_Phase_Uc();
+    float32 Ub_phase_par = APP_Get_Phase_Ub();
+    float32 Ubc = 0;
 
+#if COORDINATE_CALCULATE_MODE
     uint8_t x = 0;
     uint8_t y = 1;
     float32 vol[2];
     vol[x] = Ub_par * arm_cos_f32(Ub_phase_par) + Uc_par * arm_cos_f32(Uc_phase_par);
     vol[y] = Ub_par * arm_sin_f32(Ub_phase_par) + Uc_par * arm_sin_f32(Uc_phase_par);
 
-    float32 Ubc = 0;
     arm_power_f32(vol, 2, &Ubc);
     arm_sqrt_f32(Ubc, &Ubc);
+#else
+    Ubc = Uc_par * Uc_par + Ub_par * Ub_par - 2 * Uc_par * Ub_par * arm_cos_f32(Uc_phase_par - Ub_phase_par);
+    arm_sqrt_f32(Ubc, &Ubc);
+#endif
 
     return Ubc;
 }
 
 
 /**
- * @brief 获取C相和A相的相电压
+ * @brief 获取C相和A相的real线电压
  * 
  * @return float32 
  */
 float32 APP_Get_Current_Uca(void)
 {
-    float32 Uc_par = APP_Get_Voltage_Uc();
-    float32 Ua_par = APP_Get_Voltage_Ua();
-    float32 Uc_phase_par = APP_Get_Voltage_Uc();
-    float32 Ua_phase_par = APP_Get_Voltage_Ua();
+    float32 Uc_par = APP_Get_Voltage_Uc()/LINE_VOLTAGE_RATIO;
+    float32 Ua_par = APP_Get_Voltage_Ua()/LINE_VOLTAGE_RATIO;
+    float32 Uc_phase_par = APP_Get_Phase_Uc();
+    float32 Ua_phase_par = APP_Get_Phase_Ua();
+    float32 Uca = 0;
 
+#if COORDINATE_CALCULATE_MODE
     uint8_t x = 0;
     uint8_t y = 1;
     float32 vol[2];
     vol[x] = Uc_par * arm_cos_f32(Uc_phase_par) + Ua_par * arm_cos_f32(Ua_phase_par);
     vol[y] = Uc_par * arm_sin_f32(Uc_phase_par) + Ua_par * arm_sin_f32(Ua_phase_par);
 
-    float32 Uca = 0;
     arm_power_f32(vol, 2, &Uca);
     arm_sqrt_f32(Uca, &Uca);
+#else
+    Uca = Uc_par * Uc_par + Ua_par * Ua_par - 2 * Uc_par * Ua_par * arm_cos_f32(Ua_phase_par-Uc_phase_par);
+    arm_sqrt_f32(Uca, &Uca);
+#endif
 
     return Uca;
 }
@@ -222,7 +239,7 @@ float32 APP_Get_Line_Voltage_Max(void)
 }
 
 /**
- * @brief 获取三相电压最小值
+ * @brief 获取三相线电压最小值
  * 
  * @return float32 - 电压值，单位：v
  */
@@ -1028,10 +1045,14 @@ void APP_RFFT_Solution_Deal(float32 *p_cmplx_buff, float32 *p_mag, uint32 max_in
     int i = 0;
     float32 harmonic_sum_squares = 0.0;
     uint32 harmonic_cnt = 0;
-    float32 scale = p_mag[max_index + 1] / p_mag[max_index];
+    float32 scale = p_mag[max_index + 1] / p_mag[max_index];//check the power loss scale
     float32 dk = (2 * scale - 1) / (1 + scale);
     float32 phase = 0;
     arm_atan2_f32(p_cmplx_buff[2 * max_index + 1], p_cmplx_buff[2 * max_index], &phase);
+    if(phase < 0)
+    {
+        phase += 2*PI;//add range to [0,2*pi] due to use tan2
+    }
     *p_phase = phase;
     //float32 phase = atan2(p_cmplx_buff[2 * max_index + 1], p_cmplx_buff[2 * max_index]) * 180.0 /PI;
 
@@ -1040,6 +1061,8 @@ void APP_RFFT_Solution_Deal(float32 *p_cmplx_buff, float32 *p_mag, uint32 max_in
     }
 
     if (p_amplitude != NULL) {
+        
+        //to restore the real calue.this formula is for line voltage or current.
         *p_amplitude = p_mag[max_index] * (2 * PI * dk) * (1 - dk * dk) / arm_sin_f32(PI * dk);
     } 
 
@@ -1148,7 +1171,7 @@ void APP_Sample_Adc_Cpy(float32 *p_buff, uint32 len, APP_Sample_Adc_Ch_e ch)
     if (ch >= APP_SMP_ADC_CH_UA){ /* 电压换算 */
         for (i = 0; i < len; i++) {
             dc_fval = APP_ADC2VOLT_CALC(DMA_ADCConvertedValue[i][channel]);
-            p_buff[i] = APP_DC2AC_VOLT(dc_fval);
+            p_buff[i] = APP_DC2AC_VOLT(dc_fval);//obtain the phase voltage
             // p_buff[i] = adc_array[i];
             // p_buff[i] = 380*arm_sin_f32(i*2*PI*50/FFT_SAMPLE_RATE + 60.0f * PI/180.0f) + 80*arm_sin_f32(i*2*PI*60/FFT_SAMPLE_RATE + 30.0f * PI/180.0f);
             // Log_d("CH_%d, dcVolt_mv=%.4f, acVolt_v=%.4f, adc=%d\n", channel, dc_fval, p_buff[i], DMA_ADCConvertedValue[i][channel]);
@@ -1216,6 +1239,7 @@ void APP_RFFT_Voltage_Calc(APP_Sample_Adc_Ch_e ch, float32 *p_volt, float32 *p_f
     *p_phase = APP_Calibration_Conversion(pBk->freq_cali, PHASE_CALI_COUNT_MAX, phase);
     *p_volt = APP_Calibration_Conversion(pBk->volt_cali, VOLT_CALI_COUNT_MAX, amplitude);
     *p_harmonic = harmonic;
+    // *p_volt = *p_volt/(LINE_VOLTAGE_RATIO*1.0);//换算成相对零线的相电压
 }
 
 void APP_RFFT_Power_Calc(float32 line_volt, float32 line_current, float32 phase_volt, float32 phase_current, float32 *p_active_power, float32 *p_reactive_power, float32 *p_apparent_power)

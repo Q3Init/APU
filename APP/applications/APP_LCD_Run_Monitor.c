@@ -21,9 +21,9 @@ static uint32_t lcd_flush_timer_cur = 0;
 #define PHASE_VOLTAGE_FOR_UBC_READ()  APP_Get_Current_Ubc()
 #define PHASE_VOLTAGE_FOR_UCA_READ()  APP_Get_Current_Uca()
 #define PHASE_VOLTAGE_FOR_UX_READ()  APP_Get_Voltage_Uout()
-#define LINE_VOLTAGE_FOR_UA_READ()  APP_Get_Voltage_Ua()
-#define LINE_VOLTAGE_FOR_UB_READ()  APP_Get_Voltage_Ub()
-#define LINE_VOLTAGE_FOR_UC_READ()  APP_Get_Voltage_Uc()
+#define LINE_VOLTAGE_FOR_UA_READ()  APP_Get_Voltage_Ua()/LINE_VOLTAGE_RATIO
+#define LINE_VOLTAGE_FOR_UB_READ()  APP_Get_Voltage_Ub()/LINE_VOLTAGE_RATIO
+#define LINE_VOLTAGE_FOR_UC_READ()  APP_Get_Voltage_Uc()/LINE_VOLTAGE_RATIO
 #define THE_FUNDAMENTAL_FREQUENCY_FOR_F_READ()  APP_Get_Fundamental_Freq()
 #define THE_TOTAL_ACTIVE_POWER_FOR_PS_READ() (APP_Get_Active_Power_Total())
 #define THE_TOTAL_REACTIVE_POWER_FOR_QS_READ() (APP_Get_Reactive_Power_Total())
