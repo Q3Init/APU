@@ -190,6 +190,15 @@ float32 APP_Get_Phase_Ia(void);
 float32 APP_Get_Phase_Ib(void);
 float32 APP_Get_Phase_Ic(void);
 
+/* 获取三相电压电流之间的相位，单位：度 */
+float32 APP_Get_Phase_Uab(void);
+float32 APP_Get_Phase_Ubc(void);
+float32 APP_Get_Phase_Uca(void);
+float32 APP_Get_Phase_UabIa(void);
+
+/* 获取A相的功率因数，单位：deg */
+float32 APP_Get_cos_Ua_phi(void);
+
 /* 获取三相电压  各两相电压之间的相电压， 单位: V*/
 float32 APP_Get_Current_Uab(void);
 float32 APP_Get_Current_Ubc(void);

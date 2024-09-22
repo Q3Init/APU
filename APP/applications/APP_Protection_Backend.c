@@ -229,6 +229,74 @@ float32 APP_Get_Current_Uca(void)
 }
 
 /**
+ * @brief 获取A相和B相的相位差
+ * 
+ * @return float32 
+ */
+float32 APP_Get_Phase_Uab(void)
+{
+    float32 Ua_phase_par = APP_Get_Phase_Ua();
+    float32 Ub_phase_par = APP_Get_Phase_Ub();
+
+    return ((Ub_phase_par - Ua_phase_par) * 180 / PI);
+}
+
+/**
+ * @brief 获取B相和C相的相位差
+ * 
+ * @return float32 
+ */
+float32 APP_Get_Phase_Ubc(void)
+{
+    float32 Ub_phase_par = APP_Get_Phase_Ub();
+    float32 Uc_phase_par = APP_Get_Phase_Uc();
+
+    return ((Uc_phase_par - Ub_phase_par) * 180 / PI);
+}
+
+/**
+ * @brief 获取C相和A相的相位差
+ * 
+ * @return float32 
+ */
+float32 APP_Get_Phase_Uca(void)
+{
+    float32 Ua_phase_par = APP_Get_Phase_Ua();
+    float32 Uc_phase_par = APP_Get_Phase_Uc();
+
+    return ((Ua_phase_par - Uc_phase_par) * 180 / PI);
+}
+
+/**
+ * @brief 获取AB相电压和A相电流的相位差
+ * 
+ * @return float32 
+ */
+float32 APP_Get_Phase_UabIa(void)
+{
+    float32 Uab_phase_par = APP_Get_Phase_Uab();
+    float32 Ia_phase_par = APP_Get_Phase_Ia();
+
+    return ((Ia_phase_par - Uab_phase_par) * 180 / PI);
+}
+
+/**
+ * @brief 获取A相的功率因数
+ * 
+ * @return float32 
+ */
+float32 APP_Get_cos_Ua_phi(void)
+{
+    float32 Ua_Ps = APP_Get_Active_Power_A();
+    float32 Ua_Qs = APP_Get_Reactive_Power_A();
+    float32 result;
+    arm_atan2_f32(Ua_Ps, Ua_Qs, &result);
+
+    return result;
+}
+
+
+/**
  * @brief 获取三相线电压最大值
  * 
  * @return float32 - 电压值，单位：v
