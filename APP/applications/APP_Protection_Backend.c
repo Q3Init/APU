@@ -23,6 +23,8 @@
 
 #define COORDINATE_CALCULATE_MODE 0
 
+#define SINGLE_PHASE_INTFACE 1
+
 #define FFT_HANNING_WIN_USED    
 
 #ifdef FFT_HANNING_WIN_USED
@@ -231,50 +233,63 @@ float32 APP_Get_Current_Uca(void)
 /**
  * @brief 获取A相和B相的相位差
  * 
- * @return float32 
+ * @return float32 ，单位：度
  */
 float32 APP_Get_Phase_Uab(void)
 {
     float32 Ua_phase_par = APP_Get_Phase_Ua();
     float32 Ub_phase_par = APP_Get_Phase_Ub();
 
-    return ((Ub_phase_par - Ua_phase_par) * 180 / PI);
+    float32 abs_phase = ((Ub_phase_par - Ua_phase_par)<0)? (2*PI+(Ub_phase_par - Ua_phase_par)) : (Ub_phase_par - Ua_phase_par);
+    Log_d("Uab raw=%.4f abs=%.4f result=%.4f \r\n",(Ub_phase_par - Ua_phase_par), abs_phase, 
+												(abs_phase * 180 / PI));
+    return (abs_phase * 180 / PI);
 }
 
 /**
  * @brief 获取B相和C相的相位差
  * 
- * @return float32 
+ * @return float32 ，单位：度
  */
 float32 APP_Get_Phase_Ubc(void)
 {
     float32 Ub_phase_par = APP_Get_Phase_Ub();
     float32 Uc_phase_par = APP_Get_Phase_Uc();
 
-    return ((Uc_phase_par - Ub_phase_par) * 180 / PI);
+    float32 abs_phase = ((Uc_phase_par - Ub_phase_par)<0)? (2*PI+(Uc_phase_par - Ub_phase_par)) : (Uc_phase_par - Ub_phase_par);
+	Log_d("Ubc raw=%.4f abs=%.4f result=%.4f \r\n",(Uc_phase_par - Ub_phase_par), abs_phase, 
+												(abs_phase * 180 / PI));
+
+    return (abs_phase * 180 / PI);
 }
 
 /**
  * @brief 获取C相和A相的相位差
  * 
- * @return float32 
+ * @return float32 ，单位：度
  */
 float32 APP_Get_Phase_Uca(void)
 {
     float32 Ua_phase_par = APP_Get_Phase_Ua();
     float32 Uc_phase_par = APP_Get_Phase_Uc();
 
-    return ((Ua_phase_par - Uc_phase_par) * 180 / PI);
+    float32 abs_phase = ((Ua_phase_par - Uc_phase_par)<0)? (2*PI+(Ua_phase_par - Uc_phase_par)) : (Ua_phase_par - Uc_phase_par);
+    Log_d("Uca raw=%.4f abs=%.4f result=%.4f \r\n",(Ua_phase_par - Uc_phase_par), abs_phase, 
+													(abs_phase * 180 / PI));
+    return (abs_phase * 180 / PI);
 }
 
 /**
  * @brief 获取AB相电压和A相电流的相位差
  * 
- * @return float32 
+ * @return float32  ，单位：度
  */
 float32 APP_Get_Phase_UabIa(void)
 {
-    float32 Uab_phase_par = APP_Get_Phase_Uab();
+    float32 Ua_phase_par = APP_Get_Phase_Ua();
+    float32 Ub_phase_par = APP_Get_Phase_Ub();
+    float32 Uab_phase_par = Ub_phase_par - Ua_phase_par;
+    // float32 Uab_phase_par = APP_Get_Phase_Uab();
     float32 Ia_phase_par = APP_Get_Phase_Ia();
 
     return ((Ia_phase_par - Uab_phase_par) * 180 / PI);
@@ -1315,13 +1330,26 @@ void APP_RFFT_Power_Calc(float32 line_volt, float32 line_current, float32 phase_
     float32 phase_diff = phase_volt - phase_current;
 
     if (p_active_power != NULL) {
+		#if SINGLE_PHASE_INTFACE
+        *p_active_power = line_volt * line_current * arm_cos_f32(phase_diff)/3.0*1.59;
+		#else
         *p_active_power = 1.73205 * line_volt * line_current * arm_cos_f32(phase_diff);
+        #endif
     }
     if (p_reactive_power != NULL) {
+		#if SINGLE_PHASE_INTFACE
+		*p_reactive_power = line_volt * line_current * arm_sin_f32(phase_diff)/3.0*1.59;
+		#else
         *p_reactive_power = 1.73205 * line_volt * line_current * arm_sin_f32(phase_diff);
+        #endif
     }
     if (p_apparent_power != NULL) {
         *p_apparent_power = sqrtf((*p_active_power) * (*p_active_power) + (*p_reactive_power) * (*p_reactive_power));
+    }
+
+    if((p_reactive_power != NULL) && (p_active_power != NULL))
+    {
+        Log_d("line_volt=%.4f line_current=%.4f act_pwr=%.4f  rea_pwr=%.4f\r\n", line_volt, line_current, *p_active_power, *p_reactive_power);
     }
 }
 
@@ -1385,6 +1413,7 @@ void APP_FFT_Handler(void)
                           &pBk->value.line_uout, NULL, NULL, NULL);
 
     /* 功率相关 */
+    Log_d("HE! Ua Ia start !\r\n");
     APP_RFFT_Power_Calc(pBk->value.line_ua, 
                         pBk->value.line_ia, 
                         pBk->value.phase_ua, 
@@ -1392,7 +1421,9 @@ void APP_FFT_Handler(void)
                         &pBk->value.active_power_a, 
                         &pBk->value.reactive_power_a,
                         &pBk->value.apparent_power_a);
-
+    Log_d("HE! Ua Ia END !\r\n");
+    
+    Log_d("HE! Ub Ib start !\r\n");
     APP_RFFT_Power_Calc(pBk->value.line_ub, 
                         pBk->value.line_ib, 
                         pBk->value.phase_ub, 
@@ -1400,7 +1431,9 @@ void APP_FFT_Handler(void)
                         &pBk->value.active_power_b, 
                         &pBk->value.reactive_power_b,
                         &pBk->value.apparent_power_b);            
-
+    Log_d("HE! Ub Ib END !\r\n");
+    
+    Log_d("HE! Uc Ic start !\r\n");
     APP_RFFT_Power_Calc(pBk->value.line_uc, 
                         pBk->value.line_ic, 
                         pBk->value.phase_uc, 
@@ -1408,7 +1441,7 @@ void APP_FFT_Handler(void)
                         &pBk->value.active_power_c, 
                         &pBk->value.reactive_power_c,
                         &pBk->value.apparent_power_c);          
-
+    Log_d("HE! Uc Ic END !\r\n");
 
     tick2 = APP_Get_System_Ms();
     fft_time_cost = tick2 - tick1;

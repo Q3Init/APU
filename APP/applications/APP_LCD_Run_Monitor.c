@@ -1176,7 +1176,7 @@ struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint
 											0xff,
                                             5,  /* the displayed sum-number where int-number plus point-number*/
                                             num_array,
-                                            2   /*the position for the point*/
+                                            3   /*the position for the point*/
                                             );
                         LCD_ShowChinese_garland(97, 28, my_word_char_du, 1);
 
@@ -1195,7 +1195,7 @@ struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint
 											0xff,
                                             5,  /* the displayed sum-number where int-number plus point-number*/
                                             num_array,
-                                            2   /*the position for the point*/
+                                            3   /*the position for the point*/
                                             );
                         LCD_ShowChinese_garland(97, 39, my_word_char_du, 1);
 
@@ -1214,7 +1214,7 @@ struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint
 											0xff,
                                             5,  /* the displayed sum-number where int-number plus point-number*/
                                             num_array,
-                                            2   /*the position for the point*/
+                                            3   /*the position for the point*/
                                             );
                         LCD_ShowChinese_garland(97, 51, my_word_char_du, 1);
 
@@ -1243,7 +1243,7 @@ struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint
 											0xff,
                                             5,  /* the displayed sum-number where int-number plus point-number*/
                                             num_array,
-                                            2   /*the position for the point*/
+                                            3   /*the position for the point*/
                                             );
                         LCD_ShowChinese_garland(103, 16, my_word_char_du, 1);
 
@@ -1263,7 +1263,7 @@ struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint
 											0xff,
                                             5,  /* the displayed sum-number where int-number plus point-number*/
                                             num_array,
-                                            2   /*the position for the point*/
+                                            3   /*the position for the point*/
                                             );
                         LCD_ShowChinese_garland(103, 28, my_word_char_du, 1);
 
@@ -1282,7 +1282,7 @@ struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint
 											0xff,
                                             5,  /* the displayed sum-number where int-number plus point-number*/
                                             num_array,
-                                            2   /*the position for the point*/
+                                            3   /*the position for the point*/
                                             );
                         LCD_ShowChinese_garland(97, 39, my_word_char_du, 1);
 
@@ -1301,7 +1301,7 @@ struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint
 											0xff,
                                             5,  /* the displayed sum-number where int-number plus point-number*/
                                             num_array,
-                                            2   /*the position for the point*/
+                                            3   /*the position for the point*/
                                             );
                         LCD_ShowChinese_garland(97, 51, my_word_char_du, 1);
 						break;
@@ -1328,7 +1328,7 @@ struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint
 											0xff,
                                             5,  /* the displayed sum-number where int-number plus point-number*/
                                             num_array,
-                                            2   /*the position for the point*/
+                                            3   /*the position for the point*/
                                             );
                         LCD_ShowChinese_garland(97, 16, my_word_char_du, 1);
 
@@ -1347,7 +1347,7 @@ struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint
 											0xff,
                                             5,  /* the displayed sum-number where int-number plus point-number*/
                                             num_array,
-                                            2   /*the position for the point*/
+                                            3   /*the position for the point*/
                                             );
                         LCD_ShowChinese_garland(97, 28, my_word_char_du, 1);
 						break;

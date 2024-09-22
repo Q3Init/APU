@@ -205,6 +205,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 	uint8_t num_idx_flush[8] = {0};
 	uint16_t chinese_idx_flush = 0xff;
 	uint8_t num_array[3] = {0};
+	uint8_t num_array_special[4] = {0};
 	uint8_t int_flag = 0;
     (void)(int_flag);
 	uint8_t chinese_menu_idx = 0;
@@ -334,7 +335,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 						case BAOHU_CT_1:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Protective_CT_primary();
-							my_convert_int_to_int_array(lcd_modify_num_array, 3, float_flag);
+							my_convert_int_to_int_array(lcd_modify_num_array, 4, float_flag);
 							key_idx_for_num = 4;
 							break;
 						case BAOHU_CT_2:
@@ -390,7 +391,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 							float_flag = app_parameter_read_Generation_PT_secondary();
 							break;
 						case BAOHU_CT_1:
-							float_flag = my_convert_int_array_to_int_parameter(lcd_modify_num_array,3);
+							float_flag = my_convert_int_array_to_int_parameter(lcd_modify_num_array,4);
 							app_parameter_write_Protective_CT_primary(0);
 							app_parameter_write_Protective_CT_primary(float_flag);
 							float_flag = app_parameter_read_Protective_CT_primary();
@@ -436,11 +437,14 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 					right_diff_num_idx_ths = 3-1;
 					up_diff_num_idx_ths = 9;
 					break;
-				case BAOHU_CT_1:
 				case BAOHU_CT_2:
 				case LINGXU_1:
 				case LINGXU_2:
 					right_diff_num_idx_ths = 3-1;
+					up_diff_num_idx_ths = 9;
+					break;
+				case BAOHU_CT_1:
+					right_diff_num_idx_ths = 4-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				default:
@@ -642,10 +646,10 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x10, 44, 13, yici, 2);
 						lcd_state_flush_for_num(69,13,my_maohao,5,12,1);
 						lcd_number_modify_array_get((float32 *)&float_flag, app_parameter_read_Protective_CT_primary(), 
-													num_array, 3, 0, num_idx_flush[4]);
+													num_array_special, 4, 0, num_idx_flush[4]);
 						lcd_number_display_in_order(75, 13, 5, 12, 
-											num_idx_flush[4], sizeof(num_array), num_array, 3);
-						lcd_state_flush_for_num(95,13,my_char_A,6,12,1);
+											num_idx_flush[4], sizeof(num_array_special), num_array_special, 4);
+						lcd_state_flush_for_num(102,13,my_char_A,6,12,1);
 
 
 
