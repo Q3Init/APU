@@ -10,6 +10,15 @@
 static APP_Protection_Mnt_t APP_Protection_Mnt;
 static APP_Protection_Mnt_t *pMnt = &APP_Protection_Mnt;
 static SemaphoreHandle_t g_prt_enable_sem = NULL;
+typedef struct
+{
+    /* data */
+    uint8 cnt;
+    uint32 tick;
+}power_recovery_cnt_Type;
+static power_recovery_cnt_Type recovery_cnt[3] = {0};
+#define RECOVERY_CNT_NUM 3
+#define RECOVERY_TICK_300S_BASE_10MS 30000
 
 #define APP_PRT_ENABLE_SEM_TAKE()   do {\
     if (g_prt_enable_sem != NULL) {\
@@ -724,8 +733,18 @@ static void APP_Protection_ReversePower_Handler(void)
         }
         
         if (true == pMnt->delay_exec_list[APP_PRT_REVERSE_POWER]) {
-            if (((APP_Get_System_Ms() - pMnt->tick_list[APP_PRT_REVERSE_POWER]) >= delay_ms) && (!pMnt->state.reverse_power_switch_off_state)) {
-                APP_Relay_Select_Switch_Off();
+            if ((APP_Get_System_Ms() - pMnt->tick_list[APP_PRT_REVERSE_POWER]) >= delay_ms) {
+                if (BIT_SET == APP_Remote_Signal_Input_Read_Group_3()) {
+                    APP_Relay_Control(APP_RELAY_CHANNEL_D03, false);
+	            	APP_Relay_Control(APP_RELAY_CHANNEL_D04, true);
+                } else if (BIT_SET == APP_Remote_Signal_Input_Read_Group_2()) {
+                    APP_Relay_Control(APP_RELAY_CHANNEL_D01, false);
+	            	APP_Relay_Control(APP_RELAY_CHANNEL_D02, true);
+                } else if (BIT_SET == APP_Remote_Signal_Input_Read_Group_1()) {
+                    APP_Relay_Control(APP_RELAY_CHANNEL_HC, false);
+		            APP_Relay_Control(APP_RELAY_CHANNEL_TQ, true);
+                }
+                pMnt->delay_exec_list[APP_PRT_REVERSE_POWER] = false;
                 pMnt->state.reverse_power_switch_off_state = 1;
                 Log_i("Reverse Power Protection. Relay Select Switch Off.\n");
             } 
@@ -1180,16 +1199,37 @@ static void APP_Protection_PowerRestorationOperate_Handler(void)
         }
         
         if (true == pMnt->delay_exec_list[APP_PRT_POWER_RESTORATION]) {
-            if (((APP_Get_System_Ms() - pMnt->tick_list[APP_PRT_POWER_RESTORATION]) > delay_ms) && 
-                (!pMnt->state.power_restoration_switch_on_state)) {
-
-                APP_Relay_Select_Switch_On();
+            if ((APP_Get_System_Ms() - pMnt->tick_list[APP_PRT_POWER_RESTORATION]) > delay_ms) {
+                if ((BIT_RESET == APP_Remote_Signal_Input_Read_Group_3()) && ((recovery_cnt[0].cnt < RECOVERY_CNT_NUM) && (recovery_cnt[0].tick == 0))) {
+                    recovery_cnt[0].cnt ++;
+                    APP_Relay_Control(APP_RELAY_CHANNEL_D03, true);
+                    APP_Relay_Control(APP_RELAY_CHANNEL_D04, false);
+                } else if (BIT_RESET == APP_Remote_Signal_Input_Read_Group_2() && ((recovery_cnt[1].cnt < RECOVERY_CNT_NUM) && (recovery_cnt[1].tick == 0))) {
+                    recovery_cnt[1].cnt ++;
+                    APP_Relay_Control(APP_RELAY_CHANNEL_D01, true);
+                    APP_Relay_Control(APP_RELAY_CHANNEL_D02, false);
+                } else if (BIT_RESET == APP_Remote_Signal_Input_Read_Group_1() && ((recovery_cnt[2].cnt < RECOVERY_CNT_NUM) && (recovery_cnt[2].tick == 0))) {
+                    recovery_cnt[2].cnt ++;
+                    APP_Relay_Control(APP_RELAY_CHANNEL_HC, true);
+                    APP_Relay_Control(APP_RELAY_CHANNEL_TQ, false);
+                }
                 pMnt->state.power_restoration_switch_on_state = 1;
+                pMnt->delay_exec_list[APP_PRT_POWER_RESTORATION] = false;
                 /* 清除逆功率标志位 */
                 pMnt->state.reverse_power_switch_off_state = 0;
                 pMnt->delay_exec_list[APP_PRT_REVERSE_POWER] = false;
                 Log_i("Power Restoration Protection. Relay Select Switch On.\n");
             }    
+        }
+    
+        for(uint8 i = 0; i < 3; i++) {
+            if ((recovery_cnt[i].cnt == RECOVERY_CNT_NUM) && (recovery_cnt[i].tick == 0)) {
+                recovery_cnt[i].cnt = 0;
+                recovery_cnt[i].tick = RECOVERY_TICK_300S_BASE_10MS;
+            }
+            if (recovery_cnt[i].tick > 0) {
+                recovery_cnt[i].tick--;
+            }
         }
     }
 }
