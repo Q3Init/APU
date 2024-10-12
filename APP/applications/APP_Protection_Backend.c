@@ -389,32 +389,32 @@ uint16 APP_Relay_Get_State(void)
 
 uint8 APP_Relay_Get_State_Group_1(void)
 {
-    return pBk->relay_state & (1 << 1); /* HC */
+    return pBk->relay_state & (1 << 0); /* HC */
 }
 
 uint8 APP_Relay_Get_State_Group_2(void)
 {
-    return pBk->relay_state & (1 << 2); /* TQ */
+    return pBk->relay_state & (1 << 1); /* TQ */
 }
 
 uint8 APP_Relay_Get_State_Group_3(void)
 {
-    return pBk->relay_state & (1 << 3); /* D01 */
+    return pBk->relay_state & (1 << 2); /* D01 */
 }
 
 uint8 APP_Relay_Get_State_Group_4(void)
 {
-    return pBk->relay_state & (1 << 4); /* D02 */
+    return pBk->relay_state & (1 << 3); /* D02 */
 }
 
 uint8 APP_Relay_Get_State_Group_5(void)
 {
-    return pBk->relay_state & (1 << 5); /* D03 */
+    return pBk->relay_state & (1 << 4); /* D03 */
 }
 
 uint8 APP_Relay_Get_State_Group_6(void)
 {
-    return pBk->relay_state & (1 << 6); /* D04 */
+    return pBk->relay_state & (1 << 5); /* D04 */
 }
 
 /**
@@ -856,7 +856,7 @@ void APP_Relay_Idle_Handler(void)
 {
     static uint32 relay_tick[6];
     /* HC Relay out time */
-    if (APP_Remote_Signal_Input_State(0) == APP_Relay_Get_State_Group_1()) {
+    if (APP_Relay_Get_State_Group_1()) {
         if ((APP_Get_System_Ms() - relay_tick[0]) >= app_parameter_read_Closing_exit_time()) {
             APP_Relay_Control(APP_RELAY_CHANNEL_HC, false);
         }
@@ -864,7 +864,7 @@ void APP_Relay_Idle_Handler(void)
         relay_tick[0] = APP_Get_System_Ms();
     }
     /* TQ Relay out time */
-    if (APP_Remote_Signal_Input_State(1) == APP_Relay_Get_State_Group_2()) {
+    if (APP_Relay_Get_State_Group_2()) {
         if ((APP_Get_System_Ms() - relay_tick[1]) >= app_parameter_read_Trip_exit_time()) {
             APP_Relay_Control(APP_RELAY_CHANNEL_TQ, false);
         }
@@ -872,7 +872,7 @@ void APP_Relay_Idle_Handler(void)
         relay_tick[1] = APP_Get_System_Ms();
     }
     /* D01 Relay out time */
-    if (APP_Remote_Signal_Input_State(2) == APP_Relay_Get_State_Group_3()) {
+    if (APP_Relay_Get_State_Group_3()) {
         if ((APP_Get_System_Ms() - relay_tick[2]) >= app_parameter_read_D01_exit_time()) {
             APP_Relay_Control(APP_RELAY_CHANNEL_D01, false);
         }
@@ -880,7 +880,7 @@ void APP_Relay_Idle_Handler(void)
         relay_tick[2] = APP_Get_System_Ms();
     }
     /* D02 Relay out time */
-    if (APP_Remote_Signal_Input_State(3) == APP_Relay_Get_State_Group_4()) {
+    if (APP_Relay_Get_State_Group_4()) {
         if ((APP_Get_System_Ms() - relay_tick[3]) >= app_parameter_read_D02_exit_time()) {
             APP_Relay_Control(APP_RELAY_CHANNEL_D02, false);
         }
@@ -888,7 +888,7 @@ void APP_Relay_Idle_Handler(void)
         relay_tick[3] = APP_Get_System_Ms();
     }
     /* D03 Relay out time */
-    if (APP_Remote_Signal_Input_State(4) == APP_Relay_Get_State_Group_5()) {
+    if (APP_Relay_Get_State_Group_5()) {
         if ((APP_Get_System_Ms() - relay_tick[4]) >= app_parameter_read_D03_exit_time()) {
             APP_Relay_Control(APP_RELAY_CHANNEL_D03, false);
         }
@@ -896,7 +896,7 @@ void APP_Relay_Idle_Handler(void)
         relay_tick[4] = APP_Get_System_Ms();
     }
     /* D04 Relay out time */
-    if (APP_Remote_Signal_Input_State(5) == APP_Relay_Get_State_Group_6()) {
+    if (APP_Relay_Get_State_Group_6()) {
         if ((APP_Get_System_Ms() - relay_tick[5]) >= app_parameter_read_D04_exit_time()) {
             APP_Relay_Control(APP_RELAY_CHANNEL_D04, false);
         }
