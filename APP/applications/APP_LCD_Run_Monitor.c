@@ -30,9 +30,9 @@ static uint32_t lcd_flush_timer_cur = 0;
 // #define THE_TOTAL_ACTIVE_POWER_FOR_PS_READ() (APP_Get_Active_Power_Total()) 
 // #define THE_TOTAL_REACTIVE_POWER_FOR_QS_READ() (APP_Get_Reactive_Power_Total())
 // #define THE_TOTAL_APPARENT_POWER_FOR_S_READ() (APP_Get_Apparent_Power_Total())
-#define THE_TOTAL_ACTIVE_POWER_FOR_PS_READ() (APP_Get_Active_Power_A()) 
-#define THE_TOTAL_REACTIVE_POWER_FOR_QS_READ() (APP_Get_Reactive_Power_A())
-#define THE_COS_FOR_A_VOLTAGE_BY_ACTIVE_PWR_AND_REACTIVE_PWR() APP_Get_cos_Ua_phi()
+#define THE_TOTAL_ACTIVE_POWER_FOR_PS_READ() (APP_Get_Active_Power_Total()) 
+#define THE_TOTAL_REACTIVE_POWER_FOR_QS_READ() (APP_Get_Reactive_Power_Total())
+//#define THE_COS_FOR_A_VOLTAGE_BY_ACTIVE_PWR_AND_REACTIVE_PWR() APP_Get_cos_Ua_phi()
 
 #define THE_HARMONIC_DISTORTION_UA_FOR_THDUA_READ() APP_Get_Harmonic_Distortion_Ua()
 #define THE_HARMONIC_DISTORTION_UB_FOR_THDUB_READ() APP_Get_Harmonic_Distortion_Ub()
@@ -684,11 +684,11 @@ struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_signal, uin
                         LCD_ShowEnglish_garland(83, 28, my_char_a, 1);
                         LCD_ShowEnglish_garland(89, 28, my_char_r, 1);
 
-                        // cosPHI = THE_TOTAL_ACTIVE_POWER_FOR_PS_READ()*1.0/pow(pow(THE_TOTAL_ACTIVE_POWER_FOR_PS_READ(),2)+pow(THE_TOTAL_REACTIVE_POWER_FOR_QS_READ(),2), 0.5);
-                        // Log_d("Qs and Ps: Ps*1.0 / (Ps^2 + Qs^2)^0.5 = cosPHI = %.3f \n", cosPHI);
+                        cosPHI = THE_TOTAL_ACTIVE_POWER_FOR_PS_READ()*1.0/pow(pow(THE_TOTAL_ACTIVE_POWER_FOR_PS_READ(),2)+pow(THE_TOTAL_REACTIVE_POWER_FOR_QS_READ(),2), 0.5);
+                        Log_d("Qs and Ps: Ps*1.0 / (Ps^2 + Qs^2)^0.5 = cosPHI = %.3f \n", cosPHI);
                         // cosPHI = THE_TOTAL_ACTIVE_POWER_FOR_PS_READ()*1.0/ THE_TOTAL_APPARENT_POWER_FOR_S_READ();
                         // Log_d("Ps and S: Ps*1.0 / S = cosPHI = %.3f \n", cosPHI);
-                        cosPHI = THE_COS_FOR_A_VOLTAGE_BY_ACTIVE_PWR_AND_REACTIVE_PWR();
+                        //cosPHI = THE_COS_FOR_A_VOLTAGE_BY_ACTIVE_PWR_AND_REACTIVE_PWR();
                         //////TODO
                         LCD_ShowEnglish_garland(18, 39, my_char_c, 1);     
                         LCD_ShowEnglish_garland(24, 39, my_char_o, 1);
