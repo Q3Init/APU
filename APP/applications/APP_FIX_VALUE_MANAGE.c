@@ -2625,7 +2625,7 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Reverse_Power_Protection_Value();
 				Log_d("ENTER! float_flag:%f\n",float_flag);
-				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+				my_convert_float32_to_int_array(lcd_modify_num_array, 4, 1, float_flag);
 			}
 			key_idx_for_num = 0;
 		}
@@ -2647,7 +2647,7 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Reverse_Power_Protection_Value();
 					Log_d("ENTER! float_flag:%f\n",float_flag);
-					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+					my_convert_float32_to_int_array(lcd_modify_num_array, 4, 1, float_flag);
 					break;
 				default:
 					break;
@@ -2688,7 +2688,7 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Reverse_Power_Protection_Value();
 							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
-							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 1, float_flag);
 							break;
 						case OVER_DELAY:
 							//update the value for the array lcd_modify_num_array
@@ -2715,7 +2715,7 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 					{
 						case FIX_VALUE:
 							// prepare for the number modify
-							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 2);
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,4, 1);
 							float_flag = float_flag+ 0.0001;
 							app_parameter_write_Reverse_Power_Protection_Value(0);
 							app_parameter_write_Reverse_Power_Protection_Value(float_flag);
@@ -2753,7 +2753,7 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 			switch(chinese_menu_idx)
 			{
 				case FIX_VALUE:
-					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-2;
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
 					up_diff_num_idx_ths = 9;
 					break;
 				case OVER_DELAY:
@@ -2861,7 +2861,7 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
-				LCD_ShowChinese_garland(0, 0, reverse_power, 4);
+				LCD_ShowChinese_garland(0, 0, reverse_power, 3);
 				switch(chinese_menu_idx)
 				{
 					case FIX_VALUE:
@@ -2876,11 +2876,10 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, fix_value, 4);
 						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
 						lcd_number_modify_array_get(&float_flag, app_parameter_read_Reverse_Power_Protection_Value(), 
-													num_array, 2, 2, num_idx_flush[0]);
+													num_array, 4, 1, num_idx_flush[0]);
 						lcd_number_display_in_order(64, 13, 5, 12, 
-											num_idx_flush[0], sizeof(num_array)-1, num_array, 2);
-						lcd_state_flush_for_num(90,13,my_char_H,6,12,1);
-						lcd_state_flush_for_num(96,13,my_char_z,6,12,1);
+											num_idx_flush[0], sizeof(num_array), num_array, 4);
+						lcd_state_flush_for_num(96,13,my_char_W,6,12,1);
 
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, over_delay, 4);
 						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
