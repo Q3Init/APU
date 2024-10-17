@@ -42,6 +42,7 @@ typedef enum
     Harmonic_Protection_Delay,
     Harmonic_Protection_Eol,
     External_Coordination_Delay,
+    External_Coordination_Trip,
     External_Coordination_Eol,
     Instantaneous_Overcurrent_Protection_Value,
     Instantaneous_Overcurrent_Mutation_Setting,
@@ -94,6 +95,10 @@ typedef enum
     D02_exit_time,
     D03_exit_time,
     D04_exit_time,
+    D05_exit_time,
+    D06_exit_time,
+    D07_exit_time,
+    D08_exit_time,
     Energy_storage_exit_time,
     Energy_storage_outlet_selection,
     Zero_drift_threshold,
@@ -133,7 +138,6 @@ typedef enum
     ZERO_CURRENT_AMPLITUDE,
     ZERO_CURRENT_FREQUENCY,
     ZERO_CURRENT_PHASE,
-    External_Coordination_Trip,
     ID_CNT
 }bsw_nvm_storge_id;
 

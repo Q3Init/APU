@@ -116,6 +116,10 @@ BSW_NvM_Rte nvm_datas_Lists[ID_CNT] =
         .data_len = 4
     },
     {
+        .id = External_Coordination_Trip,
+        .data_len = 1
+    },
+    {
         .id = External_Coordination_Eol,
         .data_len = 1
     },
@@ -324,6 +328,22 @@ BSW_NvM_Rte nvm_datas_Lists[ID_CNT] =
         .data_len = 2
     },
     {
+        .id = D05_exit_time,
+        .data_len = 2
+    },
+    {
+        .id = D06_exit_time,
+        .data_len = 2
+    },
+    {
+        .id = D07_exit_time,
+        .data_len = 2
+    },
+    {
+        .id = D08_exit_time,
+        .data_len = 2
+    },
+    {
         .id = Energy_storage_exit_time,
         .data_len = 2
     },
@@ -478,10 +498,6 @@ BSW_NvM_Rte nvm_datas_Lists[ID_CNT] =
     {
         .id = ZERO_CURRENT_PHASE,
         .data_len = 4
-    },
-    {
-        .id = External_Coordination_Trip,
-        .data_len = 1
     }
 };
 

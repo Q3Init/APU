@@ -559,6 +559,30 @@ typedef struct
 {
     /* data */
     uint16 datas;
+}app_par_D05_exit_time_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_D06_exit_time_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_D07_exit_time_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
+}app_par_D08_exit_time_Rte;
+
+typedef struct
+{
+    /* data */
+    uint16 datas;
 }app_par_Energy_storage_exit_time_Rte;
 
 typedef struct
@@ -1013,6 +1037,14 @@ extern uint16 app_parameter_read_D03_exit_time(void);
 extern uint8 app_parameter_write_D03_exit_time(uint16 data);
 extern uint16 app_parameter_read_D04_exit_time(void);
 extern uint8 app_parameter_write_D04_exit_time(uint16 data);
+extern uint16 app_parameter_read_D05_exit_time(void);
+extern uint8 app_parameter_write_D05_exit_time(uint16 data);
+extern uint16 app_parameter_read_D06_exit_time(void);
+extern uint8 app_parameter_write_D06_exit_time(uint16 data);
+extern uint16 app_parameter_read_D07_exit_time(void);
+extern uint8 app_parameter_write_D07_exit_time(uint16 data);
+extern uint16 app_parameter_read_D08_exit_time(void);
+extern uint8 app_parameter_write_D08_exit_time(uint16 data);
 extern uint16 app_parameter_read_Energy_storage_exit_time(void);
 extern uint8 app_parameter_write_Energy_storage_exit_time(uint16 data);
 extern uint8 app_parameter_read_Energy_storage_outlet_selection(void);

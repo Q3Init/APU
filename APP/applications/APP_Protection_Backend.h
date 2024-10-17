@@ -64,6 +64,10 @@ typedef enum {
     APP_RELAY_CHANNEL_D02 = (1 << 3),
     APP_RELAY_CHANNEL_D03 = (1 << 4),
     APP_RELAY_CHANNEL_D04 = (1 << 5),
+    APP_RELAY_CHANNEL_D05 = (1 << 6),
+    APP_RELAY_CHANNEL_D06 = (1 << 7),
+    APP_RELAY_CHANNEL_D07 = (1 << 8),
+    APP_RELAY_CHANNEL_D08 = (1 << 9),
 } APP_Relay_Channel_e;
 
 typedef enum {
@@ -244,18 +248,22 @@ float32 APP_Get_Line_Current_Max(void);
 float32 APP_Get_Line_Current_Min(void);
 
 /* 开关输入量 */
-/* 获取开关量输入，DI1 & DI2 组合开关 */ 
+/* 获取开关量输入，DI1开关 */ 
 uint8 APP_Remote_Signal_Input_Read_Group_1(void);
-/* 获取开关量输入，DI3 & DI4 组合开关 */
+/* 获取开关量输入，DI2开关 */
 uint8 APP_Remote_Signal_Input_Read_Group_2(void);
-/* 获取开关量输入，DI5 & DI6 组合开关 */
+/* 获取开关量输入，DI3开关 */
 uint8 APP_Remote_Signal_Input_Read_Group_3(void);
+/* 获取开关量输入，DI4开关 */
+uint8 APP_Remote_Signal_Input_Read_Group_4(void);
+/* 获取开关量输入，DI5开关 */
+uint8 APP_Remote_Signal_Input_Read_Group_5(void);
 
-/* 获取联跳信号，DI18 */
+/* 获取联跳信号，DI16 */
 uint8 APP_Remote_Signal_Input_Read_ExtCtrl(void);
-/* 获取检修信号，DI19 */
+/* 获取检修信号，DI17 */
 uint8 APP_Remote_Signal_Input_Read_Overhaul(void);
-/* 获取合闸闭锁输入状态，DI10 */
+/* 获取合闸闭锁输入状态，DI8 */
 uint8 APP_Remote_Signal_Input_Read_Closing_And_Locking(void);
 /* 全部开关量输入是否存在合位状态 */
 boolean APP_Remote_Signal_Input_Switching_Exist_On(void);
@@ -271,6 +279,10 @@ uint8 APP_Relay_Get_State_Group_3(void);
 uint8 APP_Relay_Get_State_Group_4(void);
 uint8 APP_Relay_Get_State_Group_5(void);
 uint8 APP_Relay_Get_State_Group_6(void);
+uint8 APP_Relay_Get_State_Group_7(void);
+uint8 APP_Relay_Get_State_Group_8(void);
+uint8 APP_Relay_Get_State_Group_9(void);
+uint8 APP_Relay_Get_State_Group_10(void);
 boolean APP_Relay_Force_Switch_On(void);
 boolean APP_Relay_Force_Switch_Off(void);
 boolean APP_Relay_Select_Switch_Off(void);

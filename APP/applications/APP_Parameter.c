@@ -102,6 +102,10 @@ static app_par_D01_exit_time_Rte app_par_D01_exit_time;
 static app_par_D02_exit_time_Rte app_par_D02_exit_time;
 static app_par_D03_exit_time_Rte app_par_D03_exit_time;
 static app_par_D04_exit_time_Rte app_par_D04_exit_time;
+static app_par_D05_exit_time_Rte app_par_D05_exit_time;
+static app_par_D06_exit_time_Rte app_par_D06_exit_time;
+static app_par_D07_exit_time_Rte app_par_D07_exit_time;
+static app_par_D08_exit_time_Rte app_par_D08_exit_time;
 static app_par_Energy_storage_exit_time_Rte app_par_Energy_storage_exit_time;
 static app_par_Energy_storage_outlet_selection_Rte app_par_Energy_storage_outlet_selection;
 /* 接线设置 */
@@ -639,6 +643,26 @@ void APP_Parameter_Init(void)
     ret = BSW_NvM_Read(D04_exit_time,&app_par_D04_exit_time.datas); 
     if (ret == E_OK) {
         Log_d("app_par_D04_exit_time.datas:%d\r\n",app_par_D04_exit_time.datas);
+    }
+    /* D05_exit_time */
+    ret = BSW_NvM_Read(D05_exit_time,&app_par_D05_exit_time.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_D05_exit_time.datas:%d\r\n",app_par_D05_exit_time.datas);
+    }
+    /* D06_exit_time */
+    ret = BSW_NvM_Read(D06_exit_time,&app_par_D06_exit_time.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_D06_exit_time.datas:%d\r\n",app_par_D06_exit_time.datas);
+    }
+    /* D07_exit_time */
+    ret = BSW_NvM_Read(D07_exit_time,&app_par_D07_exit_time.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_D07_exit_time.datas:%d\r\n",app_par_D07_exit_time.datas);
+    }
+    /* D08_exit_time */
+    ret = BSW_NvM_Read(D08_exit_time,&app_par_D08_exit_time.datas); 
+    if (ret == E_OK) {
+        Log_d("app_par_D08_exit_time.datas:%d\r\n",app_par_D08_exit_time.datas);
     }
     /* Energy_storage_exit_time */
     ret = BSW_NvM_Read(Energy_storage_exit_time,&app_par_Energy_storage_exit_time.datas); 
@@ -2072,6 +2096,62 @@ uint8 app_parameter_write_D04_exit_time(uint16 data)
     return ret;
 }
 
+uint16 app_parameter_read_D05_exit_time(void)
+{
+    uint16 ret = app_par_D05_exit_time.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_D05_exit_time(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_D05_exit_time.datas = data;
+    ret = BSW_NvM_Write(D05_exit_time,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_D06_exit_time(void)
+{
+    uint16 ret = app_par_D06_exit_time.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_D06_exit_time(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_D06_exit_time.datas = data;
+    ret = BSW_NvM_Write(D06_exit_time,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_D07_exit_time(void)
+{
+    uint16 ret = app_par_D07_exit_time.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_D07_exit_time(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_D07_exit_time.datas = data;
+    ret = BSW_NvM_Write(D07_exit_time,&data);
+    return ret;
+}
+
+uint16 app_parameter_read_D08_exit_time(void)
+{
+    uint16 ret = app_par_D08_exit_time.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_D08_exit_time(uint16 data)
+{
+    uint8 ret = E_NOK; 
+    app_par_D08_exit_time.datas = data;
+    ret = BSW_NvM_Write(D08_exit_time,&data);
+    return ret;
+}
+
 uint16 app_parameter_read_Energy_storage_exit_time(void)
 {
     uint16 ret = app_par_Energy_storage_exit_time.datas;
@@ -2763,6 +2843,10 @@ void app_allpara_default_init(void)
     nvm_datas_Lists[D02_exit_time].dft = 500;
     nvm_datas_Lists[D03_exit_time].dft = 500;
     nvm_datas_Lists[D04_exit_time].dft = 500;
+    nvm_datas_Lists[D05_exit_time].dft = 500;
+    nvm_datas_Lists[D06_exit_time].dft = 500;
+    nvm_datas_Lists[D07_exit_time].dft = 500;
+    nvm_datas_Lists[D08_exit_time].dft = 500;
     nvm_datas_Lists[Energy_storage_exit_time].dft = 3000;
     nvm_datas_Lists[Energy_storage_outlet_selection].dft = 0;
 

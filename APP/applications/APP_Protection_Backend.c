@@ -417,6 +417,26 @@ uint8 APP_Relay_Get_State_Group_6(void)
     return pBk->relay_state & (1 << 5); /* D04 */
 }
 
+uint8 APP_Relay_Get_State_Group_7(void)
+{
+    return pBk->relay_state & (1 << 6); /* D05 */
+}
+
+uint8 APP_Relay_Get_State_Group_8(void)
+{
+    return pBk->relay_state & (1 << 7); /* D06 */
+}
+
+uint8 APP_Relay_Get_State_Group_9(void)
+{
+    return pBk->relay_state & (1 << 8); /* D07 */
+}
+
+uint8 APP_Relay_Get_State_Group_10(void)
+{
+    return pBk->relay_state & (1 << 9); /* D08 */
+}
+
 /**
  * @brief 谐波失真度 UA
  * 
@@ -672,13 +692,13 @@ static void APP_Remote_Signal_Input_Process(void)
 }
 
 /**
- * @brief 获取开关量输入，DI1 & DI2 组合开关
+ * @brief 获取开关量输入，DI1开关
  * 
  * @return uint8_t BIT_SET- 合闸，BIT_RESET- 跳闸
  */
 uint8 APP_Remote_Signal_Input_Read_Group_1(void)
 {
-    if (!pBk->remote_signal_di_state_list[0] && pBk->remote_signal_di_state_list[1]) {
+    if (!pBk->remote_signal_di_state_list[0]) {
         return BIT_SET;
     } else {
         return BIT_RESET;
@@ -686,13 +706,13 @@ uint8 APP_Remote_Signal_Input_Read_Group_1(void)
 }
 
 /**
- * @brief 获取开关量输入，DI3 & DI4 组合开关
+ * @brief 获取开关量输入，DI2开关
  * 
  * @return uint8_t BIT_SET- 合闸，BIT_RESET- 跳闸
  */
 uint8 APP_Remote_Signal_Input_Read_Group_2(void)
 {
-    if (!pBk->remote_signal_di_state_list[2] && pBk->remote_signal_di_state_list[3]) {
+    if (!pBk->remote_signal_di_state_list[1]) {
         return BIT_SET;
     } else {
         return BIT_RESET;
@@ -700,13 +720,41 @@ uint8 APP_Remote_Signal_Input_Read_Group_2(void)
 }
 
 /**
- * @brief 获取开关量输入，DI5 & DI6 组合开关
+ * @brief 获取开关量输入，DI3开关
  * 
  * @return uint8_t BIT_SET- 合闸，BIT_RESET- 跳闸
  */
 uint8 APP_Remote_Signal_Input_Read_Group_3(void)
 {
-    if (!pBk->remote_signal_di_state_list[4] && pBk->remote_signal_di_state_list[5]) {
+    if (!pBk->remote_signal_di_state_list[2]) {
+        return BIT_SET;
+    } else {
+        return BIT_RESET;
+    }
+}
+
+/**
+ * @brief 获取开关量输入，DI4开关
+ * 
+ * @return uint8_t BIT_SET- 合闸，BIT_RESET- 跳闸
+ */
+uint8 APP_Remote_Signal_Input_Read_Group_4(void)
+{
+    if (!pBk->remote_signal_di_state_list[3]) {
+        return BIT_SET;
+    } else {
+        return BIT_RESET;
+    }
+}
+
+/**
+ * @brief 获取开关量输入，DI5开关
+ * 
+ * @return uint8_t BIT_SET- 合闸，BIT_RESET- 跳闸
+ */
+uint8 APP_Remote_Signal_Input_Read_Group_5(void)
+{
+    if (!pBk->remote_signal_di_state_list[4]) {
         return BIT_SET;
     } else {
         return BIT_RESET;
@@ -722,7 +770,9 @@ boolean APP_Remote_Signal_Input_Switching_Exist_On(void)
 {
     if ((BIT_SET == APP_Remote_Signal_Input_Read_Group_1()) || 
         (BIT_SET == APP_Remote_Signal_Input_Read_Group_2()) || 
-        (BIT_SET == APP_Remote_Signal_Input_Read_Group_3())) {
+        (BIT_SET == APP_Remote_Signal_Input_Read_Group_3()) ||
+        (BIT_SET == APP_Remote_Signal_Input_Read_Group_4()) ||
+        (BIT_SET == APP_Remote_Signal_Input_Read_Group_5()) ) {
         return true;
     } else {
         return false;
@@ -738,7 +788,9 @@ boolean APP_Remote_Signal_Input_Switching_Exist_Off(void)
 {
     if ((BIT_RESET == APP_Remote_Signal_Input_Read_Group_1()) || 
         (BIT_RESET == APP_Remote_Signal_Input_Read_Group_2()) || 
-        (BIT_RESET == APP_Remote_Signal_Input_Read_Group_3())) {
+        (BIT_RESET == APP_Remote_Signal_Input_Read_Group_3()) ||
+        (BIT_RESET == APP_Remote_Signal_Input_Read_Group_4()) ||
+        (BIT_RESET == APP_Remote_Signal_Input_Read_Group_5()) ) {
         return true;
     } else {
         if (APP_Remote_Signal_Input_Switching_Exist_On == false) {
@@ -770,6 +822,14 @@ boolean APP_Relay_Select_Switch_On(void)
         APP_Relay_Control(APP_RELAY_CHANNEL_D03, true);
 		APP_Relay_Control(APP_RELAY_CHANNEL_D04, false);
     }
+    if (BIT_RESET == APP_Remote_Signal_Input_Read_Group_4()) {
+        APP_Relay_Control(APP_RELAY_CHANNEL_D05, true);
+		APP_Relay_Control(APP_RELAY_CHANNEL_D06, false);
+    }
+    if (BIT_RESET == APP_Remote_Signal_Input_Read_Group_5()) {
+        APP_Relay_Control(APP_RELAY_CHANNEL_D07, true);
+		APP_Relay_Control(APP_RELAY_CHANNEL_D08, false);
+    }
    
     return (err == true) ? false : true;
 }
@@ -794,6 +854,14 @@ boolean APP_Relay_Select_Switch_Off(void)
     if (BIT_SET == APP_Remote_Signal_Input_Read_Group_3()) {
         APP_Relay_Control(APP_RELAY_CHANNEL_D03, false);
 		APP_Relay_Control(APP_RELAY_CHANNEL_D04, true);
+    }
+    if (BIT_SET == APP_Remote_Signal_Input_Read_Group_4()) {
+        APP_Relay_Control(APP_RELAY_CHANNEL_D05, false);
+		APP_Relay_Control(APP_RELAY_CHANNEL_D06, true);
+    }
+    if (BIT_SET == APP_Remote_Signal_Input_Read_Group_5()) {
+        APP_Relay_Control(APP_RELAY_CHANNEL_D07, false);
+		APP_Relay_Control(APP_RELAY_CHANNEL_D08, true);
     }
    
     return (err == true) ? false : true;
@@ -834,8 +902,8 @@ boolean APP_Relay_ExtCtrl_Switch_Off(void)
 boolean APP_Relay_Force_Switch_On(void)
 {
     // return APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D01 | APP_RELAY_CHANNEL_D02, true);
-    APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_D01 | APP_RELAY_CHANNEL_D03, true);
-    APP_Relay_Control(APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D02 | APP_RELAY_CHANNEL_D04, false);
+    APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_D01 | APP_RELAY_CHANNEL_D03 | APP_RELAY_CHANNEL_D05 | APP_RELAY_CHANNEL_D07, true);
+    APP_Relay_Control(APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D02 | APP_RELAY_CHANNEL_D04 | APP_RELAY_CHANNEL_D06 | APP_RELAY_CHANNEL_D08, false);
     return true;
 }
 
@@ -847,14 +915,14 @@ boolean APP_Relay_Force_Switch_On(void)
 boolean APP_Relay_Force_Switch_Off(void)
 {
     // return APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D01 | APP_RELAY_CHANNEL_D02, false);
-    APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_D01 | APP_RELAY_CHANNEL_D03, false);
-    APP_Relay_Control(APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D02 | APP_RELAY_CHANNEL_D04, true);
+    APP_Relay_Control(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_D01 | APP_RELAY_CHANNEL_D03 | APP_RELAY_CHANNEL_D05 | APP_RELAY_CHANNEL_D07, false);
+    APP_Relay_Control(APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D02 | APP_RELAY_CHANNEL_D04 | APP_RELAY_CHANNEL_D06 | APP_RELAY_CHANNEL_D08, true);
     return true;
 }
 
 void APP_Relay_Idle_Handler(void)
 {
-    static uint32 relay_tick[6];
+    static uint32 relay_tick[10];
     /* HC Relay out time */
     if (APP_Relay_Get_State_Group_1()) {
         if ((APP_Get_System_Ms() - relay_tick[0]) >= app_parameter_read_Closing_exit_time()) {
@@ -903,18 +971,50 @@ void APP_Relay_Idle_Handler(void)
     } else {
         relay_tick[5] = APP_Get_System_Ms();
     }
+    /* D04 Relay out time */
+    if (APP_Relay_Get_State_Group_7()) {
+        if ((APP_Get_System_Ms() - relay_tick[6]) >= app_parameter_read_D05_exit_time()) {
+            APP_Relay_Control(APP_RELAY_CHANNEL_D05, false);
+        }
+    } else {
+        relay_tick[6] = APP_Get_System_Ms();
+    }
+    /* D05 Relay out time */
+    if (APP_Relay_Get_State_Group_8()) {
+        if ((APP_Get_System_Ms() - relay_tick[7]) >= app_parameter_read_D06_exit_time()) {
+            APP_Relay_Control(APP_RELAY_CHANNEL_D06, false);
+        }
+    } else {
+        relay_tick[7] = APP_Get_System_Ms();
+    }
+    /* D04 Relay out time */
+    if (APP_Relay_Get_State_Group_9()) {
+        if ((APP_Get_System_Ms() - relay_tick[8]) >= app_parameter_read_D07_exit_time()) {
+            APP_Relay_Control(APP_RELAY_CHANNEL_D07, false);
+        }
+    } else {
+        relay_tick[8] = APP_Get_System_Ms();
+    }
+    /* D04 Relay out time */
+    if (APP_Relay_Get_State_Group_10()) {
+        if ((APP_Get_System_Ms() - relay_tick[9]) >= app_parameter_read_D08_exit_time()) {
+            APP_Relay_Control(APP_RELAY_CHANNEL_D08, false);
+        }
+    } else {
+        relay_tick[9] = APP_Get_System_Ms();
+    }
 
 
 }
 
 /**
- * @brief 获取联跳信号，DI18
+ * @brief 获取联跳信号，DI16
  * 
  * @return uint8 
  */
 uint8 APP_Remote_Signal_Input_Read_ExtCtrl(void)
 {
-    if (!pBk->remote_signal_di_state_list[7]) {
+    if (!pBk->remote_signal_di_state_list[5]) {
         return BIT_SET;
     } else {
         return BIT_RESET;
@@ -922,13 +1022,13 @@ uint8 APP_Remote_Signal_Input_Read_ExtCtrl(void)
 }
 
 /**
- * @brief 获取检修信号，DI19
+ * @brief 获取检修信号，DI17
  * 
  * @return uint8 
  */
 uint8 APP_Remote_Signal_Input_Read_Overhaul(void)
 {
-    if (!pBk->remote_signal_di_state_list[8]) {
+    if (!pBk->remote_signal_di_state_list[6]) {
         return BIT_SET;
     } else {
         return BIT_RESET;
@@ -936,13 +1036,13 @@ uint8 APP_Remote_Signal_Input_Read_Overhaul(void)
 }
 
 /**
- * @brief 获取合闸闭锁输入状态，DI10
+ * @brief 获取合闸闭锁输入状态，DI8
  * 
  * @return uint8 
  */
 uint8 APP_Remote_Signal_Input_Read_Closing_And_Locking(void)
 {
-    if (!pBk->remote_signal_di_state_list[9]) {
+    if (!pBk->remote_signal_di_state_list[7]) {
         return BIT_SET;
     } else {
         return BIT_RESET;
