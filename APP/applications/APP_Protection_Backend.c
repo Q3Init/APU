@@ -48,6 +48,8 @@ static APP_Protection_Backend_t APP_Protection_Backend_Obj;
 static APP_Protection_Backend_t *pBk = &APP_Protection_Backend_Obj;
 static SemaphoreHandle_t g_relay_sem = NULL;
 
+static uint8_t symmetric_three_phase_circuit_ind = false;
+
 /**
  * @brief 系统时间
  * 
@@ -292,7 +294,10 @@ float32 APP_Get_Phase_UabIa(void)
     // float32 Uab_phase_par = APP_Get_Phase_Uab();
     float32 Ia_phase_par = APP_Get_Phase_Ia();
 
-    return ((Ia_phase_par - Uab_phase_par) * 180 / PI);
+    float32 abs_phase = ((Ia_phase_par - Uab_phase_par) < 0) ? (2*PI+(Ia_phase_par - Uab_phase_par)) : (Ia_phase_par - Uab_phase_par);
+    Log_d("UcaIa raw=%.4f abs=%.4f result=%.4f \r\n", (Ia_phase_par - Uab_phase_par), abs_phase, 
+													(abs_phase * 180 / PI));
+    return (abs_phase * 180 / PI);
 }
 
 /**
@@ -1430,18 +1435,29 @@ void APP_RFFT_Power_Calc(float32 line_volt, float32 line_current, float32 phase_
     float32 phase_diff = phase_volt - phase_current;
 
     if (p_active_power != NULL) {
-		#if SINGLE_PHASE_INTFACE
-        *p_active_power = line_volt * line_current * arm_cos_f32(phase_diff)/3.0*1.59;
-		#else
+#if SINGLE_PHASE_INTFACE
+        if(symmetric_three_phase_circuit_ind) {
+            *p_active_power = line_volt * line_current * arm_cos_f32(phase_diff)/3.0*1.59;
+        }
+        else {
+            *p_active_power = line_volt * line_current * arm_cos_f32(phase_diff)/3.0*1.59;
+        }
+#else
         *p_active_power = 1.73205 * line_volt * line_current * arm_cos_f32(phase_diff);
-        #endif
+#endif
     }
     if (p_reactive_power != NULL) {
-		#if SINGLE_PHASE_INTFACE
-		*p_reactive_power = line_volt * line_current * arm_sin_f32(phase_diff)/3.0*1.59;
-		#else
+#if SINGLE_PHASE_INTFACE
+        if(symmetric_three_phase_circuit_ind) {
+            *p_reactive_power = line_volt * line_current * arm_sin_f32(phase_diff)/3.0*1.59;
+        }
+        else {
+            *p_reactive_power = line_volt * line_current * arm_sin_f32(phase_diff)/3.0*1.59;
+        }
+		
+#else
         *p_reactive_power = 1.73205 * line_volt * line_current * arm_sin_f32(phase_diff);
-        #endif
+#endif
     }
     if (p_apparent_power != NULL) {
         *p_apparent_power = sqrtf((*p_active_power) * (*p_active_power) + (*p_reactive_power) * (*p_reactive_power));
@@ -1463,12 +1479,57 @@ void APP_FFT_Start(void)
     pBk->fft_enable = true;
 }
 
+#define VOLTAGE_VALUE_RATE_THRESHOLD    0.05
+#define CURRENT_VALUE_RATE_THRESHOLD    0.05
+uint8_t APP_Symmetric_Three_Phase_Circuit_State_Get(void)
+{
+    uint8_t state_ind = false;
+    float32 avr_voltage_val = (APP_Get_Voltage_Ua() + APP_Get_Voltage_Ub() + APP_Get_Voltage_Uc())/3.0;
+    float32 delta_Ua = avr_voltage_val - APP_Get_Voltage_Ua();
+    float32 delta_Ub = avr_voltage_val - APP_Get_Voltage_Ub();
+    float32 delta_Uc = avr_voltage_val - APP_Get_Voltage_Uc();
+    float32 avr_current_val = (APP_Get_Current_Ia() + APP_Get_Current_Ib() + APP_Get_Current_Ic())/3.0;
+    float32 delta_Ia = avr_current_val - APP_Get_Current_Ia();
+    float32 delta_Ib = avr_current_val - APP_Get_Current_Ib();
+    float32 delta_Ic = avr_current_val - APP_Get_Current_Ic();
+    float32 rate_Ua = 0;
+    float32 rate_Ub = 0;
+    float32 rate_Uc = 0;
+    float32 rate_Ia = 0;
+    float32 rate_Ib = 0;
+    float32 rate_Ic = 0;
+    delta_Ua = (delta_Ua > 0) ? delta_Ua : (-delta_Ua);
+    delta_Ub = (delta_Ub > 0) ? delta_Ub : (-delta_Ub);
+    delta_Uc = (delta_Uc > 0) ? delta_Uc : (-delta_Uc);
+    delta_Ia = (delta_Ia > 0) ? delta_Ia : (-delta_Ia);
+    delta_Ib = (delta_Ib > 0) ? delta_Ib : (-delta_Ib);
+    delta_Ic = (delta_Ic > 0) ? delta_Ic : (-delta_Ic);
+    Log_d("avr_voltage=%.4f, del_Ua=%.4f, del_Ua=%.4f, del_Ua=%.4f\r\n", avr_voltage_val, delta_Ua, delta_Ub, delta_Uc);
+    Log_d("avr_current=%.4f, del_Ia=%.4f, del_Ib=%.4f, del_Ic=%.4f\r\n", avr_current_val, delta_Ia, delta_Ib, delta_Ic);
+    avr_voltage_val = (avr_voltage_val > 0) ? avr_voltage_val : (-avr_voltage_val);
+    avr_current_val = (avr_current_val > 0) ? avr_current_val : (-avr_current_val);
+    rate_Ua = delta_Ua / avr_voltage_val;
+    rate_Ub = delta_Ub / avr_voltage_val;
+    rate_Uc = delta_Uc / avr_voltage_val;
+    rate_Ia = delta_Ia / avr_current_val;
+    rate_Ib = delta_Ib / avr_current_val;
+    rate_Ic = delta_Ic / avr_current_val;
+    Log_d("rate_Ua=%.4f, rate_Ub=%.4f, rate_Uc=%.4f, rate_Ia=%.4f, rate_Ib=%.4f, rate_Ic=%.4f\r\n", 
+                    rate_Ua, rate_Ub, rate_Uc, rate_Ia, rate_Ib, rate_Ic);
+    if((rate_Ua < VOLTAGE_VALUE_RATE_THRESHOLD) && (rate_Ub < VOLTAGE_VALUE_RATE_THRESHOLD) && (rate_Uc < VOLTAGE_VALUE_RATE_THRESHOLD) &&
+        (rate_Ia < CURRENT_VALUE_RATE_THRESHOLD) && (rate_Ib < CURRENT_VALUE_RATE_THRESHOLD) && (rate_Ic < CURRENT_VALUE_RATE_THRESHOLD))
+    {
+        state_ind = true;
+    }
+    return state_ind;
+}
+
 void APP_FFT_Handler(void)
 {   
     uint32 tick1 = 0;
     uint32 tick2 = 0;
     uint32_t fft_time_cost = 0;	
-   
+
 	if (pBk->fft_enable == false)
        return;
 
@@ -1511,6 +1572,8 @@ void APP_FFT_Handler(void)
 
     APP_RFFT_Voltage_Calc(APP_SMP_ADC_CH_UOUT, 
                           &pBk->value.line_uout, NULL, NULL, NULL);
+
+    symmetric_three_phase_circuit_ind = APP_Symmetric_Three_Phase_Circuit_State_Get();
 
     /* 功率相关 */
     Log_d("HE! Ua Ia start !\r\n");
