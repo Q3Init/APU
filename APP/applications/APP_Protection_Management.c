@@ -1372,8 +1372,8 @@ void APP_Protection_Management_Loop(void)
             } else {
                 APP_Protection_Harmonic_Handler();
             }
-            APP_Relay_Idle_Handler();
         }
+        APP_Relay_Idle_Handler();
         vTaskDelay(10);
     }
 }
