@@ -1132,6 +1132,11 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
                         (APP_Get_Voltage_Ub() < app_parameter_read_Voltage_Closing_Upper_Voltage_Limit())) && 
                       ((APP_Get_Voltage_Uc() > app_parameter_read_Voltage_Closing_Lower_Voltage_Limit()) && 
                         (APP_Get_Voltage_Uc() < app_parameter_read_Voltage_Closing_Upper_Voltage_Limit()));
+        if (volt_limit) {
+            pMnt->power_delay_tick = 500; /* 5 seconds based on 10ms */
+        } else {
+            pMnt->power_delay_tick  = 0;
+        }
         /* 频率上下限 */
         freq_limit = (APP_Get_Fundamental_Freq() > app_parameter_read_Voltage_Closing_Lower_Frequency_Limit()) && 
                      (APP_Get_Fundamental_Freq() < app_parameter_read_Voltage_Closing_Upper_Frequency_Limit());
@@ -1357,12 +1362,16 @@ void APP_Protection_Management_Loop(void)
             APP_Protection_Voltage_Handler();
             APP_Protection_Freq_Handler();
             APP_Protection_ReversePower_Handler();
-            APP_Protection_Harmonic_Handler();
             APP_Protection_ExtCtrl_Handler();
             APP_Protection_Current_Handler();
             APP_Protection_SystemOutage_Handler();
             APP_Protection_OperateContactor_OnVoltageRise_Handler();
             APP_Protection_PowerRestorationOperate_Handler();
+            if (pMnt->power_delay_tick > 0) {
+                pMnt->power_delay_tick--;
+            } else {
+                APP_Protection_Harmonic_Handler();
+            }
             APP_Relay_Idle_Handler();
         }
         vTaskDelay(10);

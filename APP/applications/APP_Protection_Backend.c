@@ -394,52 +394,122 @@ uint16 APP_Relay_Get_State(void)
 
 uint8 APP_Relay_Get_State_Group_1(void)
 {
-    return pBk->relay_state & (1 << 0); /* HC */
+    /* HC */
+    uint8 ret = FALSE;
+    if ((pBk->relay_state & APP_RELAY_CHANNEL_HC) == APP_RELAY_CHANNEL_HC) {
+        ret = TRUE;
+    } else {
+        ret = FALSE;
+    }
+    return ret;
 }
 
 uint8 APP_Relay_Get_State_Group_2(void)
 {
-    return pBk->relay_state & (1 << 1); /* TQ */
+    /* TQ */
+    uint8 ret = FALSE;
+    if ((pBk->relay_state & APP_RELAY_CHANNEL_TQ) == APP_RELAY_CHANNEL_TQ) {
+        ret = TRUE;
+    } else {
+        ret = FALSE;
+    }
+    return ret;
 }
 
 uint8 APP_Relay_Get_State_Group_3(void)
 {
-    return pBk->relay_state & (1 << 2); /* D01 */
+    /* D01 */
+    uint8 ret = FALSE;
+    if ((pBk->relay_state & APP_RELAY_CHANNEL_D01) == APP_RELAY_CHANNEL_D01) {
+        ret = TRUE;
+    } else {
+        ret = FALSE;
+    }
+    return ret;
 }
 
 uint8 APP_Relay_Get_State_Group_4(void)
 {
-    return pBk->relay_state & (1 << 3); /* D02 */
+    /* D02 */
+    uint8 ret = FALSE;
+    if ((pBk->relay_state & APP_RELAY_CHANNEL_D02) == APP_RELAY_CHANNEL_D02) {
+        ret = TRUE;
+    } else {
+        ret = FALSE;
+    }
+    return ret;
 }
 
 uint8 APP_Relay_Get_State_Group_5(void)
 {
-    return pBk->relay_state & (1 << 4); /* D03 */
+    /* D03 */
+    uint8 ret = FALSE;
+    if ((pBk->relay_state & APP_RELAY_CHANNEL_D03) == APP_RELAY_CHANNEL_D03) {
+        ret = TRUE;
+    } else {
+        ret = FALSE;
+    }
+    return ret;
 }
 
 uint8 APP_Relay_Get_State_Group_6(void)
 {
-    return pBk->relay_state & (1 << 5); /* D04 */
+    /* D04 */
+    uint8 ret = FALSE;
+    if ((pBk->relay_state & APP_RELAY_CHANNEL_D04) == APP_RELAY_CHANNEL_D04) {
+        ret = TRUE;
+    } else {
+        ret = FALSE;
+    }
+    return ret;
 }
 
 uint8 APP_Relay_Get_State_Group_7(void)
 {
-    return pBk->relay_state & (1 << 6); /* D05 */
+    /* D05 */
+    uint8 ret = FALSE;
+    if ((pBk->relay_state & APP_RELAY_CHANNEL_D05) == APP_RELAY_CHANNEL_D05) {
+        ret = TRUE;
+    } else {
+        ret = FALSE;
+    }
+    return ret;
 }
 
 uint8 APP_Relay_Get_State_Group_8(void)
 {
-    return pBk->relay_state & (1 << 7); /* D06 */
+    /* D06 */
+    uint8 ret= FALSE;
+    if ((pBk->relay_state & APP_RELAY_CHANNEL_D06) == APP_RELAY_CHANNEL_D06) {
+        ret = TRUE;
+    } else {
+        ret = FALSE;
+    }
+    return ret;
 }
 
 uint8 APP_Relay_Get_State_Group_9(void)
 {
-    return pBk->relay_state & (1 << 8); /* D07 */
+    /* D07 */
+    uint8 ret = FALSE;
+    if ((pBk->relay_state & APP_RELAY_CHANNEL_D07) == APP_RELAY_CHANNEL_D07) {
+        ret = TRUE;
+    } else {
+        ret = FALSE;
+    }
+    return ret;
 }
 
 uint8 APP_Relay_Get_State_Group_10(void)
 {
-    return pBk->relay_state & (1 << 9); /* D08 */
+    /* D08 */
+    uint8 ret = FALSE;
+    if ((pBk->relay_state & APP_RELAY_CHANNEL_D08) == APP_RELAY_CHANNEL_D08) {
+        ret = TRUE;
+    } else {
+        ret = FALSE;
+    }
+    return ret;
 }
 
 /**
