@@ -53,7 +53,7 @@ void AppTaskCreate(void)
                         (const char*    )"APP_test_Task",
                         (uint16_t       )256,
                         (void*          )NULL,
-                        (UBaseType_t    )2,
+                        (UBaseType_t    )4,
                         (TaskHandle_t*  )&APP_test_Mainfunction_Task_Handle);
   if(pdPASS == xReturn) {
     Log_d("APP_test_Mainfunction task create OK!\r\n");

@@ -637,11 +637,10 @@ boolean APP_Relay_Control(uint16 channel, boolean on)
     for (i = 0; i < APP_RELAY_CHANNEL_NUM; i++) {
         if (channel & (1 << i)) {
             BSW_Dio_WriteBitValue(portList[i], pinList[i], (on == true) ? BIT_SET : BIT_RESET);
-            if (((on == true) ? BIT_RESET : BIT_SET) == BSW_Dio_ReadInputBit(portList[i], pinList[i])) {
-                ret = false;
+            if (on == true) {
                 pBk->relay_state |= (1 << i);  
-            } else {                
-                pBk->relay_state &= ~(1 << i);              
+            } else {
+                pBk->relay_state &= ~(1 << i); 
             }
         }
     }
