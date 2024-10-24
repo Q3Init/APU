@@ -14,7 +14,7 @@
 #define Log_w(args...) Log_writter(__FILE__, __FUNCTION__, __LINE__, LOG_WARN, args)
 #define Log_e(args...) Log_writter(__FILE__, __FUNCTION__, __LINE__, LOG_ERROR, args)
 
-#define send_char(a)		sys_uart2_sendchar(a)
+#define send_char(a)		sys_uart1_sendchar(a)
 
 #define 	_IN_            /* 表明这是一个输入参数. */
 #define		_OU_            /* 表明这是一个输出参数. */
