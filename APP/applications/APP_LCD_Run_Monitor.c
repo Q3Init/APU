@@ -81,10 +81,10 @@ static uint32_t lcd_flush_timer_cur = 0;
 #define LCD_REMOTE_SIGNAL_LV8_READ(x)   APP_Remote_Signal_Input_State(7)
 #define LCD_REMOTE_SIGNAL_LV9_READ(x)   APP_Remote_Signal_Input_State(8)
 #define LCD_LATCH_LOCK_FOR_SWITCH_ON_READ()   APP_Remote_Signal_Input_Read_Closing_And_Locking()
-#define LCD_EXTERNAL_SHUNT_TRIPPING_LV1_FOR_OPEN_MENU_READ()   1
-#define LCD_EXTERNAL_SHUNT_TRIPPING_LV2_FOR_OPEN_MENU_READ()   2
-#define LCD_LCD_REMOTE_SIGNAL_LV13_READ()   3
-#define LCD_REMOTE_POSITION_READ()   4
+#define LCD_EXTERNAL_SHUNT_TRIPPING_LV1_FOR_OPEN_MENU_READ()   0
+#define LCD_EXTERNAL_SHUNT_TRIPPING_LV2_FOR_OPEN_MENU_READ()   0
+#define LCD_LCD_REMOTE_SIGNAL_LV13_READ()   0
+#define LCD_REMOTE_POSITION_READ()   0
 #define LCD_CONTROL_LOOP_FOR_OFF_READ()   APP_Relay_Get_State_Group_2()
 #define LCD_CONTROL_LOOP_FOR_ON_READ()   APP_Relay_Get_State_Group_1()
 #define LCD_REMOTE_CONTROL_A_READ()   APP_Relay_Get_State_Group_3()
@@ -110,8 +110,8 @@ static uint32_t lcd_flush_timer_cur = 0;
 #define LCD_OVER_CURRENT_PROTECTION_READ()   APP_Get_Over_Current_Switch_Off_State()
 #define LCD_OVER_SEQUENCE_OVER_CURRENT_READ()   APP_Get_Zero_Seq_Current_Switch_Off_State()
 #define LCD_SYSTEM_POWER_OFF_READ()   APP_Get_System_Outage_Switch_Off_State()
-#define LCD_EXTERNAL_SHUNT_TRIPPING_LV1_READ()   6
-#define LCD_EXTERNAL_SHUNT_TRIPPING_LV2_READ()   7
+#define LCD_EXTERNAL_SHUNT_TRIPPING_LV1_READ()   0
+#define LCD_EXTERNAL_SHUNT_TRIPPING_LV2_READ()   0
 #define LCD_SWITCH_ON_FOR_CHARGE_READ()   APP_Get_Switch_On_Charge_State()
 #define LCD_CLOSING_SWITCH_WITH_VOLTAGE_READ()   APP_Get_On_Volt_Switch_On_State()
 #define LCD_CLOSING_SWITCH_SUCCESS_READ()   0
