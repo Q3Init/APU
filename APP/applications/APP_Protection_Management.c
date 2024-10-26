@@ -1091,33 +1091,31 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
          /* 装置首次上电 */
         sys_first_power_on_flag = (true == pMnt->system_first_power_up_flag) && pMnt->enable.system_power_up_switch_on_enable;
         /* 低压跳闸 */
-        under_volt_flag = ((pMnt->state.under_volt_switch_off_state_lv1 != 1) || (pMnt->state.under_volt_switch_off_state_lv2 != 1)) && 
-                        pMnt->enable.under_volt_switch_on_enable;    
+        under_volt_flag = ((pMnt->state.under_volt_switch_off_state_lv1 != 1) && (pMnt->state.under_volt_switch_off_state_lv2 != 1));    
         /* 高压跳闸 */
-        over_volt_flag = ((pMnt->state.over_volt_switch_off_state_lv1 != 1) || (pMnt->state.over_volt_switch_off_state_lv2 != 1)) && 
-                        (pMnt->enable.over_volt_switch_on_enable); 
+        over_volt_flag = ((pMnt->state.over_volt_switch_off_state_lv1 != 1) && (pMnt->state.over_volt_switch_off_state_lv2 != 1)); 
         /* 失电跳闸 */
-        sys_outage_flag = (pMnt->state.system_outage_switch_off_state != 1) && pMnt->enable.system_outage_switch_on_enable;
+        sys_outage_flag = (pMnt->state.system_outage_switch_off_state != 1);
         /* 高频跳闸 */ 
-        over_freq_flag = (pMnt->state.over_freq_switch_off_state != 1) && pMnt->enable.over_freq_switch_on_enable;
+        over_freq_flag = (pMnt->state.over_freq_switch_off_state != 1);
         /* 低频跳闸 */
-        low_freq_flag = (pMnt->state.low_freq_switch_off_state != 1) && pMnt->enable.low_freq_switch_on_enable;
+        low_freq_flag = (pMnt->state.low_freq_switch_off_state != 1);
         /* 非手分合闸 */
-        non_manual_flag = (BIT_RESET == APP_Remote_Signal_Input_Read_Closing_And_Locking()) && pMnt->enable.non_manual_switch_on_enable;
+        non_manual_flag = (BIT_RESET == APP_Remote_Signal_Input_Read_Closing_And_Locking());
         /* 谐波保护 */
-        harmonic_flag = (pMnt->state.harmonic_volt_distortion_switch_off_state != 1) && pMnt->enable.harmonic_distortion_switch_off_enable;
+        harmonic_flag = (pMnt->state.harmonic_volt_distortion_switch_off_state != 1);
         /* 外部联跳 */
-        extCtrl_flag = (pMnt->state.ext_ctrl_switch_off_state != 1) && pMnt->enable.ext_ctrl_switch_off_enable;
+        extCtrl_flag = (pMnt->state.ext_ctrl_switch_off_state != 1);
         /* 速断保护 */
-        qucik_break_switch_off_flag = (pMnt->state.quick_break_switch_off_state != 1) && pMnt->enable.quick_break_switch_off_enable;
+        qucik_break_switch_off_flag = (pMnt->state.quick_break_switch_off_state != 1);
         /* 限时速断保护 */
-        time_limit_quick_break_switch_off_flag = (pMnt->state.time_limit_quick_break_switch_off_state != 1) && pMnt->enable.time_limit_quick_break_switch_off_enable;
+        time_limit_quick_break_switch_off_flag = (pMnt->state.time_limit_quick_break_switch_off_state != 1);
         /* 过流保护 */
-        over_current_switch_off_flag = (pMnt->state.over_current_switch_off_state != 1) && pMnt->enable.over_current_switch_off_enable;
+        over_current_switch_off_flag = (pMnt->state.over_current_switch_off_state != 1);
         /* 零序过流保护 */
-        zero_seq_current_switch_off_flag = (pMnt->state.zero_seq_current_switch_off_state != 1) && pMnt->enable.zero_seq_current_switch_off_enable;
+        zero_seq_current_switch_off_flag = (pMnt->state.zero_seq_current_switch_off_state != 1);
         /* 逆功率保护 */
-        reverse_Power = (pMnt->state.reverse_power_switch_off_state != 1) && pMnt->enable.reverse_power_switch_off_enable;
+        reverse_Power = (pMnt->state.reverse_power_switch_off_state != 1);
 
         /* 所有故障标志位集合 enable_state: 0代表有故障，1代表没故障 */
         enable_state = sys_first_power_on_flag || (under_volt_flag && over_volt_flag && 
