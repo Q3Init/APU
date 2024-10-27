@@ -1242,7 +1242,7 @@ static void APP_Protection_PowerRestorationOperate_Handler(void)
         for(uint8 i = 0; i < 5; i++) {
             if ((recovery_cnt[i].cnt == RECOVERY_CNT_NUM) && (recovery_cnt[i].tick == 0)) {
                 recovery_cnt[i].cnt = 0;
-                recovery_cnt[i].tick = RECOVERY_TICK_300S_BASE_10MS;
+                recovery_cnt[i].tick = app_parameter_read_A_VOLTAGE_AMPLITUDE();
             }
             if (recovery_cnt[i].tick > 0) {
                 recovery_cnt[i].tick--;
