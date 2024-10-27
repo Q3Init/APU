@@ -999,7 +999,7 @@ void APP_Relay_Idle_Handler(void)
     static uint32 relay_tick[10];
     /* HC Relay out time */
     if (APP_Relay_Get_State_Group_1()) {
-        if ((APP_Get_System_Ms() - relay_tick[0]) >= (app_parameter_read_Closing_exit_time() / 10) {
+        if ((APP_Get_System_Ms() - relay_tick[0]) >= (app_parameter_read_Closing_exit_time() / 10)) {
             APP_Relay_Control(APP_RELAY_CHANNEL_HC, false);
         }
     } else {

@@ -7,7 +7,7 @@
 #define TIME_FROM_MODBUS_GET()	RTC_date_init /* TODO*/
 #define LCD_TIME_SET(x)	 	basic_rtc_set(x) /* while(basic_rtc_set(x)) */
 #define TIME_FROM_LOCAL_GET()		rtc_get()
-
+#define OPERATION_NUM	10
 #define SOE_SEND_SWITCH_STATE_FORM_SRAM_GET() app_parameter_read_Switch_coding()
 #define SOE_SEND_SWITCH_STATE_FORM_SRAM_SET(x) app_parameter_write_Switch_coding(x)
 
@@ -1145,9 +1145,9 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 	static uint8_t key_idx_for_num  = 0;
 	uint32_t float_flag = 0;
 
-	uint8_t num_idx_flush[8] = {0};
+	uint8_t num_idx_flush[15] = {0};
 	uint16_t chinese_idx_flush = 0xff;
-	uint8_t num_array[8] = {0};
+	uint8_t num_array[15] = {0};
 	uint8_t chinese_menu_idx = 0;
 
 	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
@@ -1257,7 +1257,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 						case LUOJI:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Remote_letter_into_the_logic();
-							my_convert_int_parameter_into_bit_array(lcd_modify_num_array, 8, float_flag);
+							my_convert_int_parameter_into_bit_array(lcd_modify_num_array, OPERATION_NUM, float_flag);
 							key_idx_for_num = 1;
 							break;
 					}
@@ -1276,7 +1276,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 							float_flag = app_parameter_read_Remote_letter_anti_shake_time();
 							break;
 						case LUOJI:
-							float_flag = my_convert_bit_array_into_int_parameter(lcd_modify_num_array, 8);
+							float_flag = my_convert_bit_array_into_int_parameter(lcd_modify_num_array, OPERATION_NUM);
 							app_parameter_write_Remote_letter_into_the_logic(0);
 							app_parameter_write_Remote_letter_into_the_logic(float_flag);
 							float_flag = app_parameter_read_Remote_letter_into_the_logic();
@@ -1300,7 +1300,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 					up_diff_num_idx_ths = 9;
 					break;
 				case LUOJI:
-					right_diff_num_idx_ths = 8-1;
+					right_diff_num_idx_ths = OPERATION_NUM-1;
 					up_diff_num_idx_ths = 1;
 					break;
 				default:
@@ -1415,23 +1415,23 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 						lcd_number_modify_array_get((float32 *)&float_flag, app_parameter_read_Remote_letter_anti_shake_time(), 
 													num_array, 4, 0, num_idx_flush[0]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
 						lcd_number_display_in_order(64, 13, 5, 12, 
-											num_idx_flush[0], sizeof(num_array)-4, num_array, 4); //一段定值的数值显示部分
+											num_idx_flush[0], 4, num_array, 4); //一段定值的数值显示部分
 						lcd_state_flush_for_num(88,13,my_char_m,6,12,1);
 						lcd_state_flush_for_num(94,13,my_char_s,6,12,1);
 
 						/* “逻辑” */
 						bit_num_display = app_parameter_read_Remote_letter_into_the_logic();
-						bit_num_display = my_convert_int_parameter_into_reverse_bit_int_parameter(8, bit_num_display);
+						bit_num_display = my_convert_int_parameter_into_reverse_bit_int_parameter(OPERATION_NUM, bit_num_display);
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, luoji, 2);
 						// LCD_ShowChinese_garland(8, 26, second_in_out, 4);
 						lcd_state_flush_for_num(34,26,my_maohao,5,12,1);
-						lcd_number_modify_array_get((float32 *)&float_flag, bit_num_display, 
-													num_array, 8, 0, num_idx_flush[1]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
+						lcd_number_modify_array_get_v2(&float_flag, bit_num_display, 
+													num_array, OPERATION_NUM, 0, num_idx_flush[1]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
 						lcd_number_display_in_order(40, 26, 5, 12, 
-											num_idx_flush[1], sizeof(num_array), num_array, 8); //一段定值的数值显示部分
-						lcd_state_flush_for_num(88,26,my_char_NULL,6,12,1);
-						lcd_state_flush_for_num(93,26,my_char_NULL,6,12,1);
-						lcd_state_flush_for_num(98,26,my_char_NULL,6,12,1);
+											num_idx_flush[1], OPERATION_NUM, num_array, OPERATION_NUM); //一段定值的数值显示部分
+						lcd_state_flush_for_num(112,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(117,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(122,26,my_char_NULL,6,12,1);
 
 						break;
 					default:
