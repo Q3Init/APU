@@ -1780,6 +1780,29 @@ void lcd_number_modify_array_get(float32 *float_flag, float32 value, uint8_t *ar
 	}
 }
 
+void lcd_number_modify_array_get_v2(uint32_t *float_flag, uint32_t value, uint8_t *array_ptr, 
+								uint8_t int_convert_length, uint8_t point_convert_length, uint8_t num_flush_idx)
+{
+	if(num_flush_idx!=0xff)
+	{
+		if((int_convert_length+point_convert_length)> sizeof(lcd_modify_num_array))//EEEEEEEEEEE
+		{
+			Log_e("[%s]:ERROR!!!\n", __func__);
+			return;
+		}
+
+		for(int j =0;j<(int_convert_length+point_convert_length);j++)
+		{
+			array_ptr[j] = lcd_modify_num_array[j];
+		}
+	}
+	else
+	{
+		*float_flag = value;
+		my_convert_int_to_int_array(array_ptr, int_convert_length, *float_flag);
+	}
+}
+
 void lcd_number_modify_int_array_for_int_parameter_get(uint32_t *int_flag, uint32_t value, uint8_t *array_ptr, 
 								uint8_t int_convert_length,  uint8_t num_flush_idx)
 {

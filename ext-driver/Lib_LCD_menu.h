@@ -113,6 +113,9 @@ extern void lcd_number_display_in_order_not_modify(uint8_t hang, uint8_t lie, ui
 extern void lcd_showenglish_no_garland_or_garland(uint32_t garland_flush_target,
 											uint8_t x, uint8_t y, uint8_t *s, uint8_t english_num);
 
+extern void lcd_number_modify_array_get_v2(uint32_t *float_flag, uint32_t value, uint8_t *array_ptr, 
+								uint8_t int_convert_length, uint8_t point_convert_length, uint8_t num_flush_idx);
+
 /* Please register here your menu handlers*/
 extern struct menu_event_tag * top_node_menu_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * error_indication_menu_handler(uint8_t msg_process_signal, uint8_t msg_context);

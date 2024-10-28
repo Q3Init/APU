@@ -85,12 +85,18 @@ static uint32_t lcd_flush_timer_cur = 0;
 #define LCD_EXTERNAL_SHUNT_TRIPPING_LV2_FOR_OPEN_MENU_READ()   0
 #define LCD_LCD_REMOTE_SIGNAL_LV13_READ()   0
 #define LCD_REMOTE_POSITION_READ()   0
-#define LCD_CONTROL_LOOP_FOR_OFF_READ()   APP_Relay_Get_State_Group_2()
-#define LCD_CONTROL_LOOP_FOR_ON_READ()   APP_Relay_Get_State_Group_1()
-#define LCD_REMOTE_CONTROL_A_READ()   APP_Relay_Get_State_Group_3()
-#define LCD_REMOTE_CONTROL_B_READ()   APP_Relay_Get_State_Group_4()
-#define LCD_REMOTE_CONTROL_C_READ()   APP_Relay_Get_State_Group_5()
-#define LCD_REMOTE_CONTROL_D_READ()   APP_Relay_Get_State_Group_6()
+#define LCD_CONTROL_LOOP_FOR_OFF_READ()   0
+#define LCD_CONTROL_LOOP_FOR_ON_READ()   0 
+#define LCD_REMOTE_CONTROL_A_READ()   APP_Relay_Get_State_Group_1()
+#define LCD_REMOTE_CONTROL_B_READ()   APP_Relay_Get_State_Group_2()
+#define LCD_REMOTE_CONTROL_C_READ()   APP_Relay_Get_State_Group_3()
+#define LCD_REMOTE_CONTROL_D_READ()   APP_Relay_Get_State_Group_4()
+#define LCD_REMOTE_CONTROL_E_READ()   APP_Relay_Get_State_Group_5()
+#define LCD_REMOTE_CONTROL_F_READ()   APP_Relay_Get_State_Group_6()
+#define LCD_REMOTE_CONTROL_G_READ()   APP_Relay_Get_State_Group_7()
+#define LCD_REMOTE_CONTROL_H_READ()   APP_Relay_Get_State_Group_8()
+#define LCD_REMOTE_CONTROL_I_READ()   APP_Relay_Get_State_Group_9()
+#define LCD_REMOTE_CONTROL_J_READ()   APP_Relay_Get_State_Group_10()
 /**************          open_into_state_menu menu is above             *****************************/
 
 /**************          running_state_menu menu is as follow         *****************************/
@@ -1646,27 +1652,55 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
                                 38, /* modify*/
                                 int_flag,5,12,1);
 
-                        LCD_ShowChinese_garland(1, 51, KHFW, 4);
-                        LCD_ShowEnglish_garland(49, 51, maohao, 1);
-                        int_flag = LCD_CONTROL_LOOP_FOR_OFF_READ();
+						LCD_ShowChinese_garland(1, 51, Yao, 1);
+                        LCD_ShowChinese_garland(19, 51, Xin, 1);
+                        LCD_ShowEnglish_garland(39, 51, my_char_A, 1);
+                        LCD_ShowEnglish_garland(45, 51, maohao, 1);
+                        int_flag = LCD_REMOTE_CONTROL_A_READ();
                         if(int_flag>9)
                         {
                             Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
                         }
-                        show_num(54, /* modify*/
+                        show_num(50, /* modify*/
                                 51, /* modify*/
                                 int_flag,5,12,1);
 
-                        LCD_ShowChinese_garland(68, 51, KHHW, 4);
-                        LCD_ShowEnglish_garland(116, 51, maohao, 1);
-                        int_flag = LCD_CONTROL_LOOP_FOR_ON_READ();
+
+                        LCD_ShowChinese_garland(68, 51, Yao, 1);
+                        LCD_ShowChinese_garland(86, 51, Xin, 1);
+                        LCD_ShowEnglish_garland(105, 51, my_char_B, 1);
+                        LCD_ShowEnglish_garland(111, 51, maohao, 1);
+                        int_flag = LCD_REMOTE_CONTROL_B_READ();
                         if(int_flag>9)
                         {
                             Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
                         }
-                        show_num(121, /* modify*/
+                        show_num(116, /* modify*/
                                 51, /* modify*/
                                 int_flag,5,12,1);
+    
+                        // LCD_ShowChinese_garland(1, 51, KHFW, 4);
+                        // LCD_ShowEnglish_garland(49, 51, maohao, 1);
+                        // int_flag = LCD_CONTROL_LOOP_FOR_OFF_READ();
+                        // if(int_flag>9)
+                        // {
+                        //     Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
+                        // }
+                        // show_num(54, /* modify*/
+                        //         51, /* modify*/
+                        //         int_flag,5,12,1);
+
+
+                        // LCD_ShowChinese_garland(68, 51, KHHW, 4);
+                        // LCD_ShowEnglish_garland(116, 51, maohao, 1);
+                        // int_flag = LCD_CONTROL_LOOP_FOR_ON_READ();
+                        // if(int_flag>9)
+                        // {
+                        //     Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
+                        // }
+                        // show_num(121, /* modify*/
+                        //         51, /* modify*/
+                        //         int_flag,5,12,1);
 
 						break;
 					case OPEN_INTO_SETTING_THIRD_PAGE:
@@ -1678,9 +1712,9 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
 
 						LCD_ShowChinese_garland(1, 13, Yao, 1);
                         LCD_ShowChinese_garland(19, 13, Xin, 1);
-                        LCD_ShowEnglish_garland(39, 13, my_char_A, 1);
+                        LCD_ShowEnglish_garland(39, 13, my_char_C, 1);
                         LCD_ShowEnglish_garland(45, 13, maohao, 1);
-                        int_flag = LCD_REMOTE_CONTROL_A_READ();
+                        int_flag = LCD_REMOTE_CONTROL_C_READ();
                         if(int_flag>9)
                         {
                             Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
@@ -1691,9 +1725,9 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
 
                         LCD_ShowChinese_garland(68, 13, Yao, 1);
                         LCD_ShowChinese_garland(86, 13, Xin, 1);
-                        LCD_ShowEnglish_garland(105, 13, my_char_B, 1);
+                        LCD_ShowEnglish_garland(105, 13, my_char_D, 1);
                         LCD_ShowEnglish_garland(111, 13, maohao, 1);
-                        int_flag = LCD_REMOTE_CONTROL_B_READ();
+                        int_flag = LCD_REMOTE_CONTROL_D_READ();
                         if(int_flag>9)
                         {
                             Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
@@ -1704,9 +1738,9 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
     
                         LCD_ShowChinese_garland(1, 26, Yao, 1);
                         LCD_ShowChinese_garland(19, 26, Xin, 1);
-                        LCD_ShowEnglish_garland(39, 26, my_char_C, 1);
+                        LCD_ShowEnglish_garland(39, 26, my_char_E, 1);
                         LCD_ShowEnglish_garland(45, 26, maohao, 1);
-                        int_flag = LCD_REMOTE_CONTROL_C_READ();
+                        int_flag = LCD_REMOTE_CONTROL_E_READ();
                         if(int_flag>9)
                         {
                             Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
@@ -1717,9 +1751,9 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
 
                         LCD_ShowChinese_garland(68, 26, Yao, 1);
                         LCD_ShowChinese_garland(86, 26, Xin, 1);
-                        LCD_ShowEnglish_garland(105, 26, my_char_D, 1);
+                        LCD_ShowEnglish_garland(105, 26, my_char_F, 1);
                         LCD_ShowEnglish_garland(111, 26, maohao, 1);
-                        int_flag = LCD_REMOTE_CONTROL_D_READ();
+                        int_flag = LCD_REMOTE_CONTROL_F_READ();
                         if(int_flag>9)
                         {
                             Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
@@ -1727,9 +1761,59 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
                         show_num(116, /* modify*/
                                 26, /* modify*/
                                 int_flag,5,12,1);
+
+                        LCD_ShowChinese_garland(1, 38, Yao, 1);
+                        LCD_ShowChinese_garland(19, 38, Xin, 1);
+                        LCD_ShowEnglish_garland(39, 38, my_char_G, 1);
+                        LCD_ShowEnglish_garland(45, 38, maohao, 1);
+                        int_flag = LCD_REMOTE_CONTROL_G_READ();
+                        if(int_flag>9)
+                        {
+                            Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
+                        }
+                        show_num(50, /* modify*/
+                                38, /* modify*/
+                                int_flag,5,12,1);
+
+                        LCD_ShowChinese_garland(68, 38, Yao, 1);
+                        LCD_ShowChinese_garland(86, 38, Xin, 1);
+                        LCD_ShowEnglish_garland(105, 38, my_char_H, 1);
+                        LCD_ShowEnglish_garland(111, 38, maohao, 1);
+                        int_flag = LCD_REMOTE_CONTROL_H_READ();
+                        if(int_flag>9)
+                        {
+                            Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
+                        }
+                        show_num(116, /* modify*/
+                                38, /* modify*/
+                                int_flag,5,12,1);
+
+                        LCD_ShowChinese_garland(1, 51, Yao, 1);
+                        LCD_ShowChinese_garland(19, 51, Xin, 1);
+                        LCD_ShowEnglish_garland(39, 51, my_char_I, 1);
+                        LCD_ShowEnglish_garland(45, 51, maohao, 1);
+                        int_flag = LCD_REMOTE_CONTROL_I_READ();
+                        if(int_flag>9)
+                        {
+                            Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
+                        }
+                        show_num(50, /* modify*/
+                                51, /* modify*/
+                                int_flag,5,12,1);
+
+                        LCD_ShowChinese_garland(68, 51, Yao, 1);
+                        LCD_ShowChinese_garland(86, 51, Xin, 1);
+                        LCD_ShowEnglish_garland(105, 51, my_char_J, 1);
+                        LCD_ShowEnglish_garland(111, 51, maohao, 1);
+                        int_flag = LCD_REMOTE_CONTROL_J_READ();
+                        if(int_flag>9)
+                        {
+                            Log_w("[%s] Warning!!! state_value=%d is larger than the nine!\n", int_flag);
+                        }
+                        show_num(116, /* modify*/
+                                51, /* modify*/
+                                int_flag,5,12,1);
 						break;
-					
-					
 				}
 				break;
 			default:
