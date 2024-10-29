@@ -2380,6 +2380,7 @@ uint8 app_parameter_write_Serial_check( uint8 data )
     uint8 ret                  = E_NOK;
     app_par_Serial_check.datas = data;
     ret                        = BSW_NvM_Write( Serial_check, &data );
+    App_Uart1_Reinit();
     return ret;
 }
 
@@ -2394,6 +2395,7 @@ uint8 app_parameter_write_Serial_baud_rate( uint16 data )
     uint8 ret                      = E_NOK;
     app_par_Serial_baud_rate.datas = data;
     ret                            = BSW_NvM_Write( Serial_baud_rate, &data );
+    App_Uart1_Reinit();
     return ret;
 }
 
