@@ -127,6 +127,7 @@ extern uint8_t danweizhi[];
 extern uint8_t duoweizhi[];
 extern uint8_t XDYS[];
 extern uint8_t luoji[];
+extern uint8_t kaichu_luoji[];
 extern uint8_t yanshi[];
 extern uint8_t hezha[];
 extern uint8_t tiaozha[];

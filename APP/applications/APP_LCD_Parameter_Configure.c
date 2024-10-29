@@ -55,12 +55,14 @@ enum open_into_setting_menu_type{
     UNKNOW_OPEN_INTO_SETTING_MENU = 0,
     XIAODOU_YANSHI,
     LUOJI,
+	OUTPUT_LUOJI,
     OPEN_INTO_SETTING_MENU_TYPE_MAX_IDX,
 };
 uint8 open_into_setting_menu_array[]=
 {
 	XIAODOU_YANSHI,
     LUOJI,
+	OUTPUT_LUOJI,
 };
 
 enum open_out_setting_menu_type{
@@ -184,6 +186,7 @@ extern uint8_t JXFS[];
 extern uint8_t KGWZ[];
 extern uint8_t XDYS[];
 extern uint8_t luoji[];
+extern uint8_t kaichu_luoji[];
 extern uint8_t yanshi[];
 extern uint8_t hezha[];
 extern uint8_t tiaozha[];
@@ -1176,7 +1179,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 
 		if(!lcd_modify_num_env.check_num_modify)
 		{
-			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 2, 1, sizeof(open_into_setting_menu_array));
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(open_into_setting_menu_array));
 		}
 		chinese_menu_idx = open_into_setting_menu_array[lcd_modify_num_env.menu_type_idx];
 
@@ -1268,6 +1271,12 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 							my_convert_int_parameter_into_bit_array(lcd_modify_num_array, OPERATION_NUM, float_flag);
 							key_idx_for_num = 1;
 							break;
+						case OUTPUT_LUOJI:
+							//update the value for the array lcd_modify_num_array
+							float_flag = (uint32_t)app_parameter_read_A_VOLTAGE_FREQUENCY();
+							my_convert_int_parameter_into_bit_array(lcd_modify_num_array, OPERATION_NUM, float_flag);
+							key_idx_for_num = 2;
+							break;
 					}
 					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 				}
@@ -1289,6 +1298,14 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 							app_parameter_write_Remote_letter_into_the_logic(float_flag);
 							float_flag = app_parameter_read_Remote_letter_into_the_logic();
 							break;
+						case OUTPUT_LUOJI:
+							float_flag = my_convert_bit_array_into_int_parameter(lcd_modify_num_array, OPERATION_NUM);
+							app_parameter_write_A_VOLTAGE_FREQUENCY(0);
+							app_parameter_write_A_VOLTAGE_FREQUENCY((float32)float_flag);
+							float_flag = (uint32_t)app_parameter_read_A_VOLTAGE_FREQUENCY();
+							break;
+						default:
+							break;
 					}
 					key_idx_for_num = 0;
 					lcd_the_modified_num_env_to_be_clear_part();
@@ -1308,6 +1325,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 					up_diff_num_idx_ths = 9;
 					break;
 				case LUOJI:
+				case OUTPUT_LUOJI:
 					right_diff_num_idx_ths = OPERATION_NUM-1;
 					up_diff_num_idx_ths = 1;
 					break;
@@ -1318,6 +1336,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 			{
 				case XIAODOU_YANSHI:
 				case LUOJI:
+				case OUTPUT_LUOJI:
 					switch(msg_context)
 					{	uint8_t new_num;
 						case    KEY_UP://+
@@ -1385,6 +1404,9 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 						break;
 					case LUOJI:
 						chinese_idx_flush &= 0x00FD;
+						break;
+					case OUTPUT_LUOJI:
+						chinese_idx_flush &= 0x00FB;
 						break;	
 				}
 				break;
@@ -1411,6 +1433,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 					
 					case XIAODOU_YANSHI:
 					case LUOJI:
+					case OUTPUT_LUOJI:
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
 						lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
 						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
@@ -1430,16 +1453,29 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 						/* “逻辑” */
 						bit_num_display = app_parameter_read_Remote_letter_into_the_logic();
 						bit_num_display = my_convert_int_parameter_into_reverse_bit_int_parameter(OPERATION_NUM, bit_num_display);
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, luoji, 2);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, luoji, 4);
 						// LCD_ShowChinese_garland(8, 26, second_in_out, 4);
-						lcd_state_flush_for_num(34,26,my_maohao,5,12,1);
+						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
 						lcd_number_modify_array_get_v2(&float_flag, bit_num_display, 
 													num_array, OPERATION_NUM, 0, num_idx_flush[1]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
-						lcd_number_display_in_order(40, 26, 5, 12, 
+						lcd_number_display_in_order(64, 26, 5, 12, 
 											num_idx_flush[1], OPERATION_NUM, num_array, OPERATION_NUM); //一段定值的数值显示部分
-						lcd_state_flush_for_num(112,26,my_char_NULL,6,12,1);
-						lcd_state_flush_for_num(117,26,my_char_NULL,6,12,1);
-						lcd_state_flush_for_num(122,26,my_char_NULL,6,12,1);
+						// lcd_state_flush_for_num(112,26,my_char_NULL,6,12,1);
+						// lcd_state_flush_for_num(117,26,my_char_NULL,6,12,1);
+						// lcd_state_flush_for_num(122,26,my_char_NULL,6,12,1);
+
+						bit_num_display = (uint32)app_parameter_read_A_VOLTAGE_FREQUENCY();
+						bit_num_display = my_convert_int_parameter_into_reverse_bit_int_parameter(OPERATION_NUM, bit_num_display);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 8, 39, kaichu_luoji, 4);
+						// LCD_ShowChinese_garland(8, 26, second_in_out, 4);
+						lcd_state_flush_for_num(58,39,my_maohao,5,12,1);
+						lcd_number_modify_array_get_v2(&float_flag, bit_num_display, 
+													num_array, OPERATION_NUM, 0, num_idx_flush[2]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
+						lcd_number_display_in_order(64, 39, 5, 12, 
+											num_idx_flush[2], OPERATION_NUM, num_array, OPERATION_NUM); //一段定值的数值显示部分
+							// lcd_state_flush_for_num(112,39,my_char_NULL,6,12,1);
+							// lcd_state_flush_for_num(117,39,my_char_NULL,6,12,1);
+							// lcd_state_flush_for_num(122,39,my_char_NULL,6,12,1);
 
 						break;
 					default:
