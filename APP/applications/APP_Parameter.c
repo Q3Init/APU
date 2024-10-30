@@ -2898,7 +2898,7 @@ void app_allpara_default_init( void )
 
     nvm_datas_Lists[ Harmonic_Protection_Value ].dft                  = MCM_floatToIntBit( 30.0 );
     nvm_datas_Lists[ Harmonic_Protection_Delay ].dft                  = MCM_floatToIntBit( 1.0 );
-    nvm_datas_Lists[ Harmonic_Protection_Eol ].dft                    = 1;
+    nvm_datas_Lists[ Harmonic_Protection_Eol ].dft                    = 0;
 
     nvm_datas_Lists[ External_Coordination_Delay ].dft                = MCM_floatToIntBit( 0 );
     nvm_datas_Lists[ External_Coordination_Trip ].dft                 = 0;

@@ -8,7 +8,7 @@
 #include "semphr.h"
 
 static APP_Protection_Mnt_t APP_Protection_Mnt;
-static APP_Protection_Mnt_t *pMnt = &APP_Protection_Mnt;
+APP_Protection_Mnt_t *pMnt = &APP_Protection_Mnt;
 static SemaphoreHandle_t g_prt_enable_sem = NULL;
 typedef struct
 {
@@ -1190,9 +1190,7 @@ static void APP_Protection_PowerRestorationOperate_Handler(void)
                                            POWER_RESTORATION_DELAY_MAX_RANGE, 
                                            app_parameter_read_Power_recovery_Delay()) * 1000);
         /* 功率恢复功能投入 && 开关在分位 && IA\IB\IC均<0.1A && 逆功率保护动作过 && P > 功率恢复定值 */
-        if ((true == APP_Remote_Signal_Input_Switching_Exist_Off()) && (pMnt->state.reverse_power_switch_off_state) &&
-            ((APP_Get_Current_Ia() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ib() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ic() < CURRENT_MIN_LIMIT_THR) && 
-            (APP_Get_Active_Power_Total() > threshold))) {
+        if ((true == APP_Remote_Signal_Input_Switching_Exist_Off()) && (pMnt->state.reverse_power_switch_off_state) && (APP_Get_Active_Power_Total() > threshold)) {
 
             if ((APP_Get_System_Ms() - pMnt->anti_shake_tick[APP_PRT_POWER_RESTORATION]) >= ANTI_SHAKE_POWER_RESTORATION_DELAY) {
                 if (false == pMnt->delay_exec_list[APP_PRT_POWER_RESTORATION]) {
