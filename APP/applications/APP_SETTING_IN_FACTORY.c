@@ -1,6 +1,7 @@
 #include "Lib_LCD_kernel.h"
 #include "APP_Parameter.h"
 #include "APP_SETTING_IN_FACTORY.h"
+#include "APP_Protection_Backend.h"
 
 #define A_VOLTAGE_AMPLITUDE_VALUE_READ()  	app_parameter_read_A_VOLTAGE_AMPLITUDE()
 #define A_VOLTAGE_AMPLITUDE_VALUE_WRITE(x) 	app_parameter_write_A_VOLTAGE_AMPLITUDE(x)
@@ -2495,34 +2496,34 @@ struct menu_event_tag * open_into_test_handler(uint8_t msg_process_signal, uint8
 					switch(chinese_menu_idx)
 					{
 						case DOHC1:
-							//TODO
+							APP_Relay_Control(APP_RELAY_CHANNEL_HC, true);
 							break;
 						case DOTQ1:
-							//TODO
+							APP_Relay_Control(APP_RELAY_CHANNEL_TQ, true);
 							break;
 						case DO011:
-							//TODO
+							APP_Relay_Control(APP_RELAY_CHANNEL_D01, true);
 							break;
 						case DO021:
-							//TODO
+							APP_Relay_Control(APP_RELAY_CHANNEL_D02, true);
 							break;
 						case DO031:
-							//TODO
+							APP_Relay_Control(APP_RELAY_CHANNEL_D03, true);
 							break;
 						case DO041:
-							//TODO
+							APP_Relay_Control(APP_RELAY_CHANNEL_D04, true);
 							break;
 						case DO051:
-							//TODO
+							APP_Relay_Control(APP_RELAY_CHANNEL_D05, true);
 							break;
 						case DO061:
-							//TODO
+							APP_Relay_Control(APP_RELAY_CHANNEL_D06, true);
 							break;
 						case DO071:
-							//TODO
+							APP_Relay_Control(APP_RELAY_CHANNEL_D07, true);
 							break;
 						case DO081:
-							//TODO
+							APP_Relay_Control(APP_RELAY_CHANNEL_D08, true);
 							break;
 						default:
 							break;
