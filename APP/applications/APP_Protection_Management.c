@@ -777,10 +777,10 @@ static void APP_Protection_Harmonic_Handler(void)
                                         app_parameter_read_Harmonic_Protection_Delay()) * 1000);
         
         /* 任意相电压大于60v且电压失真度大于定值 && 谐波保护功能投入 */
-        if ((APP_Get_Voltage_Ua() > 60.0) || (APP_Get_Voltage_Ub() > 60.0) || (APP_Get_Voltage_Ub() > 60.0) && 
-            ((APP_Get_Harmonic_Distortion_Ua() > distortion_threshold) || 
-            (APP_Get_Harmonic_Distortion_Ub() > distortion_threshold) || 
-            (APP_Get_Harmonic_Distortion_Uc() > distortion_threshold))) {
+        if (((APP_Get_Voltage_Ua() > 60.0) || (APP_Get_Voltage_Ub() > 60.0) || (APP_Get_Voltage_Ub() > 60.0)) && 
+            ((APP_Get_Harmonic_Distortion_Ua() > (distortion_threshold / 100)) || 
+            (APP_Get_Harmonic_Distortion_Ub() > (distortion_threshold) / 100) || 
+            (APP_Get_Harmonic_Distortion_Uc() > (distortion_threshold) / 100))) {
             
             if ((APP_Get_System_Ms() - pMnt->anti_shake_tick[APP_PRT_HARMONIC_VOLT_DISTORTION]) >= ANTI_SHAKE_HARMONIC_DELAY) {
                 if (false == pMnt->delay_exec_list[APP_PRT_HARMONIC_VOLT_DISTORTION]) {
@@ -1190,7 +1190,9 @@ static void APP_Protection_PowerRestorationOperate_Handler(void)
                                            POWER_RESTORATION_DELAY_MAX_RANGE, 
                                            app_parameter_read_Power_recovery_Delay()) * 1000);
         /* 功率恢复功能投入 && 开关在分位 && IA\IB\IC均<0.1A && 逆功率保护动作过 && P > 功率恢复定值 */
-        if ((true == APP_Remote_Signal_Input_Switching_Exist_Off()) && (pMnt->state.reverse_power_switch_off_state) && (APP_Get_Active_Power_Total() > threshold)) {
+        if ((true == APP_Remote_Signal_Input_Switching_Exist_Off()) && (pMnt->state.reverse_power_switch_off_state) &&
+            ((APP_Get_Current_Ia() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ib() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ic() < CURRENT_MIN_LIMIT_THR) && 
+            (APP_Get_Active_Power_Total() > threshold))) {
 
             if ((APP_Get_System_Ms() - pMnt->anti_shake_tick[APP_PRT_POWER_RESTORATION]) >= ANTI_SHAKE_POWER_RESTORATION_DELAY) {
                 if (false == pMnt->delay_exec_list[APP_PRT_POWER_RESTORATION]) {
