@@ -659,36 +659,46 @@ struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_signal, uin
 						LCD_ShowEnglish_garland(24, 16, my_char_P, 1);
 						LCD_ShowEnglish_garland(30, 16, my_char_s, 1);
 						LCD_ShowEnglish_garland(36, 16, my_amount,1);
+                        float32 total_reactive_Ps_pwr = THE_TOTAL_ACTIVE_POWER_FOR_PS_READ();
+                        if(total_reactive_Ps_pwr < 0)
+                        {
+                            LCD_ShowNum_garland(43, 16, jianhao_char,5);
+                        }
 						lcd_number_modify_array_get(&float_flag, THE_TOTAL_ACTIVE_POWER_FOR_PS_READ(), 
 													num_array,
                                                     4,  /* the int-number sum*/
                                                     1,  /* the point-number sum*/
                                                     0xff);
-						lcd_number_display_in_order_not_modify(43, 16, 5, 12, 
+						lcd_number_display_in_order_not_modify(49, 16, 5, 12, 
 											0xff,
                                             5,  /* the displayed sum-number where int-number plus point-number*/
                                             num_array,
                                             4   /*the position for the point*/
                                             );
-                        LCD_ShowEnglish_garland(77, 16, my_char_W, 1);
+                        LCD_ShowEnglish_garland(83, 16, my_char_W, 1);
 
                         LCD_ShowEnglish_garland(24, 28, my_char_Q, 1);
 						LCD_ShowEnglish_garland(30, 28, my_char_s, 1);
 						LCD_ShowEnglish_garland(36, 28, my_amount,1);
-						lcd_number_modify_array_get(&float_flag, THE_TOTAL_REACTIVE_POWER_FOR_QS_READ(), 
+                        float32 total_reactive_Qs_pwr = THE_TOTAL_REACTIVE_POWER_FOR_QS_READ();
+                        if(total_reactive_Qs_pwr < 0)
+                        {
+                            LCD_ShowNum_garland(43, 28, jianhao_char,5);
+                        }
+						lcd_number_modify_array_get(&float_flag, total_reactive_Qs_pwr, 
 													num_array,
                                                     4,  /* the int-number sum*/
                                                     1,  /* the point-number sum*/
                                                     0xff);
-						lcd_number_display_in_order_not_modify(43, 28, 5, 12, 
+						lcd_number_display_in_order_not_modify(49, 28, 5, 12, 
 											0xff, 
                                             5,  /* the displayed sum-number where int-number plus point-number*/
                                             num_array,
                                             4   /*the position for the point*/
                                             );
-                        LCD_ShowEnglish_garland(77, 28, my_char_V, 1);  /* 77 = (5+1)*5+4 */
-                        LCD_ShowEnglish_garland(83, 28, my_char_a, 1);
-                        LCD_ShowEnglish_garland(89, 28, my_char_r, 1);
+                        LCD_ShowEnglish_garland(83, 28, my_char_V, 1);  /* 77 = (5+1)*5+4 */
+                        LCD_ShowEnglish_garland(89, 28, my_char_a, 1);
+                        LCD_ShowEnglish_garland(95, 28, my_char_r, 1);
 
                         cosPHI = THE_TOTAL_ACTIVE_POWER_FOR_PS_READ()*1.0/pow(pow(THE_TOTAL_ACTIVE_POWER_FOR_PS_READ(),2)+pow(THE_TOTAL_REACTIVE_POWER_FOR_QS_READ(),2), 0.5);
                         Log_d("Qs and Ps: Ps*1.0 / (Ps^2 + Qs^2)^0.5 = cosPHI = %.3f \n", cosPHI);
@@ -700,13 +710,17 @@ struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_signal, uin
                         LCD_ShowEnglish_garland(24, 39, my_char_o, 1);
 						LCD_ShowEnglish_garland(30, 39, my_char_s, 1);
 						LCD_ShowEnglish_garland(36, 39, my_amount,1);
+                        if(cosPHI < 0)
+                        {
+                            LCD_ShowNum_garland(43, 39, jianhao_char,5);
+                        }
 						lcd_number_modify_array_get(&float_flag,
                                                     cosPHI,
 													num_array,
                                                     1,  /* the int-number sum*/
                                                     3,  /* the point-number sum*/
                                                     0xff);
-						lcd_number_display_in_order_not_modify(43, 39, 5, 12, 
+						lcd_number_display_in_order_not_modify(49, 39, 5, 12, 
 											0xff,
                                             4,  /* the displayed sum-number where int-number plus point-number*/
                                             num_array,
