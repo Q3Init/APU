@@ -86,10 +86,10 @@ uint8_t menu_type_ptr_match(uint8_t key_signal, uint8_t menu_row_num, uint8_t me
 	switch(key_signal)
 	{
 		case KEY_UP:
-			cur_row = ((cur_row-1)>0) ? (cur_row-1) : 0;
+			cur_row = ((cur_row - 1 + menu_row_num) % menu_row_num);
 			break;
 		case KEY_DOWN:
-			cur_row = ((cur_row+1)<(menu_row_num-1)) ? (cur_row+1) : (menu_row_num-1);
+			cur_row = ((cur_row + 1) % menu_row_num);
 			break;
 		case KEY_LEFT:
 			cur_column = ((cur_column-1)>0) ? (cur_column-1) : 0;
