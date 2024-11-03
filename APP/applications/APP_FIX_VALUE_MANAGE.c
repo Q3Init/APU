@@ -3234,7 +3234,7 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 													num_array, 2, 2, num_idx_flush[0]);
 						lcd_number_display_in_order(64, 13, 5, 12, 
 											num_idx_flush[0], sizeof(num_array)-1, num_array, 2);
-						lcd_state_flush_for_num(90,13,my_char_H,6,12,1);
+						lcd_state_flush_for_num(90,13,my_char_h,6,12,1);
 						lcd_state_flush_for_num(96,13,my_char_z,6,12,1);
 
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, over_delay, 4);
@@ -5496,7 +5496,7 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 													num_array, 2, 3, num_idx_flush[0]);
 						lcd_number_display_in_order(64, 13, 5, 12, 
 											num_idx_flush[0], sizeof(num_array)-1, num_array, 2);
-						lcd_state_flush_for_num(96,13,my_char_A,6,12,1);
+						lcd_state_flush_for_num(96,13,my_char_V,6,12,1);
 
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, over_delay, 4);
 						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
