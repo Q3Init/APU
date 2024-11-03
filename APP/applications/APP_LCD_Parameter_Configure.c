@@ -55,16 +55,15 @@ enum open_into_setting_menu_type{
     UNKNOW_OPEN_INTO_SETTING_MENU = 0,
     XIAODOU_YANSHI,
     LUOJI,
-	OUTPUT_LUOJI,
     OPEN_INTO_SETTING_MENU_TYPE_MAX_IDX,
 };
 uint8 open_into_setting_menu_array[]=
 {
 	XIAODOU_YANSHI,
     LUOJI,
-	OUTPUT_LUOJI,
 };
 
+#if 0
 enum open_out_setting_menu_type{
     UNKNOW_OPEN_OUT_SETTING_MENU = 0,
     HEZA_YANSHI,
@@ -95,6 +94,16 @@ uint8 open_out_setting_menu_array[]=
     DO8_YANSHI,
     CHUNENG_YANSHI,
     CHUNENG_XUANZE,
+};
+#endif
+enum open_out_setting_menu_type{
+    UNKNOW_OPEN_OUT_SETTING_MENU = 0,
+    OUTPUT_LUOJI,
+    OPEN_OUT_SETTING_MENU_TYPE_MAX_IDX,
+};
+uint8 open_out_setting_menu_array[]=
+{
+	OUTPUT_LUOJI,
 };
 
 // enum communication_setting_menu_type{
@@ -1179,7 +1188,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 
 		if(!lcd_modify_num_env.check_num_modify)
 		{
-			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(open_into_setting_menu_array));
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 2, 1, sizeof(open_into_setting_menu_array));
 		}
 		chinese_menu_idx = open_into_setting_menu_array[lcd_modify_num_env.menu_type_idx];
 
@@ -1267,16 +1276,16 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 							break;
 						case LUOJI:
 							//update the value for the array lcd_modify_num_array
-							float_flag = app_parameter_read_Remote_letter_into_the_logic();
+							float_flag = app_parameter_read_A_VOLTAGE_FREQUENCY();
 							my_convert_int_parameter_into_bit_array(lcd_modify_num_array, OPERATION_NUM, float_flag);
 							key_idx_for_num = 1;
 							break;
-						case OUTPUT_LUOJI:
-							//update the value for the array lcd_modify_num_array
-							float_flag = (uint32_t)app_parameter_read_A_VOLTAGE_FREQUENCY();
-							my_convert_int_parameter_into_bit_array(lcd_modify_num_array, OPERATION_NUM, float_flag);
-							key_idx_for_num = 2;
-							break;
+						// case OUTPUT_LUOJI:
+						// 	//update the value for the array lcd_modify_num_array
+						// 	float_flag = (uint32_t)app_parameter_read_A_VOLTAGE_FREQUENCY();
+						// 	my_convert_int_parameter_into_bit_array(lcd_modify_num_array, OPERATION_NUM, float_flag);
+						// 	key_idx_for_num = 2;
+						// 	break;
 					}
 					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 				}
@@ -1293,12 +1302,6 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 							float_flag = app_parameter_read_Remote_letter_anti_shake_time();
 							break;
 						case LUOJI:
-							float_flag = my_convert_bit_array_into_int_parameter(lcd_modify_num_array, OPERATION_NUM);
-							app_parameter_write_Remote_letter_into_the_logic(0);
-							app_parameter_write_Remote_letter_into_the_logic(float_flag);
-							float_flag = app_parameter_read_Remote_letter_into_the_logic();
-							break;
-						case OUTPUT_LUOJI:
 							float_flag = my_convert_bit_array_into_int_parameter(lcd_modify_num_array, OPERATION_NUM);
 							app_parameter_write_A_VOLTAGE_FREQUENCY(0);
 							app_parameter_write_A_VOLTAGE_FREQUENCY((float32)float_flag);
@@ -1325,7 +1328,6 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 					up_diff_num_idx_ths = 9;
 					break;
 				case LUOJI:
-				case OUTPUT_LUOJI:
 					right_diff_num_idx_ths = OPERATION_NUM-1;
 					up_diff_num_idx_ths = 1;
 					break;
@@ -1336,7 +1338,6 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 			{
 				case XIAODOU_YANSHI:
 				case LUOJI:
-				case OUTPUT_LUOJI:
 					switch(msg_context)
 					{	uint8_t new_num;
 						case    KEY_UP://+
@@ -1405,9 +1406,9 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 					case LUOJI:
 						chinese_idx_flush &= 0x00FD;
 						break;
-					case OUTPUT_LUOJI:
-						chinese_idx_flush &= 0x00FB;
-						break;	
+					// case OUTPUT_LUOJI:
+					// 	chinese_idx_flush &= 0x00FB;
+					// 	break;	
 				}
 				break;
 			default:
@@ -1433,7 +1434,6 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 					
 					case XIAODOU_YANSHI:
 					case LUOJI:
-					case OUTPUT_LUOJI:
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
 						lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
 						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
@@ -1451,7 +1451,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 						lcd_state_flush_for_num(94,13,my_char_s,6,12,1);
 
 						/* “逻辑” */
-						bit_num_display = app_parameter_read_Remote_letter_into_the_logic();
+						bit_num_display = app_parameter_read_A_VOLTAGE_FREQUENCY();
 						bit_num_display = my_convert_int_parameter_into_reverse_bit_int_parameter(OPERATION_NUM, bit_num_display);
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x02, 8, 26, luoji, 4);
 						// LCD_ShowChinese_garland(8, 26, second_in_out, 4);
@@ -1464,15 +1464,15 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 						// lcd_state_flush_for_num(117,26,my_char_NULL,6,12,1);
 						// lcd_state_flush_for_num(122,26,my_char_NULL,6,12,1);
 
-						bit_num_display = (uint32)app_parameter_read_A_VOLTAGE_FREQUENCY();
-						bit_num_display = my_convert_int_parameter_into_reverse_bit_int_parameter(OPERATION_NUM, bit_num_display);
-						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 8, 39, kaichu_luoji, 4);
-						// LCD_ShowChinese_garland(8, 26, second_in_out, 4);
-						lcd_state_flush_for_num(58,39,my_maohao,5,12,1);
-						lcd_number_modify_array_get_v2(&float_flag, bit_num_display, 
-													num_array, OPERATION_NUM, 0, num_idx_flush[2]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
-						lcd_number_display_in_order(64, 39, 5, 12, 
-											num_idx_flush[2], OPERATION_NUM, num_array, OPERATION_NUM); //一段定值的数值显示部分
+						// bit_num_display = (uint32)app_parameter_read_A_VOLTAGE_FREQUENCY();
+						// bit_num_display = my_convert_int_parameter_into_reverse_bit_int_parameter(OPERATION_NUM, bit_num_display);
+						// lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x04, 8, 39, kaichu_luoji, 4);
+						// // LCD_ShowChinese_garland(8, 26, second_in_out, 4);
+						// lcd_state_flush_for_num(58,39,my_maohao,5,12,1);
+						// lcd_number_modify_array_get_v2(&float_flag, bit_num_display, 
+						// 							num_array, OPERATION_NUM, 0, num_idx_flush[2]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
+						// lcd_number_display_in_order(64, 39, 5, 12, 
+						// 					num_idx_flush[2], OPERATION_NUM, num_array, OPERATION_NUM); //一段定值的数值显示部分
 							// lcd_state_flush_for_num(112,39,my_char_NULL,6,12,1);
 							// lcd_state_flush_for_num(117,39,my_char_NULL,6,12,1);
 							// lcd_state_flush_for_num(122,39,my_char_NULL,6,12,1);
@@ -1492,7 +1492,335 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 
 
 
+struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
+{
+	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
+	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
+	menu_evt->status = EVT_NO_ERROR;
+	menu_evt->msg_operation = MSG_RESUMED;
 
+	static uint8_t key_idx_for_num  = 0;
+	uint32_t float_flag = 0;
+
+	uint8_t num_idx_flush[15] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[15] = {0};
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = PARAMETER_CONFIGURE;
+
+	uint8_t msg_storage = msg_context;
+	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
+	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
+    if(authentication_key)
+	{
+		return menu_evt;
+	}
+
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+	// app_parameter_write_Overvoltage_protection_LV1_One_Value(233.33);
+    if(msg_process_signal == 1)
+	{
+
+		if(!lcd_modify_num_env.check_num_modify)
+		{
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 1, 1, sizeof(open_out_setting_menu_array));
+		}
+		chinese_menu_idx = open_out_setting_menu_array[lcd_modify_num_env.menu_type_idx];
+
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+
+		if(msg_context == KEY_RETURN)
+		{
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+				menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
+				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				lcd_the_modified_num_env_to_be_clear_all();
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+				float_flag = app_parameter_read_Remote_letter_into_the_logic();
+				my_convert_int_parameter_into_bit_array(lcd_modify_num_array, OPERATION_NUM, float_flag);
+			}
+			key_idx_for_num = 0;
+		}
+		
+
+        if(msg_context == FLUSH_SCREEN)
+        {
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
+            clear_screen();
+			chinese_menu_idx = open_out_setting_menu_array[lcd_modify_num_env.menu_type_idx];// 数组 todo
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
+			msg_lock_from_env_set(0);//unlock the msg
+
+			//init the array lcd_modify_num_array with value in the first chinese volume
+			switch(chinese_menu_idx)
+			{
+				case OUTPUT_LUOJI:
+					//update the value for the array lcd_modify_num_array
+					float_flag = app_parameter_read_Remote_letter_into_the_logic(); // SRAM todo
+					my_convert_int_parameter_into_bit_array(lcd_modify_num_array, OPERATION_NUM, float_flag);
+					// my_convert_int_to_int_array(lcd_modify_num_array, 4, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
+					break;
+				default:
+					break;
+			}
+        }
+
+		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true; //让中文光标停住
+					switch(chinese_menu_idx)
+					{
+						// case XIAODOU_YANSHI:
+						// 	key_idx_for_num = 0;
+						// 	//update the value for the array lcd_modify_num_array
+						// 	float_flag = app_parameter_read_Remote_letter_anti_shake_time();
+						// 	my_convert_int_to_int_array(lcd_modify_num_array, 4, float_flag); // 3是整数位数，2是小数位数
+						// 	break;
+						case OUTPUT_LUOJI:
+							//update the value for the array lcd_modify_num_array
+							float_flag = app_parameter_read_Remote_letter_into_the_logic();
+							my_convert_int_parameter_into_bit_array(lcd_modify_num_array, OPERATION_NUM, float_flag);
+							key_idx_for_num = 0;
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						// case XIAODOU_YANSHI:
+						// 	// prepare for the number modify
+						// 	float_flag = my_convert_int_array_to_int_parameter(lcd_modify_num_array,4);
+						// 	app_parameter_write_Remote_letter_anti_shake_time(0);
+						// 	app_parameter_write_Remote_letter_anti_shake_time(float_flag);
+						// 	float_flag = app_parameter_read_Remote_letter_anti_shake_time();
+						// 	break;
+						case OUTPUT_LUOJI:
+							float_flag = my_convert_bit_array_into_int_parameter(lcd_modify_num_array, OPERATION_NUM);
+							app_parameter_write_Remote_letter_into_the_logic(0);
+							app_parameter_write_Remote_letter_into_the_logic(float_flag);
+							float_flag = app_parameter_read_Remote_letter_into_the_logic();
+							break;
+						default:
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
+
+		if(lcd_modify_num_env.check_num_modify)
+		{
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				// case XIAODOU_YANSHI:
+				// 	right_diff_num_idx_ths = 4-1;
+				// 	up_diff_num_idx_ths = 9;
+				// 	break;
+				// case LUOJI:
+				case OUTPUT_LUOJI:
+					right_diff_num_idx_ths = OPERATION_NUM-1;
+					up_diff_num_idx_ths = 1;
+					break;
+				default:
+					break;
+			}
+			switch(chinese_menu_idx)
+			{
+				// case XIAODOU_YANSHI:
+				// case LUOJI:
+				case OUTPUT_LUOJI:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_UP://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_DOWN://-
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				switch(chinese_menu_idx)
+				{
+					// case XIAODOU_YANSHI:
+					// 	chinese_idx_flush &= 0x00FE;
+					// 	break;
+					// case LUOJI:
+					// 	chinese_idx_flush &= 0x00FD;
+					// 	break;
+					case OUTPUT_LUOJI:
+						chinese_idx_flush &= 0x00FE;
+						break;	
+				}
+				break;
+			default:
+				break;
+		}
+
+		uint32_t bit_num_display = 0;
+		//LCD driver
+		//chinese_menu_idx  中文目录的索引下标
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:		
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+
+				// 4是显示汉字的数量
+				LCD_ShowChinese_garland(0, 0, open_out_setting, 4);
+				switch(chinese_menu_idx)
+				{
+					
+					// case XIAODOU_YANSHI:
+					// case LUOJI:
+					case OUTPUT_LUOJI:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+						lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+						lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+						lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
+						single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						// /* “消抖延时” */
+						// lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, XDYS, 4);
+						// lcd_state_flush_for_num(58,13,my_maohao,5,10,1);
+						// lcd_number_modify_array_get((float32 *)&float_flag, app_parameter_read_Remote_letter_anti_shake_time(), 
+						// 							num_array, 4, 0, num_idx_flush[0]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
+						// lcd_number_display_in_order(64, 13, 5, 12, 
+						// 					num_idx_flush[0], 4, num_array, 4); //一段定值的数值显示部分
+						// lcd_state_flush_for_num(88,13,my_char_m,6,12,1);
+						// lcd_state_flush_for_num(94,13,my_char_s,6,12,1);
+
+						bit_num_display = (uint32)app_parameter_read_Remote_letter_into_the_logic();
+						bit_num_display = my_convert_int_parameter_into_reverse_bit_int_parameter(OPERATION_NUM, bit_num_display);
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x01, 8, 13, kaichu_luoji, 4);
+						// LCD_ShowChinese_garland(8, 26, second_in_out, 4);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get_v2(&float_flag, bit_num_display, 
+													num_array, OPERATION_NUM, 0, num_idx_flush[0]);  //一段定值的数值显示部分 num_idx_flush[0]表示数字部分的index
+						lcd_number_display_in_order(64, 13, 5, 12, 
+											num_idx_flush[0], OPERATION_NUM, num_array, OPERATION_NUM); //一段定值的数值显示部分
+						// lcd_state_flush_for_num(52,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(57,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(62,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(67,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(72,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(77,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(82,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(87,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(92,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(97,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(102,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(107,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(112,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(117,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(122,26,my_char_NULL,6,12,1);
+						break;
+					default:
+						break;
+				}
+			default:
+				break;
+		}
+	}
+
+    return menu_evt;
+}
+#if 0
 struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 
@@ -2227,6 +2555,7 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 
 // 	return menu_evt;
 // }
+#endif
 
 struct menu_event_tag * communication_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
