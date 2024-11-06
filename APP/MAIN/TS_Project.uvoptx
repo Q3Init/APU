@@ -185,6 +185,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>app_par_Closing_exit_time</ItemText>
         </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>app_par_Remote_letter_into_the_logic</ItemText>
+        </Ww>
       </WatchWindow1>
       <MemoryWindow1>
         <Mm>
