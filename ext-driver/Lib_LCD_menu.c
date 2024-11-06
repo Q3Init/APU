@@ -771,6 +771,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 
 		// uint8_t fault_chinese_col = 0;
 		uint8_t fault_chinese_raw = 16;
+		uint8_t distance = 44;
 		switch(msg_par)
 		{
 			case	0xff:
@@ -784,7 +785,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 			case FAULT_MSG_TO_LCD(Over_volt_lv1_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, over_voltage_protection, 2);
 				LCD_ShowChinese_garland(32, fault_chinese_raw, first_fix_value, 2);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -793,7 +794,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 			case FAULT_MSG_TO_LCD(Over_volt_lv2_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, over_voltage_protection, 2);
 				LCD_ShowChinese_garland(32, fault_chinese_raw, second_fix_value, 2);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -802,7 +803,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 			case FAULT_MSG_TO_LCD(Under_volt_lv1_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, too_low_voltage_protection, 2);
 				LCD_ShowChinese_garland(32, fault_chinese_raw, first_fix_value, 2);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -811,7 +812,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 			case FAULT_MSG_TO_LCD(Under_volt_lv2_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, too_low_voltage_protection, 2);
 				LCD_ShowChinese_garland(32, fault_chinese_raw, second_fix_value, 2);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -819,7 +820,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 				break;
 			case FAULT_MSG_TO_LCD(Over_freq_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, frequency_over, 4);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -827,7 +828,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 				break;
 			case FAULT_MSG_TO_LCD(Low_freq_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, frequency_too_low, 4);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -835,7 +836,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 				break;
 			case FAULT_MSG_TO_LCD(Spike_freq_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, frequency_mutation, 4);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -843,7 +844,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 				break;
 			case FAULT_MSG_TO_LCD(Reverse_power_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, reverse_power, 3);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -851,7 +852,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 				break;
 			case FAULT_MSG_TO_LCD(Harmonic_volt_distortion_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, harmonic_protection, 4);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -860,7 +861,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 			case FAULT_MSG_TO_LCD(Ext_ctrl_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, external_shunt_tripping, 2);
 				LCD_ShowChinese_garland(32, fault_chinese_raw, control_word, 2);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -868,7 +869,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 				break;
 			case FAULT_MSG_TO_LCD(Quick_break_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, quick_disconnect_protection, 4);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -884,7 +885,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 				break;
 			case FAULT_MSG_TO_LCD(Over_current_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, over_current_protection, 4);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -892,7 +893,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 				break;
 			case FAULT_MSG_TO_LCD(Zero_seq_current_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, over_sequence_over_current, 4);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -900,7 +901,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 				break;
 			case FAULT_MSG_TO_LCD(System_outage_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, system_power_off, 4);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -908,7 +909,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 				break;
 			case FAULT_MSG_TO_LCD(On_volt_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, closing_switch_with_voltage, 4);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -916,7 +917,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 				break;
 			case FAULT_MSG_TO_LCD(Power_restoration_fault):
 				LCD_ShowChinese_garland(8, fault_chinese_raw, power_recover, 4);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
@@ -925,7 +926,7 @@ void error_ind_menu_display(uint8_t msg_par, App_scroll_storage_datas data)
 			case FAULT_MSG_TO_LCD(Switch_on_charge_fault):
 
 				LCD_ShowChinese_garland(8, fault_chinese_raw, HZCD, 4);
-				gu_pos = 56 + chinese_size;
+				gu_pos = distance + chinese_size;
 				zhang_pos = gu_pos+chinese_size;
 				LCD_ShowChinese_garland(gu_pos, fault_chinese_raw, gu, 1);
 				LCD_ShowChinese_garland(zhang_pos, fault_chinese_raw, zhang, 1);
