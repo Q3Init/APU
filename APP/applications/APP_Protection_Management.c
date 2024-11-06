@@ -31,7 +31,6 @@ static power_recovery_cnt_Type recovery_cnt[5] = {0};
         xSemaphoreGive(g_prt_enable_sem);\
     }\
 } while (0)
-#define APP_PRO_DEBUG_TEST
 
 #ifdef APP_PRO_DEBUG_TEST
 uint8_t app_pro_management_switch_test[25];
