@@ -6,6 +6,7 @@
 #include "BSW_FFT_APP.h"
 #include "MCAL_Cfg_DMA.h"
 #include "MCAL_Timer.h"
+#include "APP_Protection_Backend.h"
 
 void MCAL_Nvic_Init(void)
 {
@@ -15,7 +16,7 @@ void MCAL_Nvic_Init(void)
     DMA_ClearIntFlag(DMA1_INT_FLAG_TC1);
     DMA_EnableInterrupt(DMA1_Channel1,DMA1_INT_FLAG_TC1);
 }
-
+extern volatile uint32_t DMA_Time_Record_Ms;
 extern void APP_FFT_Start(void);
 void DMA1_Channel1_IRQHandler(void)
 {
@@ -23,6 +24,7 @@ void DMA1_Channel1_IRQHandler(void)
     {
         TMR_Disable(TMR3);
         APP_FFT_Start();
+        DMA_Time_Record_Ms = APP_Get_System_Ms();
         DMA_ClearIntFlag(DMA1_INT_FLAG_TC1);        
     }
 }

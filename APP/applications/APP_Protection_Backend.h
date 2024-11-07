@@ -139,7 +139,10 @@ typedef struct {
     float32 apparent_power_a;  /* A相视在功率，单位：va */
     float32 apparent_power_b;  /* B相视在功率，单位：va */
     float32 apparent_power_c;  /* C相视在功率，单位：va */
-
+    float32 plus_Ep; /* 有功功率的能量值（记录有功功率为正数时的能量累计值），单位：kWh */
+    float32 minus_Ep; /* 有功功率的能量值（记录有功功率为负数时的能量累计值），单位：kWh */
+    float32 plus_Eq; /* 无功功率的能量值（记录有功功率为正数时的能量累计值），单位：kVarh */
+    float32 minus_Eq; /* 无功功率的能量值（记录有功功率为负数时的能量累计值），单位：kVarh */
 } APP_Calc_Value_t;
 
 typedef struct {
@@ -199,6 +202,7 @@ float32 APP_Get_Phase_Uab(void);
 float32 APP_Get_Phase_Ubc(void);
 float32 APP_Get_Phase_Uca(void);
 float32 APP_Get_Phase_UabIa(void);
+float32 APP_Get_Phase_UcbIc(void);
 
 /* 获取A相的功率因数，单位：deg */
 float32 APP_Get_cos_Ua_phi(void);
@@ -231,6 +235,12 @@ float32 APP_Get_Apparent_Power_A(void);
 float32 APP_Get_Apparent_Power_B(void);
 float32 APP_Get_Apparent_Power_C(void);
 float32 APP_Get_Apparent_Power_Total(void);
+
+/* 有功能量， 单位kWh */
+float32 APP_Get_Active_Power_Total_For_Plus_Ep(void);
+float32 APP_Get_Active_Power_Total_For_minus_Ep(void);
+float32 APP_Get_Active_Power_Total_For_Plus_Eq(void);
+float32 APP_Get_Active_Power_Total_For_minus_Eq(void);
 
 /* 逆功率 */
 float32 APP_Get_Reverse_Power(void);

@@ -46,10 +46,10 @@ static uint32_t lcd_flush_timer_cur = 0;
 #define ZERO_CT_K (app_parameter_read_Zero_sequence_CT_once()/(app_parameter_read_Zero_sequence_CT_twice()*1.0))
 
 /**************          telemetry_first menu is as follow         *****************************/
-#define LCD_FIRST_THE_ACTIVE_POWER_FOR_PLUS_EP_READ()   0.0
-#define LCD_FIRST_THE_ACTIVE_POWER_FOR_MINUS_EP_READ()   0.0
-#define LCD_FIRST_THE_REACTIVE_POWER_FOR_PLUS_EQ_READ()   0.0
-#define LCD_FIRST_THE_REACTIVE_POWER_FOR_MINUS_EQ_READ()  0.0
+#define LCD_FIRST_THE_ACTIVE_POWER_FOR_PLUS_EP_READ()     APP_Get_Active_Power_Total_For_Plus_Ep()
+#define LCD_FIRST_THE_ACTIVE_POWER_FOR_MINUS_EP_READ()    APP_Get_Active_Power_Total_For_minus_Ep()
+#define LCD_FIRST_THE_REACTIVE_POWER_FOR_PLUS_EQ_READ()   APP_Get_Active_Power_Total_For_Plus_Eq()
+#define LCD_FIRST_THE_REACTIVE_POWER_FOR_MINUS_EQ_READ()  APP_Get_Active_Power_Total_For_minus_Eq()
 #define LCD_FIRST_LINE_CURRENT_FOR_IA_READ()   (PROTECTION_CT_K * LINE_CURRENT_FOR_IA_READ())
 #define LCD_FIRST_LINE_CURRENT_FOR_IB_READ()   (PROTECTION_CT_K * LINE_CURRENT_FOR_IB_READ())
 #define LCD_FIRST_LINE_CURRENT_FOR_IC_READ()   (PROTECTION_CT_K * LINE_CURRENT_FOR_IC_READ())
@@ -57,13 +57,13 @@ static uint32_t lcd_flush_timer_cur = 0;
 #define LCD_FIRST_PHASE_VOLTAGE_FOR_UAB_READ()   (GERNARATE_PT_K * PHASE_VOLTAGE_FOR_UAB_READ())
 #define LCD_FIRST_PHASE_VOLTAGE_FOR_UBC_READ()   (GERNARATE_PT_K * PHASE_VOLTAGE_FOR_UBC_READ())
 #define LCD_FIRST_PHASE_VOLTAGE_FOR_UCA_READ()   (GERNARATE_PT_K * PHASE_VOLTAGE_FOR_UCA_READ())
-#define LCD_FIRST_THE_TOTAL_ACTIVE_POWER_FOR_PS_READ()   0.0
-#define LCD_FIRST_THE_TOTAL_REACTIVE_POWER_FOR_QS_READ()   0.0
+#define LCD_FIRST_THE_TOTAL_ACTIVE_POWER_FOR_PS_READ()   (APP_Get_Active_Power_Total() / 1000.0)
+#define LCD_FIRST_THE_TOTAL_REACTIVE_POWER_FOR_QS_READ()   (APP_Get_Reactive_Power_Total() / 1000.0)
 #define LCD_FIRST_THE_ANGLE_FOR_UAUB_READ()   APP_Get_Phase_Uab()
 #define LCD_FIRST_THE_ANGLE_FOR_UBUC_READ()   APP_Get_Phase_Ubc()
 #define LCD_FIRST_THE_ANGLE_FOR_UCUA_READ()   APP_Get_Phase_Uca()
 #define LCD_FIRST_THE_ANGLE_FOR_UABIA_READ()   APP_Get_Phase_UabIa()
-#define LCD_FIRST_THE_ANGLE_FOR_UCBIC_READ()   0.0
+#define LCD_FIRST_THE_ANGLE_FOR_UCBIC_READ()   APP_Get_Phase_UcbIc()
 #define LCD_FIRST_THE_ANGLE_FOR_UOIO_READ()   0.0
 #define LCD_FIRST_THE_ANGLE_FOR_IAIB_READ()   0.0
 #define LCD_FIRST_THE_ANGLE_FOR_IBIC_READ()   0.0
@@ -485,7 +485,8 @@ struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_signal, uin
 			msg_lock_from_env_set(0);//unlock the msg
         }
 
-
+        float32 total_reactive_Ps_pwr = 0;
+        float32 total_reactive_Qs_pwr = 0;
 		switch(msg_storage)
 		{
 			case	LCD_FLUSH_SCREEN_IND:
@@ -659,7 +660,7 @@ struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_signal, uin
 						LCD_ShowEnglish_garland(24, 16, my_char_P, 1);
 						LCD_ShowEnglish_garland(30, 16, my_char_s, 1);
 						LCD_ShowEnglish_garland(36, 16, my_amount,1);
-                        float32 total_reactive_Ps_pwr = THE_TOTAL_ACTIVE_POWER_FOR_PS_READ();
+                        total_reactive_Ps_pwr = THE_TOTAL_ACTIVE_POWER_FOR_PS_READ();
                         if(total_reactive_Ps_pwr < 0)
                         {
                             LCD_ShowNum_garland(43, 16, jianhao_char,5);
@@ -680,7 +681,7 @@ struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_signal, uin
                         LCD_ShowEnglish_garland(24, 28, my_char_Q, 1);
 						LCD_ShowEnglish_garland(30, 28, my_char_s, 1);
 						LCD_ShowEnglish_garland(36, 28, my_amount,1);
-                        float32 total_reactive_Qs_pwr = THE_TOTAL_REACTIVE_POWER_FOR_QS_READ();
+                        total_reactive_Qs_pwr = THE_TOTAL_REACTIVE_POWER_FOR_QS_READ();
                         if(total_reactive_Qs_pwr < 0)
                         {
                             LCD_ShowNum_garland(43, 28, jianhao_char,5);

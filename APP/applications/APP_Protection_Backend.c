@@ -46,6 +46,7 @@ const float hanning_win_table[256] = {
 
 static APP_Protection_Backend_t APP_Protection_Backend_Obj;
 static APP_Protection_Backend_t *pBk = &APP_Protection_Backend_Obj;
+volatile uint32_t DMA_Time_Record_Ms = 0;
 static SemaphoreHandle_t g_relay_sem = NULL;
 
 static uint8_t symmetric_three_phase_circuit_ind = false;
@@ -299,6 +300,26 @@ float32 APP_Get_Phase_UabIa(void)
 													(abs_phase * 180 / PI));
     return (abs_phase * 180 / PI);
 }
+
+/**
+ * @brief 获取AB相电压和A相电流的相位差
+ * 
+ * @return float32  ，单位：度
+ */
+float32 APP_Get_Phase_UcbIc(void)
+{
+    float32 Uc_phase_par = APP_Get_Phase_Uc();
+    float32 Ub_phase_par = APP_Get_Phase_Ub();
+    float32 Ucb_phase_par = Ub_phase_par - Uc_phase_par;
+    // float32 Uab_phase_par = APP_Get_Phase_Uab();
+    float32 Ic_phase_par = APP_Get_Phase_Ic();
+
+    float32 abs_phase = ((Ic_phase_par - Ucb_phase_par) < 0) ? (2*PI+(Ic_phase_par - Ucb_phase_par)) : (Ic_phase_par - Ucb_phase_par);
+    Log_d("UcaIa raw=%.4f abs=%.4f result=%.4f \r\n", (Ic_phase_par - Ucb_phase_par), abs_phase, 
+													(abs_phase * 180 / PI));
+    return (abs_phase * 180 / PI);
+}
+
 
 /**
  * @brief 获取A相的功率因数
@@ -615,6 +636,26 @@ float32 APP_Get_Reactive_Power_Total(void)
 float32 APP_Get_Apparent_Power_Total(void)
 {
     return pBk->value.apparent_power_a + pBk->value.apparent_power_b + pBk->value.apparent_power_c;     
+}
+
+float32 APP_Get_Active_Power_Total_For_Plus_Ep(void)
+{
+    return pBk->value.plus_Ep;     
+}
+
+float32 APP_Get_Active_Power_Total_For_minus_Ep(void)
+{
+    return pBk->value.minus_Ep;     
+}
+
+float32 APP_Get_Active_Power_Total_For_Plus_Eq(void)
+{
+    return pBk->value.plus_Eq;     
+}
+
+float32 APP_Get_Active_Power_Total_For_minus_Eq(void)
+{
+    return pBk->value.minus_Eq;     
 }
 
 /**
@@ -1678,6 +1719,24 @@ void APP_FFT_Handler(void)
     Log_d("HE! Uc Ic END !\r\n");
 
     tick2 = APP_Get_System_Ms();
+    /* calculate the power ±Eq and ±Ep */
+    if(APP_Get_Active_Power_Total() > 0)
+    {
+        pBk->value.plus_Ep += APP_Get_Active_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
+    }
+    else
+    {
+        pBk->value.minus_Ep += APP_Get_Active_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
+    }
+    if(APP_Get_Reactive_Power_Total() > 0)
+    {
+        pBk->value.plus_Eq += APP_Get_Reactive_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
+    }
+    else
+    {
+        pBk->value.minus_Eq += APP_Get_Reactive_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
+    }
+
     fft_time_cost = tick2 - tick1;
     Log_d("Time Cost = %d\n", fft_time_cost);
     Log_d("C_IA[%.4f], C_IB[%.4f], C_IC[%.4f], C_IOUT[%.4f]\n", 
@@ -1759,6 +1818,12 @@ int APP_Protection_Backend_Init(void)
     APP_Relay_Force_Switch_Off();
 
     pBk->fft_enable = false;
+
+    pBk->value.minus_Eq = 0;
+    pBk->value.plus_Eq = 0;
+    pBk->value.minus_Ep = 0;
+    pBk->value.plus_Ep = 0;
+    DMA_Time_Record_Ms = 0;
 
     for (i = 0; i < APP_RMT_CHAN_MAX; i++) {
         pBk->remote_signal_di_tick_list[i] = APP_Get_System_Ms();
