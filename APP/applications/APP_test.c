@@ -210,6 +210,9 @@ void key_state_process(uint8_t key_state)
             case KEY_PLUS:
                 msg_send_to_lcd_layer(KEY_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_PLUS);
                 break;
+            case KEY_MINUS:
+                msg_send_to_lcd_layer(KEY_LAYER, LCD_LAYER, MSG_AVAILABLE, KEY_MINUS);
+                break;
             default:
                 break;
         }

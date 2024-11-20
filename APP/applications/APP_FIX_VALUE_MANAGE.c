@@ -357,9 +357,15 @@ struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uin
 
 		switch(msg_context)
 		{
-			case	0xff:
 			case    KEY_UP:
-    		case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	0xff:
+			case    KEY_PLUS:
+    		case	KEY_MINUS:		
     		case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -854,7 +860,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 				case SECOND_IN_OUT:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -865,7 +871,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -909,7 +915,9 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -943,9 +951,15 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 		//chinese_menu_idx  中文目录的索引下标
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -1306,7 +1320,7 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 				case SECOND_IN_OUT:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -1317,7 +1331,7 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -1361,7 +1375,9 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -1393,9 +1409,16 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
+
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -1711,7 +1734,7 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 				case FUNCTION_IN_OUT:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -1722,7 +1745,7 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -1766,7 +1789,9 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -1791,9 +1816,15 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -2060,7 +2091,7 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 				case FUNCTION_IN_OUT:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -2071,7 +2102,7 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -2115,7 +2146,9 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -2140,9 +2173,15 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -2416,7 +2455,7 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 				case FUNCTION_IN_OUT:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -2427,7 +2466,7 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -2471,7 +2510,9 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -2496,9 +2537,15 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -2775,7 +2822,7 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 				case FUNCTION_IN_OUT:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -2786,7 +2833,7 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -2830,7 +2877,9 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -2855,9 +2904,15 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -3130,7 +3185,7 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 				case FUNCTION_IN_OUT:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -3141,7 +3196,7 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -3185,7 +3240,9 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -3210,9 +3267,15 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -3511,7 +3574,7 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 				case TRIPPING_IN_OUT:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -3522,7 +3585,7 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -3566,7 +3629,9 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -3597,9 +3662,15 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -3931,7 +4002,7 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 				case DISCONNECT_IN_OUT:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -3942,7 +4013,7 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -3986,7 +4057,9 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -4014,9 +4087,15 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -4297,7 +4376,7 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 				case FUNCTION_IN_OUT:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -4308,7 +4387,7 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -4352,7 +4431,9 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -4377,9 +4458,15 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -4647,7 +4734,7 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 				case FUNCTION_IN_OUT:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -4658,7 +4745,7 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -4702,7 +4789,9 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -4727,9 +4816,15 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -5010,7 +5105,7 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 				case OVER_SEQUENCE_IN_OUT:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -5021,7 +5116,7 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -5063,9 +5158,15 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -5092,9 +5193,15 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -5389,7 +5496,7 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 				case SYSTEM_IN_OUT:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -5400,7 +5507,7 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -5444,7 +5551,9 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -5471,9 +5580,16 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
+
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -5901,7 +6017,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 				case SWITCH_IN_OUT:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -5912,7 +6028,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -5956,7 +6072,9 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -6014,9 +6132,15 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -6438,7 +6562,7 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 				case FUNCTION_IN_OUT:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -6449,7 +6573,7 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -6493,7 +6617,9 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -6518,9 +6644,15 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
