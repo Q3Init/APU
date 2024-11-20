@@ -254,7 +254,7 @@ uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_
 
 			switch(msg_context)
 			{
-				case    KEY_UP://+
+				case    KEY_PLUS://+
 					if(lcd_password_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 					{
 						lcd_password_num_array[lcd_modify_num_env.limited_index]++;
@@ -265,7 +265,7 @@ uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_
 					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 					msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 					break;
-				case	KEY_DOWN://-
+				case	KEY_MINUS://-
 					if(lcd_password_num_array[lcd_modify_num_env.limited_index]>0)
 					{
 						lcd_password_num_array[lcd_modify_num_env.limited_index]--;
@@ -304,8 +304,8 @@ uint8_t menu_user_password_authentication(uint8_t msg_process_signal_tag, uint8_
 			switch(msg_storage)
 			{
 				case	LCD_FLUSH_SCREEN_IND:
-				case    KEY_UP:
-				case	KEY_DOWN:		
+				case    KEY_MINUS:
+				case	KEY_PLUS:		
 				case	KEY_LEFT:
 				case	KEY_RIGHT:
 					

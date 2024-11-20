@@ -3531,7 +3531,7 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 				case ZERO_CURRENT_PHASE_VALUE:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -3542,7 +3542,7 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -3586,7 +3586,9 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case	KEY_MINUS:
+			case	KEY_PLUS:
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -3671,9 +3673,15 @@ struct menu_event_tag * parameter_norminal_value_cfg_handler(uint8_t msg_process
 
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_MINUS:
+			case	KEY_PLUS:	
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
