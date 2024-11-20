@@ -491,7 +491,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 				case LINGXU_2:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -502,7 +502,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -546,7 +546,9 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -586,9 +588,15 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 		//chinese_menu_idx  中文目录的索引下标
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -945,7 +953,7 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
 				case KAIGUANG_WEIZHI:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -956,7 +964,7 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -1000,7 +1008,9 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -1028,9 +1038,15 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
 		//chinese_menu_idx  中文目录的索引下标
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -1345,7 +1361,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 				case LUOJI:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -1356,7 +1372,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -1400,7 +1416,9 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -1425,9 +1443,15 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 		//chinese_menu_idx  中文目录的索引下标
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -1679,7 +1703,7 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 				case OUTPUT_LUOJI:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -1690,7 +1714,7 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -1733,8 +1757,8 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 		switch(msg_storage)
 		{
 			case	LCD_FLUSH_SCREEN_IND:
-			case    KEY_UP:
-			case	KEY_DOWN:		
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -1760,8 +1784,8 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 		switch(msg_storage)
 		{
 			case	LCD_FLUSH_SCREEN_IND:
-			case    KEY_UP:
-			case	KEY_DOWN:		
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -2167,7 +2191,7 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 				case OUTPUT_LUOJI:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -2178,7 +2202,7 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -2222,8 +2246,8 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 		switch(msg_storage)
 		{
 			case	LCD_FLUSH_SCREEN_IND:
-			case    KEY_UP:
-			case	KEY_DOWN:		
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -2277,9 +2301,15 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 		//chinese_menu_idx  中文目录的索引下标
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -2574,8 +2604,8 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 // 		switch(msg_context)
 // 		{
 // 			case	0xff:
-// 			case    KEY_UP:
-//     		case	KEY_DOWN:		
+// 			case    KEY_PLUS:
+//     		case	KEY_MINUS:		
 //     		case	KEY_LEFT:
 // 			case	KEY_RIGHT:
 // 				clear_screen();
@@ -2656,7 +2686,7 @@ struct menu_event_tag * communication_setting_handler(uint8_t msg_process_signal
         {
 			Log_d("\r\n    \r\n");
             clear_screen();
-			msg_context = 0xff;
+			msg_context = LCD_FLUSH_SCREEN_IND;
             // LCD_ShowString(24,30,"LCD_W:",16);
             // LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
@@ -2664,9 +2694,15 @@ struct menu_event_tag * communication_setting_handler(uint8_t msg_process_signal
 
 		switch(msg_context)
 		{
-			case	0xff:
 			case    KEY_UP:
-    		case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+    		case	KEY_MINUS:		
     		case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -2894,7 +2930,7 @@ struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint
 				case BIANHUA_YUZHI:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -2905,7 +2941,7 @@ struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -2949,7 +2985,9 @@ struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -2971,9 +3009,15 @@ struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint
 		//chinese_menu_idx  中文目录的索引下标
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -3259,7 +3303,7 @@ struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint
 				case SOE_FASONG:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -3270,7 +3314,7 @@ struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -3314,7 +3358,9 @@ struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -3344,9 +3390,15 @@ struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint
 		//chinese_menu_idx  中文目录的索引下标
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -3512,7 +3564,7 @@ struct menu_event_tag * recover_home_setting_handler(uint8_t msg_process_signal,
         {
 			Log_d("\r\n    \r\n");
             clear_screen();
-			msg_context = 0xff;
+			msg_context = LCD_FLUSH_SCREEN_IND;
             // LCD_ShowString(24,30,"LCD_W:",16);
             // LCD_ShowIntNum(72,30,4,1,16);
 			msg_lock_from_env_set(0);//unlock the msg
@@ -3520,9 +3572,15 @@ struct menu_event_tag * recover_home_setting_handler(uint8_t msg_process_signal,
 
 		switch(msg_context)
 		{
-			case	0xff:
 			case    KEY_UP:
-    		case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+    		case	KEY_MINUS:		
     		case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -3759,7 +3817,7 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 				case XIAODOU_YANSHI:
 					switch(msg_context)
 					{	uint8_t new_num;
-						case    KEY_UP://+
+						case    KEY_PLUS://+
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
@@ -3770,7 +3828,7 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
 							break;
-						case	KEY_DOWN://-
+						case	KEY_MINUS://-
 							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
 							{
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
@@ -3814,7 +3872,9 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 		{
 			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				switch(chinese_menu_idx)
@@ -3832,9 +3892,15 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 		//chinese_menu_idx  中文目录的索引下标
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-			case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:		
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -4098,9 +4164,15 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 		uint8_t time_col = 0;
 		switch(msg_storage)
 		{
-			case	LCD_FLUSH_SCREEN_IND:
 			case    KEY_UP:
-    		case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+    		case	KEY_MINUS:		
     		case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
@@ -4222,8 +4294,8 @@ RTC_date user_time_set_operation_first(uint8_t msg_context, uint8_t *num_idx_flu
 	uint8_t judge = false;
 	switch(msg_context)
 	{
-		case    KEY_UP://+
-		case	KEY_DOWN://-
+		case    KEY_PLUS://+
+		case	KEY_MINUS://-
 		case	KEY_LEFT:
 		case	KEY_RIGHT:
 			judge = true;
@@ -4315,13 +4387,13 @@ void user_time_set_operation_second(uint8_t msg_context, uint8_t * date_array_pt
 
 	switch(msg_context)
 	{
-		case    KEY_UP://+
+		case    KEY_PLUS://+
 			if(date_array_ptr[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
 			{
 				date_array_ptr[lcd_modify_num_env.limited_index]++;
 			}
 			break;
-		case	KEY_DOWN://-
+		case	KEY_MINUS://-
 			if(date_array_ptr[lcd_modify_num_env.limited_index]>0)
 			{
 				date_array_ptr[lcd_modify_num_env.limited_index]--;
