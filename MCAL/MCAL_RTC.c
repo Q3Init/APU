@@ -170,7 +170,6 @@ const RTC_date* rtc_get()
                 }
                 else
                 {
-                    index++;
                     break;
                 }
             }
