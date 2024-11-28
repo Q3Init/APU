@@ -191,8 +191,8 @@ uint8 APP_Get_On_Volt_Switch_On_State(void)
 #ifdef APP_PRO_DEBUG_TEST
     return app_pro_management_switch_test[15];;
 #else
-    return 0;
-    // return pMnt->state.on_volt_switch_on_state;//TODO
+    // return 0;
+    return pMnt->state.on_volt_switch_on_state;
 #endif
 }
 
