@@ -427,7 +427,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
           .speed = GPIO_SPEED_50MHz
           }
         },
-        {/* GPIOC PIN_6 : I/O */
+        {/* GPIOC PIN_6 : 按键-return */
          .GPIO = GPIOC,
          .GPIO_level = STD_HIGH,
          .APB1_Clock = STD_OFF,
@@ -627,7 +627,7 @@ const GPIOSignalsCfg gpioSignalsCfgTable[GPIO_SIGNALS_CNT] =
           .speed = GPIO_SPEED_50MHz
           }
         },
-        {/* GPIOD PIN_8 : 按键——return */
+        {/* GPIOD PIN_8 : 按键——cancel */
          .GPIO = GPIOD,
          .GPIO_level = STD_HIGH,
          .APB1_Clock = STD_OFF,

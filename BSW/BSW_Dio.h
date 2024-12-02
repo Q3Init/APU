@@ -76,8 +76,8 @@
 #define DIO_PORT_Ub_m          GPIOC
 #define DIO_PIN_Ub_m           GPIO_PIN_4
 
-#define DIO_PORT_cancel        GPIOC
-#define DIO_PIN_cancel         GPIO_PIN_5
+#define DIO_PORT_return        GPIOC
+#define DIO_PIN_return         GPIO_PIN_6
 
 #define DIO_PORT_DI1_m         GPIOC
 #define DIO_PIN_DI1_m          GPIO_PIN_11
@@ -119,8 +119,8 @@
 #define DIO_PORT_DI10_m        GPIOD
 #define DIO_PIN_DI10_m         GPIO_PIN_7
 
-#define DIO_PORT_return        GPIOD
-#define DIO_PIN_return         GPIO_PIN_8
+#define DIO_PORT_cancel_fugui  GPIOD
+#define DIO_PIN_cancel_fugui   GPIO_PIN_8
 
 #define DIO_PORT_enter         GPIOD
 #define DIO_PIN_enter          GPIO_PIN_9
