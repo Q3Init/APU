@@ -1042,7 +1042,7 @@ void APP_Relay_Idle_Handler(void)
     static uint32 relay_tick[10];
     /* HC Relay out time */
     if (APP_Relay_Get_State_Group_1()) {
-        if ((APP_Get_System_Ms() - relay_tick[0]) >= (app_parameter_read_Closing_exit_time() / 10)) {
+        if ((APP_Get_System_Ms() - relay_tick[0]) >= (app_parameter_read_Closing_exit_time())) {
             APP_Relay_Control(APP_RELAY_CHANNEL_HC, false);
         }
     } else {
@@ -1050,7 +1050,7 @@ void APP_Relay_Idle_Handler(void)
     }
     /* TQ Relay out time */
     if (APP_Relay_Get_State_Group_2()) {
-        if ((APP_Get_System_Ms() - relay_tick[1]) >= (app_parameter_read_Trip_exit_time() / 10)) {
+        if ((APP_Get_System_Ms() - relay_tick[1]) >= (app_parameter_read_Trip_exit_time())) {
             APP_Relay_Control(APP_RELAY_CHANNEL_TQ, false);
         }
     } else {
@@ -1058,7 +1058,7 @@ void APP_Relay_Idle_Handler(void)
     }
     /* D01 Relay out time */
     if (APP_Relay_Get_State_Group_3()) {
-        if ((APP_Get_System_Ms() - relay_tick[2]) >= (app_parameter_read_D01_exit_time() / 10)) {
+        if ((APP_Get_System_Ms() - relay_tick[2]) >= (app_parameter_read_D01_exit_time())) {
             APP_Relay_Control(APP_RELAY_CHANNEL_D01, false);
         }
     } else {
@@ -1066,7 +1066,7 @@ void APP_Relay_Idle_Handler(void)
     }
     /* D02 Relay out time */
     if (APP_Relay_Get_State_Group_4()) {
-        if ((APP_Get_System_Ms() - relay_tick[3]) >= (app_parameter_read_D02_exit_time() / 10)) {
+        if ((APP_Get_System_Ms() - relay_tick[3]) >= (app_parameter_read_D02_exit_time())) {
             APP_Relay_Control(APP_RELAY_CHANNEL_D02, false);
         }
     } else {
@@ -1074,7 +1074,7 @@ void APP_Relay_Idle_Handler(void)
     }
     /* D03 Relay out time */
     if (APP_Relay_Get_State_Group_5()) {
-        if ((APP_Get_System_Ms() - relay_tick[4]) >= (app_parameter_read_D03_exit_time() / 10)) {
+        if ((APP_Get_System_Ms() - relay_tick[4]) >= (app_parameter_read_D03_exit_time())) {
             APP_Relay_Control(APP_RELAY_CHANNEL_D03, false);
         }
     } else {
@@ -1082,7 +1082,7 @@ void APP_Relay_Idle_Handler(void)
     }
     /* D04 Relay out time */
     if (APP_Relay_Get_State_Group_6()) {
-        if ((APP_Get_System_Ms() - relay_tick[5]) >= (app_parameter_read_D04_exit_time() / 10)) {
+        if ((APP_Get_System_Ms() - relay_tick[5]) >= (app_parameter_read_D04_exit_time())) {
             APP_Relay_Control(APP_RELAY_CHANNEL_D04, false);
         }
     } else {
@@ -1090,7 +1090,7 @@ void APP_Relay_Idle_Handler(void)
     }
     /* D04 Relay out time */
     if (APP_Relay_Get_State_Group_7()) {
-        if ((APP_Get_System_Ms() - relay_tick[6]) >= (app_parameter_read_D05_exit_time() / 10)) {
+        if ((APP_Get_System_Ms() - relay_tick[6]) >= (app_parameter_read_D05_exit_time())) {
             APP_Relay_Control(APP_RELAY_CHANNEL_D05, false);
         }
     } else {
@@ -1098,7 +1098,7 @@ void APP_Relay_Idle_Handler(void)
     }
     /* D05 Relay out time */
     if (APP_Relay_Get_State_Group_8()) {
-        if ((APP_Get_System_Ms() - relay_tick[7]) >= (app_parameter_read_D06_exit_time() / 10)) {
+        if ((APP_Get_System_Ms() - relay_tick[7]) >= (app_parameter_read_D06_exit_time())) {
             APP_Relay_Control(APP_RELAY_CHANNEL_D06, false);
         }
     } else {
@@ -1106,7 +1106,7 @@ void APP_Relay_Idle_Handler(void)
     }
     /* D04 Relay out time */
     if (APP_Relay_Get_State_Group_9()) {
-        if ((APP_Get_System_Ms() - relay_tick[8]) >= (app_parameter_read_D07_exit_time() / 10)) {
+        if ((APP_Get_System_Ms() - relay_tick[8]) >= (app_parameter_read_D07_exit_time())) {
             APP_Relay_Control(APP_RELAY_CHANNEL_D07, false);
         }
     } else {
@@ -1114,7 +1114,7 @@ void APP_Relay_Idle_Handler(void)
     }
     /* D04 Relay out time */
     if (APP_Relay_Get_State_Group_10()) {
-        if ((APP_Get_System_Ms() - relay_tick[9]) >= (app_parameter_read_D08_exit_time() / 10)) {
+        if ((APP_Get_System_Ms() - relay_tick[9]) >= (app_parameter_read_D08_exit_time())) {
             APP_Relay_Control(APP_RELAY_CHANNEL_D08, false);
         }
     } else {
