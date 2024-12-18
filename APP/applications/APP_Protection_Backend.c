@@ -1180,6 +1180,11 @@ static boolean APP_Linear_Solution(float32 x1, float32 y1, float32 x2, float32 y
 	return true;
 }
 
+/*
+ * @brief 在出厂时获取到的较准raw data里，寻求跟val之间的最大正偏差和最大负偏差值（返回值为正）。
+ *          coeff_value是出厂时，本地设备通过IO获取到的实际采样值，coeff_option为标准仪器测出来的理论实际值（需要自己配置）
+ * @return 返回出厂时获取到的较准raw data的实例，其实返回的是一个实数域的一个坐标点索引,背后的坐标为(coeff_value, coeff_option)
+*/
 static int APP_Find_Coef_Close_Value(float32 val, uint8 down_flag, APP_Coeff_t *array, uint8 num)
 {
     int i = 0, inx = 0;
@@ -1188,6 +1193,7 @@ static int APP_Find_Coef_Close_Value(float32 val, uint8 down_flag, APP_Coeff_t *
     if (array == NULL)
         return -1;
 
+    //根据down_flag方向，以val为中心点，往大于val和小于val的方向分别寻找到每个方向的最大差值所在的数据实例（跟正常时捕获的校准值比较，一共10组）
     for (i = 0, inx = -1; i < num; i++) {
         if (!ISZERO_FLOAT(array[i].coeff_value) || !ISZERO_FLOAT(array[i].coeff_option)) {
             if (down_flag) {
@@ -1223,6 +1229,7 @@ static int APP_Find_Coef_Close_Value(float32 val, uint8 down_flag, APP_Coeff_t *
     return inx;
 }
 
+//cali_max是 出厂较准采样的raw data数量
 static float32 APP_Calibration_Conversion(APP_Coeff_t *p_coeff, uint8 cali_max, float32 src_data)
 {
     float32 x1, x2;
@@ -1233,11 +1240,14 @@ static float32 APP_Calibration_Conversion(APP_Coeff_t *p_coeff, uint8 cali_max, 
     if (p_coeff == NULL)
         return src_data;
 
-    inx_l = APP_Find_Coef_Close_Value(src_data, 1, p_coeff, cali_max);
-    inx_h = APP_Find_Coef_Close_Value(src_data, 0, p_coeff, cali_max);
+    //寻找最大正/负偏差所在的 出厂raw data对应的那一例数据(包含了设备实际采样值coeff_value和 理论对应的标称值coeff_option)
+    inx_l = APP_Find_Coef_Close_Value(src_data, 1, p_coeff, cali_max);//最大负偏差值所在的  出厂raw data寻找
+    inx_h = APP_Find_Coef_Close_Value(src_data, 0, p_coeff, cali_max);//最大正偏差值所在的  出厂raw data寻找
+
     if ((-1 == inx_l) && ((-1 == inx_h))) {
         result_value = src_data;
     } else {
+        //在较准raw data里找到了上/下最大的差值
         if (-1 == inx_l) {
             inx_l = inx_h;
             inx_h = inx_l + 1;
@@ -1247,8 +1257,13 @@ static float32 APP_Calibration_Conversion(APP_Coeff_t *p_coeff, uint8 cali_max, 
         }
 
         if (inx_l == inx_h) {
+            //如果最大正偏差和最大负偏差都是同一个 出厂较准采样的raw data，
+            //那就选择该例raw data里对应的理论标准值coeff_option作为返回结果
             result_value = p_coeff[inx_l].coeff_option;
         } else {
+            //如果最大正偏差和最大负偏差 并不是同一个 出厂较准采样的raw data，
+            //那就选择它们对应的raw data里对应的理论标准值coeff_option作为y
+            //实际采样值coeff_value为x，采样一阶线性拟合，求出一阶表达式，代入src_data（作为x），求出y（也即result_value）
             x1 = p_coeff[inx_l].coeff_value;
             y1 = p_coeff[inx_l].coeff_option;
             
@@ -1536,7 +1551,7 @@ void APP_RFFT_Voltage_Calc(APP_Sample_Adc_Ch_e ch, float32 *p_volt, float32 *p_f
 
     APP_RFFT_Common_Calc(ch, &amplitude, &freq, &harmonic, &phase);
     *p_freq = APP_Calibration_Conversion(pBk->freq_cali, FREQ_CALI_COUNT_MAX, freq);
-    *p_phase = APP_Calibration_Conversion(pBk->freq_cali, PHASE_CALI_COUNT_MAX, phase);
+    *p_phase = APP_Calibration_Conversion(pBk->freq_cali, PHASE_CALI_COUNT_MAX, phase);//这里pBk->freq_cali入参有问题
     *p_volt = APP_Calibration_Conversion(pBk->volt_cali, VOLT_CALI_COUNT_MAX, amplitude);
     *p_harmonic = harmonic;
     // *p_volt = *p_volt/(LINE_VOLTAGE_RATIO*1.0);//换算成相对零线的相电压
