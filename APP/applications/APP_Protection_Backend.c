@@ -17,6 +17,7 @@
 #include "arm_math.h"
 #include "Lib_Log_Util.h"
 #include "MCAL_APM32.h"
+#include "APP_Parameter.h"
 
 // #define PROJECT_BUILD_TIME      __DATE__ " " __TIME__
 // #pragma message("Time:["PROJECT_BUILD_TIME"]") 
@@ -26,6 +27,11 @@
 #define SINGLE_PHASE_INTFACE 1
 
 #define FFT_HANNING_WIN_USED    
+
+#define CALIBRATION_OFFSET_RANGE_FOR_VOLTAGE    20.0 /* unit:V, type:float32 */
+#define CALIBRATION_OFFSET_RANGE_FOR_CURRENT    0.2 /* unit:A, type:float32 */
+#define CALIBRATION_OFFSET_RANGE_FOR_FREQUENCY    5.0 /* unit:Hz, type:float32 */
+
 
 #ifdef FFT_HANNING_WIN_USED
 //256点汉宁窗, 0.5+0.5cos(2*pi*n/(M-1))
@@ -50,6 +56,10 @@ volatile uint32_t DMA_Time_Record_Ms = 0;
 static SemaphoreHandle_t g_relay_sem = NULL;
 
 static uint8_t symmetric_three_phase_circuit_ind = false;
+
+float32 current_cali_coffe_option[VOLT_CALI_COUNT_MAX];//TODO
+float32 voltage_cali_coffe_option[VOLT_CALI_COUNT_MAX];//TODO
+float32 frequency_cali_coffe_option[VOLT_CALI_COUNT_MAX];//TODO
 
 /**
  * @brief 系统时间
@@ -1230,12 +1240,13 @@ static int APP_Find_Coef_Close_Value(float32 val, uint8 down_flag, APP_Coeff_t *
 }
 
 //cali_max是 出厂较准采样的raw data数量
-static float32 APP_Calibration_Conversion(APP_Coeff_t *p_coeff, uint8 cali_max, float32 src_data)
+static float32 APP_Calibration_Conversion(APP_Coeff_t *p_coeff, uint8 cali_max, float32 src_data, uint8_t convert_type)
 {
     float32 x1, x2;
     float32 y1, y2;
     float32 result_value = 0.00;
     int inx_l = 0, inx_h = 0;
+    // uint8_t cali_sanity_check = false;
 
     if (p_coeff == NULL)
         return src_data;
@@ -1244,37 +1255,67 @@ static float32 APP_Calibration_Conversion(APP_Coeff_t *p_coeff, uint8 cali_max, 
     inx_l = APP_Find_Coef_Close_Value(src_data, 1, p_coeff, cali_max);//最大负偏差值所在的  出厂raw data寻找
     inx_h = APP_Find_Coef_Close_Value(src_data, 0, p_coeff, cali_max);//最大正偏差值所在的  出厂raw data寻找
 
-    if ((-1 == inx_l) && ((-1 == inx_h))) {
-        result_value = src_data;
-    } else {
-        //在较准raw data里找到了上/下最大的差值
-        if (-1 == inx_l) {
-            inx_l = inx_h;
-            inx_h = inx_l + 1;
-        } else if (-1 == inx_h) {
-            inx_h = inx_l;
-            inx_l = inx_h - 1;
-        }
-
-        if (inx_l == inx_h) {
-            //如果最大正偏差和最大负偏差都是同一个 出厂较准采样的raw data，
-            //那就选择该例raw data里对应的理论标准值coeff_option作为返回结果
-            result_value = p_coeff[inx_l].coeff_option;
+    do {
+        if ((-1 == inx_l) && ((-1 == inx_h))) {
+            result_value = src_data;
         } else {
-            //如果最大正偏差和最大负偏差 并不是同一个 出厂较准采样的raw data，
-            //那就选择它们对应的raw data里对应的理论标准值coeff_option作为y
-            //实际采样值coeff_value为x，采样一阶线性拟合，求出一阶表达式，代入src_data（作为x），求出y（也即result_value）
-            x1 = p_coeff[inx_l].coeff_value;
-            y1 = p_coeff[inx_l].coeff_option;
-            
-            x2 = p_coeff[inx_h].coeff_value;
-            y2 = p_coeff[inx_h].coeff_option;
-            
-            if (false == APP_Linear_Solution(x1, y1, x2, y2, src_data, &result_value)) {
-                result_value = src_data;
+            //在较准raw data里找到了上/下最大的差值
+            if (-1 == inx_l) {
+                inx_l = inx_h;
+                inx_h = inx_l + 1;
+            } else if (-1 == inx_h) {
+                inx_h = inx_l;
+                inx_l = inx_h - 1;
+            }
+
+            // switch(convert_type)
+            // {
+            //     case CURRENT_CALI_CONVERT_TYPE:
+            //         if(abs((p_coeff[inx_l].coeff_option - src_data)) < (float32)CALIBRATION_OFFSET_RANGE_FOR_CURRENT)
+            //         {
+            //             cali_sanity_check = true;
+            //         }
+            //         break;
+            //     case VOLTAGE_CALI_CONVERT_TYPE:
+            //         if(abs((p_coeff[inx_l].coeff_option - src_data)) < (float32)CALIBRATION_OFFSET_RANGE_FOR_VOLTAGE)
+            //         {
+            //             cali_sanity_check = true;
+            //         }
+            //         break;
+            //     case PHASE_CALI_CONVERT_TYPE:
+            //     default:
+            //         cali_sanity_check = false;
+            //         break;
+            // }
+
+            // if(cali_sanity_check == false)
+            // {
+            //     //如果实际测量值已经超出了较准的偏差范围，那就不进行较准，直接返回实际IC的采样值
+            //     result_value = src_data;
+            //     break;
+            // }
+
+            if (inx_l == inx_h) {
+                //如果最大正偏差和最大负偏差都是同一个 出厂较准采样的raw data，
+                //那就选择该例raw data里对应的理论标准值coeff_option作为返回结果
+                result_value = p_coeff[inx_l].coeff_option;
+            } else {
+                //如果最大正偏差和最大负偏差 并不是同一个 出厂较准采样的raw data，
+                //那就选择它们对应的raw data里对应的理论标准值coeff_option作为y
+                //实际采样值coeff_value为x，采样一阶线性拟合，求出一阶表达式，代入src_data（作为x），求出y（也即result_value）
+                x1 = p_coeff[inx_l].coeff_value;
+                y1 = p_coeff[inx_l].coeff_option;
+                
+                x2 = p_coeff[inx_h].coeff_value;
+                y2 = p_coeff[inx_h].coeff_option;
+                
+                if (false == APP_Linear_Solution(x1, y1, x2, y2, src_data, &result_value)) {
+                    result_value = src_data;
+                }
             }
         }
-    }
+
+    }while(false);
 
     return result_value;
 }
@@ -1534,11 +1575,11 @@ void APP_RFFT_Current_Calc(APP_Sample_Adc_Ch_e ch, float32 *p_current, float32 *
 
     APP_RFFT_Common_Calc(ch, &amplitude, NULL, NULL, &phase);
     if (p_current != NULL) {
-        *p_current = APP_Calibration_Conversion(pBk->current_cali, CURRENT_CALI_COUNT_MAX, amplitude);
+        *p_current = APP_Calibration_Conversion(pBk->current_cali, CURRENT_CALI_COUNT_MAX, amplitude, CURRENT_CALI_CONVERT_TYPE);
         *p_current = (*p_current) * CURRENT_CONV_MULTIPLE;
     }
     if (p_phase != NULL) {
-        *p_phase = APP_Calibration_Conversion(pBk->freq_cali, PHASE_CALI_COUNT_MAX, phase);
+        *p_phase = APP_Calibration_Conversion(pBk->freq_cali, PHASE_CALI_COUNT_MAX, phase, PHASE_CALI_CONVERT_TYPE);
     }
 }
 
@@ -1550,9 +1591,9 @@ void APP_RFFT_Voltage_Calc(APP_Sample_Adc_Ch_e ch, float32 *p_volt, float32 *p_f
     float32 harmonic = 0.0;
 
     APP_RFFT_Common_Calc(ch, &amplitude, &freq, &harmonic, &phase);
-    *p_freq = APP_Calibration_Conversion(pBk->freq_cali, FREQ_CALI_COUNT_MAX, freq);
-    *p_phase = APP_Calibration_Conversion(pBk->freq_cali, PHASE_CALI_COUNT_MAX, phase);//这里pBk->freq_cali入参有问题
-    *p_volt = APP_Calibration_Conversion(pBk->volt_cali, VOLT_CALI_COUNT_MAX, amplitude);
+    *p_freq = APP_Calibration_Conversion(pBk->freq_cali, FREQ_CALI_COUNT_MAX, freq, FREQUENCY_CALI_CONVERT_TYPE);
+    *p_phase = APP_Calibration_Conversion(NULL, PHASE_CALI_COUNT_MAX, phase, PHASE_CALI_CONVERT_TYPE);
+    *p_volt = APP_Calibration_Conversion(pBk->volt_cali, VOLT_CALI_COUNT_MAX, amplitude, VOLTAGE_CALI_CONVERT_TYPE);
     *p_harmonic = harmonic;
     // *p_volt = *p_volt/(LINE_VOLTAGE_RATIO*1.0);//换算成相对零线的相电压
 }
@@ -1784,6 +1825,126 @@ void APP_Timer_Callback(TimerHandle_t xTimer)
     APP_Remote_Signal_Input_Process();
 }
 
+void APP_voltage_cali_coffe_option_init(uint8_t cali_idx, float32 value)
+{
+    switch(cali_idx)
+    {
+        case 0:
+            VOLTAGE_CALI_0_coeff_value_write(value);
+            break;
+        case 1:
+            VOLTAGE_CALI_1_coeff_value_write(value);
+            break;
+        case 2:
+            VOLTAGE_CALI_2_coeff_value_write(value);
+            break;
+        case 3:
+            VOLTAGE_CALI_3_coeff_value_write(value);
+            break;
+        case 4:
+            VOLTAGE_CALI_4_coeff_value_write(value);
+            break;
+        case 5:
+            VOLTAGE_CALI_5_coeff_value_write(value);
+            break;
+        case 6:
+            VOLTAGE_CALI_6_coeff_value_write(value);
+            break;
+        case 7:
+            VOLTAGE_CALI_7_coeff_value_write(value);
+            break;
+        case 8:
+            VOLTAGE_CALI_8_coeff_value_write(value);
+            break;
+        case 9:
+            VOLTAGE_CALI_9_coeff_value_write(value);
+            break;
+        default:
+            break;
+    }
+}
+
+void APP_current_cali_coffe_option_init(uint8_t cali_idx, float32 value)
+{
+    switch(cali_idx)
+    {
+        case 0:
+            CURRENT_CALI_0_coeff_value_write(value);
+            break;
+        case 1:
+            CURRENT_CALI_1_coeff_value_write(value);
+            break;
+        case 2:
+            CURRENT_CALI_2_coeff_value_write(value);
+            break;
+        case 3:
+            CURRENT_CALI_3_coeff_value_write(value);
+            break;
+        case 4:
+            CURRENT_CALI_4_coeff_value_write(value);
+            break;
+        case 5:
+            CURRENT_CALI_5_coeff_value_write(value);
+            break;
+        case 6:
+            CURRENT_CALI_6_coeff_value_write(value);
+            break;
+        case 7:
+            CURRENT_CALI_7_coeff_value_write(value);
+            break;
+        case 8:
+            CURRENT_CALI_8_coeff_value_write(value);
+            break;
+        case 9:
+            CURRENT_CALI_9_coeff_value_write(value);
+            break;
+        default:
+            break;
+    }
+}
+
+void APP_frequency_cali_coffe_option_init(uint8_t cali_idx, float32 value)
+{
+    switch(cali_idx)
+    {
+        case 0:
+            FREQUENCY_CALI_0_coeff_value_write(value);
+            break;
+        case 1:
+            FREQUENCY_CALI_1_coeff_value_write(value);
+            break;
+        case 2:
+            FREQUENCY_CALI_2_coeff_value_write(value);
+            break;
+        case 3:
+            FREQUENCY_CALI_3_coeff_value_write(value);
+            break;
+        case 4:
+            FREQUENCY_CALI_4_coeff_value_write(value);
+            break;
+        case 5:
+            FREQUENCY_CALI_5_coeff_value_write(value);
+            break;
+        case 6:
+            FREQUENCY_CALI_6_coeff_value_write(value);
+            break;
+        case 7:
+            FREQUENCY_CALI_7_coeff_value_write(value);
+            break;
+        case 8:
+            FREQUENCY_CALI_8_coeff_value_write(value);
+            break;
+        case 9:
+            FREQUENCY_CALI_9_coeff_value_write(value);
+            break;
+        default:
+            break;
+    }
+}
+
+
+
+
 /**
  * @brief 保护单元后端初始化
  * 
@@ -1794,38 +1955,106 @@ int APP_Protection_Backend_Init(void)
     int i = 0;
     static TimerHandle_t xTimer = NULL;
   
-      // 测试数据
-    // pBk->current_cali[0].coeff_option = 0.987;  
-    // pBk->current_cali[0].coeff_value = 1.012;  
-    // pBk->current_cali[1].coeff_option = 1.998;  
-    // pBk->current_cali[1].coeff_value = 2.030;  
-    // pBk->current_cali[2].coeff_option = 2.981;  
-    // pBk->current_cali[2].coeff_value = 3.007;
-    // pBk->current_cali[3].coeff_option = 4.005;  
-    // pBk->current_cali[3].coeff_value = 4.0307; 
-    // pBk->current_cali[4].coeff_option = 4.910;  
-    // pBk->current_cali[4].coeff_value = 4.9219;     
+      // 测试数据  
 
-    pBk->current_cali[0].coeff_option = 0.524;
-    pBk->current_cali[0].coeff_value  = 0.5524;
-    pBk->current_cali[1].coeff_option = 0.986;
-    pBk->current_cali[1].coeff_value  = 1.0511;
-    pBk->current_cali[2].coeff_option = 1.495;
-    pBk->current_cali[2].coeff_value  = 1.567;
-    pBk->current_cali[3].coeff_option = 1.993;
-    pBk->current_cali[3].coeff_value  = 2.0742;
-    pBk->current_cali[4].coeff_option = 2.496;
-    pBk->current_cali[4].coeff_value  = 2.6363;		
-    pBk->current_cali[5].coeff_option = 2.980;
-    pBk->current_cali[5].coeff_value  = 3.123;
-    pBk->current_cali[6].coeff_option = 3.480;
-    pBk->current_cali[6].coeff_value  = 3.6258;
-    pBk->current_cali[7].coeff_option = 4.014;
-    pBk->current_cali[7].coeff_value  = 4.229;
-    pBk->current_cali[8].coeff_option = 4.501;
-    pBk->current_cali[8].coeff_value  = 4.7112;
-    pBk->current_cali[9].coeff_option = 4.918;
-    pBk->current_cali[9].coeff_value  = 5.1846;
+    // pBk->current_cali[0].coeff_option = 0.524;
+    // pBk->current_cali[0].coeff_value  = 0.5524;
+    // pBk->current_cali[1].coeff_option = 0.986;
+    // pBk->current_cali[1].coeff_value  = 1.0511;
+    // pBk->current_cali[2].coeff_option = 1.495;
+    // pBk->current_cali[2].coeff_value  = 1.567;
+    // pBk->current_cali[3].coeff_option = 1.993;
+    // pBk->current_cali[3].coeff_value  = 2.0742;
+    // pBk->current_cali[4].coeff_option = 2.496;
+    // pBk->current_cali[4].coeff_value  = 2.6363;		
+    // pBk->current_cali[5].coeff_option = 2.980;
+    // pBk->current_cali[5].coeff_value  = 3.123;
+    // pBk->current_cali[6].coeff_option = 3.480;
+    // pBk->current_cali[6].coeff_value  = 3.6258;
+    // pBk->current_cali[7].coeff_option = 4.014;
+    // pBk->current_cali[7].coeff_value  = 4.229;
+    // pBk->current_cali[8].coeff_option = 4.501;
+    // pBk->current_cali[8].coeff_value  = 4.7112;
+    // pBk->current_cali[9].coeff_option = 4.918;
+    // pBk->current_cali[9].coeff_value  = 5.1846;
+
+    for(uint8_t idx = 0; idx < VOLT_CALI_COUNT_MAX; idx++)
+    {
+        APP_current_cali_coffe_option_init(idx, current_cali_coffe_option[idx]);
+    }
+
+    for(uint8_t idx = 0; idx < VOLT_CALI_COUNT_MAX; idx++)
+    {
+        APP_frequency_cali_coffe_option_init(idx, frequency_cali_coffe_option[idx]);
+    }
+
+    for(uint8_t idx = 0; idx < VOLT_CALI_COUNT_MAX; idx++)
+    {
+        APP_voltage_cali_coffe_option_init(idx, voltage_cali_coffe_option[idx]);
+    }
+
+    pBk->current_cali[0].coeff_option = CURRENT_CALI_0_coeff_option_read();
+    pBk->current_cali[0].coeff_value  = CURRENT_CALI_0_coeff_value_read();
+    pBk->current_cali[1].coeff_option = CURRENT_CALI_1_coeff_option_read();
+    pBk->current_cali[1].coeff_value  = CURRENT_CALI_1_coeff_value_read();
+    pBk->current_cali[2].coeff_option = CURRENT_CALI_2_coeff_option_read();
+    pBk->current_cali[2].coeff_value  = CURRENT_CALI_2_coeff_value_read();
+    pBk->current_cali[3].coeff_option = CURRENT_CALI_3_coeff_option_read();
+    pBk->current_cali[3].coeff_value  = CURRENT_CALI_3_coeff_value_read();
+    pBk->current_cali[4].coeff_option = CURRENT_CALI_4_coeff_option_read();
+    pBk->current_cali[4].coeff_value  = CURRENT_CALI_4_coeff_value_read();		
+    pBk->current_cali[5].coeff_option = CURRENT_CALI_5_coeff_option_read();
+    pBk->current_cali[5].coeff_value  = CURRENT_CALI_5_coeff_value_read();
+    pBk->current_cali[6].coeff_option = CURRENT_CALI_6_coeff_option_read();
+    pBk->current_cali[6].coeff_value  = CURRENT_CALI_6_coeff_value_read();
+    pBk->current_cali[7].coeff_option = CURRENT_CALI_7_coeff_option_read();
+    pBk->current_cali[7].coeff_value  = CURRENT_CALI_7_coeff_value_read();
+    pBk->current_cali[8].coeff_option = CURRENT_CALI_8_coeff_option_read();
+    pBk->current_cali[8].coeff_value  = CURRENT_CALI_8_coeff_value_read();
+    pBk->current_cali[9].coeff_option = CURRENT_CALI_9_coeff_option_read();
+    pBk->current_cali[9].coeff_value  = CURRENT_CALI_9_coeff_value_read();
+
+    pBk->volt_cali[0].coeff_option = VOLTAGE_CALI_0_coeff_option_read();
+    pBk->volt_cali[0].coeff_value  = VOLTAGE_CALI_0_coeff_value_read();
+    pBk->volt_cali[1].coeff_option = VOLTAGE_CALI_1_coeff_option_read();
+    pBk->volt_cali[1].coeff_value  = VOLTAGE_CALI_1_coeff_value_read();
+    pBk->volt_cali[2].coeff_option = VOLTAGE_CALI_2_coeff_option_read();
+    pBk->volt_cali[2].coeff_value  = VOLTAGE_CALI_2_coeff_value_read();
+    pBk->volt_cali[3].coeff_option = VOLTAGE_CALI_3_coeff_option_read();
+    pBk->volt_cali[3].coeff_value  = VOLTAGE_CALI_3_coeff_value_read();
+    pBk->volt_cali[4].coeff_option = VOLTAGE_CALI_4_coeff_option_read();
+    pBk->volt_cali[4].coeff_value  = VOLTAGE_CALI_4_coeff_value_read();
+    pBk->volt_cali[5].coeff_option = VOLTAGE_CALI_5_coeff_option_read();
+    pBk->volt_cali[5].coeff_value  = VOLTAGE_CALI_5_coeff_value_read();
+    pBk->volt_cali[6].coeff_option = VOLTAGE_CALI_6_coeff_option_read();
+    pBk->volt_cali[6].coeff_value  = VOLTAGE_CALI_6_coeff_value_read();
+    pBk->volt_cali[7].coeff_option = VOLTAGE_CALI_7_coeff_option_read();
+    pBk->volt_cali[7].coeff_value  = VOLTAGE_CALI_7_coeff_value_read();
+    pBk->volt_cali[8].coeff_option = VOLTAGE_CALI_8_coeff_option_read();
+    pBk->volt_cali[8].coeff_value  = VOLTAGE_CALI_8_coeff_value_read();
+    pBk->volt_cali[9].coeff_option = VOLTAGE_CALI_9_coeff_option_read();
+    pBk->volt_cali[9].coeff_value  = VOLTAGE_CALI_9_coeff_value_read();
+
+    pBk->freq_cali[0].coeff_option = FREQUENCY_CALI_0_coeff_option_read();
+    pBk->freq_cali[0].coeff_value  = FREQUENCY_CALI_0_coeff_value_read();
+    pBk->freq_cali[1].coeff_option = FREQUENCY_CALI_1_coeff_option_read();
+    pBk->freq_cali[1].coeff_value  = FREQUENCY_CALI_1_coeff_value_read();
+    pBk->freq_cali[2].coeff_option = FREQUENCY_CALI_2_coeff_option_read();
+    pBk->freq_cali[2].coeff_value  = FREQUENCY_CALI_2_coeff_value_read();
+    pBk->freq_cali[3].coeff_option = FREQUENCY_CALI_3_coeff_option_read();
+    pBk->freq_cali[3].coeff_value  = FREQUENCY_CALI_3_coeff_value_read();
+    pBk->freq_cali[4].coeff_option = FREQUENCY_CALI_4_coeff_option_read();
+    pBk->freq_cali[4].coeff_value  = FREQUENCY_CALI_4_coeff_value_read();
+    pBk->freq_cali[5].coeff_option = FREQUENCY_CALI_5_coeff_option_read();
+    pBk->freq_cali[5].coeff_value  = FREQUENCY_CALI_5_coeff_value_read();
+    pBk->freq_cali[6].coeff_option = FREQUENCY_CALI_6_coeff_option_read();
+    pBk->freq_cali[6].coeff_value  = FREQUENCY_CALI_6_coeff_value_read();
+    pBk->freq_cali[7].coeff_option = FREQUENCY_CALI_7_coeff_option_read();
+    pBk->freq_cali[7].coeff_value  = FREQUENCY_CALI_7_coeff_value_read();
+    pBk->freq_cali[8].coeff_option = FREQUENCY_CALI_8_coeff_option_read();
+    pBk->freq_cali[8].coeff_value  = FREQUENCY_CALI_8_coeff_value_read();
+    pBk->freq_cali[9].coeff_option = FREQUENCY_CALI_9_coeff_option_read();
+    pBk->freq_cali[9].coeff_value  = FREQUENCY_CALI_9_coeff_value_read();
 
     APP_Relay_Set_Channel((uint16)(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D03 | APP_RELAY_CHANNEL_D04));
 

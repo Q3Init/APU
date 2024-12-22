@@ -148,6 +148,7 @@ enum forth_level_menu_type{
 	UNKNOW_FORTH_MENU = 0, // fix it to zero
 	GONGGONG_SHEZHI,
 	CHUANKOU_SHEZHI,
+	CALIBRATION_OPERATION,
 	FORTH_LEVEL_MENU_TYPE_MAX_IDX,
 };
 
@@ -393,4 +394,5 @@ extern struct menu_event_tag * running_state_handler(uint8_t msg_process_signal,
 
 extern struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * calibration_operation_handler(uint8_t msg_process_signal, uint8_t msg_context);
 #endif /* __LIB_LCD_KERNEL_H */

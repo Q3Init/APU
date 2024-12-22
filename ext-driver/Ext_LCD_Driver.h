@@ -64,6 +64,11 @@ extern uint8_t running_state[];
 extern uint8_t soe_record_char[];
 extern uint8_t soe_record_chinese[];
 extern uint8_t fault_event[];
+extern uint8_t frequency_cali_chinese[];
+extern uint8_t voltage_cali_chinese[];
+extern uint8_t current_cali_chinese[];
+extern uint8_t cali_sample_value_chinese[];
+extern uint8_t cali_normalize_value_chinese[];
 
 extern uint8_t change_proportion_setting[];
 extern uint8_t wire_splice_setting[];
@@ -132,7 +137,7 @@ extern uint8_t my_1x12_point[];
 extern uint8_t DI_chinese[];
 
 extern uint8_t YE_chinese[];
-
+extern uint8_t GE_chinese[];
 //6x12size
 extern uint8_t XieGang_char[];
 

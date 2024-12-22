@@ -39,10 +39,11 @@
 #define ABS_FLOAT(x)    ((x) >= 0.0f ? (x) : -(x))
 #define ISZERO_FLOAT(X) (((X) < 0.000001) && ((X) > (-0.000001)))
 
-#define VOLT_CALI_COUNT_MAX     10
-#define CURRENT_CALI_COUNT_MAX  10
-#define FREQ_CALI_COUNT_MAX     10
-#define PHASE_CALI_COUNT_MAX    10
+#define CALI_COUNT_MAX          10
+#define VOLT_CALI_COUNT_MAX     CALI_COUNT_MAX
+#define CURRENT_CALI_COUNT_MAX  CALI_COUNT_MAX
+#define FREQ_CALI_COUNT_MAX     CALI_COUNT_MAX
+#define PHASE_CALI_COUNT_MAX    CALI_COUNT_MAX
 
 /* 需FFT变换的频率 = ADC 采样频率 x FFT变化后的第N个数据点 / 采样点数 */
 #define FFT_POINT_CNT   256
@@ -55,6 +56,14 @@
 
 /* 能量补偿点数 */
 #define RFFT_ENERGY_COMP_MAX_POINT  10
+
+enum Cali_Convert_Type{
+    VOLTAGE_CALI_CONVERT_TYPE,
+    CURRENT_CALI_CONVERT_TYPE,
+    FREQUENCY_CALI_CONVERT_TYPE,
+    PHASE_CALI_CONVERT_TYPE,
+    NONE_CALI_CONVERT_TYPE,
+};
 
 // 继电器通道控制，bit控制
 typedef enum {

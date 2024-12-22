@@ -9,6 +9,136 @@
 #include "string.h"
 #include "MCAL_UART.h"
 
+/* Calibration for current */
+#define CURRENT_CALI_0_coeff_option_read()      app_parameter_read_ZERO_CURRENT_FREQUENCY()
+#define CURRENT_CALI_0_coeff_option_write(x)    app_parameter_write_ZERO_CURRENT_FREQUENCY(x)
+#define CURRENT_CALI_1_coeff_option_read()      app_parameter_read_ZERO_CURRENT_PHASE()
+#define CURRENT_CALI_1_coeff_option_write(x)    app_parameter_write_ZERO_CURRENT_PHASE(x)
+#define CURRENT_CALI_2_coeff_option_read()      0
+#define CURRENT_CALI_2_coeff_option_write(x)    0
+#define CURRENT_CALI_3_coeff_option_read()      0
+#define CURRENT_CALI_3_coeff_option_write(x)    0
+#define CURRENT_CALI_4_coeff_option_read()      0
+#define CURRENT_CALI_4_coeff_option_write(x)    0
+#define CURRENT_CALI_5_coeff_option_read()      0
+#define CURRENT_CALI_5_coeff_option_write(x)    0
+#define CURRENT_CALI_6_coeff_option_read()      0
+#define CURRENT_CALI_6_coeff_option_write(x)    0
+#define CURRENT_CALI_7_coeff_option_read()      0
+#define CURRENT_CALI_7_coeff_option_write(x)    0
+#define CURRENT_CALI_8_coeff_option_read()      0
+#define CURRENT_CALI_8_coeff_option_write(x)    0
+#define CURRENT_CALI_9_coeff_option_read()      0
+#define CURRENT_CALI_9_coeff_option_write(x)    0
+
+#define CURRENT_CALI_0_coeff_value_read()       0
+#define CURRENT_CALI_0_coeff_value_write(x)     0
+#define CURRENT_CALI_1_coeff_value_read()       0
+#define CURRENT_CALI_1_coeff_value_write(x)     0
+#define CURRENT_CALI_2_coeff_value_read()       0
+#define CURRENT_CALI_2_coeff_value_write(x)     0
+#define CURRENT_CALI_3_coeff_value_read()       0
+#define CURRENT_CALI_3_coeff_value_write(x)     0
+#define CURRENT_CALI_4_coeff_value_read()       0
+#define CURRENT_CALI_4_coeff_value_write(x)     0
+#define CURRENT_CALI_5_coeff_value_read()       0
+#define CURRENT_CALI_5_coeff_value_write(x)     0
+#define CURRENT_CALI_6_coeff_value_read()       0
+#define CURRENT_CALI_6_coeff_value_write(x)     0
+#define CURRENT_CALI_7_coeff_value_read()       0
+#define CURRENT_CALI_7_coeff_value_write(x)     0
+#define CURRENT_CALI_8_coeff_value_read()       0
+#define CURRENT_CALI_8_coeff_value_write(x)     0
+#define CURRENT_CALI_9_coeff_value_read()       0
+#define CURRENT_CALI_9_coeff_value_write(x)     0
+
+
+/* Calibration for voltage */
+#define VOLTAGE_CALI_0_coeff_option_read()      app_parameter_read_A_VOLTAGE_PHASE()
+#define VOLTAGE_CALI_0_coeff_option_write(x)    app_parameter_write_A_VOLTAGE_PHASE(x)
+#define VOLTAGE_CALI_1_coeff_option_read()      app_parameter_read_B_VOLTAGE_AMPLITUDE()
+#define VOLTAGE_CALI_1_coeff_option_write(x)    app_parameter_write_B_VOLTAGE_AMPLITUDE(x)
+#define VOLTAGE_CALI_2_coeff_option_read()      app_parameter_read_B_VOLTAGE_FREQUENCY()
+#define VOLTAGE_CALI_2_coeff_option_write(x)    app_parameter_write_B_VOLTAGE_FREQUENCY(x)
+#define VOLTAGE_CALI_3_coeff_option_read()      app_parameter_read_B_VOLTAGE_PHASE()
+#define VOLTAGE_CALI_3_coeff_option_write(x)    app_parameter_write_B_VOLTAGE_PHASE(x)
+#define VOLTAGE_CALI_4_coeff_option_read()      app_parameter_read_C_VOLTAGE_AMPLITUDE()
+#define VOLTAGE_CALI_4_coeff_option_write(x)    app_parameter_write_C_VOLTAGE_AMPLITUDE(x)
+#define VOLTAGE_CALI_5_coeff_option_read()      app_parameter_read_C_VOLTAGE_FREQUENCY()
+#define VOLTAGE_CALI_5_coeff_option_write(x)    app_parameter_write_C_VOLTAGE_FREQUENCY(x)
+#define VOLTAGE_CALI_6_coeff_option_read()      app_parameter_read_C_VOLTAGE_PHASE()
+#define VOLTAGE_CALI_6_coeff_option_write(x)    app_parameter_write_C_VOLTAGE_PHASE(x)
+#define VOLTAGE_CALI_7_coeff_option_read()      app_parameter_read_ZERO_VOLTAGE_AMPLITUDE()
+#define VOLTAGE_CALI_7_coeff_option_write(x)    app_parameter_write_ZERO_VOLTAGE_AMPLITUDE(x)
+#define VOLTAGE_CALI_8_coeff_option_read()      app_parameter_read_ZERO_VOLTAGE_FREQUENCY()
+#define VOLTAGE_CALI_8_coeff_option_write(x)    app_parameter_write_ZERO_VOLTAGE_FREQUENCY(x)
+#define VOLTAGE_CALI_9_coeff_option_read()      app_parameter_read_ZERO_VOLTAGE_PHASE()
+#define VOLTAGE_CALI_9_coeff_option_write(x)    app_parameter_write_ZERO_VOLTAGE_PHASE(x)
+
+#define VOLTAGE_CALI_0_coeff_value_read()       app_parameter_read_A_CURRENT_AMPLITUDE()
+#define VOLTAGE_CALI_0_coeff_value_write(x)     app_parameter_write_A_CURRENT_AMPLITUDE(x)
+#define VOLTAGE_CALI_1_coeff_value_read()       app_parameter_read_A_CURRENT_FREQUENCY()
+#define VOLTAGE_CALI_1_coeff_value_write(x)     app_parameter_write_A_CURRENT_FREQUENCY(x)
+#define VOLTAGE_CALI_2_coeff_value_read()       app_parameter_read_A_CURRENT_PHASE()
+#define VOLTAGE_CALI_2_coeff_value_write(x)     app_parameter_write_A_CURRENT_PHASE(x)
+#define VOLTAGE_CALI_3_coeff_value_read()       app_parameter_read_B_CURRENT_AMPLITUDE()
+#define VOLTAGE_CALI_3_coeff_value_write(x)     app_parameter_write_B_CURRENT_AMPLITUDE(x)
+#define VOLTAGE_CALI_4_coeff_value_read()       app_parameter_read_B_CURRENT_FREQUENCY()
+#define VOLTAGE_CALI_4_coeff_value_write(x)     app_parameter_write_B_CURRENT_FREQUENCY(x)
+#define VOLTAGE_CALI_5_coeff_value_read()       app_parameter_read_B_CURRENT_PHASE()
+#define VOLTAGE_CALI_5_coeff_value_write(x)     app_parameter_write_B_CURRENT_PHASE(x)
+#define VOLTAGE_CALI_6_coeff_value_read()       app_parameter_read_C_CURRENT_AMPLITUDE()
+#define VOLTAGE_CALI_6_coeff_value_write(x)     app_parameter_write_C_CURRENT_AMPLITUDE(x)
+#define VOLTAGE_CALI_7_coeff_value_read()       app_parameter_read_C_CURRENT_FREQUENCY()
+#define VOLTAGE_CALI_7_coeff_value_write(x)     app_parameter_write_C_CURRENT_FREQUENCY(x)
+#define VOLTAGE_CALI_8_coeff_value_read()       app_parameter_read_C_CURRENT_PHASE()
+#define VOLTAGE_CALI_8_coeff_value_write(x)     app_parameter_write_C_CURRENT_PHASE(x)
+#define VOLTAGE_CALI_9_coeff_value_read()       app_parameter_read_ZERO_CURRENT_AMPLITUDE()
+#define VOLTAGE_CALI_9_coeff_value_write(x)     app_parameter_write_ZERO_CURRENT_AMPLITUDE(x)
+
+/* Calibration for frequency */
+#define FREQUENCY_CALI_0_coeff_option_read()    0
+#define FREQUENCY_CALI_1_coeff_option_read()    0
+#define FREQUENCY_CALI_2_coeff_option_read()    0
+#define FREQUENCY_CALI_3_coeff_option_read()    0
+#define FREQUENCY_CALI_4_coeff_option_read()    0
+#define FREQUENCY_CALI_5_coeff_option_read()    0
+#define FREQUENCY_CALI_6_coeff_option_read()    0
+#define FREQUENCY_CALI_7_coeff_option_read()    0
+#define FREQUENCY_CALI_8_coeff_option_read()    0
+#define FREQUENCY_CALI_9_coeff_option_read()    0
+#define FREQUENCY_CALI_0_coeff_value_read()     0
+#define FREQUENCY_CALI_1_coeff_value_read()     0
+#define FREQUENCY_CALI_2_coeff_value_read()     0
+#define FREQUENCY_CALI_3_coeff_value_read()     0
+#define FREQUENCY_CALI_4_coeff_value_read()     0
+#define FREQUENCY_CALI_5_coeff_value_read()     0
+#define FREQUENCY_CALI_6_coeff_value_read()     0
+#define FREQUENCY_CALI_7_coeff_value_read()     0
+#define FREQUENCY_CALI_8_coeff_value_read()     0
+#define FREQUENCY_CALI_9_coeff_value_read()     0
+
+#define FREQUENCY_CALI_0_coeff_option_write(x)  0
+#define FREQUENCY_CALI_1_coeff_option_write(x)  0
+#define FREQUENCY_CALI_2_coeff_option_write(x)  0
+#define FREQUENCY_CALI_3_coeff_option_write(x)  0
+#define FREQUENCY_CALI_4_coeff_option_write(x)  0
+#define FREQUENCY_CALI_5_coeff_option_write(x)  0
+#define FREQUENCY_CALI_6_coeff_option_write(x)  0
+#define FREQUENCY_CALI_7_coeff_option_write(x)  0
+#define FREQUENCY_CALI_8_coeff_option_write(x)  0
+#define FREQUENCY_CALI_9_coeff_option_write(x)  0
+#define FREQUENCY_CALI_0_coeff_value_write(x)   0
+#define FREQUENCY_CALI_1_coeff_value_write(x)   0
+#define FREQUENCY_CALI_2_coeff_value_write(x)   0
+#define FREQUENCY_CALI_3_coeff_value_write(x)   0
+#define FREQUENCY_CALI_4_coeff_value_write(x)   0
+#define FREQUENCY_CALI_5_coeff_value_write(x)   0
+#define FREQUENCY_CALI_6_coeff_value_write(x)   0
+#define FREQUENCY_CALI_7_coeff_value_write(x)   0
+#define FREQUENCY_CALI_8_coeff_value_write(x)   0
+#define FREQUENCY_CALI_9_coeff_value_write(x)   0
+
 typedef struct
 {
     /* data */

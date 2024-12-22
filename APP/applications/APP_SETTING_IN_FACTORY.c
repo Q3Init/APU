@@ -3,62 +3,127 @@
 #include "APP_SETTING_IN_FACTORY.h"
 #include "APP_Protection_Backend.h"
 
+#define VOLTAGE_CALI_INT_NUM			4
+#define VOLTAGE_CALI_FLOAT_POINT_NUM	3
+
+#define CURRENT_CALI_INT_NUM			4
+#define CURRENT_CALI_FLOAT_POINT_NUM	3
+
+#define FREQUENCY_CALI_INT_NUM			4
+#define FREQUENCY_CALI_FLOAT_POINT_NUM	3
+
+
+#define SRAM_xxxx_read()   0
+#define SRAM_xxxx() 0
+
+/* 获取实时采样值的接口 */
+#define FFT_VOLTAGE_VALUE_GET()   	0
+#define FFT_CURRENT_VALUE_GET()		0
+#define FFT_FREQUENCY_VALUE_GET()	0
+
+/***************************************START**********************************************/
+/* 以下两个接口用作了逆功率延时时间设置和 开入逻辑功能设置 */
 #define A_VOLTAGE_AMPLITUDE_VALUE_READ()  	app_parameter_read_A_VOLTAGE_AMPLITUDE()
 #define A_VOLTAGE_AMPLITUDE_VALUE_WRITE(x) 	app_parameter_write_A_VOLTAGE_AMPLITUDE(x)
 #define A_VOLTAGE_FREQUENCY_VALUE_READ() 	app_parameter_read_A_VOLTAGE_FREQUENCY()
 #define A_VOLTAGE_FREQUENCY_VALUE_WRITE(x)	app_parameter_write_A_VOLTAGE_FREQUENCY(x)
-#define A_VOLTAGE_PHASE_VALUE_READ() 		app_parameter_read_A_VOLTAGE_PHASE()
-#define A_VOLTAGE_PHASE_VALUE_WRITE(x)		app_parameter_write_A_VOLTAGE_PHASE(x)
+/***************************************END**********************************************/
 
-#define B_VOLTAGE_AMPLITUDE_VALUE_READ() 	app_parameter_read_B_VOLTAGE_AMPLITUDE()
-#define B_VOLTAGE_AMPLITUDE_VALUE_WRITE(x)  app_parameter_write_B_VOLTAGE_AMPLITUDE(x)
-#define B_VOLTAGE_FREQUENCY_VALUE_READ() 	app_parameter_read_B_VOLTAGE_FREQUENCY()
-#define B_VOLTAGE_FREQUENCY_VALUE_WRITE(x)  app_parameter_write_B_VOLTAGE_FREQUENCY(x)
-#define B_VOLTAGE_PHASE_VALUE_READ() 		app_parameter_read_B_VOLTAGE_PHASE()
-#define B_VOLTAGE_PHASE_VALUE_WRITE(x)	    app_parameter_write_B_VOLTAGE_PHASE(x)
+// /*******************************以下20个SRAM接口用作较准电压用*******************************/
+// #define A_VOLTAGE_PHASE_VALUE_READ() 		app_parameter_read_A_VOLTAGE_PHASE()
+// #define A_VOLTAGE_PHASE_VALUE_WRITE(x)		app_parameter_write_A_VOLTAGE_PHASE(x)
+// #define B_VOLTAGE_AMPLITUDE_VALUE_READ() 	app_parameter_read_B_VOLTAGE_AMPLITUDE()
+// #define B_VOLTAGE_AMPLITUDE_VALUE_WRITE(x)  app_parameter_write_B_VOLTAGE_AMPLITUDE(x)
+// #define B_VOLTAGE_FREQUENCY_VALUE_READ() 	app_parameter_read_B_VOLTAGE_FREQUENCY()
+// #define B_VOLTAGE_FREQUENCY_VALUE_WRITE(x)  app_parameter_write_B_VOLTAGE_FREQUENCY(x)
+// #define B_VOLTAGE_PHASE_VALUE_READ() 		app_parameter_read_B_VOLTAGE_PHASE()
+// #define B_VOLTAGE_PHASE_VALUE_WRITE(x)	    app_parameter_write_B_VOLTAGE_PHASE(x)
+// #define C_VOLTAGE_AMPLITUDE_VALUE_READ() 	app_parameter_read_C_VOLTAGE_AMPLITUDE()
+// #define C_VOLTAGE_AMPLITUDE_VALUE_WRITE(x)  app_parameter_write_C_VOLTAGE_AMPLITUDE(x)
+// #define C_VOLTAGE_FREQUENCY_VALUE_READ() 	app_parameter_read_C_VOLTAGE_FREQUENCY()
+// #define C_VOLTAGE_FREQUENCY_VALUE_WRITE(x)  app_parameter_write_C_VOLTAGE_FREQUENCY(x)
+// #define C_VOLTAGE_PHASE_VALUE_READ() 		app_parameter_read_C_VOLTAGE_PHASE()
+// #define C_VOLTAGE_PHASE_VALUE_WRITE(x)      app_parameter_write_C_VOLTAGE_PHASE(x)
+// #define ZERO_VOLTAGE_AMPLITUDE_VALUE_READ() 	app_parameter_read_ZERO_VOLTAGE_AMPLITUDE()
+// #define ZERO_VOLTAGE_AMPLITUDE_VALUE_WRITE(x)   app_parameter_write_ZERO_VOLTAGE_AMPLITUDE(x)
+// #define ZERO_VOLTAGE_FREQUENCY_VALUE_READ() 	app_parameter_read_ZERO_VOLTAGE_FREQUENCY()
+// #define ZERO_VOLTAGE_FREQUENCY_VALUE_WRITE(x)   app_parameter_write_ZERO_VOLTAGE_FREQUENCY(x)
+// #define ZERO_VOLTAGE_PHASE_VALUE_READ() 		app_parameter_read_ZERO_VOLTAGE_PHASE()
+// #define ZERO_VOLTAGE_PHASE_VALUE_WRITE(x)       app_parameter_write_ZERO_VOLTAGE_PHASE(x)
+// #define A_CURRENT_AMPLITUDE_VALUE_READ()  	app_parameter_read_A_CURRENT_AMPLITUDE()
+// #define A_CURRENT_AMPLITUDE_VALUE_WRITE(x) 	app_parameter_write_A_CURRENT_AMPLITUDE(x)
+// #define A_CURRENT_FREQUENCY_VALUE_READ() 	app_parameter_read_A_CURRENT_FREQUENCY()
+// #define A_CURRENT_FREQUENCY_VALUE_WRITE(x)	app_parameter_write_A_CURRENT_FREQUENCY(x)
+// #define A_CURRENT_PHASE_VALUE_READ() 		app_parameter_read_A_CURRENT_PHASE()
+// #define A_CURRENT_PHASE_VALUE_WRITE(x)		app_parameter_write_A_CURRENT_PHASE(x)
+// #define B_CURRENT_AMPLITUDE_VALUE_READ() 	app_parameter_read_B_CURRENT_AMPLITUDE()
+// #define B_CURRENT_AMPLITUDE_VALUE_WRITE(x)  app_parameter_write_B_CURRENT_AMPLITUDE(x)
+// #define B_CURRENT_FREQUENCY_VALUE_READ() 	app_parameter_read_B_CURRENT_FREQUENCY()
+// #define B_CURRENT_FREQUENCY_VALUE_WRITE(x)  app_parameter_write_B_CURRENT_FREQUENCY(x)
+// #define B_CURRENT_PHASE_VALUE_READ() 		app_parameter_read_B_CURRENT_PHASE()
+// #define B_CURRENT_PHASE_VALUE_WRITE(x)	    app_parameter_write_B_CURRENT_PHASE(x)
+// #define C_CURRENT_AMPLITUDE_VALUE_READ() 	app_parameter_read_C_CURRENT_AMPLITUDE()
+// #define C_CURRENT_AMPLITUDE_VALUE_WRITE(x)  app_parameter_write_C_CURRENT_AMPLITUDE(x)
+// #define C_CURRENT_FREQUENCY_VALUE_READ() 	app_parameter_read_C_CURRENT_FREQUENCY()
+// #define C_CURRENT_FREQUENCY_VALUE_WRITE(x)  app_parameter_write_C_CURRENT_FREQUENCY(x)
+// #define C_CURRENT_PHASE_VALUE_READ() 		app_parameter_read_C_CURRENT_PHASE()
+// #define C_CURRENT_PHASE_VALUE_WRITE(x)  	app_parameter_write_C_CURRENT_PHASE(x)
+// #define ZERO_CURRENT_AMPLITUDE_VALUE_READ() 	app_parameter_read_ZERO_CURRENT_AMPLITUDE()
+// #define ZERO_CURRENT_AMPLITUDE_VALUE_WRITE(x)   app_parameter_write_ZERO_CURRENT_AMPLITUDE(x)
+// /************************************************END********************************************************/
 
-#define C_VOLTAGE_AMPLITUDE_VALUE_READ() 	app_parameter_read_C_VOLTAGE_AMPLITUDE()
-#define C_VOLTAGE_AMPLITUDE_VALUE_WRITE(x)  app_parameter_write_C_VOLTAGE_AMPLITUDE(x)
-#define C_VOLTAGE_FREQUENCY_VALUE_READ() 	app_parameter_read_C_VOLTAGE_FREQUENCY()
-#define C_VOLTAGE_FREQUENCY_VALUE_WRITE(x)  app_parameter_write_C_VOLTAGE_FREQUENCY(x)
-#define C_VOLTAGE_PHASE_VALUE_READ() 		app_parameter_read_C_VOLTAGE_PHASE()
-#define C_VOLTAGE_PHASE_VALUE_WRITE(x)      app_parameter_write_C_VOLTAGE_PHASE(x)
 
-#define ZERO_VOLTAGE_AMPLITUDE_VALUE_READ() 	app_parameter_read_ZERO_VOLTAGE_AMPLITUDE()
-#define ZERO_VOLTAGE_AMPLITUDE_VALUE_WRITE(x)   app_parameter_write_ZERO_VOLTAGE_AMPLITUDE(x)
-#define ZERO_VOLTAGE_FREQUENCY_VALUE_READ() 	app_parameter_read_ZERO_VOLTAGE_FREQUENCY()
-#define ZERO_VOLTAGE_FREQUENCY_VALUE_WRITE(x)   app_parameter_write_ZERO_VOLTAGE_FREQUENCY(x)
-#define ZERO_VOLTAGE_PHASE_VALUE_READ() 		app_parameter_read_ZERO_VOLTAGE_PHASE()
-#define ZERO_VOLTAGE_PHASE_VALUE_WRITE(x)       app_parameter_write_ZERO_VOLTAGE_PHASE(x)
+/*******************************以下20个SRAM接口用作较准电压用*******************************/
+#define A_VOLTAGE_PHASE_VALUE_READ() 		0
+#define A_VOLTAGE_PHASE_VALUE_WRITE(x)		0
+#define B_VOLTAGE_AMPLITUDE_VALUE_READ() 	0
+#define B_VOLTAGE_AMPLITUDE_VALUE_WRITE(x)  0
+#define B_VOLTAGE_FREQUENCY_VALUE_READ() 	0
+#define B_VOLTAGE_FREQUENCY_VALUE_WRITE(x)  0
+#define B_VOLTAGE_PHASE_VALUE_READ() 		0
+#define B_VOLTAGE_PHASE_VALUE_WRITE(x)	    0
+#define C_VOLTAGE_AMPLITUDE_VALUE_READ() 	0
+#define C_VOLTAGE_AMPLITUDE_VALUE_WRITE(x)  0
+#define C_VOLTAGE_FREQUENCY_VALUE_READ() 	0
+#define C_VOLTAGE_FREQUENCY_VALUE_WRITE(x)  0
+#define C_VOLTAGE_PHASE_VALUE_READ() 		0
+#define C_VOLTAGE_PHASE_VALUE_WRITE(x)      0
+#define ZERO_VOLTAGE_AMPLITUDE_VALUE_READ() 	0
+#define ZERO_VOLTAGE_AMPLITUDE_VALUE_WRITE(x)   0
+#define ZERO_VOLTAGE_FREQUENCY_VALUE_READ() 	0
+#define ZERO_VOLTAGE_FREQUENCY_VALUE_WRITE(x)   0
+#define ZERO_VOLTAGE_PHASE_VALUE_READ() 		0
+#define ZERO_VOLTAGE_PHASE_VALUE_WRITE(x)       0
+#define A_CURRENT_AMPLITUDE_VALUE_READ()  	0
+#define A_CURRENT_AMPLITUDE_VALUE_WRITE(x) 	0
+#define A_CURRENT_FREQUENCY_VALUE_READ() 	0
+#define A_CURRENT_FREQUENCY_VALUE_WRITE(x)	0
+#define A_CURRENT_PHASE_VALUE_READ() 		0
+#define A_CURRENT_PHASE_VALUE_WRITE(x)		0
+#define B_CURRENT_AMPLITUDE_VALUE_READ() 	0
+#define B_CURRENT_AMPLITUDE_VALUE_WRITE(x)  0
+#define B_CURRENT_FREQUENCY_VALUE_READ() 	0
+#define B_CURRENT_FREQUENCY_VALUE_WRITE(x)  0
+#define B_CURRENT_PHASE_VALUE_READ() 		0
+#define B_CURRENT_PHASE_VALUE_WRITE(x)	    0
+#define C_CURRENT_AMPLITUDE_VALUE_READ() 	0
+#define C_CURRENT_AMPLITUDE_VALUE_WRITE(x)  0
+#define C_CURRENT_FREQUENCY_VALUE_READ() 	0
+#define C_CURRENT_FREQUENCY_VALUE_WRITE(x)  0
+#define C_CURRENT_PHASE_VALUE_READ() 		0
+#define C_CURRENT_PHASE_VALUE_WRITE(x)  	0
+#define ZERO_CURRENT_AMPLITUDE_VALUE_READ() 	0
+#define ZERO_CURRENT_AMPLITUDE_VALUE_WRITE(x)   0
+/************************************************END********************************************************/
 
-////
-#define A_CURRENT_AMPLITUDE_VALUE_READ()  	app_parameter_read_A_CURRENT_AMPLITUDE()
-#define A_CURRENT_AMPLITUDE_VALUE_WRITE(x) 	app_parameter_write_A_CURRENT_AMPLITUDE(x)
-#define A_CURRENT_FREQUENCY_VALUE_READ() 	app_parameter_read_A_CURRENT_FREQUENCY()
-#define A_CURRENT_FREQUENCY_VALUE_WRITE(x)	app_parameter_write_A_CURRENT_FREQUENCY(x)
-#define A_CURRENT_PHASE_VALUE_READ() 		app_parameter_read_A_CURRENT_PHASE()
-#define A_CURRENT_PHASE_VALUE_WRITE(x)		app_parameter_write_A_CURRENT_PHASE(x)
+/***************START**************以下两个接口用作电流成员[0]和[1]较准用**************************************/
+#define ZERO_CURRENT_FREQUENCY_VALUE_READ() 	0
+#define ZERO_CURRENT_FREQUENCY_VALUE_WRITE(x)   0
+#define ZERO_CURRENT_PHASE_VALUE_READ() 		0
+#define ZERO_CURRENT_PHASE_VALUE_WRITE(x)       0
+/************************************************END********************************************************/
 
-#define B_CURRENT_AMPLITUDE_VALUE_READ() 	app_parameter_read_B_CURRENT_AMPLITUDE()
-#define B_CURRENT_AMPLITUDE_VALUE_WRITE(x)  app_parameter_write_B_CURRENT_AMPLITUDE(x)
-#define B_CURRENT_FREQUENCY_VALUE_READ() 	app_parameter_read_B_CURRENT_FREQUENCY()
-#define B_CURRENT_FREQUENCY_VALUE_WRITE(x)  app_parameter_write_B_CURRENT_FREQUENCY(x)
-#define B_CURRENT_PHASE_VALUE_READ() 		app_parameter_read_B_CURRENT_PHASE()
-#define B_CURRENT_PHASE_VALUE_WRITE(x)	    app_parameter_write_B_CURRENT_PHASE(x)
-
-#define C_CURRENT_AMPLITUDE_VALUE_READ() 	app_parameter_read_C_CURRENT_AMPLITUDE()
-#define C_CURRENT_AMPLITUDE_VALUE_WRITE(x)  app_parameter_write_C_CURRENT_AMPLITUDE(x)
-#define C_CURRENT_FREQUENCY_VALUE_READ() 	app_parameter_read_C_CURRENT_FREQUENCY()
-#define C_CURRENT_FREQUENCY_VALUE_WRITE(x)  app_parameter_write_C_CURRENT_FREQUENCY(x)
-#define C_CURRENT_PHASE_VALUE_READ() 		app_parameter_read_C_CURRENT_PHASE()
-#define C_CURRENT_PHASE_VALUE_WRITE(x)  	app_parameter_write_C_CURRENT_PHASE(x)
-
-#define ZERO_CURRENT_AMPLITUDE_VALUE_READ() 	app_parameter_read_ZERO_CURRENT_AMPLITUDE()
-#define ZERO_CURRENT_AMPLITUDE_VALUE_WRITE(x)   app_parameter_write_ZERO_CURRENT_AMPLITUDE(x)
-#define ZERO_CURRENT_FREQUENCY_VALUE_READ() 	app_parameter_read_ZERO_CURRENT_FREQUENCY()
-#define ZERO_CURRENT_FREQUENCY_VALUE_WRITE(x)   app_parameter_write_ZERO_CURRENT_FREQUENCY(x)
-#define ZERO_CURRENT_PHASE_VALUE_READ() 		app_parameter_read_ZERO_CURRENT_PHASE()
-#define ZERO_CURRENT_PHASE_VALUE_WRITE(x)       app_parameter_write_ZERO_CURRENT_PHASE(x)
+uint8_t calibration_type = NONE_CALI_CONVERT_TYPE;
 
 uint8 setting_in_factory_menu_array[]=
 {
@@ -92,17 +157,27 @@ extern uint8_t B_NORMINAL_VALUE[];
 extern uint8_t C_NORMINAL_VALUE[];
 extern uint8_t ZERO_NORMINAL_VALUE[];
 
+// enum channel_factor_menu_type{
+// 	Ia,  Ib,
+// 	Ic,  IO,
+// 	Ua,  Ub,
+// 	Uc,  Ux,
+// };
+// uint8 channel_factor_menu_array[]={
+// 	Ia,  Ib,
+// 	Ic,  IO,
+// 	Ua,  Ub,
+// 	Uc,  Ux,
+// };
 enum channel_factor_menu_type{
-	Ia,  Ib,
-	Ic,  IO,
-	Ua,  Ub,
-	Uc,  Ux,
+	CURRENT_CALIBRATION,
+	VOLTAGE_CALIBRATION,
+	FREQUENCY_CALIBRATION,
 };
 uint8 channel_factor_menu_array[]={
-	Ia,  Ib,
-	Ic,  IO,
-	Ua,  Ub,
-	Uc,  Ux,
+	CURRENT_CALIBRATION,
+	VOLTAGE_CALIBRATION,
+	FREQUENCY_CALIBRATION,
 };
 enum full_range_setting_menu_type{
 	DW_PT_FULL_RANGE,
@@ -297,6 +372,9 @@ extern uint8_t pinlv[];
 extern uint8_t xiangwei[];
 extern uint8_t dianyabiaoding[];
 extern uint8_t dianliubiaoding[];
+
+void calibration_ind_menu_display(uint8_t cali_idx, uint8_t cali_type, uint8_t int_num, uint8_t float_point_num, float32 float_flag);
+
 struct menu_event_tag * setting_in_factory_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! */
@@ -492,7 +570,7 @@ struct menu_event_tag * setting_in_factory_handler(uint8_t msg_process_signal, u
 }
 struct menu_event_tag * channel_factor_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
-	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
+	/* msg_evt should be malloced and return it! */
 	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
 	menu_evt->status = EVT_NO_ERROR;
 	menu_evt->msg_operation = MSG_RESUMED;
@@ -500,17 +578,42 @@ struct menu_event_tag * channel_factor_handler(uint8_t msg_process_signal, uint8
 	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
 	uint8_t menu_target = SETTING_IN_FACTORY;
 	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
-	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
-	if(authentication_key)
+	uint8_t authentication_key = USER_PASSWORD_AUTHENTICATE();
+    if(authentication_key)
 	{
 		return menu_evt;
 	}
 
-    if(msg_process_signal == 1)
-	{	
-		uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 4, 2, sizeof(channel_factor_menu_array));
+	if(msg_process_signal == 1)
+	{
+		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
+        uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(channel_factor_menu_array));
 		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
+		if(msg_context == KEY_ENTER)
+		{
+			menu_level_from_env_set_V2(TOP_NODE_MENU, SETTING_IN_FACTORY, CHANNEL_FACTOR, CALIBRATION_OPERATION);//just for example!
+			cur_menu_type_ptr_from_env_set(0);
+			menu_kernel_env.menu_cursor_history.second_menu_cursor = menu_type_idx;
+            msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+			switch(menu_type_idx)
+			{
+				case CURRENT_CALIBRATION:
+					calibration_type = CURRENT_CALI_CONVERT_TYPE;
+					break;
+				case VOLTAGE_CALIBRATION:
+					calibration_type = VOLTAGE_CALI_CONVERT_TYPE;
+					break;
+				case FREQUENCY_CALIBRATION:
+					calibration_type = FREQUENCY_CALI_CONVERT_TYPE;
+					break;
+				default:
+					break;
+			}
+			Log_d("key KEY_ENTER menu!\r\n");
+		}
+
+		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
 		if(msg_context == KEY_RETURN)
 		{
 			menu_level_from_env_set(TOP_NODE_MENU, SETTING_IN_FACTORY, UNKNOW_THIRD_MENU);
@@ -518,688 +621,1150 @@ struct menu_event_tag * channel_factor_handler(uint8_t msg_process_signal, uint8
 			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 			Log_d("key KEY_RETURN menu!\r\n");
 		}
+
         if(msg_context == FLUSH_SCREEN)
         {
 			Log_d("\r\n    \r\n");
             clear_screen();
-			msg_context = 0xff;
+			msg_context = LCD_FLUSH_SCREEN_IND;
 			msg_lock_from_env_set(0);//unlock the msg
         }
+
 		switch(msg_context)
 		{
-			case	0xff:
 			case    KEY_UP:
-    		case	KEY_DOWN:		
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+    		case	KEY_MINUS:		
     		case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
 				LCD_ShowChinese_garland(0, 0, channel_factor, 4);
 				switch(channel_factor_menu_array[menu_type_idx])
 				{
-					case Ia:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+					case CURRENT_CALIBRATION:
+                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
+                        LCD_ShowNum_garland(98, 1, my_num_1,5);
+                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
+                        LCD_ShowNum_garland(109, 1, my_num_1,5);  
+                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
 
-						lcd_state_flush_for_num(8,13,my_char_I,6,12,0);
-						lcd_state_flush_for_num(14,13,my_char_a,6,12,0);
-						lcd_state_flush_for_num(20,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,26,my_char_I,6,12,1);
-						lcd_state_flush_for_num(14,26,my_char_c,6,12,1);
-						lcd_state_flush_for_num(20,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,38,my_char_U,6,12,1);
-						lcd_state_flush_for_num(14,38,my_char_a,6,12,1);
-						lcd_state_flush_for_num(20,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,51,my_char_U,6,12,1);
-						lcd_state_flush_for_num(14,51,my_char_c,6,12,1);
-						lcd_state_flush_for_num(20,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,51,my_num_0,5,12,1);
-
-
-
-
-						lcd_state_flush_for_num(56,13,my_char_I,6,12,1);
-						lcd_state_flush_for_num(62,13,my_char_b,6,12,1);
-						lcd_state_flush_for_num(68,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,26,my_char_I,6,12,1);
-						lcd_state_flush_for_num(62,26,my_char_O,6,12,1);
-						lcd_state_flush_for_num(68,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,38,my_char_U,6,12,1);
-						lcd_state_flush_for_num(62,38,my_char_b,6,12,1);
-						lcd_state_flush_for_num(68,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,51,my_char_U,6,12,1);
-						lcd_state_flush_for_num(62,51,my_char_x,6,12,1);
-						lcd_state_flush_for_num(68,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,51,my_num_0,5,12,1);
+                        LCD_ShowChinese_no_garland(8, 13, current_cali_chinese, 4);
+                        LCD_ShowChinese_garland(8, 26, voltage_cali_chinese, 4);
+						LCD_ShowChinese_garland(8, 39, frequency_cali_chinese, 4);
 						break;
-					case Ib:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+					case VOLTAGE_CALIBRATION:
+                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
+                        LCD_ShowNum_garland(98, 1, my_num_1,5);
+                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
+                        LCD_ShowNum_garland(109, 1, my_num_1,5);  
+                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
 
-						lcd_state_flush_for_num(8,13,my_char_I,6,12,1);
-						lcd_state_flush_for_num(14,13,my_char_a,6,12,1);
-						lcd_state_flush_for_num(20,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,26,my_char_I,6,12,1);
-						lcd_state_flush_for_num(14,26,my_char_c,6,12,1);
-						lcd_state_flush_for_num(20,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,38,my_char_U,6,12,1);
-						lcd_state_flush_for_num(14,38,my_char_a,6,12,1);
-						lcd_state_flush_for_num(20,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,51,my_char_U,6,12,1);
-						lcd_state_flush_for_num(14,51,my_char_c,6,12,1);
-						lcd_state_flush_for_num(20,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,51,my_num_0,5,12,1);
-
-
-
-
-						lcd_state_flush_for_num(56,13,my_char_I,6,12,0);
-						lcd_state_flush_for_num(62,13,my_char_b,6,12,0);
-						lcd_state_flush_for_num(68,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,26,my_char_I,6,12,1);
-						lcd_state_flush_for_num(62,26,my_char_O,6,12,1);
-						lcd_state_flush_for_num(68,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,38,my_char_U,6,12,1);
-						lcd_state_flush_for_num(62,38,my_char_b,6,12,1);
-						lcd_state_flush_for_num(68,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,51,my_char_U,6,12,1);
-						lcd_state_flush_for_num(62,51,my_char_x,6,12,1);
-						lcd_state_flush_for_num(68,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,51,my_num_0,5,12,1);
+                        LCD_ShowChinese_garland(8, 13, current_cali_chinese, 4);
+                        LCD_ShowChinese_no_garland(8, 26, voltage_cali_chinese, 4);
+						LCD_ShowChinese_garland(8, 39, frequency_cali_chinese, 4);
 						break;
-					case Ic:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+					case FREQUENCY_CALIBRATION:
+                        LCD_ShowChinese_garland(86, 0, DI_chinese, 1);
+                        LCD_ShowNum_garland(98, 1, my_num_1,5);
+                        LCD_ShowNum_garland(103, 1, XieGang_char,6);
+                        LCD_ShowNum_garland(109, 1, my_num_1,5);  
+                        LCD_ShowChinese_garland(116, 0, YE_chinese, 1);
 
-						lcd_state_flush_for_num(8,13,my_char_I,6,12,1);
-						lcd_state_flush_for_num(14,13,my_char_a,6,12,1);
-						lcd_state_flush_for_num(20,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,26,my_char_I,6,12,0);
-						lcd_state_flush_for_num(14,26,my_char_c,6,12,0);
-						lcd_state_flush_for_num(20,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,38,my_char_U,6,12,1);
-						lcd_state_flush_for_num(14,38,my_char_a,6,12,1);
-						lcd_state_flush_for_num(20,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,51,my_char_U,6,12,1);
-						lcd_state_flush_for_num(14,51,my_char_c,6,12,1);
-						lcd_state_flush_for_num(20,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,51,my_num_0,5,12,1);
-
-
-
-
-						lcd_state_flush_for_num(56,13,my_char_I,6,12,1);
-						lcd_state_flush_for_num(62,13,my_char_b,6,12,1);
-						lcd_state_flush_for_num(68,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,26,my_char_I,6,12,1);
-						lcd_state_flush_for_num(62,26,my_char_O,6,12,1);
-						lcd_state_flush_for_num(68,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,38,my_char_U,6,12,1);
-						lcd_state_flush_for_num(62,38,my_char_b,6,12,1);
-						lcd_state_flush_for_num(68,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,51,my_char_U,6,12,1);
-						lcd_state_flush_for_num(62,51,my_char_x,6,12,1);
-						lcd_state_flush_for_num(68,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,51,my_num_0,5,12,1);
+                        LCD_ShowChinese_garland(8, 13, current_cali_chinese, 4);
+						LCD_ShowChinese_garland(8, 26, voltage_cali_chinese, 4);
+                        LCD_ShowChinese_no_garland(8, 39, frequency_cali_chinese, 4);
 						break;
-					case IO:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						lcd_state_flush_for_num(8,13,my_char_I,6,12,1);
-						lcd_state_flush_for_num(14,13,my_char_a,6,12,1);
-						lcd_state_flush_for_num(20,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,26,my_char_I,6,12,1);
-						lcd_state_flush_for_num(14,26,my_char_c,6,12,1);
-						lcd_state_flush_for_num(20,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,38,my_char_U,6,12,1);
-						lcd_state_flush_for_num(14,38,my_char_a,6,12,1);
-						lcd_state_flush_for_num(20,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,51,my_char_U,6,12,1);
-						lcd_state_flush_for_num(14,51,my_char_c,6,12,1);
-						lcd_state_flush_for_num(20,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,51,my_num_0,5,12,1);
-
-
-
-
-						lcd_state_flush_for_num(56,13,my_char_I,6,12,1);
-						lcd_state_flush_for_num(62,13,my_char_b,6,12,1);
-						lcd_state_flush_for_num(68,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,26,my_char_I,6,12,0);
-						lcd_state_flush_for_num(62,26,my_char_O,6,12,0);
-						lcd_state_flush_for_num(68,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,38,my_char_U,6,12,1);
-						lcd_state_flush_for_num(62,38,my_char_b,6,12,1);
-						lcd_state_flush_for_num(68,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,51,my_char_U,6,12,1);
-						lcd_state_flush_for_num(62,51,my_char_x,6,12,1);
-						lcd_state_flush_for_num(68,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,51,my_num_0,5,12,1);
-						break;
-					case Ua:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						lcd_state_flush_for_num(8,13,my_char_I,6,12,1);
-						lcd_state_flush_for_num(14,13,my_char_a,6,12,1);
-						lcd_state_flush_for_num(20,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,26,my_char_I,6,12,1);
-						lcd_state_flush_for_num(14,26,my_char_c,6,12,1);
-						lcd_state_flush_for_num(20,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,38,my_char_U,6,12,0);
-						lcd_state_flush_for_num(14,38,my_char_a,6,12,0);
-						lcd_state_flush_for_num(20,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,51,my_char_U,6,12,1);
-						lcd_state_flush_for_num(14,51,my_char_c,6,12,1);
-						lcd_state_flush_for_num(20,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,51,my_num_0,5,12,1);
-
-
-
-
-						lcd_state_flush_for_num(56,13,my_char_I,6,12,1);
-						lcd_state_flush_for_num(62,13,my_char_b,6,12,1);
-						lcd_state_flush_for_num(68,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,26,my_char_I,6,12,1);
-						lcd_state_flush_for_num(62,26,my_char_O,6,12,1);
-						lcd_state_flush_for_num(68,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,38,my_char_U,6,12,1);
-						lcd_state_flush_for_num(62,38,my_char_b,6,12,1);
-						lcd_state_flush_for_num(68,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,51,my_char_U,6,12,1);
-						lcd_state_flush_for_num(62,51,my_char_x,6,12,1);
-						lcd_state_flush_for_num(68,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,51,my_num_0,5,12,1);
-						break;
-					case Ub:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						lcd_state_flush_for_num(8,13,my_char_I,6,12,1);
-						lcd_state_flush_for_num(14,13,my_char_a,6,12,1);
-						lcd_state_flush_for_num(20,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,26,my_char_I,6,12,1);
-						lcd_state_flush_for_num(14,26,my_char_c,6,12,1);
-						lcd_state_flush_for_num(20,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,38,my_char_U,6,12,1);
-						lcd_state_flush_for_num(14,38,my_char_a,6,12,1);
-						lcd_state_flush_for_num(20,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,51,my_char_U,6,12,1);
-						lcd_state_flush_for_num(14,51,my_char_c,6,12,1);
-						lcd_state_flush_for_num(20,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,51,my_num_0,5,12,1);
-
-
-
-
-						lcd_state_flush_for_num(56,13,my_char_I,6,12,1);
-						lcd_state_flush_for_num(62,13,my_char_b,6,12,1);
-						lcd_state_flush_for_num(68,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,26,my_char_I,6,12,1);
-						lcd_state_flush_for_num(62,26,my_char_O,6,12,1);
-						lcd_state_flush_for_num(68,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,38,my_char_U,6,12,0);
-						lcd_state_flush_for_num(62,38,my_char_b,6,12,0);
-						lcd_state_flush_for_num(68,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,51,my_char_U,6,12,1);
-						lcd_state_flush_for_num(62,51,my_char_x,6,12,1);
-						lcd_state_flush_for_num(68,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,51,my_num_0,5,12,1);
-						break;
-					case Uc:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-
-						lcd_state_flush_for_num(8,13,my_char_I,6,12,1);
-						lcd_state_flush_for_num(14,13,my_char_a,6,12,1);
-						lcd_state_flush_for_num(20,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,26,my_char_I,6,12,1);
-						lcd_state_flush_for_num(14,26,my_char_c,6,12,1);
-						lcd_state_flush_for_num(20,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,38,my_char_U,6,12,1);
-						lcd_state_flush_for_num(14,38,my_char_a,6,12,1);
-						lcd_state_flush_for_num(20,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,51,my_char_U,6,12,0);
-						lcd_state_flush_for_num(14,51,my_char_c,6,12,0);
-						lcd_state_flush_for_num(20,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,51,my_num_0,5,12,1);
-
-
-
-
-						lcd_state_flush_for_num(56,13,my_char_I,6,12,1);
-						lcd_state_flush_for_num(62,13,my_char_b,6,12,1);
-						lcd_state_flush_for_num(68,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,26,my_char_I,6,12,1);
-						lcd_state_flush_for_num(62,26,my_char_O,6,12,1);
-						lcd_state_flush_for_num(68,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,38,my_char_U,6,12,1);
-						lcd_state_flush_for_num(62,38,my_char_b,6,12,1);
-						lcd_state_flush_for_num(68,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,51,my_char_U,6,12,1);
-						lcd_state_flush_for_num(62,51,my_char_x,6,12,1);
-						lcd_state_flush_for_num(68,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,51,my_num_0,5,12,1);
-					case Ux:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_1,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
-						
-						lcd_state_flush_for_num(8,13,my_char_I,6,12,1);
-						lcd_state_flush_for_num(14,13,my_char_a,6,12,1);
-						lcd_state_flush_for_num(20,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,26,my_char_I,6,12,1);
-						lcd_state_flush_for_num(14,26,my_char_c,6,12,1);
-						lcd_state_flush_for_num(20,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,38,my_char_U,6,12,1);
-						lcd_state_flush_for_num(14,38,my_char_a,6,12,1);
-						lcd_state_flush_for_num(20,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(8,51,my_char_U,6,12,1);
-						lcd_state_flush_for_num(14,51,my_char_c,6,12,1);
-						lcd_state_flush_for_num(20,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(26,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(31,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(36,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(41,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(46,51,my_num_0,5,12,1);
-
-
-
-
-						lcd_state_flush_for_num(56,13,my_char_I,6,12,1);
-						lcd_state_flush_for_num(62,13,my_char_b,6,12,1);
-						lcd_state_flush_for_num(68,13,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,13,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,13,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,26,my_char_I,6,12,1);
-						lcd_state_flush_for_num(62,26,my_char_O,6,12,1);
-						lcd_state_flush_for_num(68,26,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,26,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,26,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,38,my_char_U,6,12,1);
-						lcd_state_flush_for_num(62,38,my_char_b,6,12,1);
-						lcd_state_flush_for_num(68,38,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,38,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,38,my_num_0,5,12,1);
-
-						lcd_state_flush_for_num(56,51,my_char_U,6,12,0);
-						lcd_state_flush_for_num(62,51,my_char_x,6,12,0);
-						lcd_state_flush_for_num(68,51,my_maohao,5,12,1);
-						lcd_state_flush_for_num(73,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(78,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(83,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(88,51,my_num_0,5,12,1);
-						lcd_state_flush_for_num(93,51,my_num_0,5,12,1);
+					default:
 						break;
 				}
 				break;
 			default:
 				break;
 		}
-    }
+	}
+
+	return menu_evt;
+}
+
+struct menu_event_tag * calibration_operation_handler(uint8_t msg_process_signal, uint8_t msg_context)
+{
+/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
+	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
+	menu_evt->status = EVT_NO_ERROR;
+	menu_evt->msg_operation = MSG_RESUMED;
+
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint32_t int_num_flag = 0;
+	uint8_t num_idx_flush[8] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[5] = {0};
+	uint8_t int_flag = 0;
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = SETTING_IN_FACTORY;
+
+	uint16_t page_cnt = CALI_COUNT_MAX;
+	uint8_t page_cur_idx = 0;
+
+	uint8_t msg_storage = msg_context;
+	uint8_t max_count = CALI_COUNT_MAX;
+	uint8_t int_num = 0;
+	uint8_t float_point_num = 0;
+	uint8_t (*sram_write)(float32) = NULL;
+	float32 (*sram_read)(void) = NULL;
+
+	// /* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
+	// uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
+    // if(authentication_key)
+	// {
+	// 	return menu_evt;
+	// }
+
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush));
+	// app_parameter_write_Overvoltage_protection_LV1_One_Value(233.33);
+    if(msg_process_signal == 1)
+	{
+		if(!lcd_modify_num_env.check_num_modify)
+		{
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, max_count, 1, max_count);
+			// lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 5, 1, sizeof(chuankou_shezhi_menu_array));
+		}
+		// chinese_menu_idx = chuankou_shezhi_menu_array[lcd_modify_num_env.menu_type_idx];
+		chinese_menu_idx = lcd_modify_num_env.menu_type_idx;//chuankou_shezhi_menu_array[lcd_modify_num_env.menu_type_idx];
+
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+
+		if(msg_context == KEY_RETURN)
+		{
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+				menu_level_from_env_set_V2(TOP_NODE_MENU, SETTING_IN_FACTORY, CHANNEL_FACTOR, UNKNOW_FORTH_MENU);
+				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.second_menu_cursor);
+				calibration_type = NONE_CALI_CONVERT_TYPE;
+				lcd_the_modified_num_env_to_be_clear_all();
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+				float_flag = app_parameter_read_Trip_exit_time();
+				Log_d("ENTER! float_flag:%f\n",float_flag);
+				my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+			}
+			key_idx_for_num = 0;
+		}
+		
+
+        if(msg_context == FLUSH_SCREEN)
+        {
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
+            clear_screen();
+			lcd_modify_num_env.menu_type_idx = 0;
+			chinese_menu_idx = lcd_modify_num_env.menu_type_idx;// 数组 todo
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
+			msg_lock_from_env_set(0);//unlock the msg
+
+			page_cnt = CALI_COUNT_MAX;
+			float_flag = 0;
+			// //init the array lcd_modify_num_array with value in the first chinese volume
+			// switch(chinese_menu_idx)
+			// {
+			// 	case 0:
+			// 		//update the value for the array lcd_modify_num_array
+			// 		float_flag = SRAM_xxxx(); // SRAM todo
+			// 		Log_d("ENTER! float_flag:%f\n",float_flag);
+			// 		my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
+			// 		break;
+			// 	default:
+			// 		break;
+			// }
+        }
+
+		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true; //让中文光标停住
+					switch(chinese_menu_idx)
+					{
+						case 0:
+							key_idx_for_num = 0;
+							//update the value for the array lcd_modify_num_array
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = VOLTAGE_CALI_0_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_point_num = CURRENT_CALI_FLOAT_POINT_NUM;
+									float_flag = CURRENT_CALI_0_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = FREQUENCY_CALI_0_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							my_convert_float32_to_int_array(lcd_modify_num_array, int_num, float_point_num, float_flag);
+							break;
+						case 1:
+							//update the value for the array lcd_modify_num_array
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = VOLTAGE_CALI_1_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_point_num = CURRENT_CALI_FLOAT_POINT_NUM;
+									float_flag = CURRENT_CALI_1_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = FREQUENCY_CALI_1_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							my_convert_float32_to_int_array(lcd_modify_num_array, int_num, float_point_num, float_flag);
+							key_idx_for_num = 1;
+							break;
+						case 2:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = VOLTAGE_CALI_2_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_point_num = CURRENT_CALI_FLOAT_POINT_NUM;
+									float_flag = CURRENT_CALI_2_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = FREQUENCY_CALI_2_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							my_convert_float32_to_int_array(lcd_modify_num_array, int_num, float_point_num, float_flag);
+							key_idx_for_num = 2;
+							break;
+						case 3:
+							//update the value for the array lcd_modify_num_array
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = VOLTAGE_CALI_3_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_point_num = CURRENT_CALI_FLOAT_POINT_NUM;
+									float_flag = CURRENT_CALI_3_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = FREQUENCY_CALI_3_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							my_convert_float32_to_int_array(lcd_modify_num_array, int_num, float_point_num, float_flag);
+							key_idx_for_num = 3;
+							break;
+						case 4:
+							//update the value for the array lcd_modify_num_array
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = VOLTAGE_CALI_4_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_point_num = CURRENT_CALI_FLOAT_POINT_NUM;
+									float_flag = CURRENT_CALI_4_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = FREQUENCY_CALI_4_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							my_convert_float32_to_int_array(lcd_modify_num_array, int_num, float_point_num, float_flag);
+							key_idx_for_num = 4;
+							break;
+						case 5:
+							//update the value for the array lcd_modify_num_array
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = VOLTAGE_CALI_5_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_point_num = CURRENT_CALI_FLOAT_POINT_NUM;
+									float_flag = CURRENT_CALI_5_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = FREQUENCY_CALI_5_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							my_convert_float32_to_int_array(lcd_modify_num_array, int_num, float_point_num, float_flag);
+							key_idx_for_num = 5;
+							break;
+						case 6:
+							//update the value for the array lcd_modify_num_array
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = VOLTAGE_CALI_6_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_point_num = CURRENT_CALI_FLOAT_POINT_NUM;
+									float_flag = CURRENT_CALI_6_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = FREQUENCY_CALI_6_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							my_convert_float32_to_int_array(lcd_modify_num_array, int_num, float_point_num, float_flag);
+							key_idx_for_num = 6;
+							break;
+						case 7:
+							//update the value for the array lcd_modify_num_array
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = VOLTAGE_CALI_7_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_point_num = CURRENT_CALI_FLOAT_POINT_NUM;
+									float_flag = CURRENT_CALI_7_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = FREQUENCY_CALI_7_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							my_convert_float32_to_int_array(lcd_modify_num_array, int_num, float_point_num, float_flag);
+							key_idx_for_num = 7;
+							break;
+						case 8:
+							//update the value for the array lcd_modify_num_array
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = VOLTAGE_CALI_8_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_point_num = CURRENT_CALI_FLOAT_POINT_NUM;
+									float_flag = CURRENT_CALI_8_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = FREQUENCY_CALI_8_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							my_convert_float32_to_int_array(lcd_modify_num_array, int_num, float_point_num, float_flag);
+							key_idx_for_num = 8;
+							break;
+						case 9:
+							//update the value for the array lcd_modify_num_array
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = VOLTAGE_CALI_9_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_point_num = CURRENT_CALI_FLOAT_POINT_NUM;
+									float_flag = CURRENT_CALI_9_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = FREQUENCY_CALI_9_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							my_convert_float32_to_int_array(lcd_modify_num_array, int_num, float_point_num, float_flag);
+							key_idx_for_num = 9;
+							break;
+						default:
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					float32 coeff_value = 0;
+					switch(calibration_type)
+					{
+						case VOLTAGE_CALI_CONVERT_TYPE:
+							coeff_value = FFT_VOLTAGE_VALUE_GET();
+							break;
+						case CURRENT_CALI_CONVERT_TYPE:
+							coeff_value = FFT_CURRENT_VALUE_GET();
+							break;
+						case FREQUENCY_CALI_CONVERT_TYPE:
+							coeff_value = FFT_FREQUENCY_VALUE_GET();
+							break;
+						default:
+							break;
+					}
+
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						case 0:
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									// prepare for the number modify
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									VOLTAGE_CALI_0_coeff_value_write(0);
+									VOLTAGE_CALI_0_coeff_value_write(float_flag);
+									float_flag = VOLTAGE_CALI_0_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									CURRENT_CALI_0_coeff_value_write(0);
+									CURRENT_CALI_0_coeff_value_write(float_flag);
+									float_flag = CURRENT_CALI_0_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									FREQUENCY_CALI_0_coeff_value_write(0);
+									FREQUENCY_CALI_0_coeff_value_write(float_flag);
+									float_flag = FREQUENCY_CALI_0_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							break;
+						case 1:
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									// prepare for the number modify
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									VOLTAGE_CALI_1_coeff_value_write(0);
+									VOLTAGE_CALI_1_coeff_value_write(float_flag);
+									float_flag = VOLTAGE_CALI_1_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									CURRENT_CALI_1_coeff_value_write(0);
+									CURRENT_CALI_1_coeff_value_write(float_flag);
+									float_flag = CURRENT_CALI_1_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									FREQUENCY_CALI_1_coeff_value_write(0);
+									FREQUENCY_CALI_1_coeff_value_write(float_flag);
+									float_flag = FREQUENCY_CALI_1_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							break;
+						case 2:
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									// prepare for the number modify
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									VOLTAGE_CALI_2_coeff_value_write(0);
+									VOLTAGE_CALI_2_coeff_value_write(float_flag);
+									float_flag = VOLTAGE_CALI_2_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									CURRENT_CALI_2_coeff_value_write(0);
+									CURRENT_CALI_2_coeff_value_write(float_flag);
+									float_flag = CURRENT_CALI_2_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									FREQUENCY_CALI_2_coeff_value_write(0);
+									FREQUENCY_CALI_2_coeff_value_write(float_flag);
+									float_flag = FREQUENCY_CALI_2_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							break;
+						case 3:
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									// prepare for the number modify
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									VOLTAGE_CALI_3_coeff_value_write(0);
+									VOLTAGE_CALI_3_coeff_value_write(float_flag);
+									float_flag = VOLTAGE_CALI_3_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									CURRENT_CALI_3_coeff_value_write(0);
+									CURRENT_CALI_3_coeff_value_write(float_flag);
+									float_flag = CURRENT_CALI_3_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									FREQUENCY_CALI_3_coeff_value_write(0);
+									FREQUENCY_CALI_3_coeff_value_write(float_flag);
+									float_flag = FREQUENCY_CALI_3_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							break;
+						case 4:
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									// prepare for the number modify
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									VOLTAGE_CALI_4_coeff_value_write(0);
+									VOLTAGE_CALI_4_coeff_value_write(float_flag);
+									float_flag = VOLTAGE_CALI_4_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									CURRENT_CALI_4_coeff_value_write(0);
+									CURRENT_CALI_4_coeff_value_write(float_flag);
+									float_flag = CURRENT_CALI_4_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									FREQUENCY_CALI_4_coeff_value_write(0);
+									FREQUENCY_CALI_4_coeff_value_write(float_flag);
+									float_flag = FREQUENCY_CALI_4_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							break;
+						case 5:
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									// prepare for the number modify
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									VOLTAGE_CALI_5_coeff_value_write(0);
+									VOLTAGE_CALI_5_coeff_value_write(float_flag);
+									float_flag = VOLTAGE_CALI_5_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									CURRENT_CALI_5_coeff_value_write(0);
+									CURRENT_CALI_5_coeff_value_write(float_flag);
+									float_flag = CURRENT_CALI_5_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									FREQUENCY_CALI_5_coeff_value_write(0);
+									FREQUENCY_CALI_5_coeff_value_write(float_flag);
+									float_flag = FREQUENCY_CALI_5_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							break;
+						case 6:
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									// prepare for the number modify
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									VOLTAGE_CALI_6_coeff_value_write(0);
+									VOLTAGE_CALI_6_coeff_value_write(float_flag);
+									float_flag = VOLTAGE_CALI_6_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									CURRENT_CALI_6_coeff_value_write(0);
+									CURRENT_CALI_6_coeff_value_write(float_flag);
+									float_flag = CURRENT_CALI_6_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									FREQUENCY_CALI_6_coeff_value_write(0);
+									FREQUENCY_CALI_6_coeff_value_write(float_flag);
+									float_flag = FREQUENCY_CALI_6_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							break;
+						case 7:
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									// prepare for the number modify
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									VOLTAGE_CALI_7_coeff_value_write(0);
+									VOLTAGE_CALI_7_coeff_value_write(float_flag);
+									float_flag = VOLTAGE_CALI_7_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									CURRENT_CALI_7_coeff_value_write(0);
+									CURRENT_CALI_7_coeff_value_write(float_flag);
+									float_flag = CURRENT_CALI_7_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									FREQUENCY_CALI_7_coeff_value_write(0);
+									FREQUENCY_CALI_7_coeff_value_write(float_flag);
+									float_flag = FREQUENCY_CALI_7_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							break;
+						case 8:
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									// prepare for the number modify
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									VOLTAGE_CALI_8_coeff_value_write(0);
+									VOLTAGE_CALI_8_coeff_value_write(float_flag);
+									float_flag = VOLTAGE_CALI_8_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									CURRENT_CALI_8_coeff_value_write(0);
+									CURRENT_CALI_8_coeff_value_write(float_flag);
+									float_flag = CURRENT_CALI_8_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									FREQUENCY_CALI_8_coeff_value_write(0);
+									FREQUENCY_CALI_8_coeff_value_write(float_flag);
+									float_flag = FREQUENCY_CALI_8_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							break;
+						case 9:
+							switch(calibration_type)
+							{
+								case VOLTAGE_CALI_CONVERT_TYPE:
+									// prepare for the number modify
+									int_num = VOLTAGE_CALI_INT_NUM;
+									float_point_num = VOLTAGE_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									VOLTAGE_CALI_9_coeff_value_write(0);
+									VOLTAGE_CALI_9_coeff_value_write(float_flag);
+									float_flag = VOLTAGE_CALI_9_coeff_value_read();
+									break;
+								case CURRENT_CALI_CONVERT_TYPE:
+									int_num = CURRENT_CALI_INT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									CURRENT_CALI_9_coeff_value_write(0);
+									CURRENT_CALI_9_coeff_value_write(float_flag);
+									float_flag = CURRENT_CALI_9_coeff_value_read();
+									break;
+								case FREQUENCY_CALI_CONVERT_TYPE:
+									int_num = FREQUENCY_CALI_INT_NUM;
+									float_point_num = FREQUENCY_CALI_FLOAT_POINT_NUM;
+									float_flag = coeff_value;
+									float_flag = float_flag+ 0.0001;
+									FREQUENCY_CALI_9_coeff_value_write(0);
+									FREQUENCY_CALI_9_coeff_value_write(float_flag);
+									float_flag = FREQUENCY_CALI_9_coeff_value_read();
+									break;
+								default:
+									int_num = 4;
+									float_point_num = 3;
+									float_flag = 0;
+									break;
+							}
+							break;
+						default:
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
+
+		//LCD driver
+		//chinese_menu_idx  中文目录的索引下标
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:
+				clear_screen();
+				switch(calibration_type)
+				{
+					case VOLTAGE_CALI_CONVERT_TYPE:
+						LCD_ShowChinese_garland(0, 0, voltage_cali_chinese, 4);
+						break;
+					case CURRENT_CALI_CONVERT_TYPE:
+						LCD_ShowChinese_garland(0, 0, current_cali_chinese, 4);
+						break;
+					case FREQUENCY_CALI_CONVERT_TYPE:
+						LCD_ShowChinese_garland(0, 0, frequency_cali_chinese, 4);
+						break;
+					default:
+						break;
+				}
+
+        		single_row_continue_printf_12x12_chinese_in_lcd(63, 0, DI_chinese, 1, 12, 1);
+
+				my_convert_int_to_int_array(num_array, 3, chinese_menu_idx+1);
+                show_num(75, /* modify*/
+                        0, /* modify*/
+                        num_array[0],5,12,1);
+                show_num(81, /* modify*/
+                        0, /* modify*/
+                        num_array[1],5,12,1);
+                show_num(87, /* modify*/
+                        0, /* modify*/
+                        num_array[2],5,12,1);
+
+        		lcd_state_flush_for_num(92,1,XieGang_char,6,12,1);
+
+                my_convert_int_to_int_array(num_array, 3, page_cnt);
+                show_num(98, /* modify*/
+                        0, /* modify*/
+                        num_array[0],5,12,1);
+                show_num(104, /* modify*/
+                        0, /* modify*/
+                        num_array[1],5,12,1);
+                show_num(110, /* modify*/
+                        0, /* modify*/
+                        num_array[2],5,12,1);
+        		single_row_continue_printf_12x12_chinese_in_lcd(116, 0, GE_chinese, 1, 12, 1);
+
+                if(chinese_menu_idx < page_cnt)
+                {
+                    calibration_ind_menu_display(chinese_menu_idx, calibration_type, int_num, float_point_num, float_flag);
+                }
+			default:
+				break;
+		}
+	}
 
     return menu_evt;
 }
+
+void calibration_ind_menu_display(uint8_t cali_idx, uint8_t cali_type, uint8_t int_num, uint8_t float_point_num, float32 float_flag)
+{
+	uint8_t num_array[7] = {0};
+	uint8_t *danwei_char_ptr_first = NULL;
+	uint8_t *danwei_char_ptr_sec = NULL;
+	uint8_t sub_pos = 10;
+	float32 coeff_option = 0;
+	float32 coeff_value = 0;
+	switch(cali_type)
+	{
+		case VOLTAGE_CALI_CONVERT_TYPE:
+			danwei_char_ptr_first = my_char_V;
+			switch(cali_idx)
+			{
+				case 0:
+					coeff_option = VOLTAGE_CALI_0_coeff_option_read();
+					coeff_value  = VOLTAGE_CALI_0_coeff_value_read();
+					break;
+				case 1:
+					coeff_option = VOLTAGE_CALI_1_coeff_option_read();
+					coeff_value  = VOLTAGE_CALI_1_coeff_value_read();
+					break;
+				case 2:
+					coeff_option = VOLTAGE_CALI_2_coeff_option_read();
+					coeff_value  = VOLTAGE_CALI_2_coeff_value_read();
+					break;
+				case 3:
+					coeff_option = VOLTAGE_CALI_3_coeff_option_read();
+					coeff_value  = VOLTAGE_CALI_3_coeff_value_read();
+					break;
+				case 4:
+					coeff_option = VOLTAGE_CALI_4_coeff_option_read();
+					coeff_value  = VOLTAGE_CALI_4_coeff_value_read();
+					break;
+				case 5:
+					coeff_option = VOLTAGE_CALI_5_coeff_option_read();
+					coeff_value  = VOLTAGE_CALI_5_coeff_value_read();
+					break;
+				case 6:
+					coeff_option = VOLTAGE_CALI_6_coeff_option_read();
+					coeff_value  = VOLTAGE_CALI_6_coeff_value_read();
+					break;
+				case 7:
+					coeff_option = VOLTAGE_CALI_7_coeff_option_read();
+					coeff_value  = VOLTAGE_CALI_7_coeff_value_read();
+					break;
+				case 8:
+					coeff_option = VOLTAGE_CALI_8_coeff_option_read();
+					coeff_value  = VOLTAGE_CALI_8_coeff_value_read();
+					break;
+				case 9:
+					coeff_option = VOLTAGE_CALI_9_coeff_option_read();
+					coeff_value  = VOLTAGE_CALI_9_coeff_value_read();
+					break;
+				default:
+					break;
+			}
+			break;
+		case CURRENT_CALI_CONVERT_TYPE:
+			danwei_char_ptr_first = my_char_A;
+			switch(cali_idx)
+			{
+				case 0:
+					coeff_option = CURRENT_CALI_0_coeff_option_read();
+					coeff_value  = CURRENT_CALI_0_coeff_value_read();
+					break;
+				case 1:
+					coeff_option = CURRENT_CALI_1_coeff_option_read();
+					coeff_value  = CURRENT_CALI_1_coeff_value_read();
+					break;
+				case 2:
+					coeff_option = CURRENT_CALI_2_coeff_option_read();
+					coeff_value  = CURRENT_CALI_2_coeff_value_read();
+					break;
+				case 3:
+					coeff_option = CURRENT_CALI_3_coeff_option_read();
+					coeff_value  = CURRENT_CALI_3_coeff_value_read();
+					break;
+				case 4:
+					coeff_option = CURRENT_CALI_4_coeff_option_read();
+					coeff_value  = CURRENT_CALI_4_coeff_value_read();
+					break;
+				case 5:
+					coeff_option = CURRENT_CALI_5_coeff_option_read();
+					coeff_value  = CURRENT_CALI_5_coeff_value_read();
+					break;
+				case 6:
+					coeff_option = CURRENT_CALI_6_coeff_option_read();
+					coeff_value  = CURRENT_CALI_6_coeff_value_read();
+					break;
+				case 7:
+					coeff_option = CURRENT_CALI_7_coeff_option_read();
+					coeff_value  = CURRENT_CALI_7_coeff_value_read();
+					break;
+				case 8:
+					coeff_option = CURRENT_CALI_8_coeff_option_read();
+					coeff_value  = CURRENT_CALI_8_coeff_value_read();
+					break;
+				case 9:
+					coeff_option = CURRENT_CALI_9_coeff_option_read();
+					coeff_value  = CURRENT_CALI_9_coeff_value_read();
+					break;
+				default:
+					break;
+			}
+			break;
+		case FREQUENCY_CALI_CONVERT_TYPE:
+			danwei_char_ptr_first = my_char_H;
+			danwei_char_ptr_sec = my_char_z;
+			switch(cali_idx)
+			{
+				case 0:
+					coeff_option = FREQUENCY_CALI_0_coeff_option_read();
+					coeff_value  = FREQUENCY_CALI_0_coeff_value_read();
+					break;
+				case 1:
+					coeff_option = FREQUENCY_CALI_1_coeff_option_read();
+					coeff_value  = FREQUENCY_CALI_1_coeff_value_read();
+					break;
+				case 2:
+					coeff_option = FREQUENCY_CALI_2_coeff_option_read();
+					coeff_value  = FREQUENCY_CALI_2_coeff_value_read();
+					break;
+				case 3:
+					coeff_option = FREQUENCY_CALI_3_coeff_option_read();
+					coeff_value  = FREQUENCY_CALI_3_coeff_value_read();
+					break;
+				case 4:
+					coeff_option = FREQUENCY_CALI_4_coeff_option_read();
+					coeff_value  = FREQUENCY_CALI_4_coeff_value_read();
+					break;
+				case 5:
+					coeff_option = FREQUENCY_CALI_5_coeff_option_read();
+					coeff_value  = FREQUENCY_CALI_5_coeff_value_read();
+					break;
+				case 6:
+					coeff_option = FREQUENCY_CALI_6_coeff_option_read();
+					coeff_value  = FREQUENCY_CALI_6_coeff_value_read();
+					break;
+				case 7:
+					coeff_option = FREQUENCY_CALI_7_coeff_option_read();
+					coeff_value  = FREQUENCY_CALI_7_coeff_value_read();
+					break;
+				case 8:
+					coeff_option = FREQUENCY_CALI_8_coeff_option_read();
+					coeff_value  = FREQUENCY_CALI_8_coeff_value_read();
+					break;
+				case 9:
+					coeff_option = FREQUENCY_CALI_9_coeff_option_read();
+					coeff_value  = FREQUENCY_CALI_9_coeff_value_read();
+					break;
+				default:
+					break;
+			}
+			break;
+		default:
+			break;
+	}
+
+	lcd_showchinese_no_garland_or_garland(true, 8, 13, cali_sample_value_chinese, 3);
+	// LCD_ShowChinese_no_garland(8, 13, first_fix_value, 4);
+	lcd_state_flush_for_num(46,13,my_maohao,5,12,1);
+	lcd_number_modify_array_get(&float_flag, coeff_value, 
+								num_array, 4, 3, 0xff);
+	lcd_number_display_in_order(63-sub_pos, 13, 5, 12, 
+						0xff, sizeof(num_array), num_array, 4);
+	lcd_state_flush_for_num(107-sub_pos,13,danwei_char_ptr_first,6,12,1);
+	if(danwei_char_ptr_sec != NULL)
+	{
+		lcd_state_flush_for_num(107-sub_pos+6,13,danwei_char_ptr_sec,6,12,1);
+	}
+
+	lcd_showchinese_no_garland_or_garland(true, 8, 26, cali_normalize_value_chinese, 3);
+	// LCD_ShowChinese_garland(8, 26, first_delay, 4);
+	lcd_state_flush_for_num(46,26,my_maohao,5,12,1);
+	lcd_number_modify_array_get(&float_flag, coeff_option, 
+								num_array, 4, 3, 0xff);
+	lcd_number_display_in_order(63-sub_pos, 26, 5, 12, 
+						0xff, sizeof(num_array), num_array, 4);
+	lcd_state_flush_for_num(107-sub_pos,26,danwei_char_ptr_first,6,12,1);
+	if(danwei_char_ptr_sec != NULL)
+	{
+		lcd_state_flush_for_num(107-sub_pos+6,26,danwei_char_ptr_sec,6,12,1);
+	}
+}
+
 struct menu_event_tag * full_range_setting_handler(uint8_t msg_process_signal, uint8_t msg_context)
 {
 	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
