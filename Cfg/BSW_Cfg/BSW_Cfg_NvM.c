@@ -498,7 +498,215 @@ BSW_NvM_Rte nvm_datas_Lists[ID_CNT] =
     {
         .id = ZERO_CURRENT_PHASE,
         .data_len = 4
-    }
+    },
+    {
+    .id = NUMBER1,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER2,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER3,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER4,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER5,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER6,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER7,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER8,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER9,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER10,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER11,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER12,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER13,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER14,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER15,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER16,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER17,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER18,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER19,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER20,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER21,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER22,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER23,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER24,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER25,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER26,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER27,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER28,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER29,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER30,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER31,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER32,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER33,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER34,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER35,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER36,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER37,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER38,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER39,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER40,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER41,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER42,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER43,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER44,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER45,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER46,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER47,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER48,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER49,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER50,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER51,
+    .data_len = 4
+    },
+    {
+    .id = NUMBER52,
+    .data_len = 4
+    },
 };
 
 

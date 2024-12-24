@@ -150,6 +150,58 @@ static app_par_C_CURRENT_PHASE_Rte        app_par_C_CURRENT_PHASE;
 static app_par_ZERO_CURRENT_AMPLITUDE_Rte app_par_ZERO_CURRENT_AMPLITUDE;
 static app_par_ZERO_CURRENT_FREQUENCY_Rte app_par_ZERO_CURRENT_FREQUENCY;
 static app_par_ZERO_CURRENT_PHASE_Rte     app_par_ZERO_CURRENT_PHASE;
+static app_par_NUMBER_Rte                 app_par_NUMBER1;
+static app_par_NUMBER_Rte                 app_par_NUMBER2;
+static app_par_NUMBER_Rte                 app_par_NUMBER3;
+static app_par_NUMBER_Rte                 app_par_NUMBER4;
+static app_par_NUMBER_Rte                 app_par_NUMBER5;
+static app_par_NUMBER_Rte                 app_par_NUMBER6;
+static app_par_NUMBER_Rte                 app_par_NUMBER7;
+static app_par_NUMBER_Rte                 app_par_NUMBER8;
+static app_par_NUMBER_Rte                 app_par_NUMBER9;
+static app_par_NUMBER_Rte                 app_par_NUMBER10;
+static app_par_NUMBER_Rte                 app_par_NUMBER11;
+static app_par_NUMBER_Rte                 app_par_NUMBER12;
+static app_par_NUMBER_Rte                 app_par_NUMBER13;
+static app_par_NUMBER_Rte                 app_par_NUMBER14;
+static app_par_NUMBER_Rte                 app_par_NUMBER15;
+static app_par_NUMBER_Rte                 app_par_NUMBER16;
+static app_par_NUMBER_Rte                 app_par_NUMBER17;
+static app_par_NUMBER_Rte                 app_par_NUMBER18;
+static app_par_NUMBER_Rte                 app_par_NUMBER19;
+static app_par_NUMBER_Rte                 app_par_NUMBER20;
+static app_par_NUMBER_Rte                 app_par_NUMBER21;
+static app_par_NUMBER_Rte                 app_par_NUMBER22;
+static app_par_NUMBER_Rte                 app_par_NUMBER23;
+static app_par_NUMBER_Rte                 app_par_NUMBER24;
+static app_par_NUMBER_Rte                 app_par_NUMBER25;
+static app_par_NUMBER_Rte                 app_par_NUMBER26;
+static app_par_NUMBER_Rte                 app_par_NUMBER27;
+static app_par_NUMBER_Rte                 app_par_NUMBER28;
+static app_par_NUMBER_Rte                 app_par_NUMBER29;
+static app_par_NUMBER_Rte                 app_par_NUMBER30;
+static app_par_NUMBER_Rte                 app_par_NUMBER31;
+static app_par_NUMBER_Rte                 app_par_NUMBER32;
+static app_par_NUMBER_Rte                 app_par_NUMBER33;
+static app_par_NUMBER_Rte                 app_par_NUMBER34;
+static app_par_NUMBER_Rte                 app_par_NUMBER35;
+static app_par_NUMBER_Rte                 app_par_NUMBER36;
+static app_par_NUMBER_Rte                 app_par_NUMBER37;
+static app_par_NUMBER_Rte                 app_par_NUMBER38;
+static app_par_NUMBER_Rte                 app_par_NUMBER39;
+static app_par_NUMBER_Rte                 app_par_NUMBER40;
+static app_par_NUMBER_Rte                 app_par_NUMBER41;
+static app_par_NUMBER_Rte                 app_par_NUMBER42;
+static app_par_NUMBER_Rte                 app_par_NUMBER43;
+static app_par_NUMBER_Rte                 app_par_NUMBER44;
+static app_par_NUMBER_Rte                 app_par_NUMBER45;
+static app_par_NUMBER_Rte                 app_par_NUMBER46;
+static app_par_NUMBER_Rte                 app_par_NUMBER47;
+static app_par_NUMBER_Rte                 app_par_NUMBER48;
+static app_par_NUMBER_Rte                 app_par_NUMBER49;
+static app_par_NUMBER_Rte                 app_par_NUMBER50;
+static app_par_NUMBER_Rte                 app_par_NUMBER51;
+static app_par_NUMBER_Rte                 app_par_NUMBER52;
 
 static uint32  MCM_floatToIntBit( float32 x );
 static float32 IntBitTofloat( uint32 x );
@@ -1011,6 +1063,370 @@ void APP_Parameter_Init( void )
     {
         app_par_ZERO_CURRENT_PHASE.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_ZERO_CURRENT_PHASE.p_buf );
         Log_d( "app_par_ZERO_CURRENT_PHASE.datas:%f\r\n", app_par_ZERO_CURRENT_PHASE.datas );
+    }
+    /* NUMBER1 */
+    ret = BSW_NvM_Read( NUMBER1, app_par_NUMBER1.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER1.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER1.p_buf );
+        Log_d( "app_par_NUMBER1.datas:%f\r\n", app_par_NUMBER1.datas );
+    }
+    /* NUMBER2 */
+    ret = BSW_NvM_Read( NUMBER2, app_par_NUMBER2.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER2.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER2.p_buf );
+        Log_d( "app_par_NUMBER2.datas:%f\r\n", app_par_NUMBER2.datas );
+    }
+    /* NUMBER3 */
+    ret = BSW_NvM_Read( NUMBER3, app_par_NUMBER3.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER3.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER3.p_buf );
+        Log_d( "app_par_NUMBER3.datas:%f\r\n", app_par_NUMBER3.datas );
+    }
+    /* NUMBER4 */
+    ret = BSW_NvM_Read( NUMBER4, app_par_NUMBER4.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER4.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER4.p_buf );
+        Log_d( "app_par_NUMBER4.datas:%f\r\n", app_par_NUMBER4.datas );
+    }
+    /* NUMBER5 */
+    ret = BSW_NvM_Read( NUMBER5, app_par_NUMBER5.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER5.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER5.p_buf );
+        Log_d( "app_par_NUMBER5.datas:%f\r\n", app_par_NUMBER5.datas );
+    }
+    /* NUMBER6 */
+    ret = BSW_NvM_Read( NUMBER6, app_par_NUMBER6.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER6.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER6.p_buf );
+        Log_d( "app_par_NUMBER6.datas:%f\r\n", app_par_NUMBER6.datas );
+    }
+    /* NUMBER7 */
+    ret = BSW_NvM_Read( NUMBER7, app_par_NUMBER7.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER7.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER7.p_buf );
+        Log_d( "app_par_NUMBER7.datas:%f\r\n", app_par_NUMBER7.datas );
+    }
+    /* NUMBER8 */
+    ret = BSW_NvM_Read( NUMBER8, app_par_NUMBER8.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER8.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER8.p_buf );
+        Log_d( "app_par_NUMBER8.datas:%f\r\n", app_par_NUMBER8.datas );
+    }
+    /* NUMBER9 */
+    ret = BSW_NvM_Read( NUMBER9, app_par_NUMBER9.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER9.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER9.p_buf );
+        Log_d( "app_par_NUMBER9.datas:%f\r\n", app_par_NUMBER9.datas );
+    }
+    /* NUMBER10 */
+    ret = BSW_NvM_Read( NUMBER10, app_par_NUMBER10.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER10.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER10.p_buf );
+        Log_d( "app_par_NUMBER10.datas:%f\r\n", app_par_NUMBER10.datas );
+    }
+    /* NUMBER11 */
+    ret = BSW_NvM_Read( NUMBER11, app_par_NUMBER11.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER11.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER11.p_buf );
+        Log_d( "app_par_NUMBER11.datas:%f\r\n", app_par_NUMBER11.datas );
+    }
+    /* NUMBER12 */
+    ret = BSW_NvM_Read( NUMBER12, app_par_NUMBER12.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER12.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER12.p_buf );
+        Log_d( "app_par_NUMBER12.datas:%f\r\n", app_par_NUMBER12.datas );
+    }
+    /* NUMBER13 */
+    ret = BSW_NvM_Read( NUMBER13, app_par_NUMBER13.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER13.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER13.p_buf );
+        Log_d( "app_par_NUMBER13.datas:%f\r\n", app_par_NUMBER13.datas );
+    }
+    /* NUMBER14 */
+    ret = BSW_NvM_Read( NUMBER14, app_par_NUMBER14.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER14.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER14.p_buf );
+        Log_d( "app_par_NUMBER14.datas:%f\r\n", app_par_NUMBER14.datas );
+    }
+    /* NUMBER15 */
+    ret = BSW_NvM_Read( NUMBER15, app_par_NUMBER15.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER15.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER15.p_buf );
+        Log_d( "app_par_NUMBER15.datas:%f\r\n", app_par_NUMBER15.datas );
+    }
+    /* NUMBER16 */
+    ret = BSW_NvM_Read( NUMBER16, app_par_NUMBER16.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER16.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER16.p_buf );
+        Log_d( "app_par_NUMBER16.datas:%f\r\n", app_par_NUMBER16.datas );
+    }
+    /* NUMBER17 */
+    ret = BSW_NvM_Read( NUMBER17, app_par_NUMBER17.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER17.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER17.p_buf );
+        Log_d( "app_par_NUMBER17.datas:%f\r\n", app_par_NUMBER17.datas );
+    }
+    /* NUMBER18 */
+    ret = BSW_NvM_Read( NUMBER18, app_par_NUMBER18.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER18.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER18.p_buf );
+        Log_d( "app_par_NUMBER18.datas:%f\r\n", app_par_NUMBER18.datas );
+    }
+    /* NUMBER19 */
+    ret = BSW_NvM_Read( NUMBER19, app_par_NUMBER19.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER19.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER19.p_buf );
+        Log_d( "app_par_NUMBER19.datas:%f\r\n", app_par_NUMBER19.datas );
+    }
+    /* NUMBER20 */
+    ret = BSW_NvM_Read( NUMBER20, app_par_NUMBER20.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER20.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER20.p_buf );
+        Log_d( "app_par_NUMBER20.datas:%f\r\n", app_par_NUMBER20.datas );
+    }
+    /* NUMBER21 */
+    ret = BSW_NvM_Read( NUMBER21, app_par_NUMBER21.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER21.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER21.p_buf );
+        Log_d( "app_par_NUMBER21.datas:%f\r\n", app_par_NUMBER21.datas );
+    }
+    /* NUMBER22 */
+    ret = BSW_NvM_Read( NUMBER22, app_par_NUMBER22.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER22.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER22.p_buf );
+        Log_d( "app_par_NUMBER22.datas:%f\r\n", app_par_NUMBER22.datas );
+    }
+    /* NUMBER23 */
+    ret = BSW_NvM_Read( NUMBER23, app_par_NUMBER23.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER23.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER23.p_buf );
+        Log_d( "app_par_NUMBER23.datas:%f\r\n", app_par_NUMBER23.datas );
+    }
+    /* NUMBER24 */
+    ret = BSW_NvM_Read( NUMBER24, app_par_NUMBER24.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER24.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER24.p_buf );
+        Log_d( "app_par_NUMBER24.datas:%f\r\n", app_par_NUMBER24.datas );
+    }
+    /* NUMBER25 */
+    ret = BSW_NvM_Read( NUMBER25, app_par_NUMBER25.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER25.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER25.p_buf );
+        Log_d( "app_par_NUMBER25.datas:%f\r\n", app_par_NUMBER25.datas );
+    }
+    /* NUMBER26 */
+    ret = BSW_NvM_Read( NUMBER26, app_par_NUMBER26.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER26.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER26.p_buf );
+        Log_d( "app_par_NUMBER26.datas:%f\r\n", app_par_NUMBER26.datas );
+    }
+    /* NUMBER27 */
+    ret = BSW_NvM_Read( NUMBER27, app_par_NUMBER27.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER27.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER27.p_buf );
+        Log_d( "app_par_NUMBER27.datas:%f\r\n", app_par_NUMBER27.datas );
+    }
+    /* NUMBER28 */
+    ret = BSW_NvM_Read( NUMBER28, app_par_NUMBER28.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER28.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER28.p_buf );
+        Log_d( "app_par_NUMBER28.datas:%f\r\n", app_par_NUMBER28.datas );
+    }
+    /* NUMBER29 */
+    ret = BSW_NvM_Read( NUMBER29, app_par_NUMBER29.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER29.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER29.p_buf );
+        Log_d( "app_par_NUMBER29.datas:%f\r\n", app_par_NUMBER29.datas );
+    }
+    /* NUMBER30 */
+    ret = BSW_NvM_Read( NUMBER30, app_par_NUMBER30.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER30.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER30.p_buf );
+        Log_d( "app_par_NUMBER30.datas:%f\r\n", app_par_NUMBER30.datas );
+    }
+    /* NUMBER31 */
+    ret = BSW_NvM_Read( NUMBER31, app_par_NUMBER31.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER31.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER31.p_buf );
+        Log_d( "app_par_NUMBER31.datas:%f\r\n", app_par_NUMBER31.datas );
+    }
+    /* NUMBER32 */
+    ret = BSW_NvM_Read( NUMBER32, app_par_NUMBER32.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER32.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER32.p_buf );
+        Log_d( "app_par_NUMBER32.datas:%f\r\n", app_par_NUMBER32.datas );
+    }
+    /* NUMBER33 */
+    ret = BSW_NvM_Read( NUMBER33, app_par_NUMBER33.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER33.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER33.p_buf );
+        Log_d( "app_par_NUMBER33.datas:%f\r\n", app_par_NUMBER33.datas );
+    }
+    /* NUMBER34 */
+    ret = BSW_NvM_Read( NUMBER34, app_par_NUMBER34.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER34.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER34.p_buf );
+        Log_d( "app_par_NUMBER34.datas:%f\r\n", app_par_NUMBER34.datas );
+    }
+    /* NUMBER35 */
+    ret = BSW_NvM_Read( NUMBER35, app_par_NUMBER35.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER35.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER35.p_buf );
+        Log_d( "app_par_NUMBER35.datas:%f\r\n", app_par_NUMBER35.datas );
+    }
+    /* NUMBER36 */
+    ret = BSW_NvM_Read( NUMBER36, app_par_NUMBER36.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER36.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER36.p_buf );
+        Log_d( "app_par_NUMBER36.datas:%f\r\n", app_par_NUMBER36.datas );
+    }
+    /* NUMBER37 */
+    ret = BSW_NvM_Read( NUMBER37, app_par_NUMBER37.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER37.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER37.p_buf );
+        Log_d( "app_par_NUMBER37.datas:%f\r\n", app_par_NUMBER37.datas );
+    }
+    /* NUMBER38 */
+    ret = BSW_NvM_Read( NUMBER38, app_par_NUMBER38.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER38.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER38.p_buf );
+        Log_d( "app_par_NUMBER38.datas:%f\r\n", app_par_NUMBER38.datas );
+    }
+    /* NUMBER39 */
+    ret = BSW_NvM_Read( NUMBER39, app_par_NUMBER39.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER39.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER39.p_buf );
+        Log_d( "app_par_NUMBER39.datas:%f\r\n", app_par_NUMBER39.datas );
+    }
+    /* NUMBER40 */
+    ret = BSW_NvM_Read( NUMBER40, app_par_NUMBER40.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER40.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER40.p_buf );
+        Log_d( "app_par_NUMBER40.datas:%f\r\n", app_par_NUMBER40.datas );
+    }
+    /* NUMBER41 */
+    ret = BSW_NvM_Read( NUMBER41, app_par_NUMBER41.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER41.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER41.p_buf );
+        Log_d( "app_par_NUMBER41.datas:%f\r\n", app_par_NUMBER41.datas );
+    }
+    /* NUMBER42 */
+    ret = BSW_NvM_Read( NUMBER42, app_par_NUMBER42.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER42.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER42.p_buf );
+        Log_d( "app_par_NUMBER42.datas:%f\r\n", app_par_NUMBER42.datas );
+    }
+    /* NUMBER43 */
+    ret = BSW_NvM_Read( NUMBER43, app_par_NUMBER43.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER43.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER43.p_buf );
+        Log_d( "app_par_NUMBER43.datas:%f\r\n", app_par_NUMBER43.datas );
+    }
+    /* NUMBER44 */
+    ret = BSW_NvM_Read( NUMBER44, app_par_NUMBER44.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER44.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER44.p_buf );
+        Log_d( "app_par_NUMBER44.datas:%f\r\n", app_par_NUMBER44.datas );
+    }
+    /* NUMBER45 */
+    ret = BSW_NvM_Read( NUMBER45, app_par_NUMBER45.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER45.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER45.p_buf );
+        Log_d( "app_par_NUMBER45.datas:%f\r\n", app_par_NUMBER45.datas );
+    }
+    /* NUMBER46 */
+    ret = BSW_NvM_Read( NUMBER46, app_par_NUMBER46.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER46.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER46.p_buf );
+        Log_d( "app_par_NUMBER46.datas:%f\r\n", app_par_NUMBER46.datas );
+    }
+    /* NUMBER47 */
+    ret = BSW_NvM_Read( NUMBER47, app_par_NUMBER47.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER47.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER47.p_buf );
+        Log_d( "app_par_NUMBER47.datas:%f\r\n", app_par_NUMBER47.datas );
+    }
+    /* NUMBER48 */
+    ret = BSW_NvM_Read( NUMBER48, app_par_NUMBER48.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER48.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER48.p_buf );
+        Log_d( "app_par_NUMBER48.datas:%f\r\n", app_par_NUMBER48.datas );
+    }
+    /* NUMBER49 */
+    ret = BSW_NvM_Read( NUMBER49, app_par_NUMBER49.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER49.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER49.p_buf );
+        Log_d( "app_par_NUMBER49.datas:%f\r\n", app_par_NUMBER49.datas );
+    }
+    /* NUMBER50 */
+    ret = BSW_NvM_Read( NUMBER50, app_par_NUMBER50.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER50.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER50.p_buf );
+        Log_d( "app_par_NUMBER50.datas:%f\r\n", app_par_NUMBER50.datas );
+    }
+    /* NUMBER51 */
+    ret = BSW_NvM_Read( NUMBER51, app_par_NUMBER51.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER51.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER51.p_buf );
+        Log_d( "app_par_NUMBER51.datas:%f\r\n", app_par_NUMBER51.datas );
+    }
+    /* NUMBER52 */
+    ret = BSW_NvM_Read( NUMBER52, app_par_NUMBER52.p_buf );
+    if ( ret == E_OK )
+    {
+        app_par_NUMBER52.datas = app_par_four_intbit_bytes_buf_to_float32( app_par_NUMBER52.p_buf );
+        Log_d( "app_par_NUMBER52.datas:%f\r\n", app_par_NUMBER52.datas );
     }
 }
 
@@ -2843,6 +3259,786 @@ uint8 app_parameter_write_ZERO_CURRENT_PHASE( float32 data )
     return ret;
 }
 
+float32 app_parameter_read_NUMBER1( void )
+{
+    float32 ret = app_par_NUMBER1.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER1( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER1.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER1, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER2( void )
+{
+    float32 ret = app_par_NUMBER2.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER2( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER2.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER2, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER3( void )
+{
+    float32 ret = app_par_NUMBER3.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER3( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER3.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER3, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER4( void )
+{
+    float32 ret = app_par_NUMBER4.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER4( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER4.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER4, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER5( void )
+{
+    float32 ret = app_par_NUMBER5.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER5( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER5.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER5, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER6( void )
+{
+    float32 ret = app_par_NUMBER6.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER6( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER6.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER6, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER7( void )
+{
+    float32 ret = app_par_NUMBER7.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER7( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER7.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER7, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER8( void )
+{
+    float32 ret = app_par_NUMBER8.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER8( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER8.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER8, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER9( void )
+{
+    float32 ret = app_par_NUMBER9.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER9( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER9.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER9, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER10( void )
+{
+    float32 ret = app_par_NUMBER10.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER10( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER10.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER10, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER11( void )
+{
+    float32 ret = app_par_NUMBER11.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER11( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER11.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER11, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER12( void )
+{
+    float32 ret = app_par_NUMBER12.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER12( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER12.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER12, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER13( void )
+{
+    float32 ret = app_par_NUMBER13.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER13( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER13.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER13, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER14( void )
+{
+    float32 ret = app_par_NUMBER14.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER14( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER14.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER14, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER15( void )
+{
+    float32 ret = app_par_NUMBER15.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER15( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER15.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER15, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER16( void )
+{
+    float32 ret = app_par_NUMBER16.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER16( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER16.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER16, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER17( void )
+{
+    float32 ret = app_par_NUMBER17.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER17( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER17.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER17, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER18( void )
+{
+    float32 ret = app_par_NUMBER18.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER18( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER18.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER18, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER19( void )
+{
+    float32 ret = app_par_NUMBER19.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER19( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER19.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER19, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER20( void )
+{
+    float32 ret = app_par_NUMBER20.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER20( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER20.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER20, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER21( void )
+{
+    float32 ret = app_par_NUMBER21.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER21( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER21.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER21, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER22( void )
+{
+    float32 ret = app_par_NUMBER22.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER22( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER22.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER22, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER23( void )
+{
+    float32 ret = app_par_NUMBER23.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER23( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER23.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER23, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER24( void )
+{
+    float32 ret = app_par_NUMBER24.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER24( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER24.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER24, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER25( void )
+{
+    float32 ret = app_par_NUMBER25.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER25( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER25.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER25, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER26( void )
+{
+    float32 ret = app_par_NUMBER26.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER26( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER26.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER26, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER27( void )
+{
+    float32 ret = app_par_NUMBER27.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER27( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER27.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER27, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER28( void )
+{
+    float32 ret = app_par_NUMBER28.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER28( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER28.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER28, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER29( void )
+{
+    float32 ret = app_par_NUMBER29.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER29( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER29.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER29, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER30( void )
+{
+    float32 ret = app_par_NUMBER30.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER30( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER30.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER30, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER31( void )
+{
+    float32 ret = app_par_NUMBER31.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER31( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER31.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER31, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER32( void )
+{
+    float32 ret = app_par_NUMBER32.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER32( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER32.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER32, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER33( void )
+{
+    float32 ret = app_par_NUMBER33.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER33( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER33.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER33, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER34( void )
+{
+    float32 ret = app_par_NUMBER34.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER34( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER34.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER34, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER35( void )
+{
+    float32 ret = app_par_NUMBER35.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER35( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER35.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER35, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER36( void )
+{
+    float32 ret = app_par_NUMBER36.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER36( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER36.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER36, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER37( void )
+{
+    float32 ret = app_par_NUMBER37.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER37( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER37.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER37, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER38( void )
+{
+    float32 ret = app_par_NUMBER38.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER38( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER38.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER38, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER39( void )
+{
+    float32 ret = app_par_NUMBER39.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER39( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER39.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER39, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER40( void )
+{
+    float32 ret = app_par_NUMBER40.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER40( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER40.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER40, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER41( void )
+{
+    float32 ret = app_par_NUMBER41.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER41( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER41.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER41, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER42( void )
+{
+    float32 ret = app_par_NUMBER42.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER42( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER42.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER42, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER43( void )
+{
+    float32 ret = app_par_NUMBER43.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER43( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER43.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER43, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER44( void )
+{
+    float32 ret = app_par_NUMBER44.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER44( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER44.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER44, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER45( void )
+{
+    float32 ret = app_par_NUMBER45.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER45( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER45.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER45, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER46( void )
+{
+    float32 ret = app_par_NUMBER46.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER46( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER46.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER46, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER47( void )
+{
+    float32 ret = app_par_NUMBER47.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER47( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER47.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER47, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER48( void )
+{
+    float32 ret = app_par_NUMBER48.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER48( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER48.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER48, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER49( void )
+{
+    float32 ret = app_par_NUMBER49.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER49( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER49.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER49, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER50( void )
+{
+    float32 ret = app_par_NUMBER50.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER50( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER50.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER50, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER51( void )
+{
+    float32 ret = app_par_NUMBER51.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER51( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER51.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER51, &value );
+    return ret;
+}
+
+float32 app_parameter_read_NUMBER52( void )
+{
+    float32 ret = app_par_NUMBER52.datas;
+    return ret;
+}
+
+uint8 app_parameter_write_NUMBER52( float32 data )
+{
+    uint8 ret                        = E_NOK;
+    app_par_NUMBER52.datas            = data;
+    uint32 value                     = MCM_floatToIntBit( data );
+    ret                              = BSW_NvM_Write( NUMBER52, &value );
+    return ret;
+}
+
 static uint32 MCM_floatToIntBit( float32 x )
 {
     uint32* pInt;
@@ -3022,6 +4218,59 @@ void app_allpara_default_init( void )
     nvm_datas_Lists[ ZERO_CURRENT_AMPLITUDE ].dft          = MCM_floatToIntBit( 0 );
     nvm_datas_Lists[ ZERO_CURRENT_FREQUENCY ].dft          = MCM_floatToIntBit( 0 );
     nvm_datas_Lists[ ZERO_CURRENT_PHASE ].dft              = MCM_floatToIntBit( 0 );
+
+    nvm_datas_Lists[ NUMBER1 ].dft                          = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER2 ].dft                          = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER3 ].dft                          = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER4 ].dft                          = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER5 ].dft                          = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER6 ].dft                          = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER7 ].dft                          = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER8 ].dft                          = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER9 ].dft                          = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER10 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER11 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER12 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER13 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER14 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER15 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER16 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER17 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER18 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER19 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER20 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER21 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER22 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER23 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER24 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER25 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER26 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER27 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER28 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER29 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER30 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER31 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER32 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER33 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER34 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER35 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER36 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER37 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER38 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER39 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER40 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER41 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER42 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER43 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER44 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER45 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER46 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER47 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER48 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER49 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER50 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER51 ].dft                         = MCM_floatToIntBit( 0 );
+    nvm_datas_Lists[ NUMBER52 ].dft                         = MCM_floatToIntBit( 0 );
 }
 uint8 app_allpara_default_update( void )
 {
