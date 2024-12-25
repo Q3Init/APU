@@ -57,6 +57,10 @@
 /* 能量补偿点数 */
 #define RFFT_ENERGY_COMP_MAX_POINT  10
 
+#define APP_FFT_VOLTAGE_VALUE_GET()   	APP_Get_Voltage_Ua()
+#define APP_FFT_CURRENT_VALUE_GET()		APP_Get_Voltage_Ia()
+#define APP_FFT_FREQUENCY_VALUE_GET()	APP_Get_Freq_Ua()
+
 enum Cali_Convert_Type{
     VOLTAGE_CALI_CONVERT_TYPE,
     CURRENT_CALI_CONVERT_TYPE,
@@ -183,6 +187,11 @@ typedef struct {
     // uint16 sample_adc_count;
 
 } APP_Protection_Backend_t;
+
+/* 给屏幕较准电压、电流、频率用的采样接口 */
+float32 APP_FFT_Get_Voltage_Fa(void);
+float32 APP_FFT_Get_Voltage_Ia(void);
+float32 APP_FFT_Get_Voltage_Ua(void);
 
 uint32 APP_Get_System_Ms(void);
 

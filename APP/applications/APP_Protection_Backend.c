@@ -61,6 +61,44 @@ float32 current_cali_coffe_option[VOLT_CALI_COUNT_MAX];//TODO
 float32 voltage_cali_coffe_option[VOLT_CALI_COUNT_MAX];//TODO
 float32 frequency_cali_coffe_option[VOLT_CALI_COUNT_MAX];//TODO
 
+struct once_result_tag{
+    float32 voltage;
+    float32 current;
+    float32 frequency;
+};
+
+static struct once_result_tag once_result;
+
+/**
+ * @brief 获取单相电压结果值（A相）
+ * 
+ * @return float32 
+ */
+float32 APP_FFT_Get_Voltage_Ua(void)
+{
+    return once_result.voltage;
+}
+
+/**
+ * @brief 获取单相电流结果值（A相）
+ * 
+ * @return float32 
+ */
+float32 APP_FFT_Get_Voltage_Ia(void)
+{
+    return once_result.current;
+}
+
+/**
+ * @brief 获取单相频率结果值（A相电压的频率）
+ * 
+ * @return float32 
+ */
+float32 APP_FFT_Get_Voltage_Fa(void)
+{
+    return once_result.frequency;
+}
+
 /**
  * @brief 系统时间
  * 
@@ -1741,6 +1779,9 @@ void APP_FFT_Handler(void)
     APP_RFFT_Voltage_Calc(APP_SMP_ADC_CH_UOUT, 
                           &pBk->value.line_uout, NULL, NULL, NULL);
 
+    once_result.current = pBk->value.line_ia;
+    once_result.voltage = pBk->value.line_ua;
+    once_result.frequency = pBk->value.freq_ua;
     symmetric_three_phase_circuit_ind = APP_Symmetric_Three_Phase_Circuit_State_Get();
 
     /* 功率相关 */

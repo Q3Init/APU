@@ -16,10 +16,14 @@
 #define SRAM_xxxx_read()   0
 #define SRAM_xxxx() 0
 
+extern float32 APP_FFT_Get_Voltage_Ia(void);
+extern float32 APP_FFT_Get_Voltage_Ua(void);
+extern float32 APP_FFT_Get_Voltage_Fa(void);
+
 /* 获取实时采样值的接口 */
-#define FFT_VOLTAGE_VALUE_GET()   	0
-#define FFT_CURRENT_VALUE_GET()		0
-#define FFT_FREQUENCY_VALUE_GET()	0
+#define FFT_VOLTAGE_VALUE_GET()   	APP_FFT_Get_Voltage_Ua()
+#define FFT_CURRENT_VALUE_GET()		APP_FFT_Get_Voltage_Ia()
+#define FFT_FREQUENCY_VALUE_GET()	APP_FFT_Get_Voltage_Fa()
 
 /***************************************START**********************************************/
 /* 以下两个接口用作了逆功率延时时间设置和 开入逻辑功能设置 */
