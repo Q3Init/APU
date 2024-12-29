@@ -3466,6 +3466,9 @@ struct menu_event_tag * factory_reset_handler(uint8_t msg_process_signal, uint8_
 						case FIX_VALUE_RESET:
 							app_action_default_update();
 							break;
+						case COUNT_CLEAR:
+							APP_Protection_energy_cnt_clear();
+							break;
 						default:
 							break;
 					}

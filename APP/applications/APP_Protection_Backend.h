@@ -325,6 +325,6 @@ uint8 APP_Remote_Signal_Input_State(uint8 ch);
 
 int APP_Protection_Backend_Init(void);
 void APP_Protection_Backend_Loop(void);
-
+void APP_Protection_energy_cnt_clear(void);
 
 #endif

@@ -1820,18 +1820,22 @@ void APP_FFT_Handler(void)
     if(APP_Get_Active_Power_Total() > 0)
     {
         pBk->value.plus_Ep += APP_Get_Active_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
+        APP_PLUS_EP_SRAM_WRITE(pBk->value.plus_Ep);
     }
     else
     {
         pBk->value.minus_Ep += APP_Get_Active_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
+        APP_MINUS_EP_SRAM_WRITE(pBk->value.minus_Ep);
     }
     if(APP_Get_Reactive_Power_Total() > 0)
     {
         pBk->value.plus_Eq += APP_Get_Reactive_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
+        APP_PLUS_EQ_SRAM_WRITE(pBk->value.plus_Eq);
     }
     else
     {
         pBk->value.minus_Eq += APP_Get_Reactive_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
+        APP_MINUS_EQ_SRAM_WRITE(pBk->value.minus_Eq);
     }
 
     fft_time_cost = tick2 - tick1;
@@ -1983,7 +1987,18 @@ void APP_frequency_cali_coffe_option_init(uint8_t cali_idx, float32 value)
     }
 }
 
-
+void APP_Protection_energy_cnt_clear(void)
+{
+    APP_PLUS_EP_SRAM_WRITE(0);
+    APP_MINUS_EP_SRAM_WRITE(0);
+    APP_PLUS_EQ_SRAM_WRITE(0);
+    APP_MINUS_EQ_SRAM_WRITE(0);
+    pBk->value.minus_Eq = APP_MINUS_EQ_SRAM_READ();
+    pBk->value.plus_Eq = APP_PLUS_EQ_SRAM_READ();
+    pBk->value.minus_Ep = APP_MINUS_EP_SRAM_READ();
+    pBk->value.plus_Ep = APP_PLUS_EP_SRAM_READ();
+    DMA_Time_Record_Ms = 0;
+}
 
 
 /**
@@ -2067,10 +2082,10 @@ int APP_Protection_Backend_Init(void)
 
     pBk->fft_enable = false;
 
-    pBk->value.minus_Eq = 0;
-    pBk->value.plus_Eq = 0;
-    pBk->value.minus_Ep = 0;
-    pBk->value.plus_Ep = 0;
+    pBk->value.minus_Eq = APP_MINUS_EQ_SRAM_READ();
+    pBk->value.plus_Eq = APP_PLUS_EQ_SRAM_READ();
+    pBk->value.minus_Ep = APP_MINUS_EP_SRAM_READ();
+    pBk->value.plus_Ep = APP_PLUS_EP_SRAM_READ();
     DMA_Time_Record_Ms = 0;
 
     for (i = 0; i < APP_RMT_CHAN_MAX; i++) {
