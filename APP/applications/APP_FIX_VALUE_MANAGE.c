@@ -7713,7 +7713,7 @@ struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal
 													num_array, 4, 1, num_idx_flush[2]);
 						lcd_number_display_in_order(64, 38, 5, 12, 
 											num_idx_flush[2], 5, num_array, 4);
-						lcd_state_flush_for_num(90+5,38,my_char_W,6,12,1);
+						lcd_state_flush_for_num(90+6,38,my_char_W,6,12,1);
 
 						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0008, 8, 51, first_delay, 4);
 						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
