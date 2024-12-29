@@ -48,7 +48,7 @@ struct menu_cmd_tag third_menu_cmd_tbl[]=
 	{THIRD_MENU,		FREQUENCY_OVER, 				(menu_kernel_func)frequency_over_handler},
 	{THIRD_MENU,		FREQUENCY_TOO_LOW, 				(menu_kernel_func)frequency_too_low_handler},
 	{THIRD_MENU,		FREQUENCY_MUTATION, 			(menu_kernel_func)frequency_mutation_handler},
-	{THIRD_MENU,		REVERSE_POWER, 					(menu_kernel_func)reverse_power_handler},
+	{THIRD_MENU,		REVERSE_POWER, 					(menu_kernel_func)reverse_power_by_step_handler},
 	{THIRD_MENU,		HARMONIC_PROTECTION, 			(menu_kernel_func)harmonic_protection_handler},
 	{THIRD_MENU,		EXTERNAL_SHUNT_TRIPPING, 		(menu_kernel_func)external_shunt_tripping_handler},
 	{THIRD_MENU,		QUICK_DISCONNECT_PROTECTION, 	(menu_kernel_func)quick_disconnect_protection_handler},
@@ -58,7 +58,8 @@ struct menu_cmd_tag third_menu_cmd_tbl[]=
 	{THIRD_MENU,		SYSTEM_POWER_OFF, 				(menu_kernel_func)system_power_off_handler},
 	{THIRD_MENU,		CLOSING_SWITCH_WITH_VOLTAGE, 	(menu_kernel_func)closing_switch_with_voltage_handler},
 	{THIRD_MENU,		POWER_RECOVER, 					(menu_kernel_func)power_recover_handler},
-	
+	{THIRD_MENU,		POWER_RECOVER_CLOSING, 			(menu_kernel_func)power_recover_closing_handler},
+
 	/* DEBUG_MODE MENU */
 	{THIRD_MENU,		DRIVER_TEST, 					(menu_kernel_func)driver_test_handler},
 	{THIRD_MENU,		REMOTE_DRIVER_TEST, 			(menu_kernel_func)remote_driver_test_handler},

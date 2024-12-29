@@ -126,6 +126,7 @@ enum third_level_menu_type{
 	SYSTEM_POWER_OFF,
 	CLOSING_SWITCH_WITH_VOLTAGE,
 	POWER_RECOVER,
+	POWER_RECOVER_CLOSING,
 
 	/* DEBUG_MODE MENU */
 	DRIVER_TEST,
@@ -363,6 +364,8 @@ extern struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_pr
 extern struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * power_recover_closing_handler(uint8_t msg_process_signal, uint8_t msg_context);
+extern struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal, uint8_t msg_context);
 
 extern struct menu_event_tag * debug_mode_handler(uint8_t msg_process_signal, uint8_t msg_context);
 extern struct menu_event_tag * driver_test_handler(uint8_t msg_process_signal, uint8_t msg_context);

@@ -80,7 +80,7 @@ uint8 fix_value_manage_menu_array[]=
 	QUICK_DISCONNECT_PROTECTION,	LIMITED_TIME_QUICK_DISCONNECT,
 	OVER_CURRENT_PROTECTION,		OVER_SEQUENCE_OVER_CURRENT,
 	SYSTEM_POWER_OFF,				CLOSING_SWITCH_WITH_VOLTAGE,
-	POWER_RECOVER,
+	POWER_RECOVER,					POWER_RECOVER_CLOSING,
 };
 enum over_voltage_protection_menu_type{
 	FIRST_FIX_VALUE,
@@ -163,6 +163,48 @@ uint8 reverse_power_menu_array[]=
 	REVERSE_FIX_VALUE,
 	REVERSE_DELAY,
 	REVERSE_FUNCTION_IN_OUT,
+};
+enum reverse_power_control_menu_type{
+	REVERSE_POWER_CONTROL_TYPE,
+	REVERSE_POWER_CONTROL_IN_OUT,
+	REVERSE_POWER_FIX_VALUE_FOR_ONE_STEP,
+	REVERSE_POWER_OVER_DELAY_FOR_FIRST_STEP,
+	REVERSE_POWER_OVER_DELAY_FOR_SECOND_STEP,
+	REVERSE_POWER_OVER_DELAY_FOR_THIRD_STEP,
+	REVERSE_POWER_OVER_DELAY_FOR_FOURTH_STEP,
+	REVERSE_POWER_OVER_DELAY_FOR_FIFTH_STEP,
+	REVERSE_POWER_OVER_DELAY_FOR_SIXTH_STEP,
+};
+uint8 reverse_power_control_menu_array[]=
+{
+	REVERSE_POWER_CONTROL_TYPE,
+	REVERSE_POWER_CONTROL_IN_OUT,
+	REVERSE_POWER_FIX_VALUE_FOR_ONE_STEP,
+	REVERSE_POWER_OVER_DELAY_FOR_FIRST_STEP,
+	REVERSE_POWER_OVER_DELAY_FOR_SECOND_STEP,
+	REVERSE_POWER_OVER_DELAY_FOR_THIRD_STEP,
+	REVERSE_POWER_OVER_DELAY_FOR_FOURTH_STEP,
+	REVERSE_POWER_OVER_DELAY_FOR_FIFTH_STEP,
+	REVERSE_POWER_OVER_DELAY_FOR_SIXTH_STEP,
+};
+
+enum power_recover_closing_menu_type{
+	POWER_RECOVER_FUNCTION_IN_OUT,
+	POWER_RECOVER_CLOSING_FOR_FIRST_STEP,
+	POWER_RECOVER_CLOSING_FOR_SECOND_STEP,
+	POWER_RECOVER_CLOSING_FOR_THIRD_STEP,
+	POWER_RECOVER_CLOSING_FOR_FOURTH_STEP,
+	POWER_RECOVER_CLOSING_FOR_FIXTH_STEP,
+	POWER_RECOVER_CLOSING_FOR_SIXTH_STEP,
+};
+uint8 power_recover_closing_menu_array[]={
+	POWER_RECOVER_FUNCTION_IN_OUT,
+	POWER_RECOVER_CLOSING_FOR_FIRST_STEP,
+	POWER_RECOVER_CLOSING_FOR_SECOND_STEP,
+	POWER_RECOVER_CLOSING_FOR_THIRD_STEP,
+	POWER_RECOVER_CLOSING_FOR_FOURTH_STEP,
+	POWER_RECOVER_CLOSING_FOR_FIXTH_STEP,
+	POWER_RECOVER_CLOSING_FOR_SIXTH_STEP,
 };
 enum harmonic_protection_menu_type{
 	HARMONIC_FIX_VALUE,
@@ -567,6 +609,7 @@ struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uin
 						LCD_ShowChinese_garland(8, 26, power_recover, 4);
 						
 						LCD_ShowChinese_garland(64, 13, closing_switch_with_voltage, 4);
+						LCD_ShowChinese_garland(64, 26, power_closing, 4);
 						break;
 					case CLOSING_SWITCH_WITH_VOLTAGE:
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
@@ -579,6 +622,7 @@ struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uin
 						LCD_ShowChinese_garland(8, 26, power_recover, 4);
 						
 						LCD_ShowChinese_no_garland(64, 13, closing_switch_with_voltage, 4);
+						LCD_ShowChinese_garland(64, 26, power_closing, 4);
 						break;
 					case POWER_RECOVER:
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
@@ -591,9 +635,22 @@ struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uin
 						LCD_ShowChinese_no_garland(8, 26, power_recover, 4);
 						
 						LCD_ShowChinese_garland(64, 13, closing_switch_with_voltage, 4);
+						LCD_ShowChinese_garland(64, 26, power_closing, 4);
 						break;
 
-					
+					case POWER_RECOVER_CLOSING:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_3,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_3,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						LCD_ShowChinese_garland(8, 13, system_power_off, 4);
+						LCD_ShowChinese_garland(8, 26, power_recover, 4);
+
+						LCD_ShowChinese_garland(64, 13, closing_switch_with_voltage, 4);
+						LCD_ShowChinese_no_garland(64, 26, power_closing, 4);
+						break;
 				}
 				break;
 			default:
@@ -6656,7 +6713,7 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 			case	KEY_LEFT:
 			case	KEY_RIGHT:
 				clear_screen();
-				LCD_ShowChinese_garland(0, 0, power_recover, 6);
+				LCD_ShowChinese_garland(0, 0, power_recover, 4);
 				switch(chinese_menu_idx)
 				{
 					case FIX_VALUE:
@@ -6697,6 +6754,1046 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 						{
 							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63, 38, back, 2);
 						}
+						break;
+					default:
+						break;
+				}
+			default:
+				break;
+		}
+	}
+
+    return menu_evt;
+}
+
+struct menu_event_tag * power_recover_closing_handler(uint8_t msg_process_signal, uint8_t msg_context)
+{
+	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
+	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
+	menu_evt->status = EVT_NO_ERROR;
+	menu_evt->msg_operation = MSG_RESUMED;
+
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
+	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
+	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
+	if(authentication_key)
+	{
+		return menu_evt;
+	}
+
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint8_t num_idx_flush[7] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+
+	// uint8_t op = false;
+	uint8_t int_flag = 0;
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t msg_storage = msg_context;
+
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+    if(msg_process_signal == 1)
+	{
+		if(!lcd_modify_num_env.check_num_modify)
+		{
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 7, 1, sizeof(power_recover_closing_menu_array));
+		}
+		chinese_menu_idx = power_recover_closing_menu_array[lcd_modify_num_env.menu_type_idx];
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+
+		if(msg_context == KEY_RETURN)
+		{
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+
+				menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
+				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				lcd_the_modified_num_env_to_be_clear_all();
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				//just for test log
+				for(int j=0;j<5;j++)
+				{
+					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+				}
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+
+				int_flag = CLOSING_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ();
+				lcd_modify_num_array[0] = int_flag;
+			}
+			key_idx_for_num = 0;
+		}
+		
+
+        if(msg_context == FLUSH_SCREEN)
+        {
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
+            clear_screen();
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
+			msg_lock_from_env_set(0);//unlock the msg
+			chinese_menu_idx = power_recover_closing_menu_array[lcd_modify_num_env.menu_type_idx];
+			//init the array lcd_modify_num_array with value in the first chinese volume
+			switch(chinese_menu_idx)
+			{
+				case POWER_RECOVER_FUNCTION_IN_OUT:
+					//update the value for the array lcd_modify_num_array
+					int_flag = CLOSING_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ();
+					Log_d("ENTER! float_flag:%f\n",float_flag);
+					lcd_modify_num_array[0] = int_flag;
+					break;
+				default:
+					break;
+			}
+        }
+
+		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true;
+					switch(chinese_menu_idx)
+					{
+						case POWER_RECOVER_FUNCTION_IN_OUT:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = CLOSING_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 0;
+							break;
+						case POWER_RECOVER_CLOSING_FOR_FIRST_STEP:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_READ();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 1;
+							break;
+						case POWER_RECOVER_CLOSING_FOR_SECOND_STEP:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_READ();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 2;
+							break;
+						case POWER_RECOVER_CLOSING_FOR_THIRD_STEP:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_READ();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 3;
+							break;
+						case POWER_RECOVER_CLOSING_FOR_FOURTH_STEP:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_READ();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 4;
+							break;
+						case POWER_RECOVER_CLOSING_FOR_FIXTH_STEP:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_READ();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 5;
+							break;
+						case POWER_RECOVER_CLOSING_FOR_SIXTH_STEP:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_READ();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 6;
+							break;
+						default:
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						case POWER_RECOVER_FUNCTION_IN_OUT:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							CLOSING_POWER_BY_STEP_IN_OUT_FROM_SRAM_WRITE(0);
+							CLOSING_POWER_BY_STEP_IN_OUT_FROM_SRAM_WRITE(int_flag);
+							int_flag = CLOSING_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ();
+							break;
+						case POWER_RECOVER_CLOSING_FOR_FIRST_STEP:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_WRITE(0);
+							CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_WRITE(int_flag);
+							int_flag = CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_READ();
+							break;
+						case POWER_RECOVER_CLOSING_FOR_SECOND_STEP:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_WRITE(0);
+							CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_WRITE(int_flag);
+							int_flag = CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_READ();
+							break;
+						case POWER_RECOVER_CLOSING_FOR_THIRD_STEP:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_WRITE(0);
+							CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_WRITE(int_flag);
+							int_flag = CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_READ();
+							break;
+						case POWER_RECOVER_CLOSING_FOR_FOURTH_STEP:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_WRITE(0);
+							CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_WRITE(int_flag);
+							int_flag = CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_READ();
+							break;
+						case POWER_RECOVER_CLOSING_FOR_FIXTH_STEP:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_WRITE(0);
+							CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_WRITE(int_flag);
+							int_flag = CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_READ();
+							break;
+						case POWER_RECOVER_CLOSING_FOR_SIXTH_STEP:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_WRITE(0);
+							CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_WRITE(int_flag);
+							int_flag = CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_READ();
+							break;
+						default:
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
+
+		if(lcd_modify_num_env.check_num_modify)
+		{
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case	POWER_RECOVER_FUNCTION_IN_OUT:
+				case	POWER_RECOVER_CLOSING_FOR_FIRST_STEP:
+				case	POWER_RECOVER_CLOSING_FOR_SECOND_STEP:
+				case	POWER_RECOVER_CLOSING_FOR_THIRD_STEP:
+				case	POWER_RECOVER_CLOSING_FOR_FOURTH_STEP:
+				case	POWER_RECOVER_CLOSING_FOR_FIXTH_STEP:
+				case	POWER_RECOVER_CLOSING_FOR_SIXTH_STEP:
+					up_diff_num_idx_ths = 1;
+					right_diff_num_idx_ths = 0;
+					break;
+				default:
+					break;
+			}
+
+			switch(chinese_menu_idx)
+			{
+				case	POWER_RECOVER_FUNCTION_IN_OUT:
+				case	POWER_RECOVER_CLOSING_FOR_FIRST_STEP:
+				case	POWER_RECOVER_CLOSING_FOR_SECOND_STEP:
+				case	POWER_RECOVER_CLOSING_FOR_THIRD_STEP:
+				case	POWER_RECOVER_CLOSING_FOR_FOURTH_STEP:
+				case	POWER_RECOVER_CLOSING_FOR_FIXTH_STEP:
+				case	POWER_RECOVER_CLOSING_FOR_SIXTH_STEP:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_PLUS://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_MINUS://-
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				switch(chinese_menu_idx)
+				{
+					case POWER_RECOVER_FUNCTION_IN_OUT:
+						chinese_idx_flush &= 0xFFFE;
+						break;
+					case POWER_RECOVER_CLOSING_FOR_FIRST_STEP:
+						chinese_idx_flush &= 0xFFFD;
+						break;
+					case POWER_RECOVER_CLOSING_FOR_SECOND_STEP:
+						chinese_idx_flush &= 0xFFFB;
+						break;
+					case POWER_RECOVER_CLOSING_FOR_THIRD_STEP:
+						chinese_idx_flush &= 0xFFF7;
+						break;
+					case POWER_RECOVER_CLOSING_FOR_FOURTH_STEP:
+						chinese_idx_flush &= 0xFFEF;
+						break;
+					case POWER_RECOVER_CLOSING_FOR_FIXTH_STEP:
+						chinese_idx_flush &= 0xFFDF;
+						break;
+					case POWER_RECOVER_CLOSING_FOR_SIXTH_STEP:
+						chinese_idx_flush &= 0xFFBF;
+						break;
+					default:
+						break;
+				}
+				break;
+			default:
+				break;
+		}
+
+		uint8_t char_dis = 24;
+		switch(msg_storage)
+		{
+			case    KEY_UP:
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, power_reverse_closing_chinese, 6);
+				switch(chinese_menu_idx)
+				{
+					case	POWER_RECOVER_FUNCTION_IN_OUT:
+					case	POWER_RECOVER_CLOSING_FOR_FIRST_STEP:
+					case	POWER_RECOVER_CLOSING_FOR_SECOND_STEP:
+					case	POWER_RECOVER_CLOSING_FOR_THIRD_STEP:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0001, 8, 13, function_in_out, 4);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, CLOSING_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ(), 
+													num_idx_flush[0]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[0],  63, 13, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[0],  63, 13, back, 2);
+						}
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0002, 8, 26, power_reverse_closing_first, 6);
+						lcd_state_flush_for_num(58+char_dis,26,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_READ(), 
+													num_idx_flush[1]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[1],  63+char_dis, 26, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[1],  63+char_dis, 26, back, 2);
+						}
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0004, 8, 38, power_reverse_closing_second, 6);
+						lcd_state_flush_for_num(58+char_dis,38,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_READ(), 
+													num_idx_flush[2]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63+char_dis, 38, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[2],  63+char_dis, 38, back, 2);
+						}
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0008, 8, 51, power_reverse_closing_third, 6);
+						lcd_state_flush_for_num(58+char_dis,51,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_READ(), 
+													num_idx_flush[3]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[3],  63+char_dis, 51, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[3],  63+char_dis, 51, back, 2);
+						}
+						break;
+					case	POWER_RECOVER_CLOSING_FOR_FOURTH_STEP:
+					case	POWER_RECOVER_CLOSING_FOR_FIXTH_STEP:
+					case	POWER_RECOVER_CLOSING_FOR_SIXTH_STEP:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_2,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_2,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0010, 8, 13, power_reverse_closing_fourth, 6);
+						lcd_state_flush_for_num(58+char_dis,13,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_READ(), 
+													num_idx_flush[4]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[4],  63+char_dis, 13, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[4],  63+char_dis, 13, back, 2);
+						}
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0020, 8, 26, power_reverse_closing_fifth, 6);
+						lcd_state_flush_for_num(58+char_dis,26,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_READ(), 
+													num_idx_flush[5]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[5],  63+char_dis, 26, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[5],  63+char_dis, 26, back, 2);
+						}
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0040, 8, 38, power_reverse_closing_sixth, 6);
+						lcd_state_flush_for_num(58+char_dis,38,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_READ(), 
+													num_idx_flush[6]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[6],  63+char_dis, 38, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[6],  63+char_dis, 38, back, 2);
+						}
+					default:
+						break;
+				}
+			default:
+				break;
+		}
+	}
+
+    return menu_evt;
+}
+
+struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal, uint8_t msg_context)
+{
+	/* msg_evt should be malloced and return it! OVER_VOLTAGE_PROTECTION*/
+	struct menu_event_tag *menu_evt = (struct menu_event_tag *)malloc(sizeof(struct menu_event_tag));
+	menu_evt->status = EVT_NO_ERROR;
+	menu_evt->msg_operation = MSG_RESUMED;
+
+	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
+	uint8_t menu_target = FIX_VALUE_MANAGE;
+	/* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
+	uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
+	if(authentication_key)
+	{
+		return menu_evt;
+	}
+
+	static uint8_t key_idx_for_num  = 0;
+	float32 float_flag = 0;
+	uint8_t num_idx_flush[10] = {0};
+	uint16_t chinese_idx_flush = 0xff;
+	uint8_t num_array[5] = {0};
+	// uint8_t op = false;
+	uint8_t int_flag = 0;
+	uint8_t chinese_menu_idx = 0;
+
+	uint8_t msg_storage = msg_context;
+
+	memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+    if(msg_process_signal == 1)
+	{
+		if(!lcd_modify_num_env.check_num_modify)
+		{
+			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 9, 1, sizeof(reverse_power_control_menu_array));
+		}
+		chinese_menu_idx = reverse_power_control_menu_array[lcd_modify_num_env.menu_type_idx];
+		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+
+		if(msg_context == KEY_RETURN)
+		{
+			if(!lcd_modify_num_env.check_num_modify)
+			{
+				lcd_modify_num_env.enter_flag = false;
+				lcd_modify_num_env.menu_type_idx = 0;
+
+				menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE, UNKNOW_THIRD_MENU);
+				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
+				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
+				lcd_the_modified_num_env_to_be_clear_all();
+				Log_d("key KEY_RETURN menu!\r\n");
+			}
+			else
+			{
+				Log_d("RETURN\n");
+				//just for test log
+				for(int j=0;j<5;j++)
+				{
+					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+				}
+				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
+				lcd_the_modified_num_env_to_be_clear_part();
+				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
+
+				int_flag = REVERSE_POWER_BY_STEP_CONTROL_TYPE_FROM_SRAM_READ();
+				lcd_modify_num_array[0] = int_flag;
+			}
+			key_idx_for_num = 0;
+		}
+		
+
+        if(msg_context == FLUSH_SCREEN)
+        {
+			Log_i("\r\n FLUSH_SCREEN   \r\n");
+            clear_screen();
+			lcd_modify_num_env.menu_type_idx = 0;
+			msg_storage = LCD_FLUSH_SCREEN_IND;
+			lcd_modify_num_env.enter_flag = true;// prepare for the number modify
+			msg_lock_from_env_set(0);//unlock the msg
+			chinese_menu_idx = reverse_power_control_menu_array[lcd_modify_num_env.menu_type_idx];
+			//init the array lcd_modify_num_array with value in the first chinese volume
+			switch(chinese_menu_idx)
+			{
+				case REVERSE_POWER_CONTROL_TYPE:
+					//update the value for the array lcd_modify_num_array
+					int_flag = REVERSE_POWER_BY_STEP_CONTROL_TYPE_FROM_SRAM_READ();
+					Log_d("ENTER! float_flag:%f\n",float_flag);
+					lcd_modify_num_array[0] = int_flag;
+					break;
+				default:
+					break;
+			}
+        }
+
+		if(lcd_modify_num_env.enter_flag == true){
+			uint8_t modify_check_state = UNKNOW_PROCESS;
+			// One target to the return clear
+			modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+			// process it only if there is enter_key event occurred
+			if(lcd_modify_num_env.enter_key_ind == 1)
+			{
+				// modify_check_state = modify_value_check_menu_unit(msg_process_signal, msg_context);
+				if(modify_check_state == PROCESS_START)
+				{
+					return menu_evt;
+				}
+
+				if(modify_check_state == PROCESS_ONGOING)
+				{
+					return menu_evt;
+				}
+			}
+
+			if(msg_context == KEY_ENTER)
+			{
+				lcd_modify_num_env.enter_key_ind++;
+				if(lcd_modify_num_env.enter_key_ind == 1)
+				{
+					lcd_modify_num_env.check_num_modify = true;
+					switch(chinese_menu_idx)
+					{
+						case REVERSE_POWER_CONTROL_TYPE:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = REVERSE_POWER_BY_STEP_CONTROL_TYPE_FROM_SRAM_READ();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 1;
+							break;
+						case REVERSE_POWER_CONTROL_IN_OUT:
+							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
+							int_flag = REVERSE_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ();
+							lcd_modify_num_array[0] = int_flag;
+							key_idx_for_num = 2;
+							break;
+						case REVERSE_POWER_FIX_VALUE_FOR_ONE_STEP:
+							key_idx_for_num = 0;
+							//update the value for the array lcd_modify_num_array
+							float_flag = REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_READ();
+							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 1, float_flag);
+							break;
+						case REVERSE_POWER_OVER_DELAY_FOR_FIRST_STEP:
+							//update the value for the array lcd_modify_num_array
+							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_READ();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+							key_idx_for_num = 3;
+							break;
+						case REVERSE_POWER_OVER_DELAY_FOR_SECOND_STEP:
+							//update the value for the array lcd_modify_num_array
+							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_READ();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+							key_idx_for_num = 4;
+							break;
+						case REVERSE_POWER_OVER_DELAY_FOR_THIRD_STEP:
+							//update the value for the array lcd_modify_num_array
+							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_READ();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+							key_idx_for_num = 5;
+							break;
+						case REVERSE_POWER_OVER_DELAY_FOR_FOURTH_STEP:
+							//update the value for the array lcd_modify_num_array
+							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_READ();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+							key_idx_for_num = 6;
+							break;
+						case REVERSE_POWER_OVER_DELAY_FOR_FIFTH_STEP:
+							//update the value for the array lcd_modify_num_array
+							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_READ();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+							key_idx_for_num = 7;
+							break;
+						case REVERSE_POWER_OVER_DELAY_FOR_SIXTH_STEP:
+							//update the value for the array lcd_modify_num_array
+							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_READ();
+							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
+							key_idx_for_num = 8;
+							break;
+						default:
+							break;
+					}
+					num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+				}
+				else
+				{
+					// write SRAM before return to chinese colume
+					switch(chinese_menu_idx)
+					{
+						case REVERSE_POWER_CONTROL_TYPE:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							REVERSE_POWER_BY_STEP_CONTROL_TYPE_FROM_SRAM_WRITE(0);
+							REVERSE_POWER_BY_STEP_CONTROL_TYPE_FROM_SRAM_WRITE(int_flag);
+							int_flag = REVERSE_POWER_BY_STEP_CONTROL_TYPE_FROM_SRAM_READ();
+							break;
+						case REVERSE_POWER_CONTROL_IN_OUT:
+							int_flag = (uint8_t)lcd_modify_num_array[0];
+							REVERSE_POWER_BY_STEP_IN_OUT_FROM_SRAM_WRITE(0);
+							REVERSE_POWER_BY_STEP_IN_OUT_FROM_SRAM_WRITE(int_flag);
+							int_flag = REVERSE_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ();
+							break;
+						case REVERSE_POWER_FIX_VALUE_FOR_ONE_STEP:
+							// prepare for the number modify
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,4, 1);
+							float_flag = float_flag+ 0.0001;
+							REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_WRITE(0);
+							REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_WRITE(float_flag);
+							float_flag = REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_READ();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case REVERSE_POWER_OVER_DELAY_FOR_FIRST_STEP:
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
+							float_flag = float_flag+ 0.0001;
+							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_WRITE(0);
+							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_WRITE(float_flag);
+							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_READ();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case REVERSE_POWER_OVER_DELAY_FOR_SECOND_STEP:
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
+							float_flag = float_flag+ 0.0001;
+							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_WRITE(0);
+							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_WRITE(float_flag);
+							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_READ();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case REVERSE_POWER_OVER_DELAY_FOR_THIRD_STEP:
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
+							float_flag = float_flag+ 0.0001;
+							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_WRITE(0);
+							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_WRITE(float_flag);
+							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_READ();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case REVERSE_POWER_OVER_DELAY_FOR_FOURTH_STEP:
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
+							float_flag = float_flag+ 0.0001;
+							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_WRITE(0);
+							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_WRITE(float_flag);
+							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_READ();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case REVERSE_POWER_OVER_DELAY_FOR_FIFTH_STEP:
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
+							float_flag = float_flag+ 0.0001;
+							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_WRITE(0);
+							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_WRITE(float_flag);
+							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_READ();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						case REVERSE_POWER_OVER_DELAY_FOR_SIXTH_STEP:
+							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
+							float_flag = float_flag+ 0.0001;
+							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_WRITE(0);
+							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_WRITE(float_flag);
+							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_READ();
+							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							break;
+						default:
+							break;
+					}
+					key_idx_for_num = 0;
+					lcd_the_modified_num_env_to_be_clear_part();
+				}
+				msg_storage = LCD_FLUSH_SCREEN_IND;
+			}
+		}
+
+		if(lcd_modify_num_env.check_num_modify)
+		{
+			uint8_t right_diff_num_idx_ths = 0;
+			uint8_t up_diff_num_idx_ths = 0;
+			switch(chinese_menu_idx)
+			{
+				case REVERSE_POWER_CONTROL_TYPE:
+				case REVERSE_POWER_CONTROL_IN_OUT:
+					up_diff_num_idx_ths = 1;
+					right_diff_num_idx_ths = 0;
+					break;
+				case REVERSE_POWER_FIX_VALUE_FOR_ONE_STEP:
+				case REVERSE_POWER_OVER_DELAY_FOR_FIRST_STEP:
+				case REVERSE_POWER_OVER_DELAY_FOR_SECOND_STEP:
+				case REVERSE_POWER_OVER_DELAY_FOR_THIRD_STEP:
+				case REVERSE_POWER_OVER_DELAY_FOR_FOURTH_STEP:
+				case REVERSE_POWER_OVER_DELAY_FOR_FIFTH_STEP:
+				case REVERSE_POWER_OVER_DELAY_FOR_SIXTH_STEP:
+					right_diff_num_idx_ths = LCD_MODIFY_NUM_ARRAY_LV1_LENTH-1;
+					up_diff_num_idx_ths = 9;
+					break;
+
+				default:
+					break;
+			}
+
+			switch(chinese_menu_idx)
+			{
+				case REVERSE_POWER_CONTROL_TYPE:
+				case REVERSE_POWER_CONTROL_IN_OUT:
+				case REVERSE_POWER_FIX_VALUE_FOR_ONE_STEP:
+				case REVERSE_POWER_OVER_DELAY_FOR_FIRST_STEP:
+				case REVERSE_POWER_OVER_DELAY_FOR_SECOND_STEP:
+				case REVERSE_POWER_OVER_DELAY_FOR_THIRD_STEP:
+				case REVERSE_POWER_OVER_DELAY_FOR_FOURTH_STEP:
+				case REVERSE_POWER_OVER_DELAY_FOR_FIFTH_STEP:
+				case REVERSE_POWER_OVER_DELAY_FOR_SIXTH_STEP:
+					switch(msg_context)
+					{	uint8_t new_num;
+						case    KEY_PLUS://+
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]<up_diff_num_idx_ths)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_MINUS://-
+							if(lcd_modify_num_array[lcd_modify_num_env.limited_index]>0)
+							{
+								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
+							}
+							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
+							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_LEFT:
+							if(lcd_modify_num_env.limited_index>0)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								--lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						case	KEY_RIGHT:
+							if(lcd_modify_num_env.limited_index < right_diff_num_idx_ths)
+							{
+								lcd_modify_num_env.last_index = lcd_modify_num_env.limited_index;
+								++lcd_modify_num_env.limited_index;
+							}
+							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
+							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
+							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
+							break;
+						default:
+							break;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(msg_storage)
+		{
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:
+			case    KEY_PLUS:
+			case	KEY_MINUS:
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				switch(chinese_menu_idx)
+				{
+					case REVERSE_POWER_CONTROL_TYPE:
+						chinese_idx_flush &= 0xFFFE;
+						break;
+					case REVERSE_POWER_CONTROL_IN_OUT:
+						chinese_idx_flush &= 0xFFFD;
+						break;
+					case REVERSE_POWER_FIX_VALUE_FOR_ONE_STEP:
+						chinese_idx_flush &= 0xFFFB;
+						break;
+					case REVERSE_POWER_OVER_DELAY_FOR_FIRST_STEP:
+						chinese_idx_flush &= 0xFFF7;
+						break;
+					case REVERSE_POWER_OVER_DELAY_FOR_SECOND_STEP:
+						chinese_idx_flush &= 0xFFEF;
+						break;
+					case REVERSE_POWER_OVER_DELAY_FOR_THIRD_STEP:
+						chinese_idx_flush &= 0xFFDF;
+						break;
+					case REVERSE_POWER_OVER_DELAY_FOR_FOURTH_STEP:
+						chinese_idx_flush &= 0xFFBF;
+						break;
+					case REVERSE_POWER_OVER_DELAY_FOR_FIFTH_STEP:
+						chinese_idx_flush &= 0xFF7F;
+						break;
+					case REVERSE_POWER_OVER_DELAY_FOR_SIXTH_STEP:
+						chinese_idx_flush &= 0xFEFF;
+						break;
+					default:
+						break;
+				}
+				break;
+			default:
+				break;
+		}
+
+		switch(msg_storage)
+		{
+			case    KEY_UP:
+			case	KEY_DOWN:
+				if(lcd_modify_num_env.check_num_modify)
+				{
+					break;
+				}
+			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_PLUS:
+			case	KEY_MINUS:
+			case	KEY_LEFT:
+			case	KEY_RIGHT:
+				clear_screen();
+				LCD_ShowChinese_garland(0, 0, reverse_power, 3);
+				switch(chinese_menu_idx)
+				{
+					case REVERSE_POWER_CONTROL_TYPE:
+					case REVERSE_POWER_CONTROL_IN_OUT:
+					case REVERSE_POWER_FIX_VALUE_FOR_ONE_STEP:
+					case REVERSE_POWER_OVER_DELAY_FOR_FIRST_STEP:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_1,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_3,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0001, 8, 13, control_type, 4);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, REVERSE_POWER_BY_STEP_CONTROL_TYPE_FROM_SRAM_READ(), 
+													num_idx_flush[0]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[0],  63, 13, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[0],  63, 13, back, 2);
+						}
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0002, 8, 26, function_in_out, 4);
+						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
+						lcd_chinese_modify_array_get(&int_flag, REVERSE_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ(), 
+													num_idx_flush[1]);
+						if(int_flag)
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[1],  63, 26, input, 2);
+						}
+						else
+						{
+							lcd_chinese_modify_display_in_order(num_idx_flush[1],  63, 26, back, 2);
+						}
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0004, 8, 38, fix_value, 4);
+						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_READ(), 
+													num_array, 4, 1, num_idx_flush[2]);
+						lcd_number_display_in_order(64, 38, 5, 12, 
+											num_idx_flush[2], 5, num_array, 4);
+						lcd_state_flush_for_num(90+5,38,my_char_W,6,12,1);
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0008, 8, 51, first_delay, 4);
+						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_READ(), 
+													num_array, 3, 2, num_idx_flush[3]);
+						lcd_number_display_in_order(64, 51, 5, 12, 
+											num_idx_flush[3], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,51,my_char_s,6,12,1);
+						break;
+					case REVERSE_POWER_OVER_DELAY_FOR_SECOND_STEP:
+					case REVERSE_POWER_OVER_DELAY_FOR_THIRD_STEP:
+					case REVERSE_POWER_OVER_DELAY_FOR_FOURTH_STEP:
+					case REVERSE_POWER_OVER_DELAY_FOR_FIFTH_STEP:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_2,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_3,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0010, 8, 13, second_delay, 4);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_READ(), 
+													num_array, 3, 2, num_idx_flush[4]);
+						lcd_number_display_in_order(64, 13, 5, 12, 
+											num_idx_flush[4], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,13,my_char_s,6,12,1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0020, 8, 26, SAN_char, 4);
+						lcd_state_flush_for_num(58,26,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_READ(), 
+													num_array, 3, 2, num_idx_flush[5]);
+						lcd_number_display_in_order(64, 26, 5, 12, 
+											num_idx_flush[5], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,26,my_char_s,6,12,1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0040, 8, 38, SI_char, 4);
+						lcd_state_flush_for_num(58,38,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_READ(), 
+													num_array, 3, 2, num_idx_flush[6]);
+						lcd_number_display_in_order(64, 38, 5, 12, 
+											num_idx_flush[6], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,38,my_char_s,6,12,1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0080, 8, 51, WU_char, 4);
+						lcd_state_flush_for_num(58,51,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_READ(), 
+													num_array, 3, 2, num_idx_flush[7]);
+						lcd_number_display_in_order(64, 51, 5, 12, 
+											num_idx_flush[7], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,51,my_char_s,6,12,1);
+						break;
+					case REVERSE_POWER_OVER_DELAY_FOR_SIXTH_STEP:
+						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        				lcd_state_flush_for_num(98,1,my_num_3,5,12,1);
+        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        				lcd_state_flush_for_num(109,1,my_num_3,5,12,1);
+        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+
+
+						lcd_showchinese_no_garland_or_garland(chinese_idx_flush & 0x0100, 8, 13, LIU_char, 4);
+						lcd_state_flush_for_num(58,13,my_maohao,5,12,1);
+						lcd_number_modify_array_get(&float_flag, REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_READ(), 
+													num_array, 3, 2, num_idx_flush[8]);
+						lcd_number_display_in_order(64, 13, 5, 12, 
+											num_idx_flush[8], sizeof(num_array), num_array, 3);
+						lcd_state_flush_for_num(95,13,my_char_s,6,12,1);
+
+						lcd_state_flush_for_num(57,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(62,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(67,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(72,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(77,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(82,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(87,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(92,26,my_char_NULL,6,12,1);
+						lcd_state_flush_for_num(97,26,my_char_NULL,6,12,1);
 						break;
 					default:
 						break;

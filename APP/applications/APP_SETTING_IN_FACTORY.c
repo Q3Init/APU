@@ -79,52 +79,52 @@ extern float32 APP_FFT_Get_Voltage_Fa(void);
 
 /*******************************以下20个SRAM接口用作较准电压用*******************************/
 #define A_VOLTAGE_PHASE_VALUE_READ() 		0
-#define A_VOLTAGE_PHASE_VALUE_WRITE(x)		0
+#define A_VOLTAGE_PHASE_VALUE_WRITE(x)		
 #define B_VOLTAGE_AMPLITUDE_VALUE_READ() 	0
-#define B_VOLTAGE_AMPLITUDE_VALUE_WRITE(x)  0
+#define B_VOLTAGE_AMPLITUDE_VALUE_WRITE(x)  
 #define B_VOLTAGE_FREQUENCY_VALUE_READ() 	0
-#define B_VOLTAGE_FREQUENCY_VALUE_WRITE(x)  0
+#define B_VOLTAGE_FREQUENCY_VALUE_WRITE(x)  
 #define B_VOLTAGE_PHASE_VALUE_READ() 		0
-#define B_VOLTAGE_PHASE_VALUE_WRITE(x)	    0
+#define B_VOLTAGE_PHASE_VALUE_WRITE(x)	    
 #define C_VOLTAGE_AMPLITUDE_VALUE_READ() 	0
-#define C_VOLTAGE_AMPLITUDE_VALUE_WRITE(x)  0
+#define C_VOLTAGE_AMPLITUDE_VALUE_WRITE(x)  
 #define C_VOLTAGE_FREQUENCY_VALUE_READ() 	0
-#define C_VOLTAGE_FREQUENCY_VALUE_WRITE(x)  0
+#define C_VOLTAGE_FREQUENCY_VALUE_WRITE(x)  
 #define C_VOLTAGE_PHASE_VALUE_READ() 		0
-#define C_VOLTAGE_PHASE_VALUE_WRITE(x)      0
+#define C_VOLTAGE_PHASE_VALUE_WRITE(x)      
 #define ZERO_VOLTAGE_AMPLITUDE_VALUE_READ() 	0
-#define ZERO_VOLTAGE_AMPLITUDE_VALUE_WRITE(x)   0
+#define ZERO_VOLTAGE_AMPLITUDE_VALUE_WRITE(x)   
 #define ZERO_VOLTAGE_FREQUENCY_VALUE_READ() 	0
-#define ZERO_VOLTAGE_FREQUENCY_VALUE_WRITE(x)   0
+#define ZERO_VOLTAGE_FREQUENCY_VALUE_WRITE(x)   
 #define ZERO_VOLTAGE_PHASE_VALUE_READ() 		0
-#define ZERO_VOLTAGE_PHASE_VALUE_WRITE(x)       0
+#define ZERO_VOLTAGE_PHASE_VALUE_WRITE(x)       
 #define A_CURRENT_AMPLITUDE_VALUE_READ()  	0
-#define A_CURRENT_AMPLITUDE_VALUE_WRITE(x) 	0
+#define A_CURRENT_AMPLITUDE_VALUE_WRITE(x) 	
 #define A_CURRENT_FREQUENCY_VALUE_READ() 	0
-#define A_CURRENT_FREQUENCY_VALUE_WRITE(x)	0
+#define A_CURRENT_FREQUENCY_VALUE_WRITE(x)	
 #define A_CURRENT_PHASE_VALUE_READ() 		0
-#define A_CURRENT_PHASE_VALUE_WRITE(x)		0
+#define A_CURRENT_PHASE_VALUE_WRITE(x)		
 #define B_CURRENT_AMPLITUDE_VALUE_READ() 	0
-#define B_CURRENT_AMPLITUDE_VALUE_WRITE(x)  0
+#define B_CURRENT_AMPLITUDE_VALUE_WRITE(x)  
 #define B_CURRENT_FREQUENCY_VALUE_READ() 	0
-#define B_CURRENT_FREQUENCY_VALUE_WRITE(x)  0
+#define B_CURRENT_FREQUENCY_VALUE_WRITE(x)  
 #define B_CURRENT_PHASE_VALUE_READ() 		0
-#define B_CURRENT_PHASE_VALUE_WRITE(x)	    0
+#define B_CURRENT_PHASE_VALUE_WRITE(x)	    
 #define C_CURRENT_AMPLITUDE_VALUE_READ() 	0
-#define C_CURRENT_AMPLITUDE_VALUE_WRITE(x)  0
+#define C_CURRENT_AMPLITUDE_VALUE_WRITE(x)  
 #define C_CURRENT_FREQUENCY_VALUE_READ() 	0
-#define C_CURRENT_FREQUENCY_VALUE_WRITE(x)  0
+#define C_CURRENT_FREQUENCY_VALUE_WRITE(x)  
 #define C_CURRENT_PHASE_VALUE_READ() 		0
-#define C_CURRENT_PHASE_VALUE_WRITE(x)  	0
+#define C_CURRENT_PHASE_VALUE_WRITE(x)  	
 #define ZERO_CURRENT_AMPLITUDE_VALUE_READ() 	0
-#define ZERO_CURRENT_AMPLITUDE_VALUE_WRITE(x)   0
+#define ZERO_CURRENT_AMPLITUDE_VALUE_WRITE(x)   
 /************************************************END********************************************************/
 
 /***************START**************以下两个接口用作电流成员[0]和[1]较准用**************************************/
 #define ZERO_CURRENT_FREQUENCY_VALUE_READ() 	0
-#define ZERO_CURRENT_FREQUENCY_VALUE_WRITE(x)   0
+#define ZERO_CURRENT_FREQUENCY_VALUE_WRITE(x)   
 #define ZERO_CURRENT_PHASE_VALUE_READ() 		0
-#define ZERO_CURRENT_PHASE_VALUE_WRITE(x)       0
+#define ZERO_CURRENT_PHASE_VALUE_WRITE(x)       
 /************************************************END********************************************************/
 
 uint8_t calibration_type = NONE_CALI_CONVERT_TYPE;
@@ -705,25 +705,18 @@ struct menu_event_tag * calibration_operation_handler(uint8_t msg_process_signal
 
 	static uint8_t key_idx_for_num  = 0;
 	float32 float_flag = 0;
-	uint32_t int_num_flag = 0;
 	uint8_t num_idx_flush[8] = {0};
-	uint16_t chinese_idx_flush = 0xff;
 	uint8_t num_array[5] = {0};
-	uint8_t int_flag = 0;
 	uint8_t chinese_menu_idx = 0;
 
-	uint8_t last_cursor = menu_kernel_env.menu_cursor_history.first_menu_cursor;
-	uint8_t menu_target = SETTING_IN_FACTORY;
 
 	uint16_t page_cnt = CALI_COUNT_MAX;
-	uint8_t page_cur_idx = 0;
 
 	uint8_t msg_storage = msg_context;
 	uint8_t max_count = CALI_COUNT_MAX;
 	uint8_t int_num = 0;
 	uint8_t float_point_num = 0;
-	uint8_t (*sram_write)(float32) = NULL;
-	float32 (*sram_read)(void) = NULL;
+
 
 	// /* Please enter user password with USER_PASSWORD_AUTHENTICATE() */
 	// uint8_t authentication_key =  USER_PASSWORD_AUTHENTICATE();
