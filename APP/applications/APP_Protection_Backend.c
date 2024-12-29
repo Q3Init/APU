@@ -1996,106 +1996,69 @@ int APP_Protection_Backend_Init(void)
     int i = 0;
     static TimerHandle_t xTimer = NULL;
   
-      // 测试数据  
+    // 测试数据  
+    pBk->current_cali[0].coeff_option = 0.524;//实际数据
+    pBk->current_cali[0].coeff_value  = 0.5524;//显示数据
+    pBk->current_cali[1].coeff_option = 0.986;
+    pBk->current_cali[1].coeff_value  = 1.0511;
+    pBk->current_cali[2].coeff_option = 1.495;
+    pBk->current_cali[2].coeff_value  = 1.567;
+    pBk->current_cali[3].coeff_option = 1.993;
+    pBk->current_cali[3].coeff_value  = 2.0742;
+    pBk->current_cali[4].coeff_option = 2.496;
+    pBk->current_cali[4].coeff_value  = 2.6363;		
+    pBk->current_cali[5].coeff_option = 2.980;
+    pBk->current_cali[5].coeff_value  = 3.123;
+    pBk->current_cali[6].coeff_option = 3.480;
+    pBk->current_cali[6].coeff_value  = 3.6258;
+    pBk->current_cali[7].coeff_option = 4.014;
+    pBk->current_cali[7].coeff_value  = 4.229;
+    pBk->current_cali[8].coeff_option = 4.501;
+    pBk->current_cali[8].coeff_value  = 4.7112;
+    pBk->current_cali[9].coeff_option = 4.918;
+    pBk->current_cali[9].coeff_value  = 5.1846;
 
-    // pBk->current_cali[0].coeff_option = 0.524;
-    // pBk->current_cali[0].coeff_value  = 0.5524;
-    // pBk->current_cali[1].coeff_option = 0.986;
-    // pBk->current_cali[1].coeff_value  = 1.0511;
-    // pBk->current_cali[2].coeff_option = 1.495;
-    // pBk->current_cali[2].coeff_value  = 1.567;
-    // pBk->current_cali[3].coeff_option = 1.993;
-    // pBk->current_cali[3].coeff_value  = 2.0742;
-    // pBk->current_cali[4].coeff_option = 2.496;
-    // pBk->current_cali[4].coeff_value  = 2.6363;		
-    // pBk->current_cali[5].coeff_option = 2.980;
-    // pBk->current_cali[5].coeff_value  = 3.123;
-    // pBk->current_cali[6].coeff_option = 3.480;
-    // pBk->current_cali[6].coeff_value  = 3.6258;
-    // pBk->current_cali[7].coeff_option = 4.014;
-    // pBk->current_cali[7].coeff_value  = 4.229;
-    // pBk->current_cali[8].coeff_option = 4.501;
-    // pBk->current_cali[8].coeff_value  = 4.7112;
-    // pBk->current_cali[9].coeff_option = 4.918;
-    // pBk->current_cali[9].coeff_value  = 5.1846;
+    pBk->volt_cali[0].coeff_option = 100;//实际数据
+    pBk->volt_cali[0].coeff_value  = 102.2;//显示数据
+    pBk->volt_cali[1].coeff_option = 150;
+    pBk->volt_cali[1].coeff_value  = 152.5;
+    pBk->volt_cali[2].coeff_option = 200;
+    pBk->volt_cali[2].coeff_value  = 203.1;
+    pBk->volt_cali[3].coeff_option = 250;
+    pBk->volt_cali[3].coeff_value  = 253.5;
+    pBk->volt_cali[4].coeff_option = 300;
+    pBk->volt_cali[4].coeff_value  = 304;
+    pBk->volt_cali[5].coeff_option = 350;
+    pBk->volt_cali[5].coeff_value  = 355.4;
+    pBk->volt_cali[6].coeff_option = 380;
+    pBk->volt_cali[6].coeff_value  = 389.4;
+    pBk->volt_cali[7].coeff_option = 400;
+    pBk->volt_cali[7].coeff_value  = 406.9;
+    pBk->volt_cali[8].coeff_option = 450;
+    pBk->volt_cali[8].coeff_value  = 459;
+    pBk->volt_cali[9].coeff_option = 500;
+    pBk->volt_cali[9].coeff_value  = 511.4;
 
-    for(uint8_t idx = 0; idx < VOLT_CALI_COUNT_MAX; idx++)
-    {
-        APP_current_cali_coffe_option_init(idx, current_cali_coffe_option[idx]);
-    }
-
-    for(uint8_t idx = 0; idx < VOLT_CALI_COUNT_MAX; idx++)
-    {
-        APP_frequency_cali_coffe_option_init(idx, frequency_cali_coffe_option[idx]);
-    }
-
-    for(uint8_t idx = 0; idx < VOLT_CALI_COUNT_MAX; idx++)
-    {
-        APP_voltage_cali_coffe_option_init(idx, voltage_cali_coffe_option[idx]);
-    }
-
-    pBk->current_cali[0].coeff_option = CURRENT_CALI_0_coeff_option_read();
-    pBk->current_cali[0].coeff_value  = CURRENT_CALI_0_coeff_value_read();
-    pBk->current_cali[1].coeff_option = CURRENT_CALI_1_coeff_option_read();
-    pBk->current_cali[1].coeff_value  = CURRENT_CALI_1_coeff_value_read();
-    pBk->current_cali[2].coeff_option = CURRENT_CALI_2_coeff_option_read();
-    pBk->current_cali[2].coeff_value  = CURRENT_CALI_2_coeff_value_read();
-    pBk->current_cali[3].coeff_option = CURRENT_CALI_3_coeff_option_read();
-    pBk->current_cali[3].coeff_value  = CURRENT_CALI_3_coeff_value_read();
-    pBk->current_cali[4].coeff_option = CURRENT_CALI_4_coeff_option_read();
-    pBk->current_cali[4].coeff_value  = CURRENT_CALI_4_coeff_value_read();		
-    pBk->current_cali[5].coeff_option = CURRENT_CALI_5_coeff_option_read();
-    pBk->current_cali[5].coeff_value  = CURRENT_CALI_5_coeff_value_read();
-    pBk->current_cali[6].coeff_option = CURRENT_CALI_6_coeff_option_read();
-    pBk->current_cali[6].coeff_value  = CURRENT_CALI_6_coeff_value_read();
-    pBk->current_cali[7].coeff_option = CURRENT_CALI_7_coeff_option_read();
-    pBk->current_cali[7].coeff_value  = CURRENT_CALI_7_coeff_value_read();
-    pBk->current_cali[8].coeff_option = CURRENT_CALI_8_coeff_option_read();
-    pBk->current_cali[8].coeff_value  = CURRENT_CALI_8_coeff_value_read();
-    pBk->current_cali[9].coeff_option = CURRENT_CALI_9_coeff_option_read();
-    pBk->current_cali[9].coeff_value  = CURRENT_CALI_9_coeff_value_read();
-
-    pBk->volt_cali[0].coeff_option = VOLTAGE_CALI_0_coeff_option_read();
-    pBk->volt_cali[0].coeff_value  = VOLTAGE_CALI_0_coeff_value_read();
-    pBk->volt_cali[1].coeff_option = VOLTAGE_CALI_1_coeff_option_read();
-    pBk->volt_cali[1].coeff_value  = VOLTAGE_CALI_1_coeff_value_read();
-    pBk->volt_cali[2].coeff_option = VOLTAGE_CALI_2_coeff_option_read();
-    pBk->volt_cali[2].coeff_value  = VOLTAGE_CALI_2_coeff_value_read();
-    pBk->volt_cali[3].coeff_option = VOLTAGE_CALI_3_coeff_option_read();
-    pBk->volt_cali[3].coeff_value  = VOLTAGE_CALI_3_coeff_value_read();
-    pBk->volt_cali[4].coeff_option = VOLTAGE_CALI_4_coeff_option_read();
-    pBk->volt_cali[4].coeff_value  = VOLTAGE_CALI_4_coeff_value_read();
-    pBk->volt_cali[5].coeff_option = VOLTAGE_CALI_5_coeff_option_read();
-    pBk->volt_cali[5].coeff_value  = VOLTAGE_CALI_5_coeff_value_read();
-    pBk->volt_cali[6].coeff_option = VOLTAGE_CALI_6_coeff_option_read();
-    pBk->volt_cali[6].coeff_value  = VOLTAGE_CALI_6_coeff_value_read();
-    pBk->volt_cali[7].coeff_option = VOLTAGE_CALI_7_coeff_option_read();
-    pBk->volt_cali[7].coeff_value  = VOLTAGE_CALI_7_coeff_value_read();
-    pBk->volt_cali[8].coeff_option = VOLTAGE_CALI_8_coeff_option_read();
-    pBk->volt_cali[8].coeff_value  = VOLTAGE_CALI_8_coeff_value_read();
-    pBk->volt_cali[9].coeff_option = VOLTAGE_CALI_9_coeff_option_read();
-    pBk->volt_cali[9].coeff_value  = VOLTAGE_CALI_9_coeff_value_read();
-
-    pBk->freq_cali[0].coeff_option = FREQUENCY_CALI_0_coeff_option_read();
-    pBk->freq_cali[0].coeff_value  = FREQUENCY_CALI_0_coeff_value_read();
-    pBk->freq_cali[1].coeff_option = FREQUENCY_CALI_1_coeff_option_read();
-    pBk->freq_cali[1].coeff_value  = FREQUENCY_CALI_1_coeff_value_read();
-    pBk->freq_cali[2].coeff_option = FREQUENCY_CALI_2_coeff_option_read();
-    pBk->freq_cali[2].coeff_value  = FREQUENCY_CALI_2_coeff_value_read();
-    pBk->freq_cali[3].coeff_option = FREQUENCY_CALI_3_coeff_option_read();
-    pBk->freq_cali[3].coeff_value  = FREQUENCY_CALI_3_coeff_value_read();
-    pBk->freq_cali[4].coeff_option = FREQUENCY_CALI_4_coeff_option_read();
-    pBk->freq_cali[4].coeff_value  = FREQUENCY_CALI_4_coeff_value_read();
-    pBk->freq_cali[5].coeff_option = FREQUENCY_CALI_5_coeff_option_read();
-    pBk->freq_cali[5].coeff_value  = FREQUENCY_CALI_5_coeff_value_read();
-    pBk->freq_cali[6].coeff_option = FREQUENCY_CALI_6_coeff_option_read();
-    pBk->freq_cali[6].coeff_value  = FREQUENCY_CALI_6_coeff_value_read();
-    pBk->freq_cali[7].coeff_option = FREQUENCY_CALI_7_coeff_option_read();
-    pBk->freq_cali[7].coeff_value  = FREQUENCY_CALI_7_coeff_value_read();
-    pBk->freq_cali[8].coeff_option = FREQUENCY_CALI_8_coeff_option_read();
-    pBk->freq_cali[8].coeff_value  = FREQUENCY_CALI_8_coeff_value_read();
-    pBk->freq_cali[9].coeff_option = FREQUENCY_CALI_9_coeff_option_read();
-    pBk->freq_cali[9].coeff_value  = FREQUENCY_CALI_9_coeff_value_read();
+    // pBk->freq_cali[0].coeff_option = 0;//实际数据
+    // pBk->freq_cali[0].coeff_value  = 0;//显示数据
+    // pBk->freq_cali[1].coeff_option = 0;
+    // pBk->freq_cali[1].coeff_value  = 0;
+    // pBk->freq_cali[2].coeff_option = 0;
+    // pBk->freq_cali[2].coeff_value  = 0;
+    // pBk->freq_cali[3].coeff_option = 0;
+    // pBk->freq_cali[3].coeff_value  = 0;
+    // pBk->freq_cali[4].coeff_option = 0;
+    // pBk->freq_cali[4].coeff_value  = 0;
+    // pBk->freq_cali[5].coeff_option = 0;
+    // pBk->freq_cali[5].coeff_value  = 0;
+    // pBk->freq_cali[6].coeff_option = 0;
+    // pBk->freq_cali[6].coeff_value  = 0;
+    // pBk->freq_cali[7].coeff_option = 0;
+    // pBk->freq_cali[7].coeff_value  = 0;
+    // pBk->freq_cali[8].coeff_option = 0;
+    // pBk->freq_cali[8].coeff_value  = 0;
+    // pBk->freq_cali[9].coeff_option = 0;
+    // pBk->freq_cali[9].coeff_value  = 0;
 
     APP_Relay_Set_Channel((uint16)(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D03 | APP_RELAY_CHANNEL_D04));
 
