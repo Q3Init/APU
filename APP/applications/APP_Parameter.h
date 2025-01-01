@@ -19,7 +19,7 @@
 #define APP_MINUS_EQ_SRAM_WRITE(x)  app_parameter_write_NUMBER8(x)
 #define APP_MINUS_EQ_SRAM_READ()    app_parameter_read_NUMBER8()
 
-/**********************************以下为新增逆功率恢复 按段恢复接口****************************/
+/**********************************以下为新增逆功率保护 分闸 按段分闸接口****************************/
 /* 控制方式：本地控制 */
 #define REVERSE_POWER_BY_STEP_CONTROL_TYPE_FROM_SRAM_READ()                 app_parameter_read_NUMBER39()
 #define REVERSE_POWER_BY_STEP_CONTROL_TYPE_FROM_SRAM_WRITE(x)               app_parameter_write_NUMBER39(x)
@@ -27,31 +27,31 @@
 #define REVERSE_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ()                       app_parameter_read_NUMBER40()
 #define REVERSE_POWER_BY_STEP_IN_OUT_FROM_SRAM_WRITE(x)                     app_parameter_write_NUMBER40(x)
 
-/* 每段之间的梯度值（定值），单位：W */
+/* 分闸每段之间的梯度值（定值），单位：W */
 #define REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_READ()       app_parameter_read_NUMBER41()
 #define REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_WRITE(x)     app_parameter_write_NUMBER41(x)
 
-/* 一段延时时间，单位：000.00s */
+/* 分闸一段延时时间，单位：000.00s */
 #define REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_READ()    app_parameter_read_NUMBER42()
 #define REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_WRITE(x)  app_parameter_write_NUMBER42(x)
 
-/* 二段延时时间，单位：000.00s */
+/* 分闸二段延时时间，单位：000.00s */
 #define REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_READ()   app_parameter_read_NUMBER43()
 #define REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_WRITE(x) app_parameter_write_NUMBER43(x)
 
-/* 三段延时时间，单位：000.00s */
+/* 分闸三段延时时间，单位：000.00s */
 #define REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_READ()    app_parameter_read_NUMBER44()
 #define REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_WRITE(x)  app_parameter_write_NUMBER44(x)
 
-/* 四段延时时间，单位：000.00s */
+/* 分闸四段延时时间，单位：000.00s */
 #define REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_READ()   app_parameter_read_NUMBER45()
 #define REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_WRITE(x) app_parameter_write_NUMBER45(x)
 
-/* 五段延时时间，单位：000.00s */
+/* 分闸五段延时时间，单位：000.00s */
 #define REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_READ()    app_parameter_read_NUMBER46()
 #define REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_WRITE(x)  app_parameter_write_NUMBER46(x)
 
-/* 六段延时时间，单位：000.00s */
+/* 分闸六段延时时间，单位：000.00s */
 #define REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_READ()    app_parameter_read_NUMBER47()
 #define REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_WRITE(x)  app_parameter_write_NUMBER47(x)
 
@@ -83,6 +83,48 @@
 /* 恢复合闸六段，功能投退 */
 #define CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_READ()    app_parameter_read_NUMBER2()
 #define CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_WRITE(x)  app_parameter_write_NUMBER2(x)
+
+/* 恢复合闸一段，延时设置, 单位:000.00s */
+#define TIME_CLOSING_POWER_BY_STEP_FOR_FIRST_STEP_FROM_SRAM_READ()      0
+#define TIME_CLOSING_POWER_BY_STEP_FOR_FIRST_STEP_FROM_SRAM_WRITE(x)    
+/* 恢复合闸一段，功率阈值设置, 单位:0000.0W */
+#define P_CLOSING_POWER_BY_STEP_FOR_FIRST_STEP_FROM_SRAM_READ()         0
+#define P_CLOSING_POWER_BY_STEP_FOR_FIRST_STEP_FROM_SRAM_WRITE(x)       
+
+/* 恢复合闸二段，延时设置, 单位:000.00s */
+#define TIME_CLOSING_POWER_BY_STEP_FOR_SECOND_STEP_FROM_SRAM_READ()     0
+#define TIME_CLOSING_POWER_BY_STEP_FOR_SECOND_STEP_FROM_SRAM_WRITE(x)   
+/* 恢复合闸二段，功率阈值设置, 单位:0000.0W */
+#define P_CLOSING_POWER_BY_STEP_FOR_SECOND_STEP_FROM_SRAM_READ()        0
+#define P_CLOSING_POWER_BY_STEP_FOR_SECOND_STEP_FROM_SRAM_WRITE(x)      
+
+/* 恢复合闸三段，延时设置, 单位:000.00s */
+#define TIME_CLOSING_POWER_BY_STEP_FOR_THIRD_STEP_FROM_SRAM_READ()      0
+#define TIME_CLOSING_POWER_BY_STEP_FOR_THIRD_STEP_FROM_SRAM_WRITE(x)    
+/* 恢复合闸三段，功率阈值设置, 单位:0000.0W */
+#define P_CLOSING_POWER_BY_STEP_FOR_THIRD_STEP_FROM_SRAM_READ()         0
+#define P_CLOSING_POWER_BY_STEP_FOR_THIRD_STEP_FROM_SRAM_WRITE(x)       
+
+/* 恢复合闸四段，延时设置, 单位:000.00s */
+#define TIME_CLOSING_POWER_BY_STEP_FOR_FOURTH_STEP_FROM_SRAM_READ()     0
+#define TIME_CLOSING_POWER_BY_STEP_FOR_FOURTH_STEP_FROM_SRAM_WRITE(x)   
+/* 恢复合闸四段，功率阈值设置, 单位:0000.0W */
+#define P_CLOSING_POWER_BY_STEP_FOR_FOURTH_STEP_FROM_SRAM_READ()        0
+#define P_CLOSING_POWER_BY_STEP_FOR_FOURTH_STEP_FROM_SRAM_WRITE(x)      
+
+/* 恢复合闸五段，延时设置, 单位:000.00s */
+#define TIME_CLOSING_POWER_BY_STEP_FOR_FIFTH_STEP_FROM_SRAM_READ()      0
+#define TIME_CLOSING_POWER_BY_STEP_FOR_FIFTH_STEP_FROM_SRAM_WRITE(x)    
+/* 恢复合闸五段，功率阈值设置, 单位:0000.0W */
+#define P_CLOSING_POWER_BY_STEP_FOR_FIFTH_STEP_FROM_SRAM_READ()         0
+#define P_CLOSING_POWER_BY_STEP_FOR_FIFTH_STEP_FROM_SRAM_WRITE(x)       
+
+/* 恢复合闸六段，延时设置, 单位:000.00s */
+#define TIME_CLOSING_POWER_BY_STEP_FOR_SIXTH_STEP_FROM_SRAM_READ()      0
+#define TIME_CLOSING_POWER_BY_STEP_FOR_SIXTH_STEP_FROM_SRAM_WRITE(x)    
+/* 恢复合闸六段，功率阈值设置, 单位:0000.0W */
+#define P_CLOSING_POWER_BY_STEP_FOR_SIXTH_STEP_FROM_SRAM_READ()         0
+#define P_CLOSING_POWER_BY_STEP_FOR_SIXTH_STEP_FROM_SRAM_WRITE(x)       
 
 // /* Calibration for current */
 // #define CURRENT_CALI_0_coeff_option_read()      app_parameter_read_ZERO_CURRENT_FREQUENCY()
