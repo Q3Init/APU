@@ -114,17 +114,17 @@
 
 /* 恢复合闸五段，延时设置, 单位:000.00s */
 #define TIME_CLOSING_POWER_BY_STEP_FOR_FIFTH_STEP_FROM_SRAM_READ()      app_parameter_read_NUMBER11()
-#define TIME_CLOSING_POWER_BY_STEP_FOR_FIFTH_STEP_FROM_SRAM_WRITE(x)    app_parameter_write_NUMBER12(x)
+#define TIME_CLOSING_POWER_BY_STEP_FOR_FIFTH_STEP_FROM_SRAM_WRITE(x)    app_parameter_write_NUMBER11(x)
 /* 恢复合闸五段，功率阈值设置, 单位:0000.0W */
-#define P_CLOSING_POWER_BY_STEP_FOR_FIFTH_STEP_FROM_SRAM_READ()         app_parameter_read_NUMBER13()
-#define P_CLOSING_POWER_BY_STEP_FOR_FIFTH_STEP_FROM_SRAM_WRITE(x)       app_parameter_write_NUMBER13(x)
+#define P_CLOSING_POWER_BY_STEP_FOR_FIFTH_STEP_FROM_SRAM_READ()         app_parameter_read_NUMBER12()
+#define P_CLOSING_POWER_BY_STEP_FOR_FIFTH_STEP_FROM_SRAM_WRITE(x)       app_parameter_write_NUMBER12(x)
 
 /* 恢复合闸六段，延时设置, 单位:000.00s */
-#define TIME_CLOSING_POWER_BY_STEP_FOR_SIXTH_STEP_FROM_SRAM_READ()      app_parameter_read_NUMBER14()
-#define TIME_CLOSING_POWER_BY_STEP_FOR_SIXTH_STEP_FROM_SRAM_WRITE(x)    app_parameter_write_NUMBER14(x)
+#define TIME_CLOSING_POWER_BY_STEP_FOR_SIXTH_STEP_FROM_SRAM_READ()      app_parameter_read_NUMBER13()
+#define TIME_CLOSING_POWER_BY_STEP_FOR_SIXTH_STEP_FROM_SRAM_WRITE(x)    app_parameter_write_NUMBER13(x)
 /* 恢复合闸六段，功率阈值设置, 单位:0000.0W */
-#define P_CLOSING_POWER_BY_STEP_FOR_SIXTH_STEP_FROM_SRAM_READ()         app_parameter_read_NUMBER15()
-#define P_CLOSING_POWER_BY_STEP_FOR_SIXTH_STEP_FROM_SRAM_WRITE(x)       app_parameter_write_NUMBER15(x)
+#define P_CLOSING_POWER_BY_STEP_FOR_SIXTH_STEP_FROM_SRAM_READ()         app_parameter_read_NUMBER14()
+#define P_CLOSING_POWER_BY_STEP_FOR_SIXTH_STEP_FROM_SRAM_WRITE(x)       app_parameter_write_NUMBER14(x)
 
 // /* Calibration for current */
 // #define CURRENT_CALI_0_coeff_option_read()      app_parameter_read_ZERO_CURRENT_FREQUENCY()
