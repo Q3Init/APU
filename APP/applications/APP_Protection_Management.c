@@ -10,15 +10,31 @@
 static APP_Protection_Mnt_t APP_Protection_Mnt;
 APP_Protection_Mnt_t *pMnt = &APP_Protection_Mnt;
 static SemaphoreHandle_t g_prt_enable_sem = NULL;
-typedef struct
+
+typedef enum {
+    ONE_STEP = 0,
+    TWO_STEP,
+    THREE_STEP,
+    FOUR_STEP,
+    FIVE_STEP,
+    SIX_STEP,
+}step_type;
+typedef struct 
 {
     /* data */
-    uint8 cnt;
-    uint32 tick;
-}power_recovery_cnt_Type;
-static power_recovery_cnt_Type recovery_cnt[5] = {0};
-#define RECOVERY_CNT_NUM 5
-#define RECOVERY_TICK_300S_BASE_10MS 30000
+    uint8 step_state;
+    uint32 recover_anti_shake_tick[5];
+    uint32 recover_delay_tick[5];
+    uint32 recover_delay_flag[5];
+    boolean recover_flag[5];
+
+    uint32 reverse_anti_shake_tick[5];
+    uint32 reverse_delay_tick[5];
+    uint32 reverse_delay_flag[5];
+    boolean reverse_flag[5];
+}PowerProtect_Rte;
+
+PowerProtect_Rte powerPro;
 
 #define APP_PRT_ENABLE_SEM_TAKE()   do {\
     if (g_prt_enable_sem != NULL) {\
@@ -112,7 +128,7 @@ uint8 APP_Get_Reverse_Power_Switch_Off_State(void)
 #ifdef APP_PRO_DEBUG_TEST
     return app_pro_management_switch_test[7];
 #else
-    return pMnt->state.reverse_power_switch_off_state;
+    return (powerPro.reverse_flag[ONE_STEP] == true) || (powerPro.reverse_flag[TWO_STEP] == true) || (powerPro.reverse_flag[THREE_STEP] == true) || (powerPro.reverse_flag[FOUR_STEP] == true) || (powerPro.reverse_flag[FIVE_STEP] == true);
 #endif
 }
 
@@ -466,6 +482,7 @@ static void APP_Protection_Voltage_Handler(void)
         } else {
             pMnt->state.over_volt_switch_off_state_lv1 = 0;
             pMnt->delay_exec_list[APP_PRT_OVER_VOLT_LV1] = false;
+            pMnt->anti_shake_tick[APP_PRT_OVER_VOLT_LV1] = APP_Get_System_Ms();
         }
 
         if (true == pMnt->delay_exec_list[APP_PRT_OVER_VOLT_LV1]) {
@@ -501,6 +518,7 @@ static void APP_Protection_Voltage_Handler(void)
         } else {
             pMnt->state.over_volt_switch_off_state_lv2 = 0;
             pMnt->delay_exec_list[APP_PRT_OVER_VOLT_LV2] = false;
+            pMnt->anti_shake_tick[APP_PRT_OVER_VOLT_LV2] = APP_Get_System_Ms();
         }
         /* Priority: If the first stage overvoltage is satisfied, the second stage overvoltage fault is not triggered */
         if ((true == pMnt->delay_exec_list[APP_PRT_OVER_VOLT_LV2]) && (false == pMnt->delay_exec_list[APP_PRT_OVER_VOLT_LV1])) {
@@ -535,6 +553,7 @@ static void APP_Protection_Voltage_Handler(void)
         } else {
             pMnt->state.under_volt_switch_off_state_lv1 = 0;
             pMnt->delay_exec_list[APP_PRT_UNDER_VOLT_LV1] = false;
+            pMnt->anti_shake_tick[APP_PRT_UNDER_VOLT_LV1] = APP_Get_System_Ms();
         }
         /* Priority: If the second undervoltage is met, the first undervoltage fault is not triggered */
         if ((true == pMnt->delay_exec_list[APP_PRT_UNDER_VOLT_LV1]) && (false == pMnt->delay_exec_list[APP_PRT_UNDER_VOLT_LV2])) {
@@ -569,6 +588,7 @@ static void APP_Protection_Voltage_Handler(void)
         } else {
             pMnt->state.under_volt_switch_off_state_lv2 = 0;
             pMnt->delay_exec_list[APP_PRT_UNDER_VOLT_LV2] = false;
+            pMnt->anti_shake_tick[APP_PRT_UNDER_VOLT_LV2] = APP_Get_System_Ms();
         }
 
         if (true == pMnt->delay_exec_list[APP_PRT_UNDER_VOLT_LV2]) {
@@ -614,6 +634,7 @@ static void APP_Protection_Freq_Handler(void)
         } else {
             pMnt->state.over_freq_switch_off_state = 0;
             pMnt->delay_exec_list[APP_PRT_OVER_FREQ] = false;
+            pMnt->anti_shake_tick[APP_PRT_OVER_FREQ] = APP_Get_System_Ms();
         }
         /* If a frequency mutation occurs, neither too high nor too low a frequency fault will trigger */
         if ((true == pMnt->delay_exec_list[APP_PRT_OVER_FREQ]) && (false == pMnt->delay_exec_list[APP_PRT_SPIKE_FREQ])) {
@@ -648,6 +669,7 @@ static void APP_Protection_Freq_Handler(void)
         } else {
             pMnt->state.low_freq_switch_off_state = 0;
             pMnt->delay_exec_list[APP_PRT_LOW_FREQ] = false;
+            pMnt->anti_shake_tick[APP_PRT_LOW_FREQ] = APP_Get_System_Ms();
         }
         /* If a frequency mutation occurs, neither too high nor too low a frequency fault will trigger */
         if ((true == pMnt->delay_exec_list[APP_PRT_LOW_FREQ]) && (false == pMnt->delay_exec_list[APP_PRT_SPIKE_FREQ])) {
@@ -708,52 +730,193 @@ static void APP_Protection_ReversePower_Handler(void)
     float32 power_threshold = 0.0;
     uint32 delay_ms = 0;
 
-    if (pMnt->enable.reverse_power_switch_off_enable) {
-        power_threshold = LIMIT_RANGE(REVERSE_POWER_MIN_RANGE, 
-                                      REVERSE_POWER_MAX_RANGE, 
-                                      app_parameter_read_Reverse_Power_Protection_Value());
-        delay_ms = (uint32)(LIMIT_RANGE(REVERSE_POWER_DELAY_MIN_RANGE, 
-                                        REVERSE_POWER_DELAY_MAX_RANGE, 
-                                        app_parameter_read_Reverse_Power_Protection_Delay())*1000);
-       
-        /* 逆功率功能投入 && 功率绝对值 > 定值 && Ua > 35V && 开关在合位或Imax > 0.1A */
-        if ((ABS_FLOAT(APP_Get_Reverse_Power()) > power_threshold) && (APP_Get_Voltage_Ua() > 35.0) && 
-            ((true == APP_Remote_Signal_Input_Switching_Exist_On()) || (APP_Get_Line_Current_Max() > CURRENT_MIN_LIMIT_THR))) {
-            
-            if ((APP_Get_System_Ms() - pMnt->anti_shake_tick[APP_PRT_REVERSE_POWER]) >= ANTI_SHAKE_REVERSE_POWER_DELAY) {
-                if (false == pMnt->delay_exec_list[APP_PRT_REVERSE_POWER]) {
-                    pMnt->delay_exec_list[APP_PRT_REVERSE_POWER] = true;
-                    pMnt->tick_list[APP_PRT_REVERSE_POWER] = APP_Get_System_Ms();
-                    Log_w("Reverse Power Protection. Reverse Power = %f, Threshold = %f.\r\n", 
-                        APP_Get_Reverse_Power(), power_threshold);
-                }    
-            }             
-        } else {
-            pMnt->delay_exec_list[APP_PRT_REVERSE_POWER] = false; /* 故障发生的时间过短，还未置故障标志位，需要清除 */
-        }
-        
-        if (true == pMnt->delay_exec_list[APP_PRT_REVERSE_POWER]) {
-            if ((APP_Get_System_Ms() - pMnt->tick_list[APP_PRT_REVERSE_POWER]) >= delay_ms) {
-                if (BIT_SET == APP_Remote_Signal_Input_Read_Group_5()) {
-                    APP_Relay_Control(APP_RELAY_CHANNEL_D07, false);
-		            APP_Relay_Control(APP_RELAY_CHANNEL_D08, true);
-                } else if (BIT_SET == APP_Remote_Signal_Input_Read_Group_4()) {
-                    APP_Relay_Control(APP_RELAY_CHANNEL_D05, false);
-		            APP_Relay_Control(APP_RELAY_CHANNEL_D06, true);                   
-                } else if (BIT_SET == APP_Remote_Signal_Input_Read_Group_3()) {
-                    APP_Relay_Control(APP_RELAY_CHANNEL_D03, false);
-		            APP_Relay_Control(APP_RELAY_CHANNEL_D04, true);                   
-                } else if (BIT_SET == APP_Remote_Signal_Input_Read_Group_2()) {
-                    APP_Relay_Control(APP_RELAY_CHANNEL_D01, false);
-		            APP_Relay_Control(APP_RELAY_CHANNEL_D02, true);                   
-                } else if (BIT_SET == APP_Remote_Signal_Input_Read_Group_1()) {
-                    APP_Relay_Control(APP_RELAY_CHANNEL_HC, false);
-		            APP_Relay_Control(APP_RELAY_CHANNEL_TQ, true);  
-                    pMnt->delay_exec_list[APP_PRT_REVERSE_POWER] = false;                 
+    if (REVERSE_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ()) {
+        switch (powerPro.step_state)
+        {
+        case ONE_STEP:
+            if (CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_READ()) {
+                power_threshold = LIMIT_RANGE(POWER_RESTORATION_MIN_RANGE, 
+                            POWER_RESTORATION_MAX_RANGE, 
+                            REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_READ());
+                delay_ms = (uint32_t) (LIMIT_RANGE(POWER_RESTORATION_DELAY_MIN_RANGE, 
+                            POWER_RESTORATION_DELAY_MAX_RANGE, 
+                            REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_READ()) * 1000);
+                if (((APP_Get_Active_Power_Total()) < power_threshold) && (APP_Get_Voltage_Ua() > 35.0) &&
+                    ((BIT_SET == APP_Remote_Signal_Input_Read_Group_1()) || (APP_Get_Line_Current_Max() > CURRENT_MIN_LIMIT_THR))) {
+                    if ((APP_Get_System_Ms() - powerPro.reverse_anti_shake_tick[ONE_STEP]) >= ANTI_SHAKE_POWER_RESTORATION_DELAY) {
+                        if (false == powerPro.reverse_delay_flag[ONE_STEP]) {
+                            powerPro.reverse_delay_flag[ONE_STEP] = true;
+                            powerPro.reverse_delay_tick[ONE_STEP] = APP_Get_System_Ms();
+                        }  
+                    } 
+                } else {
+                    powerPro.reverse_delay_flag[ONE_STEP] = false;
+                    powerPro.reverse_anti_shake_tick[ONE_STEP] = APP_Get_System_Ms();
                 }
-                pMnt->state.reverse_power_switch_off_state = 1;
-                Log_i("Reverse Power Protection. Relay Select Switch Off.\n");
-            } 
+
+                if (true == powerPro.reverse_delay_flag[ONE_STEP]) {
+                    if ((APP_Get_System_Ms() - powerPro.reverse_delay_tick[ONE_STEP]) > delay_ms) {
+                        if (APP_Remote_Signal_Input_Read_Group_1() == BIT_SET) {
+                            APP_Relay_Control(APP_RELAY_CHANNEL_HC, false);
+		                    APP_Relay_Control(APP_RELAY_CHANNEL_TQ, true);  
+                            powerPro.reverse_delay_flag[ONE_STEP] = false;
+                            powerPro.recover_flag[ONE_STEP] = false;
+                            powerPro.reverse_flag[ONE_STEP] = true;
+                        }
+                    }
+                }
+            }
+            break;
+        case TWO_STEP:
+            if (CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_READ()) {
+                power_threshold = LIMIT_RANGE(POWER_RESTORATION_MIN_RANGE, 
+                            POWER_RESTORATION_MAX_RANGE, 
+                            REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_READ());
+                delay_ms = (uint32_t) (LIMIT_RANGE(POWER_RESTORATION_DELAY_MIN_RANGE, 
+                            POWER_RESTORATION_DELAY_MAX_RANGE, 
+                            REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_READ()) * 1000);
+                if (((APP_Get_Active_Power_Total()) < power_threshold) && (APP_Get_Voltage_Ua() > 35.0) &&
+                    ((BIT_SET == APP_Remote_Signal_Input_Read_Group_2()) || (APP_Get_Line_Current_Max() > CURRENT_MIN_LIMIT_THR))) {
+                    if ((APP_Get_System_Ms() - powerPro.reverse_anti_shake_tick[TWO_STEP]) >= ANTI_SHAKE_POWER_RESTORATION_DELAY) {
+                        if (false == powerPro.reverse_delay_flag[TWO_STEP]) {
+                            powerPro.reverse_delay_flag[TWO_STEP] = true;
+                            powerPro.reverse_delay_tick[TWO_STEP] = APP_Get_System_Ms();
+                        }  
+                    } 
+                } else {
+                    powerPro.reverse_delay_flag[TWO_STEP] = false;
+                    powerPro.reverse_anti_shake_tick[TWO_STEP] = APP_Get_System_Ms();
+                }
+
+                if (true == powerPro.reverse_delay_flag[TWO_STEP]) {
+                    if ((APP_Get_System_Ms() - powerPro.reverse_delay_tick[TWO_STEP]) > delay_ms) {
+                        if (APP_Remote_Signal_Input_Read_Group_2() == BIT_SET) {
+                            APP_Relay_Control(APP_RELAY_CHANNEL_D01, false);
+		                    APP_Relay_Control(APP_RELAY_CHANNEL_D02, true);  
+                            powerPro.reverse_delay_flag[TWO_STEP] = false;
+                            powerPro.recover_flag[TWO_STEP] = false;
+                            powerPro.reverse_flag[TWO_STEP] = true;
+                            powerPro.step_state = ONE_STEP;
+                        }
+                    }
+                }
+            } else {
+                powerPro.step_state = ONE_STEP;
+            }
+            break;
+        case THREE_STEP:
+            if (CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_READ()) {
+                power_threshold = LIMIT_RANGE(POWER_RESTORATION_MIN_RANGE, 
+                            POWER_RESTORATION_MAX_RANGE, 
+                            REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_READ());
+                delay_ms = (uint32_t) (LIMIT_RANGE(POWER_RESTORATION_DELAY_MIN_RANGE, 
+                            POWER_RESTORATION_DELAY_MAX_RANGE, 
+                            REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_READ()) * 1000);
+                if (((APP_Get_Active_Power_Total()) < power_threshold) && (APP_Get_Voltage_Ua() > 35.0) &&
+                    ((BIT_SET == APP_Remote_Signal_Input_Read_Group_3()) || (APP_Get_Line_Current_Max() > CURRENT_MIN_LIMIT_THR))) {
+                    if ((APP_Get_System_Ms() - powerPro.reverse_anti_shake_tick[THREE_STEP]) >= ANTI_SHAKE_POWER_RESTORATION_DELAY) {
+                        if (false == powerPro.reverse_delay_flag[THREE_STEP]) {
+                            powerPro.reverse_delay_flag[THREE_STEP] = true;
+                            powerPro.reverse_delay_tick[THREE_STEP] = APP_Get_System_Ms();
+                        }  
+                    } 
+                } else {
+                    powerPro.reverse_delay_flag[THREE_STEP] = false;
+                    powerPro.reverse_anti_shake_tick[THREE_STEP] = APP_Get_System_Ms();
+                }
+
+                if (true == powerPro.reverse_delay_flag[THREE_STEP]) {
+                    if ((APP_Get_System_Ms() - powerPro.reverse_delay_tick[THREE_STEP]) > delay_ms) {
+                        if (APP_Remote_Signal_Input_Read_Group_3() == BIT_SET) {
+                            APP_Relay_Control(APP_RELAY_CHANNEL_D03, false);
+		                    APP_Relay_Control(APP_RELAY_CHANNEL_D04, true);  
+                            powerPro.reverse_delay_flag[THREE_STEP] = false;
+                            powerPro.recover_flag[THREE_STEP] = false;
+                            powerPro.reverse_flag[THREE_STEP] = true;
+                            powerPro.step_state = TWO_STEP;
+                        }
+                    }
+                }
+            } else {
+                powerPro.step_state = TWO_STEP;
+            }
+            break;
+        case FOUR_STEP:
+            if (CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_READ()) {
+                power_threshold = LIMIT_RANGE(POWER_RESTORATION_MIN_RANGE, 
+                            POWER_RESTORATION_MAX_RANGE, 
+                            REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_READ());
+                delay_ms = (uint32_t) (LIMIT_RANGE(POWER_RESTORATION_DELAY_MIN_RANGE, 
+                            POWER_RESTORATION_DELAY_MAX_RANGE, 
+                            REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_READ()) * 1000);
+                if (((APP_Get_Active_Power_Total()) < power_threshold) && (APP_Get_Voltage_Ua() > 35.0) &&
+                    ((BIT_SET == APP_Remote_Signal_Input_Read_Group_4()) || (APP_Get_Line_Current_Max() > CURRENT_MIN_LIMIT_THR))) {
+                    if ((APP_Get_System_Ms() - powerPro.reverse_anti_shake_tick[FOUR_STEP]) >= ANTI_SHAKE_POWER_RESTORATION_DELAY) {
+                        if (false == powerPro.reverse_delay_flag[FOUR_STEP]) {
+                            powerPro.reverse_delay_flag[FOUR_STEP] = true;
+                            powerPro.reverse_delay_tick[FOUR_STEP] = APP_Get_System_Ms();
+                        }  
+                    } 
+                } else {
+                    powerPro.reverse_delay_flag[FOUR_STEP] = false;
+                    powerPro.reverse_anti_shake_tick[FOUR_STEP] = APP_Get_System_Ms();
+                }
+
+                if (true == powerPro.reverse_delay_flag[FOUR_STEP]) {
+                    if ((APP_Get_System_Ms() - powerPro.reverse_delay_tick[FOUR_STEP]) > delay_ms) {
+                        if (APP_Remote_Signal_Input_Read_Group_4() == BIT_SET) {
+                            APP_Relay_Control(APP_RELAY_CHANNEL_D05, false);
+		                    APP_Relay_Control(APP_RELAY_CHANNEL_D06, true);  
+                            powerPro.reverse_delay_flag[FOUR_STEP] = false;
+                            powerPro.recover_flag[FOUR_STEP] = false;
+                            powerPro.reverse_flag[FOUR_STEP] = true;
+                            powerPro.step_state = THREE_STEP;
+                        }
+                    }
+                }
+            } else {
+                powerPro.step_state = THREE_STEP;
+            }
+            break;
+        case FIVE_STEP:
+            if (CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_READ()) {
+                power_threshold = LIMIT_RANGE(POWER_RESTORATION_MIN_RANGE, 
+                            POWER_RESTORATION_MAX_RANGE, 
+                            REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_READ());
+                delay_ms = (uint32_t) (LIMIT_RANGE(POWER_RESTORATION_DELAY_MIN_RANGE, 
+                            POWER_RESTORATION_DELAY_MAX_RANGE, 
+                            REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_READ()) * 1000);
+                if (((APP_Get_Active_Power_Total()) < power_threshold) && (APP_Get_Voltage_Ua() > 35.0) &&
+                    ((BIT_SET == APP_Remote_Signal_Input_Read_Group_5()) || (APP_Get_Line_Current_Max() > CURRENT_MIN_LIMIT_THR))) {
+                    if ((APP_Get_System_Ms() - powerPro.reverse_anti_shake_tick[FIVE_STEP]) >= ANTI_SHAKE_POWER_RESTORATION_DELAY) {
+                        if (false == powerPro.reverse_delay_flag[FIVE_STEP]) {
+                            powerPro.reverse_delay_flag[FIVE_STEP] = true;
+                            powerPro.reverse_delay_tick[FIVE_STEP] = APP_Get_System_Ms();
+                        }  
+                    } 
+                } else {
+                    powerPro.reverse_delay_flag[FIVE_STEP] = false;
+                    powerPro.reverse_anti_shake_tick[FIVE_STEP] = APP_Get_System_Ms();
+                }
+
+                if (true == powerPro.reverse_delay_flag[FIVE_STEP]) {
+                    if ((APP_Get_System_Ms() - powerPro.reverse_delay_tick[FIVE_STEP]) > delay_ms) {
+                        if (APP_Remote_Signal_Input_Read_Group_5() == BIT_SET) {
+                            APP_Relay_Control(APP_RELAY_CHANNEL_D07, false);
+		                    APP_Relay_Control(APP_RELAY_CHANNEL_D08, true);  
+                            powerPro.reverse_delay_flag[FIVE_STEP] = false;
+                            powerPro.recover_flag[FIVE_STEP] = false;
+                            powerPro.reverse_flag[FIVE_STEP] = true;
+                            powerPro.step_state = FOUR_STEP;
+                        }
+                    }
+                }
+            } else {
+                powerPro.step_state = FOUR_STEP;
+            }
+            break;
+        default:
+            break;
         }
     }
 
@@ -793,6 +956,7 @@ static void APP_Protection_Harmonic_Handler(void)
         } else {
             pMnt->state.harmonic_volt_distortion_switch_off_state = 0;
             pMnt->delay_exec_list[APP_PRT_HARMONIC_VOLT_DISTORTION] = false;
+            pMnt->anti_shake_tick[APP_PRT_HARMONIC_VOLT_DISTORTION] = APP_Get_System_Ms();
         }
         
         if (true == pMnt->delay_exec_list[APP_PRT_HARMONIC_VOLT_DISTORTION]) {
@@ -829,6 +993,7 @@ static void APP_Protection_ExtCtrl_Handler(void)
         } else {
             pMnt->delay_exec_list[APP_PRT_EXT_CTRL] = true;
             pMnt->state.ext_ctrl_switch_off_state = 0;
+            pMnt->anti_shake_tick[APP_PRT_EXT_CTRL] = APP_Get_System_Ms();
         }
 
         if (true == pMnt->delay_exec_list[APP_PRT_EXT_CTRL]) {
@@ -923,6 +1088,7 @@ static void APP_Protection_Current_Handler(void)
             }                     
         } else {
             pMnt->state.time_limit_quick_break_switch_off_state = 0;
+            pMnt->anti_shake_tick[APP_PRT_TIME_LIMIT_QUICK_BREAK] = APP_Get_System_Ms();
             pMnt->delay_exec_list[APP_PRT_TIME_LIMIT_QUICK_BREAK] = false;
         }
         /* If the quick break protection occurs, the speed limit break protection fault will not trigger */
@@ -957,6 +1123,7 @@ static void APP_Protection_Current_Handler(void)
         } else {
             pMnt->state.over_current_switch_off_state = 0;
             pMnt->delay_exec_list[APP_PRT_OVER_CURRENT] = false;
+            pMnt->anti_shake_tick[APP_PRT_OVER_CURRENT] = APP_Get_System_Ms();
         }
         /* If the quick-break protection occurs, the overcurrent protection fault is not triggered */
         if ((true == pMnt->delay_exec_list[APP_PRT_OVER_CURRENT]) && (false == pMnt->delay_exec_list[APP_PRT_QUICK_BREAK]) && (false == pMnt->delay_exec_list[APP_PRT_TIME_LIMIT_QUICK_BREAK])) {
@@ -991,6 +1158,7 @@ static void APP_Protection_Current_Handler(void)
         } else {
             pMnt->state.zero_seq_current_switch_off_state = 0; 
             pMnt->delay_exec_list[APP_PRT_ZERO_SEQUENCE_CURRENT] = false;
+            pMnt->anti_shake_tick[APP_PRT_ZERO_SEQUENCE_CURRENT] = APP_Get_System_Ms();
         }
         
         if (true == pMnt->delay_exec_list[APP_PRT_ZERO_SEQUENCE_CURRENT]) {
@@ -1044,6 +1212,7 @@ static void APP_Protection_SystemOutage_Handler(void)
         } else {
             pMnt->state.system_outage_switch_off_state = 0;
             pMnt->delay_exec_list[APP_PRT_SYSTEM_OUTAGE] = false;
+            pMnt->anti_shake_tick[APP_PRT_SYSTEM_OUTAGE] = APP_Get_System_Ms();
         }
         
         if (true == pMnt->delay_exec_list[APP_PRT_SYSTEM_OUTAGE]) {
@@ -1115,7 +1284,7 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
         /* 零序过流保护 */
         zero_seq_current_switch_off_flag = (pMnt->state.zero_seq_current_switch_off_state != 1);
         /* 逆功率保护 */
-        reverse_Power = (pMnt->state.reverse_power_switch_off_state != 1);
+        reverse_Power = (powerPro.reverse_flag[ONE_STEP] != true) && (powerPro.reverse_flag[TWO_STEP] != true) && (powerPro.reverse_flag[THREE_STEP] != true) && (powerPro.reverse_flag[FOUR_STEP] != true) && (powerPro.reverse_flag[FIVE_STEP] != true);
 
         /* 所有故障标志位集合 enable_state: 0代表有故障，1代表没故障 */
         enable_state = sys_first_power_on_flag || (under_volt_flag && over_volt_flag && 
@@ -1182,71 +1351,198 @@ static void APP_Protection_PowerRestorationOperate_Handler(void)
     float32 threshold = 0.0;
     uint32  delay_ms  = 0;
 
-    if (pMnt->enable.power_restoration_enable) { /* 功率恢复合闸 */
-        threshold = LIMIT_RANGE(POWER_RESTORATION_MIN_RANGE, 
-                                POWER_RESTORATION_MAX_RANGE, 
-                                app_parameter_read_Power_recovery_Value());
-        delay_ms = (uint32_t) (LIMIT_RANGE(POWER_RESTORATION_DELAY_MIN_RANGE, 
-                                           POWER_RESTORATION_DELAY_MAX_RANGE, 
-                                           app_parameter_read_Power_recovery_Delay()) * 1000);
-        /* 功率恢复功能投入 && 开关在分位 && IA\IB\IC均<0.1A && 逆功率保护动作过 && P > 功率恢复定值 */
-        if ((true == APP_Remote_Signal_Input_Switching_Exist_Off()) && (pMnt->state.reverse_power_switch_off_state) &&
-            ((APP_Get_Current_Ia() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ib() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ic() < CURRENT_MIN_LIMIT_THR) && 
-            (APP_Get_Active_Power_Total() > threshold))) {
-
-            if ((APP_Get_System_Ms() - pMnt->anti_shake_tick[APP_PRT_POWER_RESTORATION]) >= ANTI_SHAKE_POWER_RESTORATION_DELAY) {
-                if (false == pMnt->delay_exec_list[APP_PRT_POWER_RESTORATION]) {
-                    pMnt->delay_exec_list[APP_PRT_POWER_RESTORATION] = true;
-                    pMnt->tick_list[APP_PRT_POWER_RESTORATION] = APP_Get_System_Ms();
-                    Log_w("Power Restoration Protection. Circuit Power = %f, Threshold = %f.\r\n", 
-                        APP_Get_Active_Power_Total(), threshold);
-                }  
-            }                         
-        } else {
-            pMnt->state.power_restoration_switch_on_state = 0;
-            pMnt->delay_exec_list[APP_PRT_POWER_RESTORATION] = false;
-        }
-        
-        if (true == pMnt->delay_exec_list[APP_PRT_POWER_RESTORATION]) {
-            if ((APP_Get_System_Ms() - pMnt->tick_list[APP_PRT_POWER_RESTORATION]) > delay_ms) {
-                if (((BIT_RESET) == APP_Remote_Signal_Input_Read_Group_5()) && (recovery_cnt[0].cnt < RECOVERY_CNT_NUM) && (recovery_cnt[0].tick == 0)) {
-                    recovery_cnt[0].cnt++;
-                    APP_Relay_Control(APP_RELAY_CHANNEL_D07, true);
-		            APP_Relay_Control(APP_RELAY_CHANNEL_D08, false);
-                } else if (((BIT_RESET) == APP_Remote_Signal_Input_Read_Group_4()) && (recovery_cnt[1].cnt < RECOVERY_CNT_NUM) && (recovery_cnt[1].tick == 0)) {
-                    recovery_cnt[1].cnt++;
-                    APP_Relay_Control(APP_RELAY_CHANNEL_D05, true);
-		            APP_Relay_Control(APP_RELAY_CHANNEL_D06, false);                    
-                } else if (((BIT_RESET) == APP_Remote_Signal_Input_Read_Group_3()) && (recovery_cnt[2].cnt < RECOVERY_CNT_NUM) && (recovery_cnt[2].tick == 0)) {
-                    recovery_cnt[2].cnt++;
-                    APP_Relay_Control(APP_RELAY_CHANNEL_D03, true);
-		            APP_Relay_Control(APP_RELAY_CHANNEL_D04, false);                    
-                } else if (((BIT_RESET) == APP_Remote_Signal_Input_Read_Group_2()) && (recovery_cnt[3].cnt < RECOVERY_CNT_NUM) && (recovery_cnt[3].tick == 0)) {
-                    recovery_cnt[3].cnt++;
-                    APP_Relay_Control(APP_RELAY_CHANNEL_D01, true);
-		            APP_Relay_Control(APP_RELAY_CHANNEL_D02, false);                    
-                } else if (((BIT_RESET) == APP_Remote_Signal_Input_Read_Group_1()) && (recovery_cnt[4].cnt < RECOVERY_CNT_NUM) && (recovery_cnt[4].tick == 0)) {
-                    recovery_cnt[4].cnt++;
-                    APP_Relay_Control(APP_RELAY_CHANNEL_HC, true);
-		            APP_Relay_Control(APP_RELAY_CHANNEL_TQ, false);  
-                    pMnt->delay_exec_list[APP_PRT_POWER_RESTORATION] = false;                  
+    if (CLOSING_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ()) {
+        switch (powerPro.step_state)
+        {
+        case ONE_STEP:
+            if (CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_READ()) {
+                threshold = LIMIT_RANGE(POWER_RESTORATION_MIN_RANGE, 
+                            POWER_RESTORATION_MAX_RANGE, 
+                            P_CLOSING_POWER_BY_STEP_FOR_FIRST_STEP_FROM_SRAM_READ());
+                delay_ms = (uint32_t) (LIMIT_RANGE(POWER_RESTORATION_DELAY_MIN_RANGE, 
+                            POWER_RESTORATION_DELAY_MAX_RANGE, 
+                            TIME_CLOSING_POWER_BY_STEP_FOR_FIRST_STEP_FROM_SRAM_READ()) * 1000);
+                if ((BIT_RESET == APP_Remote_Signal_Input_Read_Group_1()) && (powerPro.reverse_flag[ONE_STEP]) && 
+                ((APP_Get_Current_Ia() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ib() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ic() < CURRENT_MIN_LIMIT_THR) && 
+                (APP_Get_Active_Power_Total() > threshold))) {
+                    if ((APP_Get_System_Ms() - powerPro.recover_anti_shake_tick[ONE_STEP]) >= ANTI_SHAKE_POWER_RESTORATION_DELAY) {
+                        if (false == powerPro.recover_delay_flag[ONE_STEP]) {
+                            powerPro.recover_delay_flag[ONE_STEP] = true;
+                            powerPro.recover_delay_tick[ONE_STEP] = APP_Get_System_Ms();
+                        }  
+                    } 
+                } else {
+                    powerPro.recover_delay_flag[ONE_STEP] = false;
+                    powerPro.recover_anti_shake_tick[ONE_STEP] = APP_Get_System_Ms();
                 }
-                pMnt->state.power_restoration_switch_on_state = 1;
-                /* 清除逆功率标志位 */
-                pMnt->state.reverse_power_switch_off_state = 0;
-                pMnt->delay_exec_list[APP_PRT_REVERSE_POWER] = false;
-                Log_i("Power Restoration Protection. Relay Select Switch On.\n");
-            }    
-        }
 
-        for(uint8 i = 0; i < 5; i++) {
-            if ((recovery_cnt[i].cnt == RECOVERY_CNT_NUM) && (recovery_cnt[i].tick == 0)) {
-                recovery_cnt[i].cnt = 0;
-                recovery_cnt[i].tick = app_parameter_read_A_VOLTAGE_AMPLITUDE() * 100; /* 300s_base_10ms*/
+                if (true == powerPro.recover_delay_flag[ONE_STEP]) {
+                    if ((APP_Get_System_Ms() - powerPro.recover_delay_tick[ONE_STEP]) > delay_ms) {
+                        if (APP_Remote_Signal_Input_Read_Group_1 == BIT_RESET) {
+                            APP_Relay_Control(APP_RELAY_CHANNEL_HC, true);
+		                    APP_Relay_Control(APP_RELAY_CHANNEL_TQ, false);  
+                            powerPro.recover_delay_flag[ONE_STEP] = false;
+                            powerPro.recover_flag[ONE_STEP] = true;
+                            powerPro.reverse_flag[ONE_STEP] = false;
+                            powerPro.step_state = TWO_STEP;
+                        }
+                    }
+                }
+            } else {
+                powerPro.step_state = TWO_STEP;
             }
-            if (recovery_cnt[i].tick > 0) {
-                recovery_cnt[i].tick--;
+            break;
+        case TWO_STEP:
+            if (CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_READ()) {
+                threshold = LIMIT_RANGE(POWER_RESTORATION_MIN_RANGE, 
+                            POWER_RESTORATION_MAX_RANGE, 
+                            P_CLOSING_POWER_BY_STEP_FOR_SECOND_STEP_FROM_SRAM_READ());
+                delay_ms = (uint32_t) (LIMIT_RANGE(POWER_RESTORATION_DELAY_MIN_RANGE, 
+                            POWER_RESTORATION_DELAY_MAX_RANGE, 
+                            TIME_CLOSING_POWER_BY_STEP_FOR_SECOND_STEP_FROM_SRAM_READ()) * 1000);
+                if ((BIT_RESET == APP_Remote_Signal_Input_Read_Group_2()) && (powerPro.reverse_flag[TWO_STEP]) && 
+                ((APP_Get_Current_Ia() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ib() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ic() < CURRENT_MIN_LIMIT_THR) && 
+                (APP_Get_Active_Power_Total() > threshold))) {
+                    if ((APP_Get_System_Ms() - powerPro.recover_anti_shake_tick[TWO_STEP]) >= ANTI_SHAKE_POWER_RESTORATION_DELAY) {
+                        if (false == powerPro.recover_delay_flag[TWO_STEP]) {
+                            powerPro.recover_delay_flag[TWO_STEP] = true;
+                            powerPro.recover_delay_tick[TWO_STEP] = APP_Get_System_Ms();
+                        }  
+                    } 
+                } else {
+                    powerPro.recover_delay_flag[TWO_STEP] = false;
+                    powerPro.recover_anti_shake_tick[TWO_STEP] = APP_Get_System_Ms();
+                }
+
+                if (true == powerPro.recover_delay_flag[TWO_STEP]) {
+                    if ((APP_Get_System_Ms() - powerPro.recover_delay_tick[TWO_STEP]) > delay_ms) {
+                        if (APP_Remote_Signal_Input_Read_Group_2 == BIT_RESET) {
+                            APP_Relay_Control(APP_RELAY_CHANNEL_D01, true);
+		                    APP_Relay_Control(APP_RELAY_CHANNEL_D02, false);  
+                            powerPro.recover_delay_flag[TWO_STEP] = false;
+                            powerPro.recover_flag[TWO_STEP] = true;
+                            powerPro.reverse_flag[TWO_STEP] = false;
+                            powerPro.step_state = THREE_STEP;
+                        }
+                    }
+                }
+            } else {
+                powerPro.step_state = THREE_STEP;
             }
+            break;
+        case THREE_STEP:
+            if (CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_READ()) {
+                threshold = LIMIT_RANGE(POWER_RESTORATION_MIN_RANGE, 
+                            POWER_RESTORATION_MAX_RANGE, 
+                            P_CLOSING_POWER_BY_STEP_FOR_THIRD_STEP_FROM_SRAM_READ());
+                delay_ms = (uint32_t) (LIMIT_RANGE(POWER_RESTORATION_DELAY_MIN_RANGE, 
+                            POWER_RESTORATION_DELAY_MAX_RANGE, 
+                            TIME_CLOSING_POWER_BY_STEP_FOR_THIRD_STEP_FROM_SRAM_READ()) * 1000);
+                if ((BIT_RESET == APP_Remote_Signal_Input_Read_Group_3()) && (powerPro.reverse_flag[THREE_STEP]) && 
+                ((APP_Get_Current_Ia() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ib() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ic() < CURRENT_MIN_LIMIT_THR) && 
+                (APP_Get_Active_Power_Total() > threshold))) {
+                    if ((APP_Get_System_Ms() - powerPro.recover_anti_shake_tick[THREE_STEP]) >= ANTI_SHAKE_POWER_RESTORATION_DELAY) {
+                        if (false == powerPro.recover_delay_flag[THREE_STEP]) {
+                            powerPro.recover_delay_flag[THREE_STEP] = true;
+                            powerPro.recover_delay_tick[THREE_STEP] = APP_Get_System_Ms();
+                        }  
+                    } 
+                } else {
+                    powerPro.recover_delay_flag[THREE_STEP] = false;
+                    powerPro.recover_anti_shake_tick[THREE_STEP] = APP_Get_System_Ms();
+                }
+
+                if (true == powerPro.recover_delay_flag[THREE_STEP]) {
+                    if ((APP_Get_System_Ms() - powerPro.recover_delay_tick[THREE_STEP]) > delay_ms) {
+                        if (APP_Remote_Signal_Input_Read_Group_3 == BIT_RESET) {
+                            APP_Relay_Control(APP_RELAY_CHANNEL_D03, true);
+		                    APP_Relay_Control(APP_RELAY_CHANNEL_D04, false);  
+                            powerPro.recover_delay_flag[THREE_STEP] = false;
+                            powerPro.recover_flag[THREE_STEP] = true;
+                            powerPro.reverse_flag[THREE_STEP] = false;
+                            powerPro.step_state = FOUR_STEP;
+                        }
+                    }
+                }
+            } else {
+                powerPro.step_state = FOUR_STEP;
+            }
+            break;
+        case FOUR_STEP:
+            if (CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_READ()) {
+                threshold = LIMIT_RANGE(POWER_RESTORATION_MIN_RANGE, 
+                            POWER_RESTORATION_MAX_RANGE, 
+                            P_CLOSING_POWER_BY_STEP_FOR_FOURTH_STEP_FROM_SRAM_READ());
+                delay_ms = (uint32_t) (LIMIT_RANGE(POWER_RESTORATION_DELAY_MIN_RANGE, 
+                            POWER_RESTORATION_DELAY_MAX_RANGE, 
+                            TIME_CLOSING_POWER_BY_STEP_FOR_FOURTH_STEP_FROM_SRAM_READ()) * 1000);
+                if ((BIT_RESET == APP_Remote_Signal_Input_Read_Group_4()) && (powerPro.reverse_flag[FOUR_STEP]) && 
+                ((APP_Get_Current_Ia() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ib() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ic() < CURRENT_MIN_LIMIT_THR) && 
+                (APP_Get_Active_Power_Total() > threshold))) {
+                    if ((APP_Get_System_Ms() - powerPro.recover_anti_shake_tick[FOUR_STEP]) >= ANTI_SHAKE_POWER_RESTORATION_DELAY) {
+                        if (false == powerPro.recover_delay_flag[FOUR_STEP]) {
+                            powerPro.recover_delay_flag[FOUR_STEP] = true;
+                            powerPro.recover_delay_tick[FOUR_STEP] = APP_Get_System_Ms();
+                        }  
+                    } 
+                } else {
+                    powerPro.recover_delay_flag[FOUR_STEP] = false;
+                    powerPro.recover_anti_shake_tick[FOUR_STEP] = APP_Get_System_Ms();
+                }
+
+                if (true == powerPro.recover_delay_flag[FOUR_STEP]) {
+                    if ((APP_Get_System_Ms() - powerPro.recover_delay_tick[FOUR_STEP]) > delay_ms) {
+                        if (APP_Remote_Signal_Input_Read_Group_4 == BIT_RESET) {
+                            APP_Relay_Control(APP_RELAY_CHANNEL_D05, true);
+		                    APP_Relay_Control(APP_RELAY_CHANNEL_D06, false);  
+                            powerPro.recover_delay_flag[FOUR_STEP] = false;
+                            powerPro.recover_flag[FOUR_STEP] = true;
+                            powerPro.reverse_flag[FOUR_STEP] = false;
+                            powerPro.step_state = FIVE_STEP;
+                        }
+                    }
+                }
+            } else {
+                powerPro.step_state = FIVE_STEP;
+            }
+            break;
+        case FIVE_STEP:
+            if (CLOSING_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_READ()) {
+                threshold = LIMIT_RANGE(POWER_RESTORATION_MIN_RANGE, 
+                            POWER_RESTORATION_MAX_RANGE, 
+                            P_CLOSING_POWER_BY_STEP_FOR_FIFTH_STEP_FROM_SRAM_READ());
+                delay_ms = (uint32_t) (LIMIT_RANGE(POWER_RESTORATION_DELAY_MIN_RANGE, 
+                            POWER_RESTORATION_DELAY_MAX_RANGE, 
+                            TIME_CLOSING_POWER_BY_STEP_FOR_FIFTH_STEP_FROM_SRAM_READ()) * 1000);
+                if ((BIT_RESET == APP_Remote_Signal_Input_Read_Group_5()) && (powerPro.reverse_flag[FIVE_STEP]) && 
+                ((APP_Get_Current_Ia() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ib() < CURRENT_MIN_LIMIT_THR) && (APP_Get_Current_Ic() < CURRENT_MIN_LIMIT_THR) && 
+                (APP_Get_Active_Power_Total() > threshold))) {
+                    if ((APP_Get_System_Ms() - powerPro.recover_anti_shake_tick[FIVE_STEP]) >= ANTI_SHAKE_POWER_RESTORATION_DELAY) {
+                        if (false == powerPro.recover_delay_flag[FIVE_STEP]) {
+                            powerPro.recover_delay_flag[FIVE_STEP] = true;
+                            powerPro.recover_delay_tick[FIVE_STEP] = APP_Get_System_Ms();
+                        }  
+                    } 
+                } else {
+                    powerPro.recover_delay_flag[FIVE_STEP] = false;
+                    powerPro.recover_anti_shake_tick[FIVE_STEP] = APP_Get_System_Ms();
+                }
+
+                if (true == powerPro.recover_delay_flag[FIVE_STEP]) {
+                    if ((APP_Get_System_Ms() - powerPro.recover_delay_tick[FIVE_STEP]) > delay_ms) {
+                        if (APP_Remote_Signal_Input_Read_Group_5 == BIT_RESET) {
+                            APP_Relay_Control(APP_RELAY_CHANNEL_D07, true);
+		                    APP_Relay_Control(APP_RELAY_CHANNEL_D08, false);  
+                            powerPro.recover_delay_flag[FIVE_STEP] = false;
+                            powerPro.recover_flag[FIVE_STEP] = true;
+                            powerPro.reverse_flag[FIVE_STEP] = false;
+                        }
+                    }
+                }
+            }
+            break;
+        default:
+            break;
         }
     }
 }
@@ -1293,7 +1589,7 @@ void APP_Protection_Management_Init(void)
     /* 频率突变 */
     pMnt->enable.spike_freq_switch_off_enable             = app_parameter_read_Frequency_Discontinuity_Eol();
     /* 逆功率保护 */
-    pMnt->enable.reverse_power_switch_off_enable          = app_parameter_read_Reverse_Power_Protection_Eol();
+    pMnt->enable.reverse_power_switch_off_enable          = REVERSE_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ();
     /* 谐波保护 */
     pMnt->enable.harmonic_distortion_switch_off_enable    = app_parameter_read_Harmonic_Protection_Eol();
     /* 外部联跳 */
@@ -1321,10 +1617,18 @@ void APP_Protection_Management_Init(void)
     pMnt->enable.over_freq_switch_on_enable               = app_parameter_read_Voltage_Closing_Overfrequency();
     pMnt->enable.non_manual_switch_on_enable              = app_parameter_read_Voltage_Closing_Non_manual_separation();
     /* 功率恢复功能投入 */
-    pMnt->enable.power_restoration_enable                 = app_parameter_read_Power_recovery_Eol();
+    pMnt->enable.power_restoration_enable                 = CLOSING_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ();
 
     // 合闸充电状态先默认为1
     pMnt->state.switch_on_charge_state = 1;
+
+    /* 功率5段初始化设置 */
+    powerPro.step_state = ONE_STEP;
+    for (i = 0; i < 5; i++) {
+        powerPro.recover_flag[i] = false;
+        powerPro.reverse_flag[i] = false;
+    }
+
 
     for (i = 0; i < APP_PRT_MAX; i++) {
         pMnt->tick_list[i] = APP_Get_System_Ms();
