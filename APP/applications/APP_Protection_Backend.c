@@ -2011,7 +2011,7 @@ int APP_Protection_Backend_Init(void)
     int i = 0;
     static TimerHandle_t xTimer = NULL;
   
-    // 测试数据  
+    // 电流较准参数设置
     pBk->current_cali[0].coeff_option = 0.524;//实际数据
     pBk->current_cali[0].coeff_value  = 0.5524;//显示数据
     pBk->current_cali[1].coeff_option = 0.986;
@@ -2033,6 +2033,7 @@ int APP_Protection_Backend_Init(void)
     pBk->current_cali[9].coeff_option = 4.918;
     pBk->current_cali[9].coeff_value  = 5.1846;
 
+    //// 电压较准参数设置
     pBk->volt_cali[0].coeff_option = 100;//实际数据
     pBk->volt_cali[0].coeff_value  = 102.2;//显示数据
     pBk->volt_cali[1].coeff_option = 150;
@@ -2054,6 +2055,7 @@ int APP_Protection_Backend_Init(void)
     pBk->volt_cali[9].coeff_option = 500;
     pBk->volt_cali[9].coeff_value  = 511.4;
 
+    //// 频率较准参数设置
     // pBk->freq_cali[0].coeff_option = 0;//实际数据
     // pBk->freq_cali[0].coeff_value  = 0;//显示数据
     // pBk->freq_cali[1].coeff_option = 0;
