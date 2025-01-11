@@ -9,15 +9,15 @@
 #include "string.h"
 #include "MCAL_UART.h"
 
-#define APP_PLUS_EP_SRAM_WRITE(x)   app_parameter_write_NUMBER5(x)
-#define APP_PLUS_EP_SRAM_READ()     app_parameter_read_NUMBER5()
-#define APP_MINUS_EP_SRAM_WRITE(x)  app_parameter_write_NUMBER6(x)
-#define APP_MINUS_EP_SRAM_READ()    app_parameter_read_NUMBER6()
+#define APP_PLUS_EP_SRAM_WRITE(x)   app_parameter_write_NUMBER15(x)
+#define APP_PLUS_EP_SRAM_READ()     app_parameter_read_NUMBER15()
+#define APP_MINUS_EP_SRAM_WRITE(x)  app_parameter_write_NUMBER16(x)
+#define APP_MINUS_EP_SRAM_READ()    app_parameter_read_NUMBER16()
 
-#define APP_PLUS_EQ_SRAM_WRITE(x)   app_parameter_write_NUMBER7(x)
-#define APP_PLUS_EQ_SRAM_READ()     app_parameter_read_NUMBER7()
-#define APP_MINUS_EQ_SRAM_WRITE(x)  app_parameter_write_NUMBER8(x)
-#define APP_MINUS_EQ_SRAM_READ()    app_parameter_read_NUMBER8()
+#define APP_PLUS_EQ_SRAM_WRITE(x)   app_parameter_write_NUMBER17(x)
+#define APP_PLUS_EQ_SRAM_READ()     app_parameter_read_NUMBER17()
+#define APP_MINUS_EQ_SRAM_WRITE(x)  app_parameter_write_NUMBER18(x)
+#define APP_MINUS_EQ_SRAM_READ()    app_parameter_read_NUMBER18()
 
 /**********************************以下为新增逆功率保护 分闸 按段分闸接口****************************/
 /* 控制方式：本地控制 */
