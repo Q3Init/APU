@@ -240,6 +240,7 @@ extern uint8_t power_reverse_closing_fifth[];
 extern uint8_t power_reverse_closing_sixth[];
 extern uint8_t power_reverse_closing_chinese[];
 extern uint8_t power_closing[];
+extern uint8_t action_chinese[];
 
 extern uint8_t first_fix_value[];
 extern uint8_t first_delay[];

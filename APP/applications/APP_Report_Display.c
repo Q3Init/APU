@@ -61,10 +61,10 @@ struct menu_event_tag * fault_event_handler(uint8_t msg_process_signal, uint8_t 
 		
 
 		page_cur_idx = lcd_modify_num_env.menu_type_idx;
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		// uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
-		// Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		// //Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -73,7 +73,7 @@ struct menu_event_tag * fault_event_handler(uint8_t msg_process_signal, uint8_t 
             lcd_the_modified_num_env_to_be_clear_all();
             cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);//如果返回不对这里要改
             page_cnt = 0;// clear to zero
-            Log_d("key KEY_RETURN menu!\r\n");
+            //Log_d("key KEY_RETURN menu!\r\n");
 		}
 		
 
@@ -228,10 +228,10 @@ struct menu_event_tag * soe_record_handler(uint8_t msg_process_signal, uint8_t m
 		
 
 		page_cur_idx = lcd_modify_num_env.menu_type_idx;
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		// uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
-		// Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		// //Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -240,7 +240,7 @@ struct menu_event_tag * soe_record_handler(uint8_t msg_process_signal, uint8_t m
             lcd_the_modified_num_env_to_be_clear_all();
             cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);//如果返回不对这里要改
             page_cnt = 0;// clear to zero
-            Log_d("key KEY_RETURN menu!\r\n");
+            //Log_d("key KEY_RETURN menu!\r\n");
 		}
 
          if(msg_context == FLUSH_SCREEN)

@@ -80,7 +80,8 @@ uint8 fix_value_manage_menu_array[]=
 	QUICK_DISCONNECT_PROTECTION,	LIMITED_TIME_QUICK_DISCONNECT,
 	OVER_CURRENT_PROTECTION,		OVER_SEQUENCE_OVER_CURRENT,
 	SYSTEM_POWER_OFF,				CLOSING_SWITCH_WITH_VOLTAGE,
-	POWER_RECOVER,					POWER_RECOVER_CLOSING,
+	// POWER_RECOVER,					
+	POWER_RECOVER_CLOSING,
 };
 enum over_voltage_protection_menu_type{
 	FIRST_FIX_VALUE,
@@ -390,29 +391,29 @@ struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uin
 
 	if(msg_process_signal == 1)
 	{
-		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
+		// //Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
         uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 8, 2, sizeof(fix_value_manage_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_ENTER)
 		{
-			Log_d("top_menu_array[menu_type_idx]:%d \r\n", fix_value_manage_menu_array[menu_type_idx]);
+			//Log_d("top_menu_array[menu_type_idx]:%d \r\n", fix_value_manage_menu_array[menu_type_idx]);
 			menu_level_from_env_set(TOP_NODE_MENU, FIX_VALUE_MANAGE,fix_value_manage_menu_array[menu_type_idx]);
 			menu_kernel_env.menu_cursor_history.first_menu_cursor = menu_type_idx;
 			cur_menu_type_ptr_from_env_set(0);
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			Log_d("key KEY_ENTER menu!\r\n");
+			//Log_d("key KEY_ENTER menu!\r\n");
 		}
 		if(msg_context == KEY_RETURN)
 		{
 			menu_level_from_env_set(TOP_NODE_MENU, UNKNOW_SECOND_MENU, UNKNOW_THIRD_MENU);
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.top_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
+			//Log_d("key KEY_RETURN menu!\r\n");
 		}
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			//Log_d("\r\n    \r\n");
 			clear_screen();
 			msg_context = 0xff;
 			msg_lock_from_env_set(0);//unlock the msg
@@ -630,10 +631,12 @@ struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uin
         				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
 
 						LCD_ShowChinese_no_garland(8, 13, system_power_off, 4);
-						LCD_ShowChinese_garland(8, 26, power_recover, 4);
+						// LCD_ShowChinese_garland(8, 26, power_recover, 4);
 						
+						// LCD_ShowChinese_garland(64, 13, closing_switch_with_voltage, 4);
+						// LCD_ShowChinese_garland(64, 26, power_closing, 4);
+						LCD_ShowChinese_garland(8, 26, power_closing, 4);
 						LCD_ShowChinese_garland(64, 13, closing_switch_with_voltage, 4);
-						LCD_ShowChinese_garland(64, 26, power_closing, 4);
 						break;
 					case CLOSING_SWITCH_WITH_VOLTAGE:
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
@@ -643,24 +646,23 @@ struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uin
         				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
 
 						LCD_ShowChinese_garland(8, 13, system_power_off, 4);
-						LCD_ShowChinese_garland(8, 26, power_recover, 4);
+						LCD_ShowChinese_garland(8, 26, power_closing, 4);
 						
 						LCD_ShowChinese_no_garland(64, 13, closing_switch_with_voltage, 4);
-						LCD_ShowChinese_garland(64, 26, power_closing, 4);
 						break;
-					case POWER_RECOVER:
-						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
-        				lcd_state_flush_for_num(98,1,my_num_3,5,12,1);
-        				lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
-        				lcd_state_flush_for_num(109,1,my_num_3,5,12,1);
-        				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
+					// case POWER_RECOVER:
+					// 	single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
+        			// 	lcd_state_flush_for_num(98,1,my_num_3,5,12,1);
+        			// 	lcd_state_flush_for_num(103,1,XieGang_char,6,12,1);
+        			// 	lcd_state_flush_for_num(109,1,my_num_3,5,12,1);
+        			// 	single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
 
-						LCD_ShowChinese_garland(8, 13, system_power_off, 4);
-						LCD_ShowChinese_no_garland(8, 26, power_recover, 4);
+					// 	LCD_ShowChinese_garland(8, 13, system_power_off, 4);
+					// 	LCD_ShowChinese_no_garland(8, 26, power_recover, 4);
 						
-						LCD_ShowChinese_garland(64, 13, closing_switch_with_voltage, 4);
-						LCD_ShowChinese_garland(64, 26, power_closing, 4);
-						break;
+					// 	LCD_ShowChinese_garland(64, 13, closing_switch_with_voltage, 4);
+					// 	LCD_ShowChinese_garland(64, 26, power_closing, 4);
+					// 	break;
 
 					case POWER_RECOVER_CLOSING:
 						single_row_continue_printf_12x12_chinese_in_lcd(86, 0, DI_chinese, 1, 12, 1);
@@ -670,10 +672,9 @@ struct menu_event_tag * fix_value_manage_handler(uint8_t msg_process_signal, uin
         				single_row_continue_printf_12x12_chinese_in_lcd(116, 0, YE_chinese, 1, 12, 1);
 
 						LCD_ShowChinese_garland(8, 13, system_power_off, 4);
-						LCD_ShowChinese_garland(8, 26, power_recover, 4);
+						LCD_ShowChinese_no_garland(8, 26, power_closing, 4);
 
 						LCD_ShowChinese_garland(64, 13, closing_switch_with_voltage, 4);
-						LCD_ShowChinese_no_garland(64, 26, power_closing, 4);
 						break;
 				}
 				break;
@@ -722,7 +723,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 		}
 		chinese_menu_idx = over_voltage_protection_array[lcd_modify_num_env.menu_type_idx];
 
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -734,21 +735,21 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Value();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -771,7 +772,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 				case FIRST_FIX_VALUE:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Value(); // SRAM todo
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
 					break;
 				default:
@@ -810,13 +811,13 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Value();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag); // 3是整数位数，2是小数位数
 							break;
 						case FIRST_DELAY:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
@@ -829,14 +830,14 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 						case SECOND_FIX_VALUE:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Overvoltage_protection_LV2_One_Value();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 3;
 							break;
 						case SECOND_DELAY:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Overvoltage_protection_LV2_One_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 4;
 							break;
@@ -863,7 +864,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 							app_parameter_write_Overvoltage_protection_LV1_One_Value(0);
 							app_parameter_write_Overvoltage_protection_LV1_One_Value(float_flag);
 							float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Value();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FIRST_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -871,7 +872,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 							app_parameter_write_Overvoltage_protection_LV1_One_Delay(0);
 							app_parameter_write_Overvoltage_protection_LV1_One_Delay(float_flag);
 							float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FIRST_IN_OUT:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -885,7 +886,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 							app_parameter_write_Overvoltage_protection_LV2_One_Value(0);
 							app_parameter_write_Overvoltage_protection_LV2_One_Value(float_flag);
 							float_flag = app_parameter_read_Overvoltage_protection_LV2_One_Value();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case SECOND_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -947,7 +948,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -958,7 +959,7 @@ struct menu_event_tag * over_voltage_protection_handler(uint8_t msg_process_sign
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -1183,7 +1184,7 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 6, 1, sizeof(too_low_voltage_protection_array));
 		}
 		chinese_menu_idx = too_low_voltage_protection_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -1196,21 +1197,21 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Undervoltage_protection_LV1_One_Value();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -1232,7 +1233,7 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 				case LOW_FIRST_FIX_VALUE:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Undervoltage_protection_LV1_One_Value();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 					break;
 				default:
@@ -1270,13 +1271,13 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Undervoltage_protection_LV1_One_Value();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							break;
 						case FIRST_DELAY:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Undervoltage_protection_LV1_One_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
@@ -1289,14 +1290,14 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 						case SECOND_FIX_VALUE:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Undervoltage_protection_LV2_One_Value();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 3;
 							break;
 						case SECOND_DELAY:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Undervoltage_protection_LV2_One_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 4;
 							break;
@@ -1323,7 +1324,7 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 							app_parameter_write_Undervoltage_protection_LV1_One_Value(0);
 							app_parameter_write_Undervoltage_protection_LV1_One_Value(float_flag);
 							float_flag = app_parameter_read_Undervoltage_protection_LV1_One_Value();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FIRST_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -1331,7 +1332,7 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 							app_parameter_write_Undervoltage_protection_LV1_One_Delay(0);
 							app_parameter_write_Undervoltage_protection_LV1_One_Delay(float_flag);
 							float_flag = app_parameter_read_Overvoltage_protection_LV1_One_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FIRST_IN_OUT:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -1345,7 +1346,7 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 							app_parameter_write_Undervoltage_protection_LV2_One_Value(0);
 							app_parameter_write_Undervoltage_protection_LV2_One_Value(float_flag);
 							float_flag = app_parameter_read_Undervoltage_protection_LV2_One_Value();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case SECOND_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -1407,7 +1408,7 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -1418,7 +1419,7 @@ struct menu_event_tag * too_low_voltage_protection_handler(uint8_t msg_process_s
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -1640,7 +1641,7 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_over_menu_array));
 		}
 		chinese_menu_idx = frequency_over_menu_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -1653,21 +1654,21 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Overfrequency_Value();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -1689,7 +1690,7 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 				case FIX_VALUE:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Overfrequency_Value();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 					break;
 				default:
@@ -1727,13 +1728,13 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Overfrequency_Value();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 							break;
 						case OVER_DELAY:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Overfrequency_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
@@ -1760,7 +1761,7 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 							app_parameter_write_Overfrequency_Value(0);
 							app_parameter_write_Overfrequency_Value(float_flag);
 							float_flag = app_parameter_read_Overfrequency_Value();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -1768,7 +1769,7 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 							app_parameter_write_Overfrequency_Delay(0);
 							app_parameter_write_Overfrequency_Delay(float_flag);
 							float_flag = app_parameter_read_Overfrequency_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FUNCTION_IN_OUT:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -1821,7 +1822,7 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -1832,7 +1833,7 @@ struct menu_event_tag * frequency_over_handler(uint8_t msg_process_signal, uint8
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -1997,7 +1998,7 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 6, 1, sizeof(frequency_too_low_menu_array));
 		}
 		chinese_menu_idx = frequency_too_low_menu_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -2010,21 +2011,21 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Underfrequency_Value();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -2046,7 +2047,7 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 				case FIX_VALUE:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Underfrequency_Value();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 					break;
 				default:
@@ -2084,13 +2085,13 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Underfrequency_Value();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 							break;
 						case OVER_DELAY:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Underfrequency_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
@@ -2117,7 +2118,7 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 							app_parameter_write_Underfrequency_Value(0);
 							app_parameter_write_Underfrequency_Value(float_flag);
 							float_flag = app_parameter_read_Underfrequency_Value();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -2125,7 +2126,7 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 							app_parameter_write_Underfrequency_Delay(0);
 							app_parameter_write_Underfrequency_Delay(float_flag);
 							float_flag = app_parameter_read_Underfrequency_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FUNCTION_IN_OUT:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -2178,7 +2179,7 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -2189,7 +2190,7 @@ struct menu_event_tag * frequency_too_low_handler(uint8_t msg_process_signal, ui
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -2355,10 +2356,10 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
 		}
 		chinese_menu_idx = frequency_mutation_menu_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		// uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
-		// Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		// //Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -2371,21 +2372,21 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
             	msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				lcd_the_modified_num_env_to_be_clear_all();
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Frequency_Discontinuity_Value();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -2407,7 +2408,7 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 				case FIX_VALUE:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Frequency_Discontinuity_Value();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 					break;
 				default:
@@ -2448,13 +2449,13 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Frequency_Discontinuity_Value();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 							break;
 						case OVER_DELAY:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Frequency_Discontinuity_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
@@ -2481,7 +2482,7 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 							app_parameter_write_Frequency_Discontinuity_Value(0);
 							app_parameter_write_Frequency_Discontinuity_Value(float_flag);
 							float_flag = app_parameter_read_Underfrequency_Value();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -2489,7 +2490,7 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 							app_parameter_write_Frequency_Discontinuity_Delay(0);
 							app_parameter_write_Frequency_Discontinuity_Delay(float_flag);
 							float_flag = app_parameter_read_Underfrequency_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FUNCTION_IN_OUT:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -2542,7 +2543,7 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -2553,7 +2554,7 @@ struct menu_event_tag * frequency_mutation_handler(uint8_t msg_process_signal, u
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -2722,10 +2723,10 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(reverse_power_menu_array));
 		}
 		chinese_menu_idx = reverse_power_menu_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		// uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
-		// Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		// //Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -2738,21 +2739,21 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
             	msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				lcd_the_modified_num_env_to_be_clear_all();
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Reverse_Power_Protection_Value();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 4, 1, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -2774,7 +2775,7 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 				case FIX_VALUE:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Reverse_Power_Protection_Value();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 4, 1, float_flag);
 					break;
 				default:
@@ -2815,13 +2816,13 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Reverse_Power_Protection_Value();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 1, float_flag);
 							break;
 						case OVER_DELAY:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Reverse_Power_Protection_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
@@ -2848,7 +2849,7 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 							app_parameter_write_Reverse_Power_Protection_Value(0);
 							app_parameter_write_Reverse_Power_Protection_Value(float_flag);
 							float_flag = app_parameter_read_Reverse_Power_Protection_Value();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -2856,7 +2857,7 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 							app_parameter_write_Reverse_Power_Protection_Delay(0);
 							app_parameter_write_Reverse_Power_Protection_Delay(float_flag);
 							float_flag = app_parameter_read_Reverse_Power_Protection_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FUNCTION_IN_OUT:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -2909,7 +2910,7 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -2920,7 +2921,7 @@ struct menu_event_tag * reverse_power_handler(uint8_t msg_process_signal, uint8_
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -3085,10 +3086,10 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(harmonic_protection_menu_array));
 		}
 		chinese_menu_idx = harmonic_protection_menu_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		// uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
-		// Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		// //Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -3101,21 +3102,21 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
             	msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				lcd_the_modified_num_env_to_be_clear_all();
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Harmonic_Protection_Value();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -3137,7 +3138,7 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 				case FIX_VALUE:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Harmonic_Protection_Value();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 					break;
 				default:
@@ -3178,13 +3179,13 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Harmonic_Protection_Value();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 							break;
 						case OVER_DELAY:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Harmonic_Protection_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
@@ -3211,7 +3212,7 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 							app_parameter_write_Harmonic_Protection_Value(0);
 							app_parameter_write_Harmonic_Protection_Value(float_flag);
 							float_flag = app_parameter_read_Harmonic_Protection_Value();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -3219,7 +3220,7 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 							app_parameter_write_Harmonic_Protection_Delay(0);
 							app_parameter_write_Harmonic_Protection_Delay(float_flag);
 							float_flag = app_parameter_read_Harmonic_Protection_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FUNCTION_IN_OUT:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -3272,7 +3273,7 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -3283,7 +3284,7 @@ struct menu_event_tag * harmonic_protection_handler(uint8_t msg_process_signal, 
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -3449,10 +3450,10 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 5, 1, sizeof(external_shunt_tripping_menu_array));
 		}
 		chinese_menu_idx = external_shunt_tripping_menu_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		// uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
-		// Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		// //Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -3465,21 +3466,21 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
             	msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				lcd_the_modified_num_env_to_be_clear_all();
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_External_Coordination_Delay();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -3501,7 +3502,7 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 				case TRIPPING_FIRST_DELAY:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_External_Coordination_Delay();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 					break;
 				default:
@@ -3542,13 +3543,13 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_External_Coordination_Delay();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							break;
 						case TRIPPING_SECOND_DELAY:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_External_Coordination_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
@@ -3587,7 +3588,7 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 							app_parameter_write_External_Coordination_Delay(0);
 							app_parameter_write_External_Coordination_Delay(float_flag);
 							float_flag = app_parameter_read_External_Coordination_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case TRIPPING_SECOND_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -3595,7 +3596,7 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 							app_parameter_write_External_Coordination_Delay(0);
 							app_parameter_write_External_Coordination_Delay(float_flag);
 							float_flag = app_parameter_read_External_Coordination_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case TRIPPING_FIRST_CLOSE:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -3661,7 +3662,7 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -3672,7 +3673,7 @@ struct menu_event_tag * external_shunt_tripping_handler(uint8_t msg_process_sign
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -3883,10 +3884,10 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 4, 1, sizeof(quick_disconnect_protection_menu_array));
 		}
 		chinese_menu_idx = quick_disconnect_protection_menu_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		// uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
-		// Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		// //Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -3899,21 +3900,21 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
             	msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				lcd_the_modified_num_env_to_be_clear_all();
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Instantaneous_Overcurrent_Protection_Value();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -3935,7 +3936,7 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 				case DISCONNECT_PROTECTION_FIX_VALUE:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Instantaneous_Overcurrent_Protection_Value();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 					break;
 				default:
@@ -3976,19 +3977,19 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Instantaneous_Overcurrent_Protection_Value();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 							break;
 						case DISCONNECT_MUTATION_FIX_VALUE:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Instantaneous_Overcurrent_Mutation_Setting();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 1, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
 						case DISCONNECT_DELAY:
 							float_flag = app_parameter_read_Instantaneous_Overcurrent_Delay();
-							Log_d("ENTER! 4 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 4 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 2;
 							break;
@@ -4015,7 +4016,7 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 							app_parameter_write_Instantaneous_Overcurrent_Protection_Value(0);
 							app_parameter_write_Instantaneous_Overcurrent_Protection_Value(float_flag);
 							float_flag = app_parameter_read_Instantaneous_Overcurrent_Protection_Value();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case DISCONNECT_MUTATION_FIX_VALUE:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,1, 2);
@@ -4023,7 +4024,7 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 							app_parameter_write_Instantaneous_Overcurrent_Mutation_Setting(0);
 							app_parameter_write_Instantaneous_Overcurrent_Mutation_Setting(float_flag);
 							float_flag = app_parameter_read_Instantaneous_Overcurrent_Mutation_Setting();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case DISCONNECT_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -4031,7 +4032,7 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 							app_parameter_write_Instantaneous_Overcurrent_Delay(0);
 							app_parameter_write_Instantaneous_Overcurrent_Delay(float_flag);
 							float_flag = app_parameter_read_Instantaneous_Overcurrent_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case DISCONNECT_IN_OUT:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -4089,7 +4090,7 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -4100,7 +4101,7 @@ struct menu_event_tag * quick_disconnect_protection_handler(uint8_t msg_process_
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -4276,10 +4277,10 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(limited_time_quick_disconnect_menu_array));
 		}
 		chinese_menu_idx = limited_time_quick_disconnect_menu_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		// uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(frequency_mutation_menu_array));
-		// Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		// //Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -4292,21 +4293,21 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
             	msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				lcd_the_modified_num_env_to_be_clear_all();
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Speed_Limit_Break_Value();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -4328,7 +4329,7 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 				case FIX_VALUE:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Speed_Limit_Break_Value();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 					break;
 				default:
@@ -4369,13 +4370,13 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Speed_Limit_Break_Value();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 							break;
 						case OVER_DELAY:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Speed_Limit_Break_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
@@ -4402,7 +4403,7 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 							app_parameter_write_Speed_Limit_Break_Value(0);
 							app_parameter_write_Speed_Limit_Break_Value(float_flag);
 							float_flag = app_parameter_read_Speed_Limit_Break_Value();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -4410,7 +4411,7 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 							app_parameter_write_Speed_Limit_Break_Delay(0);
 							app_parameter_write_Speed_Limit_Break_Delay(float_flag);
 							float_flag = app_parameter_read_Speed_Limit_Break_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FUNCTION_IN_OUT:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -4463,7 +4464,7 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -4474,7 +4475,7 @@ struct menu_event_tag * limited_time_quick_disconnect_handler(uint8_t msg_proces
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -4639,7 +4640,7 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 6, 1, sizeof(over_current_protection_menu_array));
 		}
 		chinese_menu_idx = over_current_protection_menu_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -4652,21 +4653,21 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Overcurrent_Protection_Value();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -4688,7 +4689,7 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 				case FIX_VALUE:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Overcurrent_Protection_Value();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 					break;
 				default:
@@ -4727,13 +4728,13 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Overcurrent_Protection_Value();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 							break;
 						case OVER_DELAY:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Overcurrent_Protection_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
@@ -4760,7 +4761,7 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 							app_parameter_write_Overcurrent_Protection_Value(0);
 							app_parameter_write_Overcurrent_Protection_Value(float_flag);
 							float_flag = app_parameter_read_Overcurrent_Protection_Value();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -4768,7 +4769,7 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 							app_parameter_write_Overcurrent_Protection_Delay(0);
 							app_parameter_write_Overcurrent_Protection_Delay(float_flag);
 							float_flag = app_parameter_read_Overcurrent_Protection_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FUNCTION_IN_OUT:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -4821,7 +4822,7 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -4832,7 +4833,7 @@ struct menu_event_tag * over_current_protection_handler(uint8_t msg_process_sign
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -4996,7 +4997,7 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 6, 1, sizeof(over_sequence_over_current_menu_array));
 		}
 		chinese_menu_idx = over_sequence_over_current_menu_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -5009,21 +5010,21 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Zero_Sequence_Overflow_Value();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 3, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -5045,7 +5046,7 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 				case FIX_VALUE:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Zero_Sequence_Overflow_Value();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 3, float_flag);
 					break;
 				default:
@@ -5084,13 +5085,13 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Zero_Sequence_Overflow_Value();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							break;
 						case OVER_SEQUENCE_DELAY:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Zero_Sequence_Overflow_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
@@ -5123,7 +5124,7 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 							app_parameter_write_Zero_Sequence_Overflow_Value(0);
 							app_parameter_write_Zero_Sequence_Overflow_Value(float_flag);
 							float_flag = app_parameter_read_Zero_Sequence_Overflow_Value();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_SEQUENCE_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -5131,7 +5132,7 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 							app_parameter_write_Zero_Sequence_Overflow_Delay(0);
 							app_parameter_write_Zero_Sequence_Overflow_Delay(float_flag);
 							float_flag = app_parameter_read_Zero_Sequence_Overflow_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_SEQUENCE_CLOSE:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -5192,7 +5193,7 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -5203,7 +5204,7 @@ struct menu_event_tag * over_sequence_over_current_handler(uint8_t msg_process_s
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -5387,7 +5388,7 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 4, 1, sizeof(system_power_off_menu_array));
 		}
 		chinese_menu_idx = system_power_off_menu_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -5400,21 +5401,21 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_System_Down_Value();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 3, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -5436,7 +5437,7 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 				case SYSTEM_FIX_VALUE:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_System_Down_Value();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 3, float_flag);
 					break;
 				default:
@@ -5475,13 +5476,13 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_System_Down_Value();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 3, float_flag);
 							break;
 						case SYSTEM_DELAY:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_System_Down_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
@@ -5514,7 +5515,7 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 							app_parameter_write_System_Down_Value(0);
 							app_parameter_write_System_Down_Value(float_flag);
 							float_flag = app_parameter_read_System_Down_Value();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case SYSTEM_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -5522,7 +5523,7 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 							app_parameter_write_System_Down_Delay(0);
 							app_parameter_write_System_Down_Delay(float_flag);
 							float_flag = app_parameter_read_System_Down_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case SYSTEM_CHECK_CURRENT:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -5583,7 +5584,7 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -5594,7 +5595,7 @@ struct menu_event_tag * system_power_off_handler(uint8_t msg_process_signal, uin
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -5775,7 +5776,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 14, 1, sizeof(closing_switch_with_voltage_menu_array));
 		}
 		chinese_menu_idx = closing_switch_with_voltage_menu_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -5788,21 +5789,21 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_System_Down_Value();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -5824,7 +5825,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 				case MAX_VOLTAGE:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Voltage_Closing_Upper_Frequency_Limit();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 					break;
 				default:
@@ -5846,25 +5847,25 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Voltage_Closing_Upper_Voltage_Limit();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							break;
 						case MIN_VOLTAGE:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Voltage_Closing_Lower_Voltage_Limit();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
 						case MAX_FREQUENCE:
 							float_flag = app_parameter_read_Voltage_Closing_Upper_Frequency_Limit();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 							key_idx_for_num = 2;
 							break;
 						case MIN_FREQUENCE:
 							float_flag = app_parameter_read_Voltage_Closing_Lower_Frequency_Limit();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 							key_idx_for_num = 3;
 							break;
@@ -5912,13 +5913,13 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							break;
 						case CLOSING_CHARGE_DELAY:
 							float_flag = app_parameter_read_Voltage_Closing_Charging_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 11;
 							break;
 						case CLOSING_WITH_VOLTAGE_DELAY:
 							float_flag = app_parameter_read_Voltage_Closing_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 12;
 							break;
@@ -5945,7 +5946,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							app_parameter_write_Voltage_Closing_Upper_Voltage_Limit(0);
 							app_parameter_write_Voltage_Closing_Upper_Voltage_Limit(float_flag);
 							float_flag = app_parameter_read_Voltage_Closing_Upper_Voltage_Limit();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case MIN_VOLTAGE:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -5953,7 +5954,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							app_parameter_write_Voltage_Closing_Lower_Voltage_Limit(0);
 							app_parameter_write_Voltage_Closing_Lower_Voltage_Limit(float_flag);
 							float_flag = app_parameter_read_Voltage_Closing_Lower_Voltage_Limit();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case MAX_FREQUENCE:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 2);
@@ -5961,7 +5962,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							app_parameter_write_Voltage_Closing_Upper_Frequency_Limit(0);
 							app_parameter_write_Voltage_Closing_Upper_Frequency_Limit(float_flag);
 							float_flag = app_parameter_read_Voltage_Closing_Upper_Frequency_Limit();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case MIN_FREQUENCE:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,2, 2);
@@ -5969,7 +5970,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							app_parameter_write_Voltage_Closing_Lower_Frequency_Limit(0);
 							app_parameter_write_Voltage_Closing_Lower_Frequency_Limit(float_flag);
 							float_flag = app_parameter_read_Voltage_Closing_Lower_Frequency_Limit();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case CLOSING_WITH_VOLTAGE:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -6019,7 +6020,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							app_parameter_write_Voltage_Closing_Charging_Delay(0);
 							app_parameter_write_Voltage_Closing_Charging_Delay(float_flag);
 							float_flag = app_parameter_read_Voltage_Closing_Charging_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case CLOSING_WITH_VOLTAGE_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -6027,7 +6028,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 							app_parameter_write_Voltage_Closing_Delay(0);
 							app_parameter_write_Voltage_Closing_Delay(float_flag);
 							float_flag = app_parameter_read_Voltage_Closing_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case SWITCH_IN_OUT:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -6104,7 +6105,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -6115,7 +6116,7 @@ struct menu_event_tag * closing_switch_with_voltage_handler(uint8_t msg_process_
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -6467,7 +6468,7 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(power_recover_menu_array));
 		}
 		chinese_menu_idx = power_recover_menu_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -6480,21 +6481,21 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Power_recovery_Value();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -6516,7 +6517,7 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 				case FIX_VALUE:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Power_recovery_Value();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 					break;
 				default:
@@ -6555,13 +6556,13 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Power_recovery_Value();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 2, 2, float_flag);
 							break;
 						case OVER_DELAY:
 							//update the value for the array lcd_modify_num_array
 							float_flag = app_parameter_read_Power_recovery_Delay();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 1;
 							break;
@@ -6588,7 +6589,7 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 							app_parameter_write_Power_recovery_Value(0);
 							app_parameter_write_Power_recovery_Value(float_flag);
 							float_flag = app_parameter_read_Power_recovery_Value();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case OVER_DELAY:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -6596,7 +6597,7 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 							app_parameter_write_Power_recovery_Delay(0);
 							app_parameter_write_Power_recovery_Delay(float_flag);
 							float_flag = app_parameter_read_Power_recovery_Delay();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case FUNCTION_IN_OUT:
 							int_flag = (uint8_t)lcd_modify_num_array[0];
@@ -6649,7 +6650,7 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -6660,7 +6661,7 @@ struct menu_event_tag * power_recover_handler(uint8_t msg_process_signal, uint8_
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -6825,7 +6826,7 @@ struct menu_event_tag * power_recover_closing_handler(uint8_t msg_process_signal
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 19, 1, sizeof(power_recover_closing_menu_array));
 		}
 		chinese_menu_idx = power_recover_closing_menu_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -6838,15 +6839,15 @@ struct menu_event_tag * power_recover_closing_handler(uint8_t msg_process_signal
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
@@ -6874,7 +6875,7 @@ struct menu_event_tag * power_recover_closing_handler(uint8_t msg_process_signal
 				case POWER_RECOVER_FUNCTION_IN_OUT:
 					//update the value for the array lcd_modify_num_array
 					int_flag = CLOSING_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					lcd_modify_num_array[0] = int_flag;
 					break;
 				default:
@@ -7245,7 +7246,7 @@ struct menu_event_tag * power_recover_closing_handler(uint8_t msg_process_signal
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -7256,7 +7257,7 @@ struct menu_event_tag * power_recover_closing_handler(uint8_t msg_process_signal
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -7675,7 +7676,7 @@ struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal
 			lcd_modify_num_env.menu_type_idx = menu_type_ptr_match(msg_context, 9, 1, sizeof(reverse_power_control_menu_array));
 		}
 		chinese_menu_idx = reverse_power_control_menu_array[lcd_modify_num_env.menu_type_idx];
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -7688,15 +7689,15 @@ struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
@@ -7724,7 +7725,7 @@ struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal
 				case REVERSE_POWER_CONTROL_TYPE:
 					//update the value for the array lcd_modify_num_array
 					int_flag = REVERSE_POWER_BY_STEP_CONTROL_TYPE_FROM_SRAM_READ();
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					lcd_modify_num_array[0] = int_flag;
 					break;
 				default:
@@ -7775,48 +7776,48 @@ struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							float_flag = REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_READ();
-							Log_d("ENTER! 2 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 4, 1, float_flag);
 							break;
 						case REVERSE_POWER_OVER_DELAY_FOR_FIRST_STEP:
 							//update the value for the array lcd_modify_num_array
 							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_READ();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 3;
 							break;
 						case REVERSE_POWER_OVER_DELAY_FOR_SECOND_STEP:
 							//update the value for the array lcd_modify_num_array
 							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_READ();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 4;
 							break;
 						case REVERSE_POWER_OVER_DELAY_FOR_THIRD_STEP:
 							//update the value for the array lcd_modify_num_array
 							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_READ();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 5;
 							break;
 						case REVERSE_POWER_OVER_DELAY_FOR_FOURTH_STEP:
 							//update the value for the array lcd_modify_num_array
 							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_READ();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 6;
 							break;
 						case REVERSE_POWER_OVER_DELAY_FOR_FIFTH_STEP:
 							//update the value for the array lcd_modify_num_array
 							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_READ();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 7;
 							break;
 						case REVERSE_POWER_OVER_DELAY_FOR_SIXTH_STEP:
 							//update the value for the array lcd_modify_num_array
 							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_READ();
-							Log_d("ENTER! 3 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 3 float_flag:%f\n",float_flag);
 							my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 							key_idx_for_num = 8;
 							break;
@@ -7849,7 +7850,7 @@ struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal
 							REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_WRITE(0);
 							REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_WRITE(float_flag);
 							float_flag = REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_READ();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case REVERSE_POWER_OVER_DELAY_FOR_FIRST_STEP:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -7857,7 +7858,7 @@ struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal
 							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_WRITE(0);
 							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_WRITE(float_flag);
 							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIRST_STEP_FROM_SRAM_READ();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case REVERSE_POWER_OVER_DELAY_FOR_SECOND_STEP:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -7865,7 +7866,7 @@ struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal
 							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_WRITE(0);
 							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_WRITE(float_flag);
 							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SECOND_STEP_FROM_SRAM_READ();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case REVERSE_POWER_OVER_DELAY_FOR_THIRD_STEP:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -7873,7 +7874,7 @@ struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal
 							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_WRITE(0);
 							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_WRITE(float_flag);
 							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_THIRD_STEP_FROM_SRAM_READ();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case REVERSE_POWER_OVER_DELAY_FOR_FOURTH_STEP:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -7881,7 +7882,7 @@ struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal
 							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_WRITE(0);
 							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_WRITE(float_flag);
 							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FOURTH_STEP_FROM_SRAM_READ();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case REVERSE_POWER_OVER_DELAY_FOR_FIFTH_STEP:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -7889,7 +7890,7 @@ struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal
 							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_WRITE(0);
 							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_WRITE(float_flag);
 							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_FIFTH_STEP_FROM_SRAM_READ();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						case REVERSE_POWER_OVER_DELAY_FOR_SIXTH_STEP:
 							float_flag = my_convert_int_array_to_float32_parameter(lcd_modify_num_array,3, 2);
@@ -7897,7 +7898,7 @@ struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal
 							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_WRITE(0);
 							REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_WRITE(float_flag);
 							float_flag = REVERSE_POWER_BY_STEP_OVER_DELAY_FOR_SIXTH_STEP_FROM_SRAM_READ();
-							Log_d("ENTER! 33 float_flag:%f\n",float_flag);
+							//Log_d("ENTER! 33 float_flag:%f\n",float_flag);
 							break;
 						default:
 							break;
@@ -7954,7 +7955,7 @@ struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -7965,7 +7966,7 @@ struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen

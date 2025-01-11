@@ -57,8 +57,8 @@ struct menu_cmd_tag third_menu_cmd_tbl[]=
 	{THIRD_MENU,		OVER_SEQUENCE_OVER_CURRENT, 	(menu_kernel_func)over_sequence_over_current_handler},
 	{THIRD_MENU,		SYSTEM_POWER_OFF, 				(menu_kernel_func)system_power_off_handler},
 	{THIRD_MENU,		CLOSING_SWITCH_WITH_VOLTAGE, 	(menu_kernel_func)closing_switch_with_voltage_handler},
-	{THIRD_MENU,		POWER_RECOVER, 					(menu_kernel_func)power_recover_handler},
 	{THIRD_MENU,		POWER_RECOVER_CLOSING, 			(menu_kernel_func)power_recover_closing_handler},
+	// {THIRD_MENU,		POWER_RECOVER_CLOSING, 			(menu_kernel_func)power_recover_closing_handler},
 
 	/* DEBUG_MODE MENU */
 	{THIRD_MENU,		DRIVER_TEST, 					(menu_kernel_func)driver_test_handler},

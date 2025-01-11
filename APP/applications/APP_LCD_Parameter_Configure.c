@@ -258,7 +258,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 		}
 		chinese_menu_idx = change_proportion_setting_menu_array[lcd_modify_num_env.menu_type_idx];
 
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -270,11 +270,11 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
@@ -497,7 +497,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -508,7 +508,7 @@ struct menu_event_tag * change_proportion_setting_handler(uint8_t msg_process_si
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -777,7 +777,7 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
 		}
 		chinese_menu_idx = wire_splice_setting_menu_array[lcd_modify_num_env.menu_type_idx];
 
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -789,15 +789,15 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
@@ -959,7 +959,7 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -970,7 +970,7 @@ struct menu_event_tag * wire_splice_setting_handler(uint8_t msg_process_signal, 
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -1213,7 +1213,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 		}
 		chinese_menu_idx = open_into_setting_menu_array[lcd_modify_num_env.menu_type_idx];
 
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -1225,7 +1225,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
@@ -1367,7 +1367,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -1378,7 +1378,7 @@ struct menu_event_tag * open_into_setting_handler(uint8_t msg_process_signal, ui
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -1558,7 +1558,7 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 		}
 		chinese_menu_idx = open_out_setting_menu_array[lcd_modify_num_env.menu_type_idx];
 
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -1570,7 +1570,7 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
@@ -1709,7 +1709,7 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -1720,7 +1720,7 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -1890,7 +1890,7 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 		}
 		chinese_menu_idx = open_out_setting_menu_array[lcd_modify_num_env.menu_type_idx];
 
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -1902,7 +1902,7 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
@@ -1910,7 +1910,7 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Closing_exit_time();
-				Log_d("ENTER! float_flag:%d\n",float_flag);
+				//Log_d("ENTER! float_flag:%d\n",float_flag);
 				my_convert_int_to_int_array(lcd_modify_num_array, 4, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -1933,7 +1933,7 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 				case HEZA_YANSHI:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Closing_exit_time(); // SRAM todo
-					Log_d("ENTER! float_flag:%d\n",float_flag);
+					//Log_d("ENTER! float_flag:%d\n",float_flag);
 					my_convert_int_to_int_array(lcd_modify_num_array, 4, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
 					break;
 				default:
@@ -2197,7 +2197,7 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -2208,7 +2208,7 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -2569,9 +2569,9 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 
 // 	if(msg_process_signal == 1)
 // 	{
-// 		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
+// 		// //Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
 //         uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 2, 1, sizeof(communication_setting_menu_array));
-// 		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+// 		//Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 // 		if(msg_context == KEY_ENTER)
 // 		{
@@ -2579,21 +2579,21 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 // 			cur_menu_type_ptr_from_env_set(0);
 // 			menu_kernel_env.menu_cursor_history.second_menu_cursor = menu_type_idx;
 //             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-// 			Log_d("key KEY_ENTER menu!\r\n");
+// 			//Log_d("key KEY_ENTER menu!\r\n");
 // 		}
 
-// 		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
+// 		//Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
 // 		if(msg_context == KEY_RETURN)
 // 		{
 // 			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
 //             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 // 			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-// 			Log_d("key KEY_RETURN menu!\r\n");
+// 			//Log_d("key KEY_RETURN menu!\r\n");
 // 		}
 
 //         if(msg_context == FLUSH_SCREEN)
 //         {
-// 			Log_d("\r\n    \r\n");
+// 			//Log_d("\r\n    \r\n");
 //             clear_screen();
 // 			msg_context = 0xff;
 //             // LCD_ShowString(24,30,"LCD_W:",16);
@@ -2660,9 +2660,9 @@ struct menu_event_tag * communication_setting_handler(uint8_t msg_process_signal
 
 	if(msg_process_signal == 1)
 	{
-		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
+		// //Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
         uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 2, 1, sizeof(communication_setting_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_ENTER)
 		{
@@ -2670,21 +2670,21 @@ struct menu_event_tag * communication_setting_handler(uint8_t msg_process_signal
 			cur_menu_type_ptr_from_env_set(0);
 			menu_kernel_env.menu_cursor_history.second_menu_cursor = menu_type_idx;
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			Log_d("key KEY_ENTER menu!\r\n");
+			//Log_d("key KEY_ENTER menu!\r\n");
 		}
 
-		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
+		//Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
 		if(msg_context == KEY_RETURN)
 		{
 			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
+			//Log_d("key KEY_RETURN menu!\r\n");
 		}
 
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			//Log_d("\r\n    \r\n");
             clear_screen();
 			msg_context = LCD_FLUSH_SCREEN_IND;
             // LCD_ShowString(24,30,"LCD_W:",16);
@@ -2786,7 +2786,7 @@ struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint
 		}
 		chinese_menu_idx = gonggong_shezhi_menu_array[lcd_modify_num_env.menu_type_idx];
 
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -2798,16 +2798,16 @@ struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.second_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_zhuangzhi_dizhi();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 3, 0, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -2830,7 +2830,7 @@ struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint
 				case ZHUANGZHI_DIZHI:
 					//update the value for the array lcd_modify_num_array
 					int_num_flag = app_parameter_read_zhuangzhi_dizhi(); // SRAM todo
-					Log_d("ENTER! float_flag:%d\n",int_num_flag);
+					//Log_d("ENTER! float_flag:%d\n",int_num_flag);
 					my_convert_int_to_int_array(lcd_modify_num_array, 3, int_num_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
 					break;
 				default:
@@ -2869,13 +2869,13 @@ struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint
 							key_idx_for_num = 0;
 							//update the value for the array lcd_modify_num_array
 							int_num_flag = app_parameter_read_zhuangzhi_dizhi();
-							Log_d("ENTER! 2 float_flag:%d\n",int_num_flag);
+							//Log_d("ENTER! 2 float_flag:%d\n",int_num_flag);
 							my_convert_int_to_int_array(lcd_modify_num_array, 3, int_num_flag); // 3是整数位数，2是小数位数
 							break;
 						case BIANHUA_YUZHI:
 							//update the value for the array lcd_modify_num_array
 							int_num_flag = app_parameter_read_bianhua_yuzhi();
-							Log_d("ENTER! 2 float_flag:%d\n",int_num_flag);
+							//Log_d("ENTER! 2 float_flag:%d\n",int_num_flag);
 							my_convert_int_to_int_array(lcd_modify_num_array, 3, int_num_flag);
 							key_idx_for_num = 1;
 							break;
@@ -2893,14 +2893,14 @@ struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint
 							// app_parameter_write_zhuangzhi_dizhi();
 							// app_parameter_write_zhuangzhi_dizhi();
 							int_num_flag = app_parameter_read_zhuangzhi_dizhi();
-							Log_d("ENTER! 33 float_flag:%d\n",int_num_flag);
+							//Log_d("ENTER! 33 float_flag:%d\n",int_num_flag);
 							break;
 						case BIANHUA_YUZHI:
 							int_num_flag = my_convert_int_array_to_int_parameter(lcd_modify_num_array, 3);
 							// app_parameter_write_bianhua_yuzhi();
 							// app_parameter_write_bianhua_yuzhi();
 							int_num_flag = app_parameter_read_bianhua_yuzhi();
-							Log_d("ENTER! 33 float_flag:%d\n",int_num_flag);
+							//Log_d("ENTER! 33 float_flag:%d\n",int_num_flag);
 							break;
 					}
 					key_idx_for_num = 0;
@@ -2936,7 +2936,7 @@ struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -2947,7 +2947,7 @@ struct menu_event_tag * gonggong_shezhi_handler(uint8_t msg_process_signal, uint
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -3102,7 +3102,7 @@ struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint
 		}
 		chinese_menu_idx = chuankou_shezhi_menu_array[lcd_modify_num_env.menu_type_idx];
 
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -3114,21 +3114,21 @@ struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.second_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
 				msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen for returned chinese colume
 				float_flag = app_parameter_read_Trip_exit_time();
-				Log_d("ENTER! float_flag:%f\n",float_flag);
+				//Log_d("ENTER! float_flag:%f\n",float_flag);
 				my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag);
 			}
 			key_idx_for_num = 0;
@@ -3151,7 +3151,7 @@ struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint
 				case GUIYUE_LEIXING:
 					//update the value for the array lcd_modify_num_array
 					float_flag = app_parameter_read_Trip_exit_time(); // SRAM todo
-					Log_d("ENTER! float_flag:%f\n",float_flag);
+					//Log_d("ENTER! float_flag:%f\n",float_flag);
 					my_convert_float32_to_int_array(lcd_modify_num_array, 3, 2, float_flag); // 3表示整数位，2表示小数位， 最多不超过5位数
 					break;
 				default:
@@ -3309,7 +3309,7 @@ struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -3320,7 +3320,7 @@ struct menu_event_tag * chuankou_shezhi_handler(uint8_t msg_process_signal, uint
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -3538,9 +3538,9 @@ struct menu_event_tag * recover_home_setting_handler(uint8_t msg_process_signal,
 
 	if(msg_process_signal == 1)
 	{
-		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
+		// //Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
         uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(recover_home_setting_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_ENTER)
 		{
@@ -3548,21 +3548,21 @@ struct menu_event_tag * recover_home_setting_handler(uint8_t msg_process_signal,
 			cur_menu_type_ptr_from_env_set(0);
 			menu_kernel_env.menu_cursor_history.second_menu_cursor = menu_type_idx;
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			Log_d("key KEY_ENTER menu!\r\n");
+			//Log_d("key KEY_ENTER menu!\r\n");
 		}
 
-		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
+		//Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
 		if(msg_context == KEY_RETURN)
 		{
 			menu_level_from_env_set(TOP_NODE_MENU, PARAMETER_CONFIGURE, UNKNOW_THIRD_MENU);
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
+			//Log_d("key KEY_RETURN menu!\r\n");
 		}
 
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			//Log_d("\r\n    \r\n");
             clear_screen();
 			msg_context = LCD_FLUSH_SCREEN_IND;
             // LCD_ShowString(24,30,"LCD_W:",16);
@@ -3688,7 +3688,7 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 		}
 		chinese_menu_idx = password_setting_menu_array[lcd_modify_num_env.menu_type_idx];
 
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(msg_context == KEY_RETURN)
 		{
@@ -3700,15 +3700,15 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{
-				Log_d("RETURN\n");
+				//Log_d("RETURN\n");
 				//just for test log
 				for(int j=0;j<5;j++)
 				{
-					Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
+					//Log_d("[%d]=%d\n",j,lcd_modify_num_array[j]);
 				}
 				memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
 				lcd_the_modified_num_env_to_be_clear_part();
@@ -3823,7 +3823,7 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]++;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -3834,7 +3834,7 @@ struct menu_event_tag * password_setting_handler(uint8_t msg_process_signal, uin
 								lcd_modify_num_array[lcd_modify_num_env.limited_index]--;
 							}
 							new_num=lcd_modify_num_array[lcd_modify_num_env.limited_index];
-							Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
+							//Log_d("HELLO!! new_Num=%d  key_idx_for_num=%d \n", new_num, key_idx_for_num); 
 							memset(num_idx_flush, 0xff, sizeof(num_idx_flush)); 
 							num_idx_flush[key_idx_for_num] = lcd_modify_num_env.limited_index;
 							msg_storage = LCD_FLUSH_SCREEN_IND; //flush the screen
@@ -4038,7 +4038,7 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 		}
 		chinese_menu_idx = time_setting_menu_array[lcd_modify_num_env.menu_type_idx];
 
-		Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", lcd_modify_num_env.menu_type_idx);
 
 		if(lcd_modify_num_env.enter_flag == true)
 		{
@@ -4102,12 +4102,12 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 					lcd_number_modify_int_array_for_time_clear_all();
 					// msg_storage = LCD_FLUSH_SCREEN_IND;
 				}
-				Log_d("key KEY_ENTER menu!\r\n");
+				//Log_d("key KEY_ENTER menu!\r\n");
 			}
 			msg_storage = LCD_FLUSH_SCREEN_IND;
 		}
 
-		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
+		//Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
 		if(msg_context == KEY_RETURN)
 		{
 			if(!lcd_modify_num_env.check_num_modify)
@@ -4116,7 +4116,7 @@ struct menu_event_tag * time_setting_handler(uint8_t msg_process_signal, uint8_t
 				msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 				cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
 				lcd_the_modified_num_env_to_be_clear_all();
-				Log_d("key KEY_RETURN menu!\r\n");
+				//Log_d("key KEY_RETURN menu!\r\n");
 			}
 			else
 			{

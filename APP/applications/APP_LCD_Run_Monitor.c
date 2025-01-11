@@ -452,9 +452,9 @@ struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_signal, uin
 
 	if(msg_process_signal == 1)
 	{
-		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
+		// //Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
         uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 5, 1, sizeof(telemetry_second_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		// if(msg_context == KEY_ENTER) //for the last page to the first page
 		// {
@@ -462,22 +462,22 @@ struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_signal, uin
 		// 	cur_menu_type_ptr_from_env_set(0);
 		// 	menu_kernel_env.menu_cursor_history.second_menu_cursor = menu_type_idx;
         //     msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-		// 	Log_d("key KEY_ENTER menu!\r\n");
+		// 	//Log_d("key KEY_ENTER menu!\r\n");
 		// }
 
-		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
+		//Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
 		if(msg_context == KEY_RETURN)
 		{
 			menu_level_from_env_set(TOP_NODE_MENU, RUN_MONITOR, UNKNOW_THIRD_MENU);
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
             memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
-			Log_d("key KEY_RETURN menu!\r\n");
+			//Log_d("key KEY_RETURN menu!\r\n");
 		}
 
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			//Log_d("\r\n    \r\n");
             clear_screen();
             msg_storage = LCD_FLUSH_SCREEN_IND;
             // LCD_ShowString(24,30,"LCD_W:",16);
@@ -702,9 +702,9 @@ struct menu_event_tag * telemetry_second_handler(uint8_t msg_process_signal, uin
                         LCD_ShowEnglish_garland(95, 28, my_char_r, 1);
 
                         cosPHI = THE_TOTAL_ACTIVE_POWER_FOR_PS_READ()*1.0/pow(pow(THE_TOTAL_ACTIVE_POWER_FOR_PS_READ(),2)+pow(THE_TOTAL_REACTIVE_POWER_FOR_QS_READ(),2), 0.5);
-                        Log_d("Qs and Ps: Ps*1.0 / (Ps^2 + Qs^2)^0.5 = cosPHI = %.3f \n", cosPHI);
+                        //Log_d("Qs and Ps: Ps*1.0 / (Ps^2 + Qs^2)^0.5 = cosPHI = %.3f \n", cosPHI);
                         // cosPHI = THE_TOTAL_ACTIVE_POWER_FOR_PS_READ()*1.0/ THE_TOTAL_APPARENT_POWER_FOR_S_READ();
-                        // Log_d("Ps and S: Ps*1.0 / S = cosPHI = %.3f \n", cosPHI);
+                        // //Log_d("Ps and S: Ps*1.0 / S = cosPHI = %.3f \n", cosPHI);
                         //cosPHI = THE_COS_FOR_A_VOLTAGE_BY_ACTIVE_PWR_AND_REACTIVE_PWR();
                         //////TODO
                         LCD_ShowEnglish_garland(18, 39, my_char_c, 1);     
@@ -836,9 +836,9 @@ struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint
 
 	if(msg_process_signal == 1)
 	{
-		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
+		// //Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
         uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 6, 1, sizeof(telemetry_first_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_ENTER)
 		{
@@ -846,22 +846,22 @@ struct menu_event_tag * telemetry_first_handler(uint8_t msg_process_signal, uint
 			cur_menu_type_ptr_from_env_set(0);
 			menu_kernel_env.menu_cursor_history.second_menu_cursor = menu_type_idx;
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			Log_d("key KEY_ENTER menu!\r\n");
+			//Log_d("key KEY_ENTER menu!\r\n");
 		}
 
-		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
+		//Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
 		if(msg_context == KEY_RETURN)
 		{
 			menu_level_from_env_set(TOP_NODE_MENU, RUN_MONITOR, UNKNOW_THIRD_MENU);
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
             memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array)); //clear the array before returning the chinese colume
-			Log_d("key KEY_RETURN menu!\r\n");
+			//Log_d("key KEY_RETURN menu!\r\n");
 		}
 
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			//Log_d("\r\n    \r\n");
             clear_screen();
 			msg_storage = LCD_FLUSH_SCREEN_IND;
             // LCD_ShowString(24,30,"LCD_W:",16);
@@ -1431,9 +1431,9 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
 
 	if(msg_process_signal == 1)
 	{
-		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
+		// //Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
         uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 3, 1, sizeof(open_into_state_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_ENTER)
 		{
@@ -1441,21 +1441,21 @@ struct menu_event_tag * open_into_state_handler(uint8_t msg_process_signal, uint
 			cur_menu_type_ptr_from_env_set(0);
 			menu_kernel_env.menu_cursor_history.second_menu_cursor = menu_type_idx;
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			Log_d("key KEY_ENTER menu!\r\n");
+			//Log_d("key KEY_ENTER menu!\r\n");
 		}
 
-		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
+		//Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
 		if(msg_context == KEY_RETURN)
 		{
 			menu_level_from_env_set(TOP_NODE_MENU, RUN_MONITOR, UNKNOW_THIRD_MENU);
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
+			//Log_d("key KEY_RETURN menu!\r\n");
 		}
 
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			//Log_d("\r\n    \r\n");
             clear_screen();
 			msg_storage = LCD_FLUSH_SCREEN_IND;
             // LCD_ShowString(24,30,"LCD_W:",16);
@@ -1887,9 +1887,9 @@ struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_
 
 	if(msg_process_signal == 1)
 	{
-		// Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
+		// //Log_d("HELLO sizeof(top_menu_array):%d \r\n",sizeof(top_menu_array));
         uint8_t menu_type_idx = menu_type_ptr_match(msg_context, 4, 1, sizeof(running_state_menu_array));
-		Log_d("menu_type_idx:%d \r\n", menu_type_idx);
+		//Log_d("menu_type_idx:%d \r\n", menu_type_idx);
 
 		if(msg_context == KEY_ENTER)
 		{
@@ -1897,21 +1897,21 @@ struct menu_event_tag * running_state_handler(uint8_t msg_process_signal, uint8_
 			cur_menu_type_ptr_from_env_set(0);
 			menu_kernel_env.menu_cursor_history.second_menu_cursor = menu_type_idx;
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
-			Log_d("key KEY_ENTER menu!\r\n");
+			//Log_d("key KEY_ENTER menu!\r\n");
 		}
 
-		Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
+		//Log_d("\r\n ???????? msg_context:%d \r\n",msg_context);
 		if(msg_context == KEY_RETURN)
 		{
 			menu_level_from_env_set(TOP_NODE_MENU, RUN_MONITOR, UNKNOW_THIRD_MENU);
             msg_send_to_lcd_layer(LCD_LAYER, LCD_LAYER, MSG_AVAILABLE, FLUSH_SCREEN);
 			cur_menu_type_ptr_from_env_set(menu_kernel_env.menu_cursor_history.first_menu_cursor);
-			Log_d("key KEY_RETURN menu!\r\n");
+			//Log_d("key KEY_RETURN menu!\r\n");
 		}
 
         if(msg_context == FLUSH_SCREEN)
         {
-			Log_d("\r\n    \r\n");
+			//Log_d("\r\n    \r\n");
             clear_screen();
 			msg_storage = LCD_FLUSH_SCREEN_IND;
             // LCD_ShowString(24,30,"LCD_W:",16);
