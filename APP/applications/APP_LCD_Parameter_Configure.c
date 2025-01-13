@@ -2246,6 +2246,8 @@ struct menu_event_tag * open_out_setting_handler(uint8_t msg_process_signal, uin
 		switch(msg_storage)
 		{
 			case	LCD_FLUSH_SCREEN_IND:
+			case    KEY_UP:
+			case	KEY_DOWN:
 			case    KEY_PLUS:
 			case	KEY_MINUS:		
 			case	KEY_LEFT:
