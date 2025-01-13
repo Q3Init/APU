@@ -7764,16 +7764,16 @@ struct menu_event_tag * reverse_power_by_step_handler(uint8_t msg_process_signal
 							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
 							int_flag = REVERSE_POWER_BY_STEP_CONTROL_TYPE_FROM_SRAM_READ();
 							lcd_modify_num_array[0] = int_flag;
-							key_idx_for_num = 1;
+							key_idx_for_num = 0;
 							break;
 						case REVERSE_POWER_CONTROL_IN_OUT:
 							memset(lcd_modify_num_array, 0x00, sizeof(lcd_modify_num_array));
 							int_flag = REVERSE_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ();
 							lcd_modify_num_array[0] = int_flag;
-							key_idx_for_num = 2;
+							key_idx_for_num = 1;
 							break;
 						case REVERSE_POWER_FIX_VALUE_FOR_ONE_STEP:
-							key_idx_for_num = 0;
+							key_idx_for_num = 2;
 							//update the value for the array lcd_modify_num_array
 							float_flag = REVERSE_POWER_BY_STEP_FIX_VALUE_FOR_ONE_STEP_FROM_SRAM_READ();
 							//Log_d("ENTER! 2 float_flag:%f\n",float_flag);
