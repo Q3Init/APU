@@ -7,7 +7,7 @@
 #include "task.h"
 #include "semphr.h"
 
-static APP_Protection_Mnt_t APP_Protection_Mnt;
+APP_Protection_Mnt_t APP_Protection_Mnt;
 APP_Protection_Mnt_t *pMnt = &APP_Protection_Mnt;
 static SemaphoreHandle_t g_prt_enable_sem = NULL;
 

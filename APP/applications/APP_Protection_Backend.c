@@ -50,8 +50,8 @@ const float hanning_win_table[256] = {
 
 #endif
 
-static APP_Protection_Backend_t APP_Protection_Backend_Obj;
-static APP_Protection_Backend_t *pBk = &APP_Protection_Backend_Obj;
+APP_Protection_Backend_t APP_Protection_Backend_Obj;
+APP_Protection_Backend_t *pBk = &APP_Protection_Backend_Obj;
 volatile uint32_t DMA_Time_Record_Ms = 0;
 static SemaphoreHandle_t g_relay_sem = NULL;
 
@@ -1729,7 +1729,10 @@ uint8_t APP_Symmetric_Three_Phase_Circuit_State_Get(void)
     }
     return state_ind;
 }
-
+float32 PS;
+float32 QS;
+float32 PS2;
+float32 QS2;
 void APP_FFT_Handler(void)
 {   
     uint32 tick1 = 0;
@@ -1814,6 +1817,66 @@ void APP_FFT_Handler(void)
                         &pBk->value.reactive_power_c,
                         &pBk->value.apparent_power_c);          
     Log_d("HE! Uc Ic END !\r\n");
+    if(symmetric_three_phase_circuit_ind == true)
+    {
+        PS = APP_Get_Active_Power_Total();
+        QS = APP_Get_Reactive_Power_Total();
+        float32 average_active = 0;
+        float32 average_reactive = 0;
+        float32 average[3];
+        average[0] = (pBk->value.active_power_a > 0) ? (pBk->value.active_power_a):(-pBk->value.active_power_a);
+        average[1] = (pBk->value.active_power_b > 0) ? (pBk->value.active_power_b):(-pBk->value.active_power_b);
+        average[2] = (pBk->value.active_power_c > 0) ? (pBk->value.active_power_c):(-pBk->value.active_power_c);
+        float32 max = average[0];
+        uint8_t max_idx = 0;
+        for(uint8_t idx=1; idx<3;idx++)
+        {
+            if(max < average[idx])
+            {
+                max = average[idx];
+                max_idx = idx;
+            }
+        }
+            
+        for(uint8_t idx=0; idx<3;idx++)
+        {
+            if(idx != max_idx)
+            {
+                average_active += average[idx];
+            }
+        }
+        pBk->value.active_power_a = average_active/2.0;
+        pBk->value.active_power_b = average_active/2.0;
+        pBk->value.active_power_c = average_active/2.0;
+    
+    
+        average[0] = (pBk->value.reactive_power_a > 0) ? (pBk->value.reactive_power_a):(-pBk->value.reactive_power_a);
+        average[1] = (pBk->value.reactive_power_b > 0) ? (pBk->value.reactive_power_b):(-pBk->value.reactive_power_b);
+        average[2] = (pBk->value.reactive_power_c > 0) ? (pBk->value.reactive_power_c):(-pBk->value.reactive_power_c);
+        float32 min = average[0];
+        uint8_t min_idx = 0;
+        for(uint8_t idx=1; idx<3;idx++)
+        {
+            if(min > average[idx])
+            {
+                        min = average[idx];
+                        min_idx = idx;
+            }
+        }
+            
+        for(uint8_t idx=0; idx<3;idx++)
+        {
+            if(idx != min_idx)
+            {
+                average_reactive += average[idx];
+            }
+        }
+        pBk->value.reactive_power_a = average_reactive/2.0;
+        pBk->value.reactive_power_b = average_reactive/2.0;
+        pBk->value.reactive_power_c = average_reactive/2.0;
+        PS2 = APP_Get_Active_Power_Total();
+        QS2 = APP_Get_Reactive_Power_Total();    
+    }
 
     tick2 = APP_Get_System_Ms();
     /* calculate the power ±Eq and ±Ep */
