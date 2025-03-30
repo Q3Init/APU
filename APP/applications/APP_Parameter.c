@@ -216,7 +216,7 @@ void APP_Parameter_Init( void )
 
     if ( 0xAA != flag || ret == E_NOK )
     {
-        app_allpara_default_update( );
+        app_allpara_default_update(true);
         BSW_NvM_Write_Para_flag( );
         APP_Scroll_storage_erase( Controls_block );
         APP_Scroll_storage_erase( Error_Block );
@@ -4272,14 +4272,19 @@ void app_allpara_default_init( void )
     nvm_datas_Lists[ NUMBER51 ].dft                         = MCM_floatToIntBit( 0 );
     nvm_datas_Lists[ NUMBER52 ].dft                         = MCM_floatToIntBit( 0 );
 }
-uint8 app_allpara_default_update( void )
+uint8 app_allpara_default_update(bool sram_first_init)
 {
     uint8 ret = E_OK;
     for ( uint8 index = 0; index < ID_CNT; index++ )
     {
         BSW_NvM_Write( index, (void*)&nvm_datas_Lists[ index ].dft );
     }
-    APP_Parameter_Init( );
+
+    if(sram_first_init == false)
+    {
+        APP_Parameter_Init();
+    }
+
     return ret;
 }
 uint8 app_action_default_update( void )
