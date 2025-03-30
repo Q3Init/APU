@@ -4272,7 +4272,7 @@ void app_allpara_default_init( void )
     nvm_datas_Lists[ NUMBER51 ].dft                         = MCM_floatToIntBit( 0 );
     nvm_datas_Lists[ NUMBER52 ].dft                         = MCM_floatToIntBit( 0 );
 }
-uint8 app_allpara_default_update(bool sram_first_init)
+uint8 app_allpara_default_update(uint8_t sram_first_init)
 {
     uint8 ret = E_OK;
     for ( uint8 index = 0; index < ID_CNT; index++ )
