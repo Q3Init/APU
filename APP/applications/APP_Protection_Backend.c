@@ -2142,8 +2142,8 @@ int APP_Protection_Backend_Init(void)
 
     APP_Relay_Set_Channel((uint16)(APP_RELAY_CHANNEL_HC | APP_RELAY_CHANNEL_TQ | APP_RELAY_CHANNEL_D03 | APP_RELAY_CHANNEL_D04));
 
-    // 装置首次上电，默认强制跳闸
-    APP_Relay_Force_Switch_Off();
+    // // 装置首次上电，默认强制跳闸
+    // APP_Relay_Force_Switch_Off();
 
     pBk->fft_enable = false;
 
