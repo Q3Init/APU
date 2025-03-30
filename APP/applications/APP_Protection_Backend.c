@@ -1685,8 +1685,8 @@ void APP_FFT_Start(void)
     pBk->fft_enable = true;
 }
 
-#define VOLTAGE_VALUE_RATE_THRESHOLD    0.05
-#define CURRENT_VALUE_RATE_THRESHOLD    0.05
+#define VOLTAGE_VALUE_RATE_THRESHOLD    5.00
+#define CURRENT_VALUE_RATE_THRESHOLD    0.300
 uint8_t APP_Symmetric_Three_Phase_Circuit_State_Get(void)
 {
     uint8_t state_ind = false;
@@ -1878,28 +1878,28 @@ void APP_FFT_Handler(void)
         QS2 = APP_Get_Reactive_Power_Total();    
     }
 
-    tick2 = APP_Get_System_Ms();
-    /* calculate the power ±Eq and ±Ep */
-    if(APP_Get_Active_Power_Total() > 0)
-    {
-        pBk->value.plus_Ep += APP_Get_Active_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
-        APP_PLUS_EP_SRAM_WRITE(pBk->value.plus_Ep);
-    }
-    else
-    {
-        pBk->value.minus_Ep += APP_Get_Active_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
-        APP_MINUS_EP_SRAM_WRITE(pBk->value.minus_Ep);
-    }
-    if(APP_Get_Reactive_Power_Total() > 0)
-    {
-        pBk->value.plus_Eq += APP_Get_Reactive_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
-        APP_PLUS_EQ_SRAM_WRITE(pBk->value.plus_Eq);
-    }
-    else
-    {
-        pBk->value.minus_Eq += APP_Get_Reactive_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
-        APP_MINUS_EQ_SRAM_WRITE(pBk->value.minus_Eq);
-    }
+    // tick2 = APP_Get_System_Ms();
+    // /* calculate the power ±Eq and ±Ep */
+    // if(APP_Get_Active_Power_Total() > 0)
+    // {
+    //     pBk->value.plus_Ep += APP_Get_Active_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
+    //     APP_PLUS_EP_SRAM_WRITE(pBk->value.plus_Ep);
+    // }
+    // else
+    // {
+    //     pBk->value.minus_Ep += APP_Get_Active_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
+    //     APP_MINUS_EP_SRAM_WRITE(pBk->value.minus_Ep);
+    // }
+    // if(APP_Get_Reactive_Power_Total() > 0)
+    // {
+    //     pBk->value.plus_Eq += APP_Get_Reactive_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
+    //     APP_PLUS_EQ_SRAM_WRITE(pBk->value.plus_Eq);
+    // }
+    // else
+    // {
+    //     pBk->value.minus_Eq += APP_Get_Reactive_Power_Total() * ((DMA_Time_Record_Ms - tick2 + 0xffffffff) % 0xffffffff) / 3600.0 / 1000.0 / 1000.0;
+    //     APP_MINUS_EQ_SRAM_WRITE(pBk->value.minus_Eq);
+    // }
 
     fft_time_cost = tick2 - tick1;
     Log_d("Time Cost = %d\n", fft_time_cost);
