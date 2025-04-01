@@ -216,8 +216,8 @@ void APP_Parameter_Init( void )
 
     if ( 0xAA != flag || ret == E_NOK )
     {
-        app_allpara_default_update( );
         BSW_NvM_Write_Para_flag( );
+        app_allpara_default_update( );
         APP_Scroll_storage_erase( Controls_block );
         APP_Scroll_storage_erase( Error_Block );
         Log_d( "app_allpara_default_update" );
