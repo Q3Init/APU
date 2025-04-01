@@ -1629,7 +1629,7 @@ extern uint8   app_parameter_write_NUMBER51( float32 data );
 extern uint8   app_parameter_write_NUMBER52( float32 data );
 
 extern void  app_allpara_default_init( void );
-extern uint8 app_allpara_default_update(uint8_t sram_first_init);
+extern uint8 app_allpara_default_update(bool sram_first_init);
 extern uint8 app_action_default_update( void );
 
 #endif
