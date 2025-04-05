@@ -933,14 +933,26 @@ uint8 APP_Remote_Signal_Input_Read_Group_5(void)
  */
 boolean APP_Remote_Signal_Input_Switching_Exist_On(void)
 {
-    if ((BIT_SET == APP_Remote_Signal_Input_Read_Group_1()) || 
-        (BIT_SET == APP_Remote_Signal_Input_Read_Group_2()) || 
+    if(CLOSING_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ() == true)
+    {
+        if ((BIT_SET == APP_Remote_Signal_Input_Read_Group_1()) || 
+        (BIT_SET == APP_Remote_Signal_Input_Read_Group_2()) || //当逆功率没用使用时，这里设置为单一的就行
         (BIT_SET == APP_Remote_Signal_Input_Read_Group_3()) ||
         (BIT_SET == APP_Remote_Signal_Input_Read_Group_4()) ||
         (BIT_SET == APP_Remote_Signal_Input_Read_Group_5()) ) {
-        return true;
-    } else {
-        return false;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    else
+    {
+        //当逆功率相关保护没用使用时，这里仅需要设置第一组信号作为判断就行
+        if (BIT_SET == APP_Remote_Signal_Input_Read_Group_1()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
@@ -951,19 +963,36 @@ boolean APP_Remote_Signal_Input_Switching_Exist_On(void)
  */
 boolean APP_Remote_Signal_Input_Switching_Exist_Off(void)
 {
-    if ((BIT_RESET == APP_Remote_Signal_Input_Read_Group_1()) || 
+    if(REVERSE_POWER_BY_STEP_IN_OUT_FROM_SRAM_READ() == false)
+    {
+        if (BIT_RESET == APP_Remote_Signal_Input_Read_Group_1()) {
+            return true;
+        } else {
+            //当逆功率相关保护没用使用时，这里仅需要设置第一组信号作为判断就行
+            if (APP_Remote_Signal_Input_Switching_Exist_On() == false) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    else
+    {
+        if ((BIT_RESET == APP_Remote_Signal_Input_Read_Group_1()) || 
         (BIT_RESET == APP_Remote_Signal_Input_Read_Group_2()) || 
         (BIT_RESET == APP_Remote_Signal_Input_Read_Group_3()) ||
         (BIT_RESET == APP_Remote_Signal_Input_Read_Group_4()) ||
         (BIT_RESET == APP_Remote_Signal_Input_Read_Group_5()) ) {
-        return true;
-    } else {
-        if (APP_Remote_Signal_Input_Switching_Exist_On == false) {
             return true;
         } else {
-            return false;
+            if (APP_Remote_Signal_Input_Switching_Exist_On() == false) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
+
 }
 
 /**
