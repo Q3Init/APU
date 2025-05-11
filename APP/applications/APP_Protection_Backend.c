@@ -1614,11 +1614,22 @@ boolean APP_RFFT_Common_Calc(APP_Sample_Adc_Ch_e ch, float32 *p_amplitude, float
 {
     uint32  max_index = 0;
     float32 max_mag   = 0.0;
-
+    float32 average_current = 0;
+    float32 sum = 0;
     if ((ch >= APP_SMP_ADC_CH_MAX) || ((NULL == p_amplitude) && (NULL == p_freq) && (NULL == p_harmonic) && (NULL == p_phase)))
         return false;
 
     APP_Sample_Adc_Cpy(pBk->fft_in_buff, FFT_POINT_CNT, ch);
+    if(ch <= APP_SMP_ADC_CH_IOUT)
+    {
+        uint16_t i;
+        for (i = 0; i < FFT_POINT_CNT; i++)
+        {
+            sum += pBk->fft_in_buff[i];
+        }
+        average_current = sum/((FFT_POINT_CNT)*1.0);
+    }
+
     APP_RFFT_Fast_Calc(&pBk->rfft_f32, pBk->fft_in_buff, pBk->fft_out_buff, pBk->fft_mag_buff, FFT_POINT_CNT);
     APP_RFFT_Max_F32(pBk->fft_mag_buff, FFT_POINT_CNT/2, &max_mag, &max_index);
     Log_i("FFT Max Index = %d, Max Value = %.4f.\n", max_index, max_mag);
@@ -1632,6 +1643,12 @@ boolean APP_RFFT_Common_Calc(APP_Sample_Adc_Ch_e ch, float32 *p_amplitude, float
                             p_phase, 
                             p_amplitude,
                             p_harmonic);
+    
+    if(ch <= APP_SMP_ADC_CH_IOUT)
+    {
+        *p_amplitude = average_current;
+    }
+
     return true;
 }
 

@@ -9,7 +9,7 @@
 
 static uint32_t lcd_flush_timer_last = 0;
 static uint32_t lcd_flush_timer_cur = 0;
-#define LCD_FLUSH_PERIOD    2000  /* unit:ms */
+#define LCD_FLUSH_PERIOD    1000  /* unit:ms */
 
 
 /**************          telemetry_second menu is as follow         *****************************/
