@@ -1270,7 +1270,7 @@ static void APP_Protection_OperateContactor_OnVoltageRise_Handler(void)
         /* 低频跳闸 */
         low_freq_flag = (pMnt->state.low_freq_switch_off_state != 1);
         /* 非手分合闸 */
-        non_manual_flag = (BIT_RESET == APP_Remote_Signal_Input_Read_Closing_And_Locking());
+        non_manual_flag = pMnt->enable.non_manual_switch_on_enable;
         /* 谐波保护 */
         harmonic_flag = (pMnt->state.harmonic_volt_distortion_switch_off_state != 1);
         /* 外部联跳 */
